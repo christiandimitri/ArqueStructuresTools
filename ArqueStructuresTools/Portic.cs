@@ -36,10 +36,10 @@ namespace ArqueStructuresTools
             // You can often supply default values when creating parameters.
             // All parameters must have the correct access type. If you want 
             // to import lists or trees of values, modify the ParamAccess flag.
-            pManager.AddPlaneParameter("plane", "pl", "description", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddIntegerParameter("typology", "ty", "description", GH_ParamAccess.item, 3);
-            pManager.AddIntegerParameter("base type", "bT", "description", GH_ParamAccess.item, 0);
-            pManager.AddIntegerParameter("support type", "sT", "description", GH_ParamAccess.item, 1);
+            pManager.AddPlaneParameter("plane", "pl", "Starting base plane", GH_ParamAccess.item, Plane.WorldXY);
+            pManager.AddIntegerParameter("typology", "ty", "(0) Straight/Flat (1) Arc (2) Single inclination (3) Double inclination", GH_ParamAccess.item, 3);
+            pManager.AddIntegerParameter("base type", "bT", "(0) Straight base (1) Offset base", GH_ParamAccess.item, 0);
+            pManager.AddIntegerParameter("support type", "sT", "(0) Articulated supports (1) Rigid", GH_ParamAccess.item, 1);
             pManager.AddIntegerParameter("span left", "sL", "description", GH_ParamAccess.item, 5000);
             pManager.AddIntegerParameter("span right", "sR", "description", GH_ParamAccess.item, 5000);
             pManager.AddIntegerParameter("max height", "mH", "description", GH_ParamAccess.item, 3500);
@@ -80,69 +80,108 @@ namespace ArqueStructuresTools
             Plane plane = Plane.WorldXY;
             int typology = 3;
             int baseType = 0;
-            int supType = 1;
-            int spanLeft = 5000;
-            int spanRight = 5000;
-            int maxHeight = 3500;
+            int supportType = 1;
+            int leftSpan = 5000;
+            int rightSpan = 5000;
+            int maximumHeight = 3500;
             int clearHeight = 2700;
-            int clHeight = 3000;
-            int crHeight = 3000;
-            int subdCount = 4;
-            int minLength = 1500;
-            int maxLength = 2000;
+            int leftHeight = 3000;
+            int rightHeight = 3000;
+            int subdivisionCount = 4;
+            int minimumLength = 1500;
+            int maximumLength = 2000;
             int porticType = 0;
             int trussType = 0;
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref typology)) return;
             if (!DA.GetData(2, ref baseType)) return;
-            if (!DA.GetData(3, ref supType)) return;
-            if (!DA.GetData(4, ref spanLeft)) return;
-            if (!DA.GetData(5, ref spanRight)) return;
-            if (!DA.GetData(6, ref maxHeight)) return;
+            if (!DA.GetData(3, ref supportType)) return;
+            if (!DA.GetData(4, ref leftSpan)) return;
+            if (!DA.GetData(5, ref rightSpan)) return;
+            if (!DA.GetData(6, ref maximumHeight)) return;
             if (!DA.GetData(7, ref clearHeight)) return;
-            if (!DA.GetData(8, ref clHeight)) return;
-            if (!DA.GetData(9, ref crHeight)) return;
-            if (!DA.GetData(10, ref subdCount)) return;
-            if (!DA.GetData(11, ref minLength)) return;
-            if (!DA.GetData(12, ref maxLength)) return;
+            if (!DA.GetData(8, ref leftHeight)) return;
+            if (!DA.GetData(9, ref rightHeight)) return;
+            if (!DA.GetData(10, ref subdivisionCount)) return;
+            if (!DA.GetData(11, ref minimumLength)) return;
+            if (!DA.GetData(12, ref maximumLength)) return;
             if (!DA.GetData(13, ref porticType)) return;
             if (!DA.GetData(14, ref trussType)) return;
             List<Point3d> upperBasePoints = new List<Point3d>();
             List<Curve> upperBaseCurves = new List<Curve>();
+
+            // get heights interval
+            int[] heights = Utilities.Heights.HeightsInterval.Interval(leftHeight, rightHeight);
+            // min height and index for selected corner
+            int min = Utilities.Heights.HeightsInterval.Min(heights);
+            int indexOfMin = Utilities.Heights.HeightsInterval.IndexOfMin(heights, min);
+
+            // max height and index for not selected corner
+            int max = Utilities.Heights.HeightsInterval.Max(heights);
+            int indexOfMax = Utilities.Heights.HeightsInterval.IndexOfMax(heights, max);
+
+
+
+            // if typology range skipped, throw warning
             if(typology > 3)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Topology type selection should be between 0 and 3");
             }
+
             // straight typology
-            if(typology == 0)
+            if (typology == 0)
             {
-                List<Point3d> straightPoints = Straight.StraightPoints.UpperBasePoints(plane, spanLeft, maxHeight);
+                min = maximumHeight;
+                List<Point3d> straightPoints = Straight.StraightPoints.UpperBasePoints(plane, leftSpan, maximumHeight);
                 upperBasePoints = straightPoints;
                 List<Curve> straightBaseCurves = Duopich.DuopichCurves.UpperBaseCurves(straightPoints);
                 upperBaseCurves = straightBaseCurves;
 
             }
+
             // arch typology
             else if (typology == 1)
             {
-                List<Point3d> archPoints = Arch.ArchPoints.UpperBasePoints(plane, spanLeft, maxHeight, ref clHeight, ref crHeight);
+                // warning maximum height >= columns maximum height
+                if (maximumHeight <= max)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Maximum height should be > left/right heights ");
+                }
+
+                //Restrict maximum height to columns maximum height
+                Utilities.Restrictions.MaxHeight.Recompute(ref maximumHeight, max, 200);
+
+                List<Point3d> archPoints = Arch.ArchPoints.UpperBasePoints(plane, leftSpan, maximumHeight, ref leftHeight, ref rightHeight);
                 upperBasePoints = archPoints;
                 List<Curve> archBaseCurves = Arch.ArchCurves.UpperBaseCurves(archPoints);
                 upperBaseCurves = archBaseCurves;
+
             }
+
             // monopich typology
-            else if(typology ==2)
+            else if(typology == 2)
             {
-                List<Point3d> monopichPoints = Monopich.MonopichPoints.UpperBasePoints(plane, spanLeft, ref clHeight,ref crHeight);
+
+                List<Point3d> monopichPoints = Monopich.MonopichPoints.UpperBasePoints(plane, leftSpan, ref leftHeight,ref rightHeight);
                 upperBasePoints = monopichPoints;
                 List<Curve> monopichBaseCurves = Monopich.MonopichCurves.UpperBaseCurves(monopichPoints);
                 upperBaseCurves = monopichBaseCurves;
 
             }
+
             // duopich typology
             else if(typology == 3)
             {
-                List<Point3d> duopichPoints = Duopich.DuopichPoints.UpperBasePoints(plane, spanLeft, spanRight, maxHeight, ref clHeight, ref crHeight);
+                // warning maximum height >= columns maximum height
+                if (maximumHeight <= max)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Maximum height should be > left/right heights ");
+                }
+
+                //Restrict maximum height to columns maximum height
+                Utilities.Restrictions.MaxHeight.Recompute(ref maximumHeight, max, 0);
+
+                List<Point3d> duopichPoints = Duopich.DuopichPoints.UpperBasePoints(plane, leftSpan, rightSpan, maximumHeight, ref leftHeight, ref rightHeight);
                 upperBasePoints = duopichPoints;
                 List<Curve> duopichBaseCurves = Duopich.DuopichCurves.UpperBaseCurves(duopichPoints);
                 upperBaseCurves = duopichBaseCurves;
