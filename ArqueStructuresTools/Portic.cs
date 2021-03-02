@@ -64,6 +64,7 @@ namespace ArqueStructuresTools
             // Use the pManager object to register your output parameters.
             // Output parameters do not have default values, but they too must have the correct access type.
             pManager.AddPointParameter("upper points", "uP", "upper base points", GH_ParamAccess.list);
+            pManager.AddCurveParameter("upper curves", "uC", "upper curves points", GH_ParamAccess.list);
             // Sometimes you want to hide a specific parameter from the Rhino preview.
             // You can use the HideParameter() method as a quick way:
             //pManager.HideParameter(0);
@@ -107,6 +108,7 @@ namespace ArqueStructuresTools
             if (!DA.GetData(13, ref porticType)) return;
             if (!DA.GetData(14, ref trussType)) return;
             List<Point3d> upperBasePoints = new List<Point3d>();
+            List<Curve> upperBaseCurves = new List<Curve>();
             if(typology > 3)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Topology type selection should be between 0 and 3");
@@ -116,26 +118,39 @@ namespace ArqueStructuresTools
             {
                 List<Point3d> straightPoints = Straight.StraightPoints.UpperBasePoints(plane, spanLeft, maxHeight);
                 upperBasePoints = straightPoints;
+                List<Curve> straightBaseCurves = Duopich.DuopichCurves.UpperBaseCurves(straightPoints);
+                upperBaseCurves = straightBaseCurves;
+
             }
             // arch typology
             else if (typology == 1)
             {
-                List<Point3d> arcPoints = Arch.ArchPoints.UpperBasePoints(plane, spanLeft, maxHeight, crHeight, clHeight);
-                upperBasePoints = arcPoints;
+                List<Point3d> archPoints = Arch.ArchPoints.UpperBasePoints(plane, spanLeft, maxHeight, ref clHeight, ref crHeight);
+                upperBasePoints = archPoints;
+                List<Curve> archBaseCurves = Arch.ArchCurves.UpperBaseCurves(archPoints);
+                upperBaseCurves = archBaseCurves;
             }
             // monopich typology
             else if(typology ==2)
             {
+                List<Point3d> monopichPoints = Monopich.MonopichPoints.UpperBasePoints(plane, spanLeft, ref clHeight,ref crHeight);
+                upperBasePoints = monopichPoints;
+                List<Curve> monopichBaseCurves = Monopich.MonopichCurves.UpperBaseCurves(monopichPoints);
+                upperBaseCurves = monopichBaseCurves;
 
             }
             // duopich typology
             else if(typology == 3)
             {
-                List<Point3d> duopichPoints = Duopich.DuopichPoints.UpperBasePoints(plane, spanLeft, spanRight, maxHeight, crHeight, clHeight);
+                List<Point3d> duopichPoints = Duopich.DuopichPoints.UpperBasePoints(plane, spanLeft, spanRight, maxHeight, ref clHeight, ref crHeight);
                 upperBasePoints = duopichPoints;
+                List<Curve> duopichBaseCurves = Duopich.DuopichCurves.UpperBaseCurves(duopichPoints);
+                upperBaseCurves = duopichBaseCurves;
+
             }
 
             DA.SetDataList(0, upperBasePoints);
+            DA.SetDataList(1, upperBaseCurves);
         }
 
         

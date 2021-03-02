@@ -9,7 +9,7 @@ namespace ArqueStructuresTools.Duopich
 {
     class DuopichPoints
     {
-        public static List<Point3d> UpperBasePoints(Plane plane, int spanOne, int spanTwo, int maxHeight, int crHeight, int clHeight)
+        public static List<Point3d> UpperBasePoints(Plane plane, int spanOne, int spanTwo, int maxHeight, ref int clHeight, ref int crHeight)
         {
             List<Point3d> upperBasePoints = new List<Point3d>();
             Point3d pt1 = new Point3d(plane.Origin.X - spanOne, plane.Origin.Y, clHeight);

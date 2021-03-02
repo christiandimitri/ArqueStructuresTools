@@ -9,13 +9,13 @@ namespace ArqueStructuresTools.Arch
 {
     class ArchPoints
     {
-        public static List<Point3d> UpperBasePoints(Plane plane, int spanOne, int maxHeight, int crHeight, int clHeight)
+        public static List<Point3d> UpperBasePoints(Plane plane, int spanOne, int maxHeight, ref int clHeight, ref int crHeight)
         {
 
-            //if (maxHeight > spanOne * 0.8) maxHeight = Convert.ToInt32(spanOne * 0.8);
-            //if (crHeight > spanOne * 0.7) crHeight = Convert.ToInt32(spanOne * 0.7);
-            //if (clHeight > spanOne * 0.7) clHeight = Convert.ToInt32(spanOne * 0.7);
-            
+            if (maxHeight > spanOne * 0.8) maxHeight = Convert.ToInt32(spanOne * 0.8);
+            if (clHeight > spanOne * 0.7) clHeight = Convert.ToInt32(spanOne * 0.7);
+            if (crHeight > spanOne * 0.7) crHeight = Convert.ToInt32(spanOne * 0.7);
+
             List<Point3d> upperBasePoints = new List<Point3d>();
             Point3d pt1 = new Point3d(plane.Origin.X - spanOne / 2, plane.Origin.Y, clHeight);
             Point3d pt3 = new Point3d(plane.Origin.X + spanOne / 2, plane.Origin.Y, crHeight);

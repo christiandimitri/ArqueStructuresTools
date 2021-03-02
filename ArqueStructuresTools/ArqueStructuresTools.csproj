@@ -56,15 +56,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arch\ArchCurves.cs" />
+    <Compile Include="Duopich\DuopichCurves.cs" />
     <Compile Include="Duopich\DuopichPoints.cs" />
+    <Compile Include="Monopich\MonopichCurves.cs" />
+    <Compile Include="Monopich\MonopichPoints.cs" />
     <Compile Include="Portic.cs" />
     <Compile Include="ArqueStructuresToolsInfo.cs" />
     <Compile Include="Arch\ArchPoints.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Straight\StraightCurves.cs" />
     <Compile Include="Straight\StraightPoints.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Monopich\" />
+    <Folder Include="Utilities\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
