@@ -126,14 +126,22 @@ namespace ArqueStructuresTools
             if(typology > 3)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Topology type selection should be between 0 and 3");
+                //Restrict maximum height to columns maximum height
+                Utilities.Restrictions.MaxHeight.Recompute(ref maximumHeight, max, 0);
+
             }
 
             // straight typology
             if (typology == 0)
             {
-                min = maximumHeight;
+                // compute difference between clear height and maximum
+                int difference = Straight.Heights.ClearHeight.ComputeDifference(maximumHeight,ref clearHeight, min);
+                
+                //draw upper base points 
                 List<Point3d> straightPoints = Straight.StraightPoints.UpperBasePoints(plane, leftSpan, maximumHeight);
                 upperBasePoints = straightPoints;
+
+                //draw upper base curves
                 List<Curve> straightBaseCurves = Duopich.DuopichCurves.UpperBaseCurves(straightPoints);
                 upperBaseCurves = straightBaseCurves;
 
@@ -146,13 +154,25 @@ namespace ArqueStructuresTools
                 if (maximumHeight <= max)
                 {
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Maximum height should be > left/right heights ");
+                    //Restrict maximum height to columns maximum height
+                    Utilities.Restrictions.MaxHeight.Recompute(ref maximumHeight, max, 200);
+
+                }
+                else if (maximumHeight > leftSpan / 2)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Maximum height should be <= (leftSpan/2) ");
+                    maximumHeight = leftSpan / 2;
                 }
 
-                //Restrict maximum height to columns maximum height
-                Utilities.Restrictions.MaxHeight.Recompute(ref maximumHeight, max, 200);
 
+                // compute difference between clear height and maximum
+                int difference = Arch.Heights.ClearHeight.ComputeDifference(ref clearHeight, min);
+                
+                //draw upper base points 
                 List<Point3d> archPoints = Arch.ArchPoints.UpperBasePoints(plane, leftSpan, maximumHeight, ref leftHeight, ref rightHeight);
                 upperBasePoints = archPoints;
+
+                //draw upper base curves
                 List<Curve> archBaseCurves = Arch.ArchCurves.UpperBaseCurves(archPoints);
                 upperBaseCurves = archBaseCurves;
 
@@ -161,9 +181,14 @@ namespace ArqueStructuresTools
             // monopich typology
             else if(typology == 2)
             {
+                // compute difference between clear height and maximum
+                int difference = Arch.Heights.ClearHeight.ComputeDifference(ref clearHeight, min);
 
+                //draw upper base points 
                 List<Point3d> monopichPoints = Monopich.MonopichPoints.UpperBasePoints(plane, leftSpan, ref leftHeight,ref rightHeight);
                 upperBasePoints = monopichPoints;
+
+                //draw upper base curves
                 List<Curve> monopichBaseCurves = Monopich.MonopichCurves.UpperBaseCurves(monopichPoints);
                 upperBaseCurves = monopichBaseCurves;
 
@@ -176,13 +201,20 @@ namespace ArqueStructuresTools
                 if (maximumHeight <= max)
                 {
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Maximum height should be > left/right heights ");
+                    //Restrict maximum height to columns maximum height
+                    Utilities.Restrictions.MaxHeight.Recompute(ref maximumHeight, max, 0);
+
                 }
 
-                //Restrict maximum height to columns maximum height
-                Utilities.Restrictions.MaxHeight.Recompute(ref maximumHeight, max, 0);
 
+                // compute difference between clear height and maximum
+                int difference = Arch.Heights.ClearHeight.ComputeDifference(ref clearHeight, min);
+
+                //draw upper base points 
                 List<Point3d> duopichPoints = Duopich.DuopichPoints.UpperBasePoints(plane, leftSpan, rightSpan, maximumHeight, ref leftHeight, ref rightHeight);
                 upperBasePoints = duopichPoints;
+
+                //draw upper base curves
                 List<Curve> duopichBaseCurves = Duopich.DuopichCurves.UpperBaseCurves(duopichPoints);
                 upperBaseCurves = duopichBaseCurves;
 

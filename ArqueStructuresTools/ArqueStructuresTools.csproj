@@ -57,7 +57,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arch\ArchCurves.cs" />
-    <Compile Include="Utilities\Heights\ClearHeight.cs" />
+    <Compile Include="Arch\Heights\ClearHeight.cs" />
+    <Compile Include="Duopich\Heights\ClearHeight.cs" />
+    <Compile Include="Monopich\Heights\ClearHeight.cs" />
+    <Compile Include="Straight\Heights\ClearHeight.cs" />
     <Compile Include="Utilities\Restrictions\MaxHeight.cs" />
     <Compile Include="Duopich\DuopichCurves.cs" />
     <Compile Include="Duopich\DuopichPoints.cs" />
@@ -72,7 +75,6 @@
     <Compile Include="Utilities\Heights\HeightsInterval.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Arch\Restrictions\" />
     <Folder Include="Duopich\Restrictions\" />
     <Folder Include="Monopich\Restrictions\" />
     <Folder Include="Straight\Restrictions\" />

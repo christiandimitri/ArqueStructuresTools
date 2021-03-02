@@ -13,7 +13,7 @@ namespace ArqueStructuresTools.Utilities.Restrictions
     {
         public static int Recompute(ref int maxHeight, int maxColumnHeight, int threshold)
         {
-            if(maxHeight<= maxColumnHeight)
+            if(maxHeight <= maxColumnHeight)
             {
                 return maxHeight = maxColumnHeight + threshold;
             }

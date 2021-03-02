@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArqueStructuresTools.Utilities.Heights
+namespace ArqueStructuresTools.Duopich.Heights
 {
     class ClearHeight
     {
-        public static int ComputeDifference(int maximumHeight, ref int clearHeight, int columnMinimumHeight)
+        public static int ComputeDifference(ref int clearHeight, int columnMinimumHeight)
         {
             int difference;
             if (clearHeight >= columnMinimumHeight - 200)
