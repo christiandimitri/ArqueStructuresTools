@@ -65,6 +65,8 @@ namespace ArqueStructuresTools
             // Output parameters do not have default values, but they too must have the correct access type.
             pManager.AddPointParameter("upper points", "uP", "upper base points", GH_ParamAccess.list);
             pManager.AddCurveParameter("upper curves", "uC", "upper curves points", GH_ParamAccess.list);
+            pManager.AddPointParameter("lower points", "lP", "lower base points", GH_ParamAccess.list);
+            pManager.AddVectorParameter("lower vectors", "lV", "lower normal vectors", GH_ParamAccess.list);
             // Sometimes you want to hide a specific parameter from the Rhino preview.
             // You can use the HideParameter() method as a quick way:
             //pManager.HideParameter(0);
@@ -107,8 +109,13 @@ namespace ArqueStructuresTools
             if (!DA.GetData(12, ref maximumLength)) return;
             if (!DA.GetData(13, ref porticType)) return;
             if (!DA.GetData(14, ref trussType)) return;
+            // upper elements
             List<Point3d> upperBasePoints = new List<Point3d>();
             List<Curve> upperBaseCurves = new List<Curve>();
+
+            // lower elements
+            List<Point3d> lowerBasePoints = new List<Point3d>();
+            List<Curve> lowerBaseCurves = new List<Curve>();
 
             // get heights interval
             int[] heights = Utilities.Heights.HeightsInterval.Interval(leftHeight, rightHeight);
@@ -120,8 +127,9 @@ namespace ArqueStructuresTools
             int max = Utilities.Heights.HeightsInterval.Max(heights);
             int indexOfMax = Utilities.Heights.HeightsInterval.IndexOfMax(heights, max);
 
-
-
+            // initilize difference
+            int difference= new int();
+            List<Vector3d> firstLastNormalVectors = new List<Vector3d>();
             // if typology range skipped, throw warning
             if(typology > 3)
             {
@@ -134,8 +142,10 @@ namespace ArqueStructuresTools
             // straight typology
             if (typology == 0)
             {
+
                 // compute difference between clear height and maximum
-                int difference = Straight.Heights.ClearHeight.ComputeDifference(maximumHeight,ref clearHeight, min);
+                int tempDifference = Straight.Heights.ClearHeight.ComputeDifference(maximumHeight,ref clearHeight, min);
+                difference = tempDifference;
                 
                 //draw upper base points 
                 List<Point3d> straightPoints = Straight.StraightPoints.UpperBasePoints(plane, leftSpan, maximumHeight);
@@ -144,6 +154,10 @@ namespace ArqueStructuresTools
                 //draw upper base curves
                 List<Curve> straightBaseCurves = Duopich.DuopichCurves.UpperBaseCurves(straightPoints);
                 upperBaseCurves = straightBaseCurves;
+
+                // compute first last normal vectors 
+                List<Vector3d> tempNormals = Straight.Vectors.FirstLastNormals.Get(straightBaseCurves);
+                firstLastNormalVectors = tempNormals;
 
             }
 
@@ -158,6 +172,7 @@ namespace ArqueStructuresTools
                     Utilities.Restrictions.MaxHeight.Recompute(ref maximumHeight, max, 200);
 
                 }
+
                 else if (maximumHeight > leftSpan / 2)
                 {
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Maximum height should be <= (leftSpan/2) ");
@@ -166,8 +181,9 @@ namespace ArqueStructuresTools
 
 
                 // compute difference between clear height and maximum
-                int difference = Arch.Heights.ClearHeight.ComputeDifference(ref clearHeight, min);
-                
+                int tempDifference = Arch.Heights.ClearHeight.ComputeDifference(ref clearHeight, min);
+                difference = tempDifference;
+
                 //draw upper base points 
                 List<Point3d> archPoints = Arch.ArchPoints.UpperBasePoints(plane, leftSpan, maximumHeight, ref leftHeight, ref rightHeight);
                 upperBasePoints = archPoints;
@@ -176,13 +192,17 @@ namespace ArqueStructuresTools
                 List<Curve> archBaseCurves = Arch.ArchCurves.UpperBaseCurves(archPoints);
                 upperBaseCurves = archBaseCurves;
 
+                // compute first last normal vectors 
+                List<Vector3d> tempNormals = Arch.Vectors.FirstLastNormals.Get(archBaseCurves);
+                firstLastNormalVectors = tempNormals;
+
             }
 
             // monopich typology
             else if(typology == 2)
             {
                 // compute difference between clear height and maximum
-                int difference = Arch.Heights.ClearHeight.ComputeDifference(ref clearHeight, min);
+                int tempDifference = Monopich.Heights.ClearHeight.ComputeDifference(ref clearHeight, min);
 
                 //draw upper base points 
                 List<Point3d> monopichPoints = Monopich.MonopichPoints.UpperBasePoints(plane, leftSpan, ref leftHeight,ref rightHeight);
@@ -191,6 +211,11 @@ namespace ArqueStructuresTools
                 //draw upper base curves
                 List<Curve> monopichBaseCurves = Monopich.MonopichCurves.UpperBaseCurves(monopichPoints);
                 upperBaseCurves = monopichBaseCurves;
+
+                // compute first last normal vectors 
+                List<Vector3d> tempNormals = Arch.Vectors.FirstLastNormals.Get(monopichBaseCurves);
+                firstLastNormalVectors = tempNormals;
+
 
             }
 
@@ -208,7 +233,8 @@ namespace ArqueStructuresTools
 
 
                 // compute difference between clear height and maximum
-                int difference = Arch.Heights.ClearHeight.ComputeDifference(ref clearHeight, min);
+                int tempDifference = Duopich.Heights.ClearHeight.ComputeDifference(ref clearHeight, min);
+                difference = tempDifference;
 
                 //draw upper base points 
                 List<Point3d> duopichPoints = Duopich.DuopichPoints.UpperBasePoints(plane, leftSpan, rightSpan, maximumHeight, ref leftHeight, ref rightHeight);
@@ -218,10 +244,50 @@ namespace ArqueStructuresTools
                 List<Curve> duopichBaseCurves = Duopich.DuopichCurves.UpperBaseCurves(duopichPoints);
                 upperBaseCurves = duopichBaseCurves;
 
+                // compute first last normal vectors 
+                List<Vector3d> tempNormals = Arch.Vectors.FirstLastNormals.Get(duopichBaseCurves);
+                firstLastNormalVectors = tempNormals;
+
             }
+
+            // ====== generate inferior truss points & curves ======= //
+
+            // compute the offset variable
+            double offsetFactor = Utilities.Compute.Offset.Compute(indexOfMin, difference, upperBaseCurves[indexOfMin]);
+
+            // compute and store the normal vectors at each point and store globally
+            List<Vector3d> sideVectors = new List<Vector3d>();
+            sideVectors.Add(firstLastNormalVectors[0]);
+            sideVectors.Add(firstLastNormalVectors[2]);
+            firstLastNormalVectors[1].Rotate(-0.5 * Math.PI, Vector3d.YAxis);
+
+            List<Vector3d> tempN = firstLastNormalVectors;
+            // compute highest corner and middle hypothenus
+            double middleHypothenus = Utilities.Compute.Hypothenus.Center(offsetFactor, upperBaseCurves[indexOfMin], firstLastNormalVectors[1]);
+            double cornerHypothenus = Utilities.Compute.Hypothenus.Corner(indexOfMax, offsetFactor, upperBaseCurves[indexOfMax]);
+
+            // store points at normal vectors at each point
+            if (typology == 0) lowerBasePoints = Straight.StraightPoints.ThickBasePoints(firstLastNormalVectors, offsetFactor, upperBasePoints, middleHypothenus);
+            else if (typology == 1) lowerBasePoints = Arch.ArchPoints.ThickBasePoints(firstLastNormalVectors, offsetFactor, upperBasePoints, middleHypothenus);
+            else if (typology == 2) lowerBasePoints = Monopich.MonopichPoints.ThickBasePoints(firstLastNormalVectors, offsetFactor, upperBasePoints, middleHypothenus);
+            else if (typology == 3) lowerBasePoints = Duopich.DuopichPoints.ThickBasePoints(firstLastNormalVectors, offsetFactor, upperBasePoints, middleHypothenus);
+
+            // on each side create the clear point at its corresponding clear height
+            //for (int i = 0; i < sideVectors.Count; i++)
+            //{
+            //    Point3d tempPt = new Point3d(i != indexOfMin ? -cornerHypothenus * Vector3d.ZAxis + upperBasePoints[i == 1 ? 2 : 0] : -difference * Vector3d.ZAxis + upperBasePoints[i == 1 ? 2 : 0]);
+            //    lowerBasePoints.Insert(i == 0 ? 0 : 4, tempPt);
+            //}
+
+
+
+            // output to grasshopper
 
             DA.SetDataList(0, upperBasePoints);
             DA.SetDataList(1, upperBaseCurves);
+            DA.SetDataList(2, lowerBasePoints);
+
+            DA.SetDataList(3, tempN);
         }
 
         
