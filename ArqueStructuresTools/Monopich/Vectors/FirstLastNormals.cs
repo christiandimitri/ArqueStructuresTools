@@ -12,25 +12,16 @@ namespace ArqueStructuresTools.Monopich.Vectors
         public static List<Vector3d> Get(List<Curve> curves)
         {
             List<Vector3d> normalVectors = new List<Vector3d>();
-            Curve[] joinCurves = Curve.JoinCurves(curves);
-            Curve tempCurve = joinCurves[0];
-            Vector3d tangentAtStart = curves[0].PointAtEnd - curves[0].PointAtStart;
+            Vector3d tangentAtStart = curves[0].PointAtStart - curves[0].PointAtEnd;
             tangentAtStart.Unitize();
-            Vector3d tangentAtEnd = curves[1].PointAtEnd - curves[1].PointAtStart;
+            Vector3d tangentAtEnd = curves[1].PointAtStart - curves[1].PointAtEnd;
             tangentAtEnd.Unitize();
-            Vector3d tangent1 = new Vector3d(curves[0].PointAtStart - curves[0].PointAtEnd);
-            tangent1.Unitize();
-            Vector3d tangent2 = new Vector3d(curves[1].PointAtStart - curves[1].PointAtEnd);
-            tangent2.Unitize();
-            double centerAngle = Vector3d.VectorAngle(tangent1, tangent2);
-            tangent1.Rotate(-centerAngle / 2, Vector3d.YAxis);
-            tangent2.Rotate(centerAngle / 2, Vector3d.YAxis);
-            Vector3d tangentCenter = new Vector3d(tangent1 + tangent2 / 2);
-            tangentCenter.Unitize();
             tangentAtStart.Rotate(-0.5 * Math.PI, Vector3d.YAxis);
+            tangentAtStart.Unitize();
             tangentAtEnd.Rotate(0.5 * Math.PI, Vector3d.YAxis);
+            tangentAtEnd.Unitize();
             normalVectors.Add(tangentAtStart);
-            normalVectors.Add(tangentCenter);
+            normalVectors.Add(tangentAtStart);
             normalVectors.Add(tangentAtEnd);
             return normalVectors;
         }

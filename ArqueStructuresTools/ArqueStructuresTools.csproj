@@ -65,6 +65,7 @@
     <Compile Include="Monopich\Vectors\FirstLastNormals.cs" />
     <Compile Include="Straight\Heights\ClearHeight.cs" />
     <Compile Include="Straight\Vectors\FirstLastNormals.cs" />
+    <Compile Include="TestWarehouseComponent.cs" />
     <Compile Include="Utilities\Compute\Hypothenus.cs" />
     <Compile Include="Utilities\Compute\Offset.cs" />
     <Compile Include="Utilities\Restrictions\MaxHeight.cs" />
@@ -84,6 +85,12 @@
     <Folder Include="Duopich\Restrictions\" />
     <Folder Include="Monopich\Restrictions\" />
     <Folder Include="Straight\Restrictions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WarehouseLib\WarehouseLib.csproj">
+      <Project>{af74ead0-03eb-433f-ba45-41be96cd954b}</Project>
+      <Name>WarehouseLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

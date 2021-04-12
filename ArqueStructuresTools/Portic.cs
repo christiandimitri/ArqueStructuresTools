@@ -152,7 +152,7 @@ namespace ArqueStructuresTools
                 upperBasePoints = straightPoints;
 
                 //draw upper base curves
-                List<Curve> straightBaseCurves = Duopich.DuopichCurves.UpperBaseCurves(straightPoints);
+                List<Curve> straightBaseCurves = Straight.StraightCurves.UpperBaseCurves(straightPoints);
                 upperBaseCurves = straightBaseCurves;
 
                 // compute first last normal vectors 
@@ -203,7 +203,7 @@ namespace ArqueStructuresTools
             {
                 // compute difference between clear height and maximum
                 int tempDifference = Monopich.Heights.ClearHeight.ComputeDifference(ref clearHeight, min);
-
+                difference = tempDifference;
                 //draw upper base points 
                 List<Point3d> monopichPoints = Monopich.MonopichPoints.UpperBasePoints(plane, leftSpan, ref leftHeight,ref rightHeight);
                 upperBasePoints = monopichPoints;
@@ -213,7 +213,7 @@ namespace ArqueStructuresTools
                 upperBaseCurves = monopichBaseCurves;
 
                 // compute first last normal vectors 
-                List<Vector3d> tempNormals = Arch.Vectors.FirstLastNormals.Get(monopichBaseCurves);
+                List<Vector3d> tempNormals = Monopich.Vectors.FirstLastNormals.Get(monopichBaseCurves);
                 firstLastNormalVectors = tempNormals;
 
 
@@ -245,7 +245,7 @@ namespace ArqueStructuresTools
                 upperBaseCurves = duopichBaseCurves;
 
                 // compute first last normal vectors 
-                List<Vector3d> tempNormals = Arch.Vectors.FirstLastNormals.Get(duopichBaseCurves);
+                List<Vector3d> tempNormals = Duopich.Vectors.FirstLastNormals.Get(duopichBaseCurves);
                 firstLastNormalVectors = tempNormals;
 
             }
@@ -267,7 +267,7 @@ namespace ArqueStructuresTools
             double cornerHypothenus = Utilities.Compute.Hypothenus.Corner(indexOfMax, offsetFactor, upperBaseCurves[indexOfMax]);
 
             // store points at normal vectors at each point
-            if (typology == 0) lowerBasePoints = Straight.StraightPoints.ThickBasePoints(firstLastNormalVectors, offsetFactor, upperBasePoints, middleHypothenus);
+            if (typology == 0) lowerBasePoints = Straight.StraightPoints.ThickBasePoints(firstLastNormalVectors, offsetFactor, upperBasePoints);
             else if (typology == 1) lowerBasePoints = Arch.ArchPoints.ThickBasePoints(firstLastNormalVectors, offsetFactor, upperBasePoints, middleHypothenus);
             else if (typology == 2) lowerBasePoints = Monopich.MonopichPoints.ThickBasePoints(firstLastNormalVectors, offsetFactor, upperBasePoints, middleHypothenus);
             else if (typology == 3) lowerBasePoints = Duopich.DuopichPoints.ThickBasePoints(firstLastNormalVectors, offsetFactor, upperBasePoints, middleHypothenus);

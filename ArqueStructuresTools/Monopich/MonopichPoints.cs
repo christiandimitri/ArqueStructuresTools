@@ -26,7 +26,7 @@ namespace ArqueStructuresTools.Monopich
             List<Point3d> thickBasePoints = new List<Point3d>();
             for (int i = 0; i < normals.Count; i++)
             {
-                tempPoint = new Point3d(i != 1 ? offset * normals[i] + upperBasePoints[i] : middleHypothenus * normals[i] + upperBasePoints[i]);
+                tempPoint = new Point3d(offset * normals[i] + upperBasePoints[i]);
                 thickBasePoints.Add(tempPoint);
             }
             return thickBasePoints;
