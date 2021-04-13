@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchTruss.cs" />
+    <Compile Include="CurvedTruss.cs" />
     <Compile Include="DoublepichedTruss.cs" />
     <Compile Include="FlatTruss.cs" />
     <Compile Include="MonopichedTruss.cs" />

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace WarehouseLib
 {
-    public abstract class PichedTruss : Truss
+    public class PichedTruss : Truss
     {
-        protected PichedTruss(Plane plane, double length, double height, double maxHeight, int divisions) : base(plane, length, height, maxHeight, divisions)
+        protected PichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions) : base(plane, length, height, maxHeight, clearHeight, divisions)
         {
 
         }
@@ -19,10 +19,7 @@ namespace WarehouseLib
             throw new NotImplementedException();
         }
 
-        public override void GenerateLowerNodes()
-        {
-            throw new NotImplementedException();
-        }
+
 
         public override void GenerateUpperBars()
         {
@@ -31,6 +28,17 @@ namespace WarehouseLib
         public override void GenerateBeams()
         {
             throw new NotImplementedException();
+        }
+
+        public override void GenerateLowerNodes(List<Point3d> points, double difference)
+        {
+            List<Point3d> nodes = new List<Point3d>();
+            foreach (var pt in points)
+            {
+                Point3d tempPt = pt - (Vector3d.ZAxis * difference);
+                nodes.Add(tempPt);
+            }
+            BottomNodes.AddRange(nodes);
         }
     }
 }

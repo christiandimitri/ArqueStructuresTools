@@ -9,13 +9,15 @@ namespace WarehouseLib
 {
     class MonopichedTruss : PichedTruss
     {
-        public MonopichedTruss(Plane plane, double length, double height, double maxHeight, int divisions) : base(plane, length, height, maxHeight,  divisions)
+        public MonopichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions) : base(plane, length, height, maxHeight,clearHeight, divisions)
         {
             GenerateUpperBars();
-            UpperNodes = new List<Point3d>();
+            TopNodes = new List<Point3d>();
+            BottomNodes = new List<Point3d>();
             foreach (var bar in UpperBars)
             {
-                UpperNodes.AddRange(GetNodesOnCurve(bar, divisions));
+                TopNodes.AddRange(GetNodesOnCurve(bar, divisions));
+                GenerateLowerNodes(GetNodesOnCurve(bar, divisions), ComputeDifference());
             }
         }
 
@@ -25,11 +27,6 @@ namespace WarehouseLib
             var barA = new Line(StartingNodes[0], StartingNodes[1]);
             var barB = new Line(StartingNodes[2], StartingNodes[1]);
             UpperBars = new List<Curve> { barA.ToNurbsCurve(), barB.ToNurbsCurve() };
-        }
-
-        public override void GenerateLowerNodes()
-        {
-            throw new NotImplementedException();
         }
 
         public override void GenerateLowerBars()

@@ -17,17 +17,19 @@ namespace WarehouseLib
         public int Divisions;
 
         public List<Point3d> StartingNodes;
-        public List<Point3d> UpperNodes;
+        public List<Point3d> TopNodes;
+        public List<Point3d> BottomNodes;
         public List<Curve> UpperBars;
         public List<Curve> LowerBars;
         public List<Line> Beams;
 
-        public Truss(Plane plane, double length, double height, double maxHeight, int divisions)
+        public Truss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions)
         {
             Plane = plane;
             Length = length;
             Height = height;
             MaxHeight = maxHeight;
+            ClearHeight = clearHeight;
             Divisions = divisions;
         }
         public List<Point3d> GetStartingPoints(Plane plane, double length, double leftHeight, double centerHeight, double rightHeight)
@@ -56,7 +58,7 @@ namespace WarehouseLib
         }
 
         public abstract void GenerateUpperBars();
-        public abstract void GenerateLowerNodes();
+        public abstract void GenerateLowerNodes(List<Point3d> points, double difference);
         public abstract void GenerateLowerBars();
         public abstract void GenerateBeams();
 

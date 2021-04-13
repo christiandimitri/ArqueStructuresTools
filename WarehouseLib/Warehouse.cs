@@ -22,7 +22,7 @@ namespace WarehouseLib
         public List<Plane> TempPlanes;
         public List<Column> Columns;
 
-        public Warehouse(Plane plane,double length, double width, double height, double maxHeight, int typology, int count)
+        public Warehouse(Plane plane,double length, double width, double height, double maxHeight,double clearHeight, int typology, int count)
         {
             if (width <= 0) throw new Exception("Warehouse cannot have 0 width!!");
             if (length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
@@ -34,6 +34,7 @@ namespace WarehouseLib
             Width = width;
             Height = height;
             MaxHeight = maxHeight;
+            ClearHeight = clearHeight;
             Typology = typology;
             Count = count;
             GenerateTrusses();
@@ -61,10 +62,10 @@ namespace WarehouseLib
             foreach (var truss in Trusses)
             {
                 //nodes = truss.StartingNodes;
-                nodes = truss.UpperNodes;
+                nodes = truss.TopNodes;
+                nodes = truss.BottomNodes;
             }
             Nodes = nodes;
-            
         }
         private void GenerateTrusses()
         {
@@ -75,22 +76,22 @@ namespace WarehouseLib
                 var tempPlane = new Plane(Plane.PointAt(0,span, 0), Plane.ZAxis);
                 if (Typology ==0)
                 {
-                    var trussA = new FlatTruss(tempPlane, Length, Height, MaxHeight, 4);
+                    var trussA = new FlatTruss(tempPlane, Length, Height, MaxHeight,ClearHeight, 4);
                     trusses.Add(trussA);
                 }
                 else if(Typology == 1)
                 {
-                    var trussA = new ArchTruss(tempPlane, Length, Height, MaxHeight, 4);
+                    var trussA = new ArchTruss(tempPlane, Length, Height, MaxHeight,ClearHeight, 4);
                     trusses.Add(trussA);
                 }
                 else if(Typology == 2)
                 {
-                    var trussA = new MonopichedTruss(tempPlane, Length, Height, MaxHeight, 4);
+                    var trussA = new MonopichedTruss(tempPlane, Length, Height, MaxHeight,ClearHeight, 4);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 3)
                 {
-                    var trussA = new DoublepichedTruss(tempPlane, Length, Height, MaxHeight, 4);
+                    var trussA = new DoublepichedTruss(tempPlane, Length, Height, MaxHeight,ClearHeight, 4);
                     trusses.Add(trussA);
                 }
             }

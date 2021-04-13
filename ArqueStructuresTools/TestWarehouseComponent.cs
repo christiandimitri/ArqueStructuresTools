@@ -71,7 +71,7 @@ namespace ArqueStructuresTools
             Warehouse warehouse = null;
             try
             {
-                warehouse = new Warehouse(plane, length, width, height, maxHeight, typology, count);
+                warehouse = new Warehouse(plane, length, width, height, maxHeight,clearHeight, typology, count);
             }
             catch (Exception e)
             {
@@ -89,7 +89,8 @@ namespace ArqueStructuresTools
             foreach (var truss in warehouse.Trusses)
             {
                 lines.AddRange(truss.UpperBars);
-                nodes.AddRange(truss.UpperNodes);
+                nodes.AddRange(truss.TopNodes);
+                nodes.AddRange(truss.BottomNodes);
             }
             DA.SetData(0, warehouse);
             DA.SetDataList(1, lines);
