@@ -7,15 +7,15 @@ using WarehouseLib;
 
 namespace ArqueStructuresTools
 {
-    public class TestWarehouseComponent : GH_Component
+    public class WarehouseComponent : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the TestWarehouseComponent class.
         /// </summary>
-        public TestWarehouseComponent()
+        public WarehouseComponent()
           : base("TestWarehouseComponent", "Nickname",
               "Description",
-              "Arque Structures", "Test")
+              "Arque Structures", "Warehouse")
         {
         }
 
@@ -89,6 +89,7 @@ namespace ArqueStructuresTools
             foreach (var truss in warehouse.Trusses)
             {
                 lines.AddRange(truss.TopBars);
+                //lines.AddRange(truss.BottomBars);
                 nodes.AddRange(truss.TopNodes);
                 nodes.AddRange(truss.BottomNodes);
             }

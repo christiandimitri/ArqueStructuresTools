@@ -19,8 +19,8 @@ namespace WarehouseLib
         public List<Point3d> StartingNodes;
         public List<Point3d> TopNodes;
         public List<Point3d> BottomNodes;
-        public List<Curve> UpperBars;
-        public List<Curve> LowerBars;
+        public List<Curve> TopBars;
+        public List<Curve> BottomBars;
         public List<Line> Beams;
 
         public Truss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions)
@@ -59,10 +59,9 @@ namespace WarehouseLib
 
         public abstract void GenerateUpperBars();
         public abstract void GenerateLowerNodes(List<Point3d> points, double difference);
+        public abstract void GenerateNodes(int divisions);
         public abstract void GenerateLowerBars();
         public abstract void GenerateBeams();
-
-
 
     }
 }

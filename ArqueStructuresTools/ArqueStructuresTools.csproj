@@ -61,11 +61,13 @@
     <Compile Include="Arch\Vectors\FirstLastNormals.cs" />
     <Compile Include="Duopich\Heights\ClearHeight.cs" />
     <Compile Include="Duopich\Vectors\FirstLastNormals.cs" />
+    <Compile Include="FlatTrussComponent.cs" />
     <Compile Include="Monopich\Heights\ClearHeight.cs" />
     <Compile Include="Monopich\Vectors\FirstLastNormals.cs" />
     <Compile Include="Straight\Heights\ClearHeight.cs" />
     <Compile Include="Straight\Vectors\FirstLastNormals.cs" />
     <Compile Include="TestWarehouseComponent.cs" />
+    <Compile Include="TrussParameter.cs" />
     <Compile Include="Utilities\Compute\Hypothenus.cs" />
     <Compile Include="Utilities\Compute\Offset.cs" />
     <Compile Include="Utilities\Restrictions\MaxHeight.cs" />
