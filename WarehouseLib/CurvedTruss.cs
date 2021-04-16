@@ -9,7 +9,7 @@ namespace WarehouseLib
 {
     public class CurvedTruss : Truss
     {
-        public CurvedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions) : base(plane, length, height, maxHeight, clearHeight, divisions)
+        public CurvedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions, string trussType) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType)
         {
 
         }
@@ -72,7 +72,7 @@ namespace WarehouseLib
             double hypothenus = opposite / Math.Sin(theta);
             return hypothenus;
         }
-        public override void GenerateNodes(int divisions)
+        public override void ConstructTruss(int divisions)
         {
             throw new NotImplementedException();
         }

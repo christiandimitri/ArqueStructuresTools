@@ -32,6 +32,7 @@ namespace ArqueStructuresTools
             pManager.AddNumberParameter("Clear Height", "ch", "h", GH_ParamAccess.item, 3.5);
             pManager.AddIntegerParameter("Typology", "T", "T", GH_ParamAccess.item, 2);
             pManager.AddIntegerParameter("Count", "C", "C", GH_ParamAccess.item, 3);
+            pManager.AddTextParameter("Truss Type", "tt", "tt", GH_ParamAccess.item, "Warren");
 
         }
 
@@ -59,6 +60,7 @@ namespace ArqueStructuresTools
             double clearHeight = 3.5;
             int typology = 2;
             int count = 3;
+            string trussType = "";
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref width)) return;
@@ -67,11 +69,13 @@ namespace ArqueStructuresTools
             if (!DA.GetData(5, ref clearHeight)) return;
             if (!DA.GetData(6, ref typology)) return;
             if (!DA.GetData(7, ref count)) return;
+            if (!DA.GetData(8, ref trussType)) return;
 
             Warehouse warehouse = null;
+            
             try
             {
-                warehouse = new Warehouse(plane, length, width, height, maxHeight,clearHeight, typology, count);
+                warehouse = new Warehouse(plane, length, width, height, maxHeight, clearHeight, typology, count, trussType);
             }
             catch (Exception e)
             {
@@ -90,6 +94,7 @@ namespace ArqueStructuresTools
             {
                 lines.AddRange(truss.TopBars);
                 lines.AddRange(truss.BottomBars);
+                lines.AddRange(truss.IntermediateBars);
                 //nodes.AddRange(truss.TopNodes);
                 //nodes.AddRange(truss.BottomNodes);
             }

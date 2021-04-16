@@ -25,7 +25,7 @@ namespace ArqueStructuresTools
         {
             pManager.AddPlaneParameter("p", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
             pManager.AddNumberParameter("l", "l", "l", GH_ParamAccess.item, 10);
-            pManager.AddNumberParameter("mH", "mh", "mh", GH_ParamAccess.item, 3);
+            pManager.AddNumberParameter("h", "h", "h", GH_ParamAccess.item, 3);
             pManager.AddNumberParameter("ch", "ch", "ch", GH_ParamAccess.item, 1.8);
             pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 5);
         }
@@ -47,17 +47,17 @@ namespace ArqueStructuresTools
 
             Plane worldXY = Plane.WorldXY;
             double length = 0;
-            double maxHeight = 0;
+            double height = 0;
             double clearHeight = 0;
             int divisions = 0;
 
             if (!DA.GetData(0, ref worldXY)) return;
             if (!DA.GetData(1, ref length)) return;
-            if (!DA.GetData(2, ref maxHeight)) return;
+            if (!DA.GetData(2, ref height)) return;
             if (!DA.GetData(3, ref clearHeight)) return;
             if (!DA.GetData(4, ref divisions)) return;
 
-            var truss = new FlatTruss(worldXY, length,0, maxHeight, clearHeight, divisions);
+            var truss = new FlatTruss(worldXY, length, height, 0, clearHeight, divisions, "Warren");
 
             DA.SetData(0, new TrussGoo(truss));
         }

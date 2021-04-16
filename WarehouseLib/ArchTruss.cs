@@ -9,12 +9,12 @@ namespace WarehouseLib
 {
     public class ArchTruss : CurvedTruss
     {
-        public ArchTruss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions) : base(plane, length, height, maxHeight,clearHeight, divisions)
+        public ArchTruss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions, string trussType) : base(plane, length, height, maxHeight,clearHeight, divisions, trussType)
         {
             GenerateTopBars();
             GenerateColumns();
             GenerateBottomBars();
-            GenerateNodes(divisions);
+            ConstructTruss(divisions);
         }
 
         public override void GenerateBottomBars()
@@ -48,14 +48,14 @@ namespace WarehouseLib
                 Arc arch = new Arc(StartingNodes[0], StartingNodes[1], StartingNodes[2]);
                 arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
                 Curve[] tempCrvs = arch.ToNurbsCurve().Split(t);
-                tempCrvs[1].Reverse();
+                //tempCrvs[1].Reverse();
                 TopBars = tempCrvs.ToList();
             }
         }
 
-        public override void GenerateNodes(int divisions)
+        public override void ConstructTruss(int divisions)
         {
-
+            RecomputeDivisions();
             TopNodes = new List<Point3d>();
             foreach (var bar in TopBars)
             {

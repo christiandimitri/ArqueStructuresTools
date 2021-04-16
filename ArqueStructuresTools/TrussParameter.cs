@@ -53,7 +53,16 @@ namespace ArqueStructuresTools
                     foreach (var line in truss.BottomBars)
                     {
                         box.Union(line.GetBoundingBox(false));
-                        args.Display.DrawCurve(line, System.Drawing.Color.Blue);
+                        args.Display.DrawCurve(line, System.Drawing.Color.Red);
+                    }
+                }
+                foreach (var trussGoo in branch)
+                {
+                    var truss = trussGoo.Value;
+                    foreach (var line in truss.IntermediateBars)
+                    {
+                        box.Union(line.GetBoundingBox(false));
+                        args.Display.DrawCurve(line, System.Drawing.Color.Green);
                     }
                 }
                 foreach (var trussGoo in branch)
@@ -62,7 +71,7 @@ namespace ArqueStructuresTools
                     foreach (var line in truss.Columns)
                     {
                         box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
-                        args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.Blue);
+                        args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.Purple);
                     }
                 }
             }

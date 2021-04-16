@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace WarehouseLib
 {
-    enum PathTopology
+    class Connection
     {
-        Flat,
-        Arc,
-        Monopich,
-        Duopich
-
+        public string ConnectionType;
+        public Connection(string connectionType)
+        {
+        }
     }
 }

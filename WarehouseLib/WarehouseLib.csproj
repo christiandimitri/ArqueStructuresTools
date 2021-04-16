@@ -57,11 +57,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchTruss.cs" />
+    <Compile Include="Connection.cs" />
     <Compile Include="CurvedTruss.cs" />
     <Compile Include="DoublepichedTruss.cs" />
     <Compile Include="FlatTruss.cs" />
     <Compile Include="MonopichedTruss.cs" />
-    <Compile Include="PathTopology.cs" />
+    <Compile Include="Portico.cs" />
+    <Compile Include="ConnectionGenerator.cs" />
+    <Compile Include="ConnectionType.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="PichedTruss.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

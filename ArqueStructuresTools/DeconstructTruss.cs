@@ -34,6 +34,7 @@ namespace ArqueStructuresTools
         {
             pManager.AddCurveParameter("top bar", "tb", "tb", GH_ParamAccess.list);
             pManager.AddCurveParameter("bottom bar", "bb", "bb", GH_ParamAccess.list);
+            pManager.AddCurveParameter("intermediate bar", "bb", "bb", GH_ParamAccess.list);
             pManager.AddCurveParameter("column bar", "cb", "cb", GH_ParamAccess.list);
             pManager.AddPointParameter("top nodes", "tn", "tn", GH_ParamAccess.list);
             pManager.AddPointParameter("bottom nodes", "bn", "bn", GH_ParamAccess.list);
@@ -53,6 +54,7 @@ namespace ArqueStructuresTools
             var truss = trussGoo.Value;
             List<Curve> topBars = truss.TopBars;
             List<Curve> bottomBars = truss.BottomBars;
+            List<Curve> intermediateBars = truss.IntermediateBars;
             List<Curve> columns = new List<Curve>();
             List<Point3d> topNodes = truss.TopNodes;
             List<Point3d> bottomNodes = truss.BottomNodes;
@@ -64,9 +66,10 @@ namespace ArqueStructuresTools
 
             DA.SetDataList(0, topBars);
             DA.SetDataList(1, bottomBars);
-            DA.SetDataList(2, columns);
-            DA.SetDataList(3, topNodes);
-            DA.SetDataList(4, bottomNodes);
+            DA.SetDataList(2, intermediateBars);
+            DA.SetDataList(3, columns);
+            DA.SetDataList(4, topNodes);
+            DA.SetDataList(5, bottomNodes);
         }
 
         /// <summary>

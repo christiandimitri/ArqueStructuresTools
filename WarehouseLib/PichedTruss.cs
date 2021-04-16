@@ -10,7 +10,7 @@ namespace WarehouseLib
     public class PichedTruss : Truss
     {
 
-        protected PichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions) : base(plane, length, height, maxHeight, clearHeight, divisions)
+        protected PichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions, string trussType) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType)
         {
 
         }
@@ -48,13 +48,15 @@ namespace WarehouseLib
             BottomNodes.AddRange(nodes);
         }
 
-        public override void GenerateNodes(int divisions)
+        public override void ConstructTruss(int divisions)
         {
+            RecomputeDivisions();
             TopNodes = new List<Point3d>();
             foreach (var bar in TopBars)
             {
                 TopNodes.AddRange(GenerateTopNodes(bar, divisions));
                 GenerateBottomNodes(TopNodes, ComputeDifference());
+                GenerateIntermediateBars(TrussType, TopBars[0].PointAtEnd);
             }
         }
 

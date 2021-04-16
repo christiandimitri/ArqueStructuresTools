@@ -5,8 +5,6 @@ using System.Collections.Generic;
 
 namespace WarehouseLib
 {
-    
-
     public abstract class Truss
     {
         public Plane Plane;
@@ -15,16 +13,17 @@ namespace WarehouseLib
         public double MaxHeight;
         public double ClearHeight;
         public int Divisions;
-
+        public string TrussType;
         public List<Point3d> StartingNodes;
         public List<Point3d> TopNodes;
         public List<Point3d> BottomNodes;
         public List<Curve> TopBars;
         public List<Curve> BottomBars;
+        public List<Curve> IntermediateBars;
         public List<Line> Beams;
         public List<Column> Columns;
 
-        public Truss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions)
+        public Truss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions, string trussType)
         {
             Plane = plane;
             Length = length;
@@ -32,6 +31,15 @@ namespace WarehouseLib
             MaxHeight = maxHeight;
             ClearHeight = clearHeight;
             Divisions = divisions;
+            TrussType = trussType;
+        }
+
+        public void RecomputeDivisions()
+        {
+            if(TrussType== "Warren" && Divisions%2 ==1)
+            {
+                Divisions++;
+            }
         }
         public List<Point3d> GetStartingPoints(Plane plane, double length, double leftHeight, double centerHeight, double rightHeight)
         {
@@ -44,7 +52,8 @@ namespace WarehouseLib
         public List<Point3d> GenerateTopNodes(Curve curve, int divisions)
         {
             List<Point3d> nodes = new List<Point3d>();
-            double[]parameters=curve.DivideByCount(divisions, true);
+            double[]parameters = 
+            curve.DivideByCount(divisions, true);
 
             for (int i = 0; i < parameters.Length; i++)
             {
@@ -71,8 +80,68 @@ namespace WarehouseLib
         }
         public abstract void GenerateTopBars();
         public abstract void GenerateBottomNodes(List<Point3d> points, double difference);
-        public abstract void GenerateNodes(int divisions);
+        public abstract void ConstructTruss(int divisions);
         public abstract void GenerateBottomBars();
+        public void GenerateIntermediateBars(string trussType, Point3d pt)
+        {
+
+            if(trussType == "Warren")
+            {
+                ConstructWarrenTruss(pt);
+            }
+            else if (trussType == "Warren_Studs")
+            {
+                ConstructWarrenStudsTruss(pt);
+            }
+            else if (trussType == "Pratt")
+            {
+                ConstructPrattTruss(pt);
+            }
+            else if (trussType == "Howe")
+            {
+                ConstructHoweTruss(pt);
+            }
+        }
+        private void ConstructWarrenTruss(Point3d pt)
+        {
+            List<Curve> bars = new List<Curve>();
+            int index = TopNodes.IndexOf(pt);
+            for (int i = 0; i < TopNodes.Count; i += 2)
+            {
+                Line lineA = new Line();
+                Line lineB = new Line();
+                
+                if (i < index)
+                {
+                    lineA = new Line(TopNodes[i], BottomNodes[i + 1]);
+                }
+                else if (i > 0 && i<index)
+                {
+                    lineB = new Line(TopNodes[i], BottomNodes[i - 1]);
+                }
+                if(lineA.IsValid || lineB.IsValid)
+                {
+                    bars.Add(lineA.ToNurbsCurve());
+                    bars.Add(lineB.ToNurbsCurve());
+
+                }
+            }
+            IntermediateBars = bars;
+        }
+        private void ConstructHoweTruss(Point3d pt)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ConstructPrattTruss(Point3d pt)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ConstructWarrenStudsTruss(Point3d pt)
+        {
+            throw new NotImplementedException();
+        }
         public abstract void GenerateBeams();
 
     }

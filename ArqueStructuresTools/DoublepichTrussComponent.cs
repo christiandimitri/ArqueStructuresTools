@@ -60,7 +60,7 @@ namespace ArqueStructuresTools
             if (!DA.GetData(4, ref clearHeight)) return;
             if (!DA.GetData(5, ref divisions)) return;
 
-            var truss = new DoublepichedTruss(worldXY, length, height, maxHeight, clearHeight, divisions);
+            var truss = new DoublepichedTruss(worldXY, length, height, maxHeight, clearHeight, divisions, "Warren");
 
             DA.SetData(0, new TrussGoo(truss));
         }
