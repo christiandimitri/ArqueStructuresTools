@@ -57,10 +57,10 @@ namespace WarehouseLib
             return difference;
         }
 
-        public abstract void GenerateUpperBars();
-        public abstract void GenerateLowerNodes(List<Point3d> points, double difference);
+        public abstract void GenerateTopBars();
+        public abstract void GenerateBottomNodes(List<Point3d> points, double difference);
         public abstract void GenerateNodes(int divisions);
-        public abstract void GenerateLowerBars();
+        public abstract void GenerateBottomBars();
         public abstract void GenerateBeams();
 
     }

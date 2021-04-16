@@ -11,12 +11,12 @@ namespace WarehouseLib
     {
         public FlatTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions) : base(plane, length, height, maxHeight, clearHeight, divisions)
         {
-            GenerateUpperBars();
-            GenerateNodes(divisions);
-
+            GenerateTopBars();
+            GenerateBottomBars();
+            //GenerateNodes(divisions);
         }
 
-        public override void GenerateUpperBars()
+        public override void GenerateTopBars()
         {
             StartingNodes = GetStartingPoints(Plane, Length, Height, Height, Height);
             var barA = new Line(StartingNodes[0], StartingNodes[1]);

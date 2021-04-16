@@ -11,11 +11,12 @@ namespace WarehouseLib
     {
         public MonopichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions) : base(plane, length, height, maxHeight,clearHeight, divisions)
         {
-            GenerateUpperBars();
-            GenerateNodes(divisions);
+            GenerateTopBars();
+            GenerateBottomBars();
+            //GenerateNodes(divisions);
         }
 
-        public override void GenerateUpperBars()
+        public override void GenerateTopBars()
         {
             StartingNodes = GetStartingPoints(Plane, Length, Height, Height + ((MaxHeight - Height) / 2), MaxHeight);
             var barA = new Line(StartingNodes[0], StartingNodes[1]);

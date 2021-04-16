@@ -59,6 +59,7 @@
     <Compile Include="Arch\ArchCurves.cs" />
     <Compile Include="Arch\Heights\ClearHeight.cs" />
     <Compile Include="Arch\Vectors\FirstLastNormals.cs" />
+    <Compile Include="DoublepichTrussComponent.cs" />
     <Compile Include="Duopich\Heights\ClearHeight.cs" />
     <Compile Include="Duopich\Vectors\FirstLastNormals.cs" />
     <Compile Include="FlatTrussComponent.cs" />

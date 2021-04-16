@@ -11,10 +11,30 @@ namespace WarehouseLib
     {
         public ArchTruss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions) : base(plane, length, height, maxHeight,clearHeight, divisions)
         {
-            GenerateUpperBars();
-            GenerateNodes(divisions);
+            GenerateTopBars();
+            GenerateBottomBars();
+            //GenerateNodes(divisions);
         }
-        public override void GenerateUpperBars()
+
+        public override void GenerateBottomBars()
+        {
+            if (Height == MaxHeight)
+            {
+                Line lineA = new Line(StartingNodes[0]-Vector3d.ZAxis*ComputeDifference(), StartingNodes[1]-Vector3d.ZAxis*ComputeDifference());
+                Line lineB = new Line(StartingNodes[2] - Vector3d.ZAxis * ComputeDifference(), StartingNodes[1] - Vector3d.ZAxis * ComputeDifference());
+                BottomBars = new List<Curve> { lineA.ToNurbsCurve(), lineB.ToNurbsCurve() };
+            }
+            else
+            {
+                Arc arch = new Arc(StartingNodes[0] - Vector3d.ZAxis * ComputeDifference(), StartingNodes[1] - Vector3d.ZAxis * ComputeDifference(), StartingNodes[2] - Vector3d.ZAxis * ComputeDifference());
+                arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
+                Curve[] tempCrvs = arch.ToNurbsCurve().Split(t);
+                tempCrvs[1].Reverse();
+                BottomBars = tempCrvs.ToList();
+            }
+        }
+
+        public override void GenerateTopBars()
         {
             StartingNodes = GetStartingPoints(Plane, Length,  Height, MaxHeight, Height);
 
@@ -28,7 +48,7 @@ namespace WarehouseLib
                 arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
                 Curve[] tempCrvs = arch.ToNurbsCurve().Split(t);
                 tempCrvs[1].Reverse();
-                TopBars = new List<Curve> { tempCrvs[0], tempCrvs[1] };
+                TopBars = tempCrvs.ToList();
             }
         }
         

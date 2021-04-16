@@ -15,7 +15,7 @@ namespace ArqueStructuresTools
         public TestWarehouseComponent()
           : base("TestWarehouseComponent", "Nickname",
               "Description",
-              "Arque Structures", "Test")
+              "Arque Structures", "Warehouse")
         {
         }
 
@@ -89,8 +89,9 @@ namespace ArqueStructuresTools
             foreach (var truss in warehouse.Trusses)
             {
                 lines.AddRange(truss.TopBars);
-                nodes.AddRange(truss.TopNodes);
-                nodes.AddRange(truss.BottomNodes);
+                lines.AddRange(truss.BottomBars);
+                //nodes.AddRange(truss.TopNodes);
+                //nodes.AddRange(truss.BottomNodes);
             }
             DA.SetData(0, warehouse);
             DA.SetDataList(1, lines);

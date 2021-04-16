@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using WarehouseLib;
+
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
 namespace ArqueStructuresTools
 {
-    public class FlatTrussComponent : GH_Component
+    public class DoublepichTrussComponent : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the FlatTrussComponent class.
+        /// Initializes a new instance of the DoublepichTruss class.
         /// </summary>
-        public FlatTrussComponent()
-          : base("FlatTrussComponent", "Nickname",
+        public DoublepichTrussComponent()
+          : base("DoublepichTruss", "Nickname",
               "Description",
               "Arque Structures", "Trusses")
         {
@@ -23,12 +23,6 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddPlaneParameter("p", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddNumberParameter("l", "l", "l", GH_ParamAccess.item, 10);
-            pManager.AddNumberParameter("h", "h", "h", GH_ParamAccess.item, 1);
-            pManager.AddNumberParameter("mH", "mh", "mh", GH_ParamAccess.item, 3);
-            pManager.AddNumberParameter("ch", "ch", "ch", GH_ParamAccess.item, 1.8);
-            pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 5);
         }
 
         /// <summary>
@@ -36,7 +30,6 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter());
         }
 
         /// <summary>
@@ -45,24 +38,6 @@ namespace ArqueStructuresTools
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-
-            Plane worldXY = Plane.WorldXY;
-            double height = 0;
-            double length = 0;
-            double maxHeight = 0;
-            double clearHeight = 0;
-            int divisions = 0;
-
-            if (!DA.GetData(0, ref worldXY)) return;
-            if (!DA.GetData(1, ref length)) return;
-            if (!DA.GetData(2, ref height)) return;
-            if (!DA.GetData(3, ref maxHeight)) return;
-            if (!DA.GetData(4, ref clearHeight)) return;
-            if (!DA.GetData(5, ref divisions)) return;
-
-            var truss = new FlatTruss(worldXY, length, height, maxHeight, clearHeight, divisions);
-
-            DA.SetData(0, new TrussGoo(truss));
         }
 
         /// <summary>
@@ -83,7 +58,7 @@ namespace ArqueStructuresTools
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("2b787215-f764-4c47-b420-92c3cec221ac"); }
+            get { return new Guid("07fd9034-a1e2-4cb7-8716-484638082fe7"); }
         }
     }
 }

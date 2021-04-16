@@ -20,12 +20,23 @@ namespace WarehouseLib
             throw new NotImplementedException();
         }
 
-        public override void GenerateLowerBars()
+        public override void GenerateBottomBars()
         {
-            throw new NotImplementedException();
+            List<Curve> bars = new List<Curve>();
+            for (int i = 0; i < StartingNodes.Count; i++)
+            {
+                if (i < StartingNodes.Count - 1)
+                {
+                    Point3d ptA = StartingNodes[i] - Vector3d.ZAxis * ComputeDifference();
+                    Point3d ptB = StartingNodes[i+1] - Vector3d.ZAxis * ComputeDifference();
+                    Line tempLine = new Line(ptA, ptB);
+                    bars.Add(tempLine.ToNurbsCurve());
+                }
+            }
+            BottomBars = bars;
         }
 
-        public override void GenerateLowerNodes(List<Point3d> points, double difference)
+        public override void GenerateBottomNodes(List<Point3d> points, double difference)
         {
             List<Point3d> nodes = new List<Point3d>();
             foreach (var pt in points)
@@ -43,11 +54,11 @@ namespace WarehouseLib
             foreach (var bar in TopBars)
             {
                 TopNodes.AddRange(GetNodesOnCurve(bar, divisions));
-                GenerateLowerNodes(TopNodes, ComputeDifference());
+                GenerateBottomNodes(TopNodes, ComputeDifference());
             }
         }
 
-        public override void GenerateUpperBars()
+        public override void GenerateTopBars()
         {
             throw new NotImplementedException();
         }

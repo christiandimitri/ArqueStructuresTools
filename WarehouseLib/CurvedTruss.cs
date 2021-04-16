@@ -17,16 +17,16 @@ namespace WarehouseLib
         {
             throw new NotImplementedException();
         }
-        public override void GenerateLowerBars()
+        public override void GenerateBottomBars()
         {
 
             throw new NotImplementedException();
         }
-        public override void GenerateLowerNodes(List<Point3d> points, double difference)
+        public override void GenerateBottomNodes(List<Point3d> points, double difference)
         {
             throw new NotImplementedException();
         }
-        public override void GenerateUpperBars()
+        public override void GenerateTopBars()
         {
             throw new NotImplementedException();
         }
