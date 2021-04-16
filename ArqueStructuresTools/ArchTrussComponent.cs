@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using WarehouseLib;
+
 using Grasshopper.Kernel;
 using Rhino.Geometry;
+using WarehouseLib;
 
 namespace ArqueStructuresTools
 {
-    public class DoublepichTrussComponent : GH_Component
+    public class ArchTrussComponent : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the DoublepichTruss class.
+        /// Initializes a new instance of the ArchTrussComponent class.
         /// </summary>
-        public DoublepichTrussComponent()
-          : base("DoublepichTruss", "Nickname",
+        public ArchTrussComponent()
+          : base("ArchTrussComponent", "Nickname",
               "Description",
               "Arque Structures", "Trusses")
         {
@@ -25,11 +26,10 @@ namespace ArqueStructuresTools
         {
             pManager.AddPlaneParameter("p", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
             pManager.AddNumberParameter("l", "l", "l", GH_ParamAccess.item, 10);
-            pManager.AddNumberParameter("h", "h", "h", GH_ParamAccess.item, 2);
+            pManager.AddNumberParameter("m", "m", "m", GH_ParamAccess.item, 2);
             pManager.AddNumberParameter("mH", "mh", "mh", GH_ParamAccess.item, 3);
             pManager.AddNumberParameter("ch", "ch", "ch", GH_ParamAccess.item, 1.8);
             pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 5);
-
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace ArqueStructuresTools
             if (!DA.GetData(4, ref clearHeight)) return;
             if (!DA.GetData(5, ref divisions)) return;
 
-            var truss = new DoublepichedTruss(worldXY, length, height, maxHeight, clearHeight, divisions);
+            var truss = new ArchTruss(worldXY, length, height, maxHeight, clearHeight, divisions);
 
             DA.SetData(0, new TrussGoo(truss));
         }
@@ -83,7 +83,7 @@ namespace ArqueStructuresTools
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("07fd9034-a1e2-4cb7-8716-484638082fe7"); }
+            get { return new Guid("273ce80d-9f41-4d50-8a02-0291b75a4aaa"); }
         }
     }
 }

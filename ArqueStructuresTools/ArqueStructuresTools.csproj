@@ -56,9 +56,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArchTrussComponent.cs" />
     <Compile Include="Arch\ArchCurves.cs" />
     <Compile Include="Arch\Heights\ClearHeight.cs" />
     <Compile Include="Arch\Vectors\FirstLastNormals.cs" />
+    <Compile Include="DeconstructTruss.cs" />
     <Compile Include="DoublepichTrussComponent.cs" />
     <Compile Include="Duopich\Heights\ClearHeight.cs" />
     <Compile Include="Duopich\Vectors\FirstLastNormals.cs" />

@@ -12,8 +12,9 @@ namespace WarehouseLib
         public DoublepichedTruss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions) : base(plane, length, height, maxHeight, clearHeight, divisions)
         {
             GenerateTopBars();
+            GenerateColumns();
             GenerateBottomBars();
-            //GenerateNodes(divisions);
+            GenerateNodes(divisions);
         }
 
         public override void GenerateTopBars()
@@ -21,7 +22,7 @@ namespace WarehouseLib
             StartingNodes = GetStartingPoints(Plane, Length, Height, MaxHeight, Height);
             var barA = new Line(StartingNodes[0], StartingNodes[1]);
             var barB = new Line(StartingNodes[2], StartingNodes[1]);
-            BottomBars = new List<Curve> { barA.ToNurbsCurve(), barB.ToNurbsCurve() };
+            TopBars = new List<Curve> { barA.ToNurbsCurve(), barB.ToNurbsCurve() };
         }
     }
 }

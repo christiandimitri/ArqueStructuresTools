@@ -12,8 +12,9 @@ namespace WarehouseLib
         public MonopichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions) : base(plane, length, height, maxHeight,clearHeight, divisions)
         {
             GenerateTopBars();
+            GenerateColumns();
             GenerateBottomBars();
-            //GenerateNodes(divisions);
+            GenerateNodes(divisions);
         }
 
         public override void GenerateTopBars()

@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using WarehouseLib;
+
 using Grasshopper.Kernel;
 using Rhino.Geometry;
+using WarehouseLib;
 
 namespace ArqueStructuresTools
 {
-    public class FlatTrussComponent : GH_Component
+    public class DeconstructTruss : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the FlatTrussComponent class.
+        /// Initializes a new instance of the DeconstructTruss class.
         /// </summary>
-        public FlatTrussComponent()
-          : base("FlatTrussComponent", "Nickname",
+        public DeconstructTruss()
+          : base("DeconstructTruss", "Nickname",
               "Description",
-              "Arque Structures", "Trusses")
+              "Arque Structures", "Utilities")
         {
         }
 
@@ -23,11 +24,7 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddPlaneParameter("p", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddNumberParameter("l", "l", "l", GH_ParamAccess.item, 10);
-            pManager.AddNumberParameter("mH", "mh", "mh", GH_ParamAccess.item, 3);
-            pManager.AddNumberParameter("ch", "ch", "ch", GH_ParamAccess.item, 1.8);
-            pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 5);
+            pManager.AddParameter(new TrussParameter());
         }
 
         /// <summary>
@@ -35,7 +32,11 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter());
+            pManager.AddCurveParameter("top bar", "tb", "tb", GH_ParamAccess.list);
+            pManager.AddCurveParameter("bottom bar", "bb", "bb", GH_ParamAccess.list);
+            pManager.AddCurveParameter("column bar", "cb", "cb", GH_ParamAccess.list);
+            pManager.AddPointParameter("top nodes", "tn", "tn", GH_ParamAccess.list);
+            pManager.AddPointParameter("bottom nodes", "bn", "bn", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -45,21 +46,27 @@ namespace ArqueStructuresTools
         protected override void SolveInstance(IGH_DataAccess DA)
         {
 
-            Plane worldXY = Plane.WorldXY;
-            double length = 0;
-            double maxHeight = 0;
-            double clearHeight = 0;
-            int divisions = 0;
+            TrussGoo trussGoo = new TrussGoo();
 
-            if (!DA.GetData(0, ref worldXY)) return;
-            if (!DA.GetData(1, ref length)) return;
-            if (!DA.GetData(2, ref maxHeight)) return;
-            if (!DA.GetData(3, ref clearHeight)) return;
-            if (!DA.GetData(4, ref divisions)) return;
+            if (!DA.GetData(0, ref trussGoo)) return;
 
-            var truss = new FlatTruss(worldXY, length,0, maxHeight, clearHeight, divisions);
+            var truss = trussGoo.Value;
+            List<Curve> topBars = truss.TopBars;
+            List<Curve> bottomBars = truss.BottomBars;
+            List<Curve> columns = new List<Curve>();
+            List<Point3d> topNodes = truss.TopNodes;
+            List<Point3d> bottomNodes = truss.BottomNodes;
 
-            DA.SetData(0, new TrussGoo(truss));
+            foreach (var cl in truss.Columns)
+            {
+                columns.Add(cl.Axis.ToNurbsCurve());
+            }
+
+            DA.SetDataList(0, topBars);
+            DA.SetDataList(1, bottomBars);
+            DA.SetDataList(2, columns);
+            DA.SetDataList(3, topNodes);
+            DA.SetDataList(4, bottomNodes);
         }
 
         /// <summary>
@@ -80,7 +87,7 @@ namespace ArqueStructuresTools
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("2b787215-f764-4c47-b420-92c3cec221ac"); }
+            get { return new Guid("ca8cb4da-4294-4944-9d8d-2b7ad00bf9b1"); }
         }
     }
 }

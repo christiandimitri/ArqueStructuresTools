@@ -22,6 +22,7 @@ namespace WarehouseLib
         public List<Curve> TopBars;
         public List<Curve> BottomBars;
         public List<Line> Beams;
+        public List<Column> Columns;
 
         public Truss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions)
         {
@@ -40,7 +41,7 @@ namespace WarehouseLib
             List<Point3d> startingPoints = new List<Point3d> { ptA, ptB, ptC };
             return startingPoints;
         }
-        public List<Point3d> GetNodesOnCurve(Curve curve, int divisions)
+        public List<Point3d> GenerateTopNodes(Curve curve, int divisions)
         {
             List<Point3d> nodes = new List<Point3d>();
             double[]parameters=curve.DivideByCount(divisions, true);
@@ -56,7 +57,18 @@ namespace WarehouseLib
             double difference = Height - ClearHeight;
             return difference;
         }
+        public void GenerateColumns()
+        {
+            var columns = new List<Column>();
 
+            // TODO: Create columns here using trusses!
+            Line axisA = new Line(new Point3d(StartingNodes[0].X, StartingNodes[0].Y, Plane.Origin.Z), StartingNodes[0]);
+            Line axisB = new Line(new Point3d(StartingNodes[2].X, StartingNodes[2].Y, Plane.Origin.Z), StartingNodes[2]);
+            columns.Add(new Column(axisA));
+            columns.Add(new Column(axisB));
+            
+            Columns = columns;
+        }
         public abstract void GenerateTopBars();
         public abstract void GenerateBottomNodes(List<Point3d> points, double difference);
         public abstract void GenerateNodes(int divisions);

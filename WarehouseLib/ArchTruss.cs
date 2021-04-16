@@ -12,8 +12,9 @@ namespace WarehouseLib
         public ArchTruss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions) : base(plane, length, height, maxHeight,clearHeight, divisions)
         {
             GenerateTopBars();
+            GenerateColumns();
             GenerateBottomBars();
-            //GenerateNodes(divisions);
+            GenerateNodes(divisions);
         }
 
         public override void GenerateBottomBars()
@@ -51,6 +52,17 @@ namespace WarehouseLib
                 TopBars = tempCrvs.ToList();
             }
         }
-        
+
+        public override void GenerateNodes(int divisions)
+        {
+
+            TopNodes = new List<Point3d>();
+            foreach (var bar in TopBars)
+            {
+                TopNodes.AddRange(GenerateTopNodes(bar, divisions));
+                GenerateBottomNodes(TopNodes, ComputeDifference());
+            }
+        }
+
     }
 }

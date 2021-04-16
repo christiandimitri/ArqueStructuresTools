@@ -39,6 +39,7 @@ namespace WarehouseLib
         public override void GenerateBottomNodes(List<Point3d> points, double difference)
         {
             List<Point3d> nodes = new List<Point3d>();
+            BottomNodes = new List<Point3d>();
             foreach (var pt in points)
             {
                 Point3d tempPt = pt - (Vector3d.ZAxis * difference);
@@ -50,10 +51,9 @@ namespace WarehouseLib
         public override void GenerateNodes(int divisions)
         {
             TopNodes = new List<Point3d>();
-            BottomNodes = new List<Point3d>();
             foreach (var bar in TopBars)
             {
-                TopNodes.AddRange(GetNodesOnCurve(bar, divisions));
+                TopNodes.AddRange(GenerateTopNodes(bar, divisions));
                 GenerateBottomNodes(TopNodes, ComputeDifference());
             }
         }

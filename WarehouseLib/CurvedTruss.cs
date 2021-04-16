@@ -24,7 +24,14 @@ namespace WarehouseLib
         }
         public override void GenerateBottomNodes(List<Point3d> points, double difference)
         {
-            throw new NotImplementedException();
+            List<Point3d> nodes = new List<Point3d>();
+            BottomNodes = new List<Point3d>();
+            foreach (var pt in points)
+            {
+                Point3d tempPt = pt - (Vector3d.ZAxis * difference);
+                nodes.Add(tempPt);
+            }
+            BottomNodes.AddRange(nodes);
         }
         public override void GenerateTopBars()
         {
