@@ -1,29 +1,29 @@
-﻿using Grasshopper.Kernel.Data;
-using Rhino.Geometry;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Rhino.Geometry;
 
 namespace WarehouseLib
 {
     public abstract class Truss
     {
-        public Plane Plane;
-        public double Length;
-        public double Height;
-        public double MaxHeight;
-        public double ClearHeight;
-        public int Divisions;
-        public string TrussType;
-        public List<Point3d> StartingNodes;
-        public List<Point3d> TopNodes;
-        public List<Point3d> BottomNodes;
-        public List<Curve> TopBars;
-        public List<Curve> BottomBars;
-        public List<Curve> IntermediateBars;
         public List<Line> Beams;
+        public List<Curve> BottomBars;
+        public List<Point3d> BottomNodes;
+        public double ClearHeight;
         public List<Column> Columns;
+        public int Divisions;
+        public double Height;
+        public List<Curve> IntermediateBars;
+        public double Length;
+        public double MaxHeight;
+        public Plane Plane;
+        public List<Point3d> StartingNodes;
+        public List<Curve> TopBars;
+        public List<Point3d> TopNodes;
+        public string TrussType;
 
-        public Truss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions, string trussType)
+        public Truss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
+            string trussType)
         {
             Plane = plane;
             Length = length;
@@ -34,115 +34,146 @@ namespace WarehouseLib
             TrussType = trussType;
         }
 
-        public void RecomputeDivisions()
+        public int RecomputeDivisions(int divisions)
         {
-            if(TrussType== "Warren" && Divisions%2 ==1)
-            {
-                Divisions++;
-            }
+            var recomputedDivisons = divisions;
+            if ((TrussType == "Howe" || TrussType == "Pratt") && divisions % 2 == 1) recomputedDivisons++;
+
+            return recomputedDivisons;
         }
-        public List<Point3d> GetStartingPoints(Plane plane, double length, double leftHeight, double centerHeight, double rightHeight)
+
+        public List<Point3d> GetStartingPoints(Plane plane, double length, double leftHeight, double centerHeight,
+            double rightHeight)
         {
-            Point3d ptA = plane.PointAt(0, 0, leftHeight);
-            Point3d ptB = plane.PointAt(length / 2, 0, centerHeight);
-            Point3d ptC = plane.PointAt(length, 0, rightHeight);
-            List<Point3d> startingPoints = new List<Point3d> { ptA, ptB, ptC };
+            var ptA = plane.PointAt(0, 0, leftHeight);
+            var ptB = plane.PointAt(length / 2, 0, centerHeight);
+            var ptC = plane.PointAt(length, 0, rightHeight);
+            var startingPoints = new List<Point3d> {ptA, ptB, ptC};
             return startingPoints;
         }
-        public List<Point3d> GenerateTopNodes(Curve curve, int divisions)
-        {
-            List<Point3d> nodes = new List<Point3d>();
-            double[]parameters = 
-            curve.DivideByCount(divisions, true);
 
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                nodes.Add(curve.PointAt(parameters[i]));
-            }
+        public List<Point3d> GenerateTopNodes(Curve curve, int divisions, int index)
+        {
+            var nodes = new List<Point3d>();
+            var parameters =
+                curve.DivideByCount(divisions, true);
+
+            for (var i = 0; i < parameters.Length; i++) nodes.Add(curve.PointAt(parameters[i]));
+
+            if (index == 0) nodes.RemoveAt(nodes.Count - 1);
             return nodes;
         }
+
         public double ComputeDifference()
         {
-            double difference = Height - ClearHeight;
+            var difference = Height - ClearHeight;
             return difference;
         }
+
         public void GenerateColumns()
         {
             var columns = new List<Column>();
 
             // TODO: Create columns here using trusses!
-            Line axisA = new Line(new Point3d(StartingNodes[0].X, StartingNodes[0].Y, Plane.Origin.Z), StartingNodes[0]);
-            Line axisB = new Line(new Point3d(StartingNodes[2].X, StartingNodes[2].Y, Plane.Origin.Z), StartingNodes[2]);
+            var axisA = new Line(new Point3d(StartingNodes[0].X, StartingNodes[0].Y, Plane.Origin.Z),
+                StartingNodes[0]);
+            var axisB = new Line(new Point3d(StartingNodes[2].X, StartingNodes[2].Y, Plane.Origin.Z),
+                StartingNodes[2]);
             columns.Add(new Column(axisA));
             columns.Add(new Column(axisB));
-            
+
             Columns = columns;
         }
+
         public abstract void GenerateTopBars();
-        public abstract void GenerateBottomNodes(List<Point3d> points, double difference);
-        public abstract void ConstructTruss(int divisions);
         public abstract void GenerateBottomBars();
-        public void GenerateIntermediateBars(string trussType, Point3d pt)
-        {
+        public abstract void GenerateBottomNodes(List<Point3d> points, double difference);
 
-            if(trussType == "Warren")
-            {
-                ConstructWarrenTruss(pt);
-            }
+        public abstract void ConstructTruss(int divisions);
+        public void GenerateIntermediateBars(string trussType, int index)
+        {
+            if (trussType == "Warren")
+                ConstructWarrenTruss();
             else if (trussType == "Warren_Studs")
-            {
-                ConstructWarrenStudsTruss(pt);
-            }
+                ConstructWarrenStudsTruss();
             else if (trussType == "Pratt")
-            {
-                ConstructPrattTruss(pt);
-            }
-            else if (trussType == "Howe")
-            {
-                ConstructHoweTruss(pt);
-            }
+                ConstructPrattTruss(index);
+            else if (trussType == "Howe") ConstructHoweTruss(index);
         }
-        private void ConstructWarrenTruss(Point3d pt)
-        {
-            List<Curve> bars = new List<Curve>();
-            int index = TopNodes.IndexOf(pt);
-            for (int i = 0; i < TopNodes.Count; i += 2)
-            {
-                Line lineA = new Line();
-                Line lineB = new Line();
-                
-                if (i < index)
-                {
-                    lineA = new Line(TopNodes[i], BottomNodes[i + 1]);
-                }
-                else if (i > 0 && i<index)
-                {
-                    lineB = new Line(TopNodes[i], BottomNodes[i - 1]);
-                }
-                if(lineA.IsValid || lineB.IsValid)
-                {
-                    bars.Add(lineA.ToNurbsCurve());
-                    bars.Add(lineB.ToNurbsCurve());
 
+        private void ConstructWarrenTruss()
+        {
+            var bars = new List<Curve>();
+            for (var i = 0; i < TopNodes.Count; i += 2)
+            {
+                
+                if (i < TopNodes.Count - 1)
+                {
+                    var lineA = new Line(TopNodes[i], BottomNodes[i + 1]);
+                    bars.Add(lineA.ToNurbsCurve());
+                }
+
+                if (i > 0)
+                {
+                    var lineA = new Line(TopNodes[i], BottomNodes[i - 1]);
+                    bars.Add(lineA.ToNurbsCurve());
                 }
             }
+
             IntermediateBars = bars;
         }
-        private void ConstructHoweTruss(Point3d pt)
+
+        private void ConstructPrattTruss(int index)
+        {
+            var bars = new List<Curve>();
+            for (var i = 0; i < TopNodes.Count; i += 2)
+            {
+                var lineA = new Line(TopNodes[i], BottomNodes[i]);
+                bars.Add(lineA.ToNurbsCurve());
+                if (i < index)
+                {
+                    lineA = new Line(TopNodes[i], BottomNodes[i + 2]);
+                    bars.Add(lineA.ToNurbsCurve());
+                }
+                else if (i > index)
+                {
+                    lineA = new Line(TopNodes[i], BottomNodes[i - 2]);
+                    bars.Add(lineA.ToNurbsCurve());
+                }
+            }
+
+            IntermediateBars = bars;
+        }
+
+        private void ConstructHoweTruss(int index)
+        {
+            var tempTopNodes = BottomNodes;
+            var tempBottomNodes = TopNodes;
+            var bars = new List<Curve>();
+            for (var i = 0; i < tempTopNodes.Count; i += 2)
+            {
+                var lineA = new Line(tempBottomNodes[i],tempTopNodes[i]);
+                bars.Add(lineA.ToNurbsCurve());
+                if (i < index)
+                {
+                    lineA = new Line(tempBottomNodes[i + 2],tempTopNodes[i]);
+                    bars.Add(lineA.ToNurbsCurve());
+                }
+                else if (i > index)
+                {
+                    lineA = new Line(tempBottomNodes[i - 2], tempTopNodes[i]);
+                    bars.Add(lineA.ToNurbsCurve());
+                }
+            }
+
+            IntermediateBars = bars;
+        }
+
+        private void ConstructWarrenStudsTruss()
         {
             throw new NotImplementedException();
         }
 
-        private void ConstructPrattTruss(Point3d pt)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void ConstructWarrenStudsTruss(Point3d pt)
-        {
-            throw new NotImplementedException();
-        }
         public abstract void GenerateBeams();
-
     }
 }

@@ -27,7 +27,8 @@ namespace ArqueStructuresTools
             pManager.AddNumberParameter("l", "l", "l", GH_ParamAccess.item, 10);
             pManager.AddNumberParameter("h", "h", "h", GH_ParamAccess.item, 3);
             pManager.AddNumberParameter("ch", "ch", "ch", GH_ParamAccess.item, 1.8);
-            pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 5);
+            pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 4);
+            pManager.AddTextParameter("type", "t", "t", GH_ParamAccess.item, "Pratt");
         }
 
         /// <summary>
@@ -50,14 +51,16 @@ namespace ArqueStructuresTools
             double height = 0;
             double clearHeight = 0;
             int divisions = 0;
+            string trussType = "";
 
             if (!DA.GetData(0, ref worldXY)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref height)) return;
             if (!DA.GetData(3, ref clearHeight)) return;
             if (!DA.GetData(4, ref divisions)) return;
+            if (!DA.GetData(5, ref trussType)) return;
 
-            var truss = new FlatTruss(worldXY, length, height, 0, clearHeight, divisions, "Warren");
+            var truss = new FlatTruss(worldXY, length, height, 0, clearHeight, divisions, trussType);
 
             DA.SetData(0, new TrussGoo(truss));
         }

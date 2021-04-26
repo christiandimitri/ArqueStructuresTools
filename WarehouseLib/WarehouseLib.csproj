@@ -9,11 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WarehouseLib</RootNamespace>
     <AssemblyName>WarehouseLib</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,9 +37,13 @@
     <Reference Include="Eto, Version=2.5.0.0, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
       <HintPath>..\packages\RhinoCommon.6.28.20199.17141\lib\net45\Eto.dll</HintPath>
     </Reference>
-    <Reference Include="GH_IO, Version=6.28.20199.17141, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97" />
-    <Reference Include="Grasshopper">
-      <HintPath>..\..\..\..\..\..\Program Files\Rhino 6\Plug-ins\Grasshopper\Grasshopper.dll</HintPath>
+    <Reference Include="GH_IO, Version=6.28.20199.17140, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
+      <HintPath>..\packages\Grasshopper.6.28.20199.17141\lib\net45\GH_IO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Grasshopper, Version=6.28.20199.17140, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
+      <HintPath>..\packages\Grasshopper.6.28.20199.17141\lib\net45\Grasshopper.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Rhino.UI, Version=6.28.20199.17140, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
       <HintPath>..\packages\RhinoCommon.6.28.20199.17141\lib\net45\Rhino.UI.dll</HintPath>
@@ -57,14 +62,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchTruss.cs" />
-    <Compile Include="Connection.cs" />
     <Compile Include="CurvedTruss.cs" />
     <Compile Include="DoublepichedTruss.cs" />
     <Compile Include="FlatTruss.cs" />
     <Compile Include="MonopichedTruss.cs" />
     <Compile Include="Portico.cs" />
-    <Compile Include="ConnectionGenerator.cs" />
-    <Compile Include="ConnectionType.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="PichedTruss.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,5 +83,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\RhinoCommon.6.28.20199.17141\build\net45\RhinoCommon.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RhinoCommon.6.28.20199.17141\build\net45\RhinoCommon.targets'))" />
+    <Error Condition="!Exists('..\packages\Grasshopper.6.28.20199.17141\build\net45\Grasshopper.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Grasshopper.6.28.20199.17141\build\net45\Grasshopper.targets'))" />
   </Target>
+  <Import Project="..\packages\Grasshopper.6.28.20199.17141\build\net45\Grasshopper.targets" Condition="Exists('..\packages\Grasshopper.6.28.20199.17141\build\net45\Grasshopper.targets')" />
 </Project>

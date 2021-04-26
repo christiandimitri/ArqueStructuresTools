@@ -34,7 +34,7 @@ namespace ArqueStructuresTools
         {
             pManager.AddCurveParameter("top bar", "tb", "tb", GH_ParamAccess.list);
             pManager.AddCurveParameter("bottom bar", "bb", "bb", GH_ParamAccess.list);
-            pManager.AddCurveParameter("intermediate bar", "bb", "bb", GH_ParamAccess.list);
+            pManager.AddCurveParameter("intermediate bar", "ib", "ib", GH_ParamAccess.list);
             pManager.AddCurveParameter("column bar", "cb", "cb", GH_ParamAccess.list);
             pManager.AddPointParameter("top nodes", "tn", "tn", GH_ParamAccess.list);
             pManager.AddPointParameter("bottom nodes", "bn", "bn", GH_ParamAccess.list);
