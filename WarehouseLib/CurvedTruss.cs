@@ -72,6 +72,7 @@ namespace WarehouseLib
             double hypothenus = opposite / Math.Sin(theta);
             return hypothenus;
         }
+
         public override void ConstructTruss(int divisions)
         {
             throw new NotImplementedException();
