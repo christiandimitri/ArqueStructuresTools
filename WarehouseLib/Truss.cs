@@ -23,7 +23,7 @@ namespace WarehouseLib
         public string TrussType;
         public string ArticulationType;
 
-        public Truss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
+        protected Truss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
             string trussType, string articulationType)
         {
             Plane = plane;
@@ -36,14 +36,15 @@ namespace WarehouseLib
             ArticulationType = articulationType;
         }
 
-        public int RecomputeDivisions(int divisions)
+        protected int RecomputeDivisions(int divisions)
         {
-            var recomputedDivisons = divisions;
-            if ((TrussType == "Howe" || TrussType == "Pratt") && divisions % 2 == 1) recomputedDivisons++;
+            var recomputedDivisions = divisions;
+            if ((TrussType == "Howe" || TrussType == "Pratt") && divisions % 2 == 1) recomputedDivisions++;
 
-            return recomputedDivisons;
+            return recomputedDivisions;
         }
-        public List<Point3d> GetStartingPoints(Plane plane, double leftLength,double rightLength, double leftHeight,
+
+        protected List<Point3d> GetStartingPoints(Plane plane, double leftLength, double rightLength, double leftHeight,
             double centerHeight,
             double rightHeight)
         {
@@ -56,9 +57,9 @@ namespace WarehouseLib
 
         public abstract void ComputeArticulationAtColumns(string type);
         public abstract void IsRigidToColumns();
-        public abstract void IsArticualtedToColumns();
-        
-        public List<Point3d> GenerateTopNodes(Curve curve, int divisions, int index)
+        public abstract void IsArticulatedToColumns();
+
+        protected List<Point3d> GenerateTopNodes(Curve curve, int divisions, int index)
         {
             var nodes = new List<Point3d>();
             var parameters =
@@ -70,13 +71,13 @@ namespace WarehouseLib
             return nodes;
         }
 
-        public double ComputeDifference()
+        protected double ComputeDifference()
         {
             var difference = Height - ClearHeight;
             return difference;
         }
 
-        public void GenerateColumns()
+        protected void GenerateColumns()
         {
             var columns = new List<Column>();
 
@@ -96,7 +97,8 @@ namespace WarehouseLib
         public abstract void GenerateBottomNodes(List<Point3d> points, double difference);
 
         public abstract void ConstructTruss(int divisions);
-        public void GenerateIntermediateBars(string trussType, int index)
+
+        protected void GenerateIntermediateBars(string trussType, int index)
         {
             if (trussType == "Warren")
                 ConstructWarrenTruss();
@@ -105,6 +107,7 @@ namespace WarehouseLib
             else if (trussType == "Pratt")
                 ConstructPrattTruss(index);
             else if (trussType == "Howe") ConstructHoweTruss(index);
+            RecomputeNodes();
         }
 
         private void ConstructWarrenTruss()
@@ -112,7 +115,6 @@ namespace WarehouseLib
             var bars = new List<Curve>();
             for (var i = 0; i < TopNodes.Count; i += 2)
             {
-                
                 if (i < TopNodes.Count - 1)
                 {
                     var lineA = new Line(TopNodes[i], BottomNodes[i + 1]);
@@ -134,20 +136,29 @@ namespace WarehouseLib
             var bars = new List<Curve>();
             for (var i = 0; i < TopNodes.Count; i += 2)
             {
-                var lineA = new Line(TopNodes[i], BottomNodes[i]);
-                bars.Add(lineA.ToNurbsCurve());
                 if (i < index)
                 {
+                    var lineA = new Line(TopNodes[i], BottomNodes[i]);
+                    bars.Add(lineA.ToNurbsCurve());
                     lineA = new Line(TopNodes[i], BottomNodes[i + 2]);
+                    bars.Add(lineA.ToNurbsCurve());
+                }
+                else if (i == index)
+                {
+                    var lineA = new Line(TopNodes[i], BottomNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
                 else if (i > index)
                 {
-                    lineA = new Line(TopNodes[i], BottomNodes[i - 2]);
+                    var lineA = new Line(TopNodes[i], BottomNodes[i - 2]);
+                    bars.Add(lineA.ToNurbsCurve());
+                    lineA = new Line(TopNodes[i], BottomNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
             }
 
+            bars.RemoveAt(0);
+            bars.RemoveAt(bars.Count - 1);
             IntermediateBars = bars;
         }
 
@@ -158,18 +169,37 @@ namespace WarehouseLib
             var bars = new List<Curve>();
             for (var i = 0; i < tempTopNodes.Count; i += 2)
             {
-                var lineA = new Line(tempBottomNodes[i],tempTopNodes[i]);
-                bars.Add(lineA.ToNurbsCurve());
                 if (i < index)
                 {
-                    lineA = new Line(tempBottomNodes[i + 2],tempTopNodes[i]);
+                    var lineA = new Line(tempBottomNodes[i], tempTopNodes[i]);
+                    bars.Add(lineA.ToNurbsCurve());
+                    lineA = new Line(tempBottomNodes[i + 2], tempTopNodes[i]);
+                    bars.Add(lineA.ToNurbsCurve());
+                }
+                else if (i == index)
+                {
+                    var lineA = new Line(TopNodes[i], BottomNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
                 else if (i > index)
                 {
-                    lineA = new Line(tempBottomNodes[i - 2], tempTopNodes[i]);
+                    var lineA = new Line(tempBottomNodes[i - 2], tempTopNodes[i]);
+                    bars.Add(lineA.ToNurbsCurve());
+                    lineA = new Line(tempBottomNodes[i], tempTopNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
+            }
+
+            bars.RemoveAt(0);
+            bars.RemoveAt(bars.Count - 1);
+            if (ArticulationType == "Articulated")
+            {
+                bars.RemoveAt(0);
+                var lineA = new Line(TopNodes[0], BottomNodes[2]);
+                bars.Insert(0, lineA.ToNurbsCurve());
+                bars.RemoveAt(bars.Count-1);
+                lineA = new Line(TopNodes[TopNodes.Count - 1], BottomNodes[BottomNodes.Count - 3]);
+                bars.Add(lineA.ToNurbsCurve());
             }
 
             IntermediateBars = bars;
@@ -178,6 +208,51 @@ namespace WarehouseLib
         private void ConstructWarrenStudsTruss()
         {
             throw new NotImplementedException();
+        }
+
+        private void RecomputeNodes()
+        {
+            List<Point3d> tempTopList = new List<Point3d>();
+            List<Point3d> tempBottomList = new List<Point3d>();
+            for (int i = 0; i < TopNodes.Count; i++)
+            {
+                if (TrussType == "Warren")
+                {
+                    if (i % 2 == 0)
+                    {
+                        tempTopList.Add(TopNodes[i]);
+                    }
+                    else if (i % 2 == 1)
+                    {
+                        tempBottomList.Add(BottomNodes[i]);
+                    }
+                }
+                else if (TrussType == "Warren_Studs")
+                {
+                    tempTopList.Add(TopNodes[i]);
+                    if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
+                    {
+                        tempBottomList.Add(BottomNodes[i]);
+                    }
+                }
+                else if (TrussType == "Howe" || TrussType == "Pratt")
+                {
+                    if (i % 2 == 0)
+                    {
+                        tempTopList.Add(TopNodes[i]);
+                        tempBottomList.Add(BottomNodes[i]);
+                    }
+                }
+            }
+
+            if (TrussType == "Warren")
+            {
+                tempBottomList.Insert(0, BottomNodes[0]);
+                tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
+            }
+
+            TopNodes = new List<Point3d>(tempTopList);
+            BottomNodes = new List<Point3d>(tempBottomList);
         }
 
         public abstract void GenerateBeams();

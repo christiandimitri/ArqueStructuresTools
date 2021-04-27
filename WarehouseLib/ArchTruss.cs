@@ -24,7 +24,7 @@ namespace WarehouseLib
         {
             if (type == "Articulated")
             {
-                IsArticualtedToColumns();
+                IsArticulatedToColumns();
             }
             else if (type == "Rigid")
             {
@@ -37,9 +37,22 @@ namespace WarehouseLib
             BottomBars = new List<Curve>(BottomBars);
         }
 
-        public override void IsArticualtedToColumns()
+        public override void IsArticulatedToColumns()
         {
-            BottomBars = new List<Curve>(BottomBars);
+            Point3d ptA = new Point3d();
+            List<Curve> splitCrvs = new List<Curve>();
+            for (int i = 0; i < BottomBars.Count; i++)
+            {
+                var bar = BottomBars[i];
+                ptA = BottomNodes[i == 0 ? 1 : BottomNodes.Count - 2];
+                double t;
+                bar.ClosestPoint(ptA, out t);
+                splitCrvs.Add(bar.Split(t)[i == 0 ? 1 : 0]);
+            }
+
+            BottomNodes.RemoveAt(0);
+            BottomNodes.RemoveAt(BottomNodes.Count - 1);
+            BottomBars = splitCrvs;
         }
 
         public override void GenerateBottomBars()

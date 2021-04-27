@@ -44,7 +44,7 @@ namespace WarehouseLib
             throw new NotImplementedException();
         }
 
-        public override void IsArticualtedToColumns()
+        public override void IsArticulatedToColumns()
         {
             throw new NotImplementedException();
         }
