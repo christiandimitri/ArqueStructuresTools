@@ -24,12 +24,15 @@ namespace ArqueStructuresTools
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("p", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddNumberParameter("l", "l", "l", GH_ParamAccess.item, 10);
+            pManager.AddNumberParameter("rl", "rl", "rl", GH_ParamAccess.item, 7);
+            pManager.AddNumberParameter("ll", "ll", "ll", GH_ParamAccess.item, 5);
             pManager.AddNumberParameter("h", "h", "h", GH_ParamAccess.item, 2);
             pManager.AddNumberParameter("mH", "mh", "mh", GH_ParamAccess.item, 3);
             pManager.AddNumberParameter("ch", "ch", "ch", GH_ParamAccess.item, 1.8);
             pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 4);
             pManager.AddTextParameter("type", "t", "t", GH_ParamAccess.item, "Pratt");
+            pManager.AddTextParameter("at", "at", "at", GH_ParamAccess.item, "Articulated");
+
         }
 
         /// <summary>
@@ -48,21 +51,24 @@ namespace ArqueStructuresTools
         {
             Plane worldXY = Plane.WorldXY;
             double height = 0;
-            double length = 0;
+            double rightLength = 0;
+            double leftLength = 0;
             double maxHeight = 0;
             double clearHeight = 0;
             int divisions = 0;
             string trussType = "";
-
+            string articulationType = "";
             if (!DA.GetData(0, ref worldXY)) return;
-            if (!DA.GetData(1, ref length)) return;
-            if (!DA.GetData(2, ref height)) return;
-            if (!DA.GetData(3, ref maxHeight)) return;
-            if (!DA.GetData(4, ref clearHeight)) return;
-            if (!DA.GetData(5, ref divisions)) return;
-            if (!DA.GetData(6, ref trussType)) return;
+            if (!DA.GetData(1, ref rightLength)) return;
+            if (!DA.GetData(2, ref leftLength)) return;
+            if (!DA.GetData(3, ref height)) return;
+            if (!DA.GetData(4, ref maxHeight)) return;
+            if (!DA.GetData(5, ref clearHeight)) return;
+            if (!DA.GetData(6, ref divisions)) return;
+            if (!DA.GetData(7, ref trussType)) return;
+            if (!DA.GetData(8, ref articulationType)) return;
 
-            var truss = new DoublepichedTruss(worldXY, length, height, maxHeight, clearHeight, divisions, trussType);
+            var truss = new DoublepichedTruss(worldXY, 0, height, maxHeight, clearHeight, divisions,trussType, articulationType, rightLength, leftLength);
 
             DA.SetData(0, new TrussGoo(truss));
         }

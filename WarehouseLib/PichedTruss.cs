@@ -10,7 +10,8 @@ namespace WarehouseLib
     public class PichedTruss : Truss
     {
         protected PichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
-            int divisions, string trussType) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType)
+            int divisions, string trussType, string articulationType) : base(plane, length, height, maxHeight,
+            clearHeight, divisions, trussType, articulationType)
         {
         }
 
@@ -62,6 +63,28 @@ namespace WarehouseLib
             }
 
             BottomNodes.AddRange(nodes);
+        }
+
+        public override void ComputeArticulationAtColumns(string type)
+        {
+            if (type == "Articulated")
+            {
+                IsArticualtedToColumns();
+            }
+            else if (type == "Rigid")
+            {
+                IsRigidToColumns();
+            }
+        }
+
+        public override void IsRigidToColumns()
+        {
+            BottomBars = new List<Curve>(BottomBars);
+        }
+
+        public override void IsArticualtedToColumns()
+        {
+            BottomBars = new List<Curve>(BottomBars);
         }
 
         public override void GenerateTopBars()

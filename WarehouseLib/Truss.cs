@@ -21,9 +21,10 @@ namespace WarehouseLib
         public List<Curve> TopBars;
         public List<Point3d> TopNodes;
         public string TrussType;
+        public string ArticulationType;
 
         public Truss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
-            string trussType)
+            string trussType, string articulationType)
         {
             Plane = plane;
             Length = length;
@@ -32,6 +33,7 @@ namespace WarehouseLib
             ClearHeight = clearHeight;
             Divisions = divisions;
             TrussType = trussType;
+            ArticulationType = articulationType;
         }
 
         public int RecomputeDivisions(int divisions)
@@ -41,17 +43,21 @@ namespace WarehouseLib
 
             return recomputedDivisons;
         }
-
-        public List<Point3d> GetStartingPoints(Plane plane, double length, double leftHeight, double centerHeight,
+        public List<Point3d> GetStartingPoints(Plane plane, double leftLength,double rightLength, double leftHeight,
+            double centerHeight,
             double rightHeight)
         {
-            var ptA = plane.PointAt(0, 0, leftHeight);
-            var ptB = plane.PointAt(length / 2, 0, centerHeight);
-            var ptC = plane.PointAt(length, 0, rightHeight);
+            var ptA = plane.PointAt(-leftLength, 0, leftHeight);
+            var ptB = plane.PointAt(0, 0, centerHeight);
+            var ptC = plane.PointAt(rightLength, 0, rightHeight);
             var startingPoints = new List<Point3d> {ptA, ptB, ptC};
             return startingPoints;
         }
 
+        public abstract void ComputeArticulationAtColumns(string type);
+        public abstract void IsRigidToColumns();
+        public abstract void IsArticualtedToColumns();
+        
         public List<Point3d> GenerateTopNodes(Curve curve, int divisions, int index)
         {
             var nodes = new List<Point3d>();

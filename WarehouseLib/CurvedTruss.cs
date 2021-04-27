@@ -9,7 +9,7 @@ namespace WarehouseLib
 {
     public class CurvedTruss : Truss
     {
-        public CurvedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions, string trussType) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType)
+        public CurvedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions, string trussType, string articulationType) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType, articulationType)
         {
 
         }
@@ -33,6 +33,22 @@ namespace WarehouseLib
             }
             BottomNodes.AddRange(nodes);
         }
+
+        public override void ComputeArticulationAtColumns(string type)
+        {
+            throw new NotImplementedException();
+
+        }
+        public override void IsRigidToColumns()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void IsArticualtedToColumns()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void GenerateTopBars()
         {
             throw new NotImplementedException();

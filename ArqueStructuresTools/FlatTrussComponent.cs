@@ -29,6 +29,8 @@ namespace ArqueStructuresTools
             pManager.AddNumberParameter("ch", "ch", "ch", GH_ParamAccess.item, 1.8);
             pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 4);
             pManager.AddTextParameter("type", "t", "t", GH_ParamAccess.item, "Pratt");
+            pManager.AddTextParameter("at", "at", "at", GH_ParamAccess.item, "Articulated");
+
         }
 
         /// <summary>
@@ -52,15 +54,16 @@ namespace ArqueStructuresTools
             double clearHeight = 0;
             int divisions = 0;
             string trussType = "";
-
+            string articulationType = "";
             if (!DA.GetData(0, ref worldXY)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref height)) return;
             if (!DA.GetData(3, ref clearHeight)) return;
             if (!DA.GetData(4, ref divisions)) return;
             if (!DA.GetData(5, ref trussType)) return;
+            if (!DA.GetData(6, ref articulationType)) return;
 
-            var truss = new FlatTruss(worldXY, length, height, 0, clearHeight, divisions, trussType);
+            var truss = new FlatTruss(worldXY, length, height, 0, clearHeight, divisions, trussType,articulationType);
 
             DA.SetData(0, new TrussGoo(truss));
         }

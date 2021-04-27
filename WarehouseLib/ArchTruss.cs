@@ -10,12 +10,36 @@ namespace WarehouseLib
     public class ArchTruss : CurvedTruss
     {
         public ArchTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
-            string trussType) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType)
+            string trussType, string articulationType) : base(plane, length, height, maxHeight, clearHeight, divisions,
+            trussType, articulationType)
         {
             GenerateTopBars();
             GenerateColumns();
             GenerateBottomBars();
             ConstructTruss(divisions);
+            ComputeArticulationAtColumns(articulationType);
+        }
+
+        public override void ComputeArticulationAtColumns(string type)
+        {
+            if (type == "Articulated")
+            {
+                IsArticualtedToColumns();
+            }
+            else if (type == "Rigid")
+            {
+                IsRigidToColumns();
+            }
+        }
+
+        public override void IsRigidToColumns()
+        {
+            BottomBars = new List<Curve>(BottomBars);
+        }
+
+        public override void IsArticualtedToColumns()
+        {
+            BottomBars = new List<Curve>(BottomBars);
         }
 
         public override void GenerateBottomBars()
@@ -39,9 +63,10 @@ namespace WarehouseLib
                 BottomBars = tempCrvs.ToList();
             }
         }
+
         public override void GenerateTopBars()
         {
-            StartingNodes = GetStartingPoints(Plane, Length, Height, MaxHeight, Height);
+            StartingNodes = GetStartingPoints(Plane, Length / 2, Length / 2, Height, MaxHeight, Height);
 
             if (Height == MaxHeight)
             {
@@ -58,6 +83,7 @@ namespace WarehouseLib
                 TopBars = tempCrvs.ToList();
             }
         }
+
         public override void ConstructTruss(int divisions)
         {
             int recomputedDivisions = RecomputeDivisions(divisions);
