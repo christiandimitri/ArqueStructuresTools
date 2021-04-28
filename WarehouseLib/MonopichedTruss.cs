@@ -6,14 +6,16 @@ namespace WarehouseLib
 {
     public class MonopichedTruss : PichedTruss
     {
+        public int BaseType;
         public MonopichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
-            int divisions, string trussType, string articulationType) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType, articulationType)
+            int divisions, string trussType, string articulationType, int baseType) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType, articulationType)
         {
+            BaseType = baseType;
             GenerateTopBars();
             GenerateColumns();
-            GenerateBottomBars();
+            ChangeBaseByType(baseType);
             ConstructTruss(divisions);
-            ComputeArticulationAtColumns(articulationType);
+            // ChangeArticulationAtColumnsByType(articulationType);
         }
 
         public override void GenerateTopBars()

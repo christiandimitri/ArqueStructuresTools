@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rhino.Geometry;
+using Rhino.Geometry.Intersect;
 
 namespace WarehouseLib
 {
@@ -55,7 +56,8 @@ namespace WarehouseLib
             return startingPoints;
         }
 
-        public abstract void ComputeArticulationAtColumns(string type);
+        public abstract void ChangeArticulationAtColumnsByType(string type);
+        public abstract void ChangeBaseByType(int type);
         public abstract void IsRigidToColumns();
         public abstract void IsArticulatedToColumns();
 
@@ -94,8 +96,48 @@ namespace WarehouseLib
         }
 
         public abstract void GenerateTopBars();
-        public abstract void GenerateBottomBars();
-        public abstract void GenerateBottomNodes(Curve crv);
+        public abstract void GenerateTickBottomBars();
+
+        public void GenerateStraightBottomBars()
+        {
+            Point3d ptA = StartingNodes[0] - Vector3d.ZAxis * ComputeDifference();
+            Point3d ptC = new Point3d(StartingNodes[2].X, StartingNodes[2].Y, ptA.Z);
+            Point3d ptB = new Point3d(StartingNodes[1].X, StartingNodes[1].Y, ptA.Z);
+            Line lineA = new Line(ptA, ptB);
+            Line lineB = new Line(ptB, ptC);
+            var bars = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
+            BottomBars = bars;
+        }
+
+        public void GenerateThickBottomNodes(Curve crv)
+        {
+            List<Point3d> nodes = new List<Point3d>();
+            List<double> parameters = new List<double>();
+            var difference = ComputeDifference();
+            var points = new List<Point3d>(TopNodes);
+            var intersectingLines = new List<Line>();
+            for (int i = 0; i < points.Count; i++)
+            {
+                var tempPt = Plane.Origin - Vector3d.ZAxis * MaxHeight;
+                var lineA = new Line(points[i], new Point3d(points[i].X, points[i].Y, tempPt.Z));
+                intersectingLines.Add(lineA);
+            }
+
+            foreach (var line in intersectingLines)
+            {
+                var intersectionEvents = Intersection.CurveCurve(crv, line.ToNurbsCurve(), 0.01, 0.0);
+                if (intersectionEvents != null)
+                {
+                    for (int i = 0; i < intersectionEvents.Count; i++)
+                    {
+                        var intEv = intersectionEvents[0];
+                        nodes.Add(intEv.PointA);
+                    }
+                }
+            }
+
+            BottomNodes.AddRange(nodes);
+        }
 
         public abstract void ConstructTruss(int divisions);
 
@@ -198,7 +240,7 @@ namespace WarehouseLib
                 bars.RemoveAt(0);
                 var lineA = new Line(TopNodes[0], BottomNodes[2]);
                 bars.Insert(0, lineA.ToNurbsCurve());
-                bars.RemoveAt(bars.Count-1);
+                bars.RemoveAt(bars.Count - 1);
                 lineA = new Line(TopNodes[TopNodes.Count - 1], BottomNodes[BottomNodes.Count - 3]);
                 bars.Add(lineA.ToNurbsCurve());
             }
@@ -255,7 +297,5 @@ namespace WarehouseLib
             TopNodes = new List<Point3d>(tempTopList);
             BottomNodes = new List<Point3d>(tempBottomList);
         }
-
-        public abstract void GenerateBeams();
     }
 }

@@ -11,68 +11,21 @@ namespace WarehouseLib
     public class CurvedTruss : Truss
     {
         public CurvedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
-            int divisions, string trussType, string articulationType) : base(plane, length, height, maxHeight,
+            int divisions, string trussType, string articulationType) : base(plane, length, height,
+            maxHeight,
             clearHeight, divisions, trussType, articulationType)
         {
         }
-
-        public override void GenerateBeams()
+        public override void GenerateTickBottomBars()
+        {
+            throw new NotImplementedException();
+        }
+        public override void ChangeArticulationAtColumnsByType(string type)
         {
             throw new NotImplementedException();
         }
 
-        public override void GenerateBottomBars()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void GenerateBottomNodes(Curve crv)
-        {
-            List<Point3d> nodes = new List<Point3d>();
-            List<double> parameters = new List<double>();
-            var difference = ComputeDifference();
-            var points = new List<Point3d>(TopNodes);
-            var intersectingLines = new List<Line>();
-            for (int i = 0; i < points.Count; i++)
-            {
-                var tempPt = Plane.Origin - Vector3d.ZAxis * MaxHeight;
-                var lineA = new Line(points[i], new Point3d(points[i].X, points[i].Y, tempPt.Z));
-                intersectingLines.Add(lineA);
-            }
-
-            foreach (var line in intersectingLines)
-            {
-                var intersectionEvents = Intersection.CurveCurve(crv, line.ToNurbsCurve(), 0.01, 0.0);
-                if (intersectionEvents != null)
-                {
-                    for (int i = 0; i < intersectionEvents.Count; i++)
-                    {
-                        var intEv = intersectionEvents[0];
-                        nodes.Add(intEv.PointA);
-                    }
-                }
-            }
-            // foreach (var parameter in parameters)
-            // {
-            //     nodes.Add(crv.PointAt(parameter));
-            // }
-
-            // BottomNodes.AddRange(nodes);
-
-            // List<Point3d> nodes = new List<Point3d>();
-            // var points = TopNodes;
-            // var difference = ComputeDifference();
-            // BottomNodes = new List<Point3d>();
-            // foreach (var pt in points)
-            // {
-            //     Point3d tempPt = pt - (Vector3d.ZAxis * difference);
-            //     nodes.Add(tempPt);
-            // }
-            //
-            BottomNodes.AddRange(nodes);
-        }
-
-        public override void ComputeArticulationAtColumns(string type)
+        public override void ChangeBaseByType(int type)
         {
             throw new NotImplementedException();
         }

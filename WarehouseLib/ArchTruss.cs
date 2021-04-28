@@ -9,18 +9,20 @@ namespace WarehouseLib
 {
     public class ArchTruss : CurvedTruss
     {
+        public int BaseType;
         public ArchTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
-            string trussType, string articulationType) : base(plane, length, height, maxHeight, clearHeight, divisions,
+            string trussType, string articulationType, int baseType) : base(plane, length, height, maxHeight, clearHeight, divisions,
             trussType, articulationType)
         {
+            BaseType = baseType;
             GenerateTopBars();
             GenerateColumns();
-            GenerateBottomBars();
+            ChangeBaseByType(baseType);
             ConstructTruss(divisions);
-            ComputeArticulationAtColumns(articulationType);
+            // ChangeArticulationAtColumnsByType(articulationType);
         }
 
-        public override void ComputeArticulationAtColumns(string type)
+        public override void ChangeArticulationAtColumnsByType(string type)
         {
             if (type == "Articulated")
             {
@@ -30,6 +32,28 @@ namespace WarehouseLib
             {
                 IsRigidToColumns();
             }
+        }
+
+        public override void ChangeBaseByType(int index)
+        {
+            if (index == 0)
+            {
+                BaseIsThickened();
+            }
+            else
+            {
+                BaseIsStraight();
+            }
+        }
+
+        private void BaseIsThickened()
+        {
+            GenerateTickBottomBars();
+        }
+
+        private void BaseIsStraight()
+        {
+            GenerateStraightBottomBars();
         }
 
         public override void IsRigidToColumns()
@@ -55,7 +79,7 @@ namespace WarehouseLib
             BottomBars = splitCrvs;
         }
 
-        public override void GenerateBottomBars()
+        public override void GenerateTickBottomBars()
         {
             if (Height == MaxHeight)
             {
@@ -117,7 +141,7 @@ namespace WarehouseLib
             for (int i = 0; i < TopBars.Count; i++)
             {
                 GenerateTopNodes(TopBars[i], recomputedDivisions, i);
-                GenerateBottomNodes(BottomBars[i]);
+                GenerateThickBottomNodes(BottomBars[i]);
             }
 
             PointCloud cloud = new PointCloud(TopNodes);

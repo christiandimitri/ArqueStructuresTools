@@ -1,9 +1,6 @@
 ﻿using Rhino.Geometry;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+// ReSharper disable VirtualMemberCallInConstructor
 
 namespace WarehouseLib
 {
@@ -11,15 +8,17 @@ namespace WarehouseLib
     {
         private double RightLength;
         private double LeftLength;
-        public DoublepichedTruss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions, string trussType, string articulationType, double rightLength, double leftLength) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType, articulationType)
+        public int BaseType;
+        public DoublepichedTruss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions, string trussType, string articulationType, double rightLength, double leftLength, int baseType) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType, articulationType)
         {
             RightLength = rightLength;
             LeftLength = leftLength;
+            BaseType = baseType;
             GenerateTopBars();
             GenerateColumns();
-            GenerateBottomBars();
+            ChangeBaseByType(baseType);
             ConstructTruss(divisions);
-            ComputeArticulationAtColumns(articulationType);
+            // ChangeArticulationAtColumnsByType(articulationType);
         }
 
         public override void GenerateTopBars()

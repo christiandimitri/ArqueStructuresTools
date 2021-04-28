@@ -83,17 +83,17 @@ namespace WarehouseLib
                 }
                 else if(Typology == 1)
                 {
-                    var trussA = new ArchTruss(tempPlane, Length, Height, MaxHeight,ClearHeight, 4, TrussType, "Articulated");
+                    var trussA = new ArchTruss(tempPlane, Length, Height, MaxHeight,ClearHeight, 4, TrussType, "Articulated",0);
                     trusses.Add(trussA);
                 }
                 else if(Typology == 2)
                 {
-                    var trussA = new MonopichedTruss(tempPlane, Length, Height, MaxHeight,ClearHeight, 4, TrussType,"Articulated");
+                    var trussA = new MonopichedTruss(tempPlane, Length, Height, MaxHeight,ClearHeight, 4, TrussType,"Articulated",0);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 3)
                 {
-                    var trussA = new DoublepichedTruss(tempPlane, 0, Height, MaxHeight,ClearHeight, 4, TrussType, "Articulated", Length,Length*0.8);
+                    var trussA = new DoublepichedTruss(tempPlane, 0, Height, MaxHeight,ClearHeight, 4, TrussType, "Articulated", Length,Length*0.8,0);
                     trusses.Add(trussA);
                 }
             }

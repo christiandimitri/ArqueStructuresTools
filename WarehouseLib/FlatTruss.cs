@@ -13,9 +13,9 @@ namespace WarehouseLib
         {
             GenerateTopBars();
             GenerateColumns();
-            GenerateBottomBars();
+            GenerateTickBottomBars();
             ConstructTruss(divisions);
-            ComputeArticulationAtColumns(articulationType);
+            // ChangeArticulationAtColumnsByType(articulationType);
         }
         public override void GenerateTopBars()
         {
@@ -24,6 +24,5 @@ namespace WarehouseLib
             var barB = new Line(StartingNodes[1], StartingNodes[2]);
             TopBars = new List<Curve> { barA.ToNurbsCurve(), barB.ToNurbsCurve() };
         }
-        
     }
 }

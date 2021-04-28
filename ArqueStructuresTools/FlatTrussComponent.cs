@@ -30,7 +30,6 @@ namespace ArqueStructuresTools
             pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 4);
             pManager.AddTextParameter("type", "t", "t", GH_ParamAccess.item, "Pratt");
             pManager.AddTextParameter("at", "at", "at", GH_ParamAccess.item, "Rigid");
-
         }
 
         /// <summary>

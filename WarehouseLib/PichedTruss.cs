@@ -10,17 +10,13 @@ namespace WarehouseLib
     public class PichedTruss : Truss
     {
         protected PichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
-            int divisions, string trussType, string articulationType) : base(plane, length, height, maxHeight,
+            int divisions, string trussType, string articulationType) : base(plane, length, height,
+            maxHeight,
             clearHeight, divisions, trussType, articulationType)
         {
         }
 
-        public override void GenerateBeams()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void GenerateBottomBars()
+        public override void GenerateTickBottomBars()
         {
             List<Curve> bars = new List<Curve>();
             for (int i = 0; i < StartingNodes.Count; i++)
@@ -33,6 +29,7 @@ namespace WarehouseLib
                     bars.Add(tempLine.ToNurbsCurve());
                 }
             }
+
             BottomBars = bars;
         }
 
@@ -44,29 +41,37 @@ namespace WarehouseLib
             for (int i = 0; i < TopBars.Count; i++)
             {
                 GenerateTopNodes(TopBars[i], recomputedDivisions, i);
-                GenerateBottomNodes(BottomBars[i]);
+                GenerateThickBottomNodes(BottomBars[i]);
             }
+
             PointCloud cloud = new PointCloud(TopNodes);
             int index = cloud.ClosestPoint(StartingNodes[1]);
             GenerateIntermediateBars(TrussType, index);
         }
-
-        public override void GenerateBottomNodes(Curve crv)
+        
+        public override void ChangeBaseByType(int index)
         {
-            List<Point3d> nodes = new List<Point3d>();
-            var points = TopNodes;
-            var difference = ComputeDifference();
-            BottomNodes = new List<Point3d>();
-            foreach (var pt in points)
+            if (index == 0)
             {
-                Point3d tempPt = pt - (Vector3d.ZAxis * difference);
-                nodes.Add(tempPt);
+                BaseIsThickened();
             }
-
-            BottomNodes.AddRange(nodes);
+            else
+            {
+                BaseIsStraight();
+            }
         }
 
-        public override void ComputeArticulationAtColumns(string type)
+        private void BaseIsThickened()
+        {
+            GenerateTickBottomBars();
+        }
+
+        private void BaseIsStraight()
+        {
+            GenerateStraightBottomBars();
+        }
+
+        public override void ChangeArticulationAtColumnsByType(string type)
         {
             if (type == "Articulated")
             {

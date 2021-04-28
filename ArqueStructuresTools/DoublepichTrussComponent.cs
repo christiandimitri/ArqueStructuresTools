@@ -32,6 +32,7 @@ namespace ArqueStructuresTools
             pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 4);
             pManager.AddTextParameter("type", "t", "t", GH_ParamAccess.item, "Pratt");
             pManager.AddTextParameter("at", "at", "at", GH_ParamAccess.item, "Rigid");
+            pManager.AddIntegerParameter("bt", "bt", "bt", GH_ParamAccess.item, 0);
 
         }
 
@@ -58,6 +59,7 @@ namespace ArqueStructuresTools
             int divisions = 0;
             string trussType = "";
             string articulationType = "";
+            int baseType = 0;
             if (!DA.GetData(0, ref worldXY)) return;
             if (!DA.GetData(1, ref rightLength)) return;
             if (!DA.GetData(2, ref leftLength)) return;
@@ -67,8 +69,9 @@ namespace ArqueStructuresTools
             if (!DA.GetData(6, ref divisions)) return;
             if (!DA.GetData(7, ref trussType)) return;
             if (!DA.GetData(8, ref articulationType)) return;
+            if (!DA.GetData(9, ref baseType)) return;
 
-            var truss = new DoublepichedTruss(worldXY, 0, height, maxHeight, clearHeight, divisions,trussType, articulationType, rightLength, leftLength);
+            var truss = new DoublepichedTruss(worldXY, 0, height, maxHeight, clearHeight, divisions,trussType, articulationType, rightLength, leftLength, baseType);
 
             DA.SetData(0, new TrussGoo(truss));
         }
