@@ -62,40 +62,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchTrussComponent.cs" />
-    <Compile Include="Arch\ArchCurves.cs" />
-    <Compile Include="Arch\Heights\ClearHeight.cs" />
-    <Compile Include="Arch\Vectors\FirstLastNormals.cs" />
     <Compile Include="DeconstructTruss.cs" />
     <Compile Include="DoublepichTrussComponent.cs" />
-    <Compile Include="Duopich\Heights\ClearHeight.cs" />
-    <Compile Include="Duopich\Vectors\FirstLastNormals.cs" />
     <Compile Include="FlatTrussComponent.cs" />
     <Compile Include="MonopichTrussComponent.cs" />
-    <Compile Include="Monopich\Heights\ClearHeight.cs" />
-    <Compile Include="Monopich\Vectors\FirstLastNormals.cs" />
-    <Compile Include="Straight\Heights\ClearHeight.cs" />
-    <Compile Include="Straight\Vectors\FirstLastNormals.cs" />
     <Compile Include="TestWarehouseComponent.cs" />
     <Compile Include="TrussParameter.cs" />
-    <Compile Include="Utilities\Compute\Hypothenus.cs" />
-    <Compile Include="Utilities\Compute\Offset.cs" />
-    <Compile Include="Utilities\Restrictions\MaxHeight.cs" />
-    <Compile Include="Duopich\DuopichCurves.cs" />
-    <Compile Include="Duopich\DuopichPoints.cs" />
-    <Compile Include="Monopich\MonopichCurves.cs" />
-    <Compile Include="Monopich\MonopichPoints.cs" />
-    <Compile Include="Portic.cs" />
     <Compile Include="ArqueStructuresToolsInfo.cs" />
-    <Compile Include="Arch\ArchPoints.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Straight\StraightCurves.cs" />
-    <Compile Include="Straight\StraightPoints.cs" />
-    <Compile Include="Utilities\Heights\HeightsInterval.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Duopich\Restrictions\" />
-    <Folder Include="Monopich\Restrictions\" />
-    <Folder Include="Straight\Restrictions\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WarehouseLib\WarehouseLib.csproj">

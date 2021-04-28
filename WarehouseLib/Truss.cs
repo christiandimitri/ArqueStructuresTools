@@ -59,7 +59,7 @@ namespace WarehouseLib
         public abstract void IsRigidToColumns();
         public abstract void IsArticulatedToColumns();
 
-        protected List<Point3d> GenerateTopNodes(Curve curve, int divisions, int index)
+        protected void GenerateTopNodes(Curve curve, int divisions, int index)
         {
             var nodes = new List<Point3d>();
             var parameters =
@@ -68,7 +68,8 @@ namespace WarehouseLib
             for (var i = 0; i < parameters.Length; i++) nodes.Add(curve.PointAt(parameters[i]));
 
             if (index == 0) nodes.RemoveAt(nodes.Count - 1);
-            return nodes;
+
+            TopNodes.AddRange(nodes);
         }
 
         protected double ComputeDifference()
@@ -94,7 +95,7 @@ namespace WarehouseLib
 
         public abstract void GenerateTopBars();
         public abstract void GenerateBottomBars();
-        public abstract void GenerateBottomNodes(List<Point3d> points, double difference);
+        public abstract void GenerateBottomNodes(Curve crv);
 
         public abstract void ConstructTruss(int divisions);
 

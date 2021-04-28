@@ -33,7 +33,6 @@ namespace WarehouseLib
                     bars.Add(tempLine.ToNurbsCurve());
                 }
             }
-
             BottomBars = bars;
         }
 
@@ -41,20 +40,22 @@ namespace WarehouseLib
         {
             int recomputedDivisions = RecomputeDivisions(divisions);
             TopNodes = new List<Point3d>();
-            for (int j = 0; j < TopBars.Count; j++)
+            BottomNodes = new List<Point3d>();
+            for (int i = 0; i < TopBars.Count; i++)
             {
-                TopNodes.AddRange(GenerateTopNodes(TopBars[j], recomputedDivisions, j));
-                GenerateBottomNodes(TopNodes, ComputeDifference());
+                GenerateTopNodes(TopBars[i], recomputedDivisions, i);
+                GenerateBottomNodes(BottomBars[i]);
             }
-
             PointCloud cloud = new PointCloud(TopNodes);
             int index = cloud.ClosestPoint(StartingNodes[1]);
             GenerateIntermediateBars(TrussType, index);
         }
 
-        public override void GenerateBottomNodes(List<Point3d> points, double difference)
+        public override void GenerateBottomNodes(Curve crv)
         {
             List<Point3d> nodes = new List<Point3d>();
+            var points = TopNodes;
+            var difference = ComputeDifference();
             BottomNodes = new List<Point3d>();
             foreach (var pt in points)
             {

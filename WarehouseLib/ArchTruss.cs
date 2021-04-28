@@ -67,13 +67,24 @@ namespace WarehouseLib
             }
             else
             {
-                Arc arch = new Arc(StartingNodes[0] - Vector3d.ZAxis * ComputeDifference(),
-                    StartingNodes[1] - Vector3d.ZAxis * ComputeDifference(),
-                    StartingNodes[2] - Vector3d.ZAxis * ComputeDifference());
+                Arc arch = new Arc(StartingNodes[0] - ComputeNormal(0) * ComputeOffsetFromDot(0),
+                    StartingNodes[1] - Vector3d.ZAxis * ComputeOffsetFromTrigo(0),
+                    StartingNodes[2] - ComputeNormal(1) * ComputeOffsetFromDot(1));
                 arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
                 Curve[] tempCrvs = arch.ToNurbsCurve().Split(t);
+                Line lineA = new Line(StartingNodes[0] - Vector3d.ZAxis * ComputeDifference(),
+                    StartingNodes[0] - ComputeNormal(0) * ComputeOffsetFromDot(0));
+                Line lineB = new Line(StartingNodes[2] - ComputeNormal(1) * ComputeOffsetFromDot(1),
+                    StartingNodes[2] - Vector3d.ZAxis * ComputeDifference()
+                );
+                List<Curve> leftCrvs = new List<Curve> {lineA.ToNurbsCurve(), tempCrvs[0]};
+                List<Curve> rightCrvs = new List<Curve> {tempCrvs[1], lineB.ToNurbsCurve()};
+                Curve[] joinedRight = Curve.JoinCurves(rightCrvs, 0.001);
+                Curve[] joinedLeft = Curve.JoinCurves(leftCrvs, 0.001);
+                leftCrvs.AddRange(rightCrvs);
+                List<Curve> finalList = new List<Curve> {joinedLeft.ToList()[0], joinedRight.ToList()[0]};
                 // tempCrvs[1].Reverse();
-                BottomBars = tempCrvs.ToList();
+                BottomBars = finalList;
             }
         }
 
@@ -101,10 +112,12 @@ namespace WarehouseLib
         {
             int recomputedDivisions = RecomputeDivisions(divisions);
             TopNodes = new List<Point3d>();
-            for (int j = 0; j < TopBars.Count; j++)
+            BottomNodes = new List<Point3d>();
+            IntermediateBars = new List<Curve>();
+            for (int i = 0; i < TopBars.Count; i++)
             {
-                TopNodes.AddRange(GenerateTopNodes(TopBars[j], recomputedDivisions, j));
-                GenerateBottomNodes(TopNodes, ComputeDifference());
+                GenerateTopNodes(TopBars[i], recomputedDivisions, i);
+                GenerateBottomNodes(BottomBars[i]);
             }
 
             PointCloud cloud = new PointCloud(TopNodes);
