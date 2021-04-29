@@ -19,6 +19,7 @@ namespace WarehouseLib
         public List<Point3d> Nodes;
         public List<Plane> TempPlanes;
         public List<Column> Columns;
+        public List<Strap> DeckStraps;
 
         public Warehouse(Plane plane,double length, double width, double height, double maxHeight,double clearHeight, int typology, int count, string trussType)
         {

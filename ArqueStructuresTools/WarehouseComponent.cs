@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using WarehouseLib;
@@ -13,15 +12,16 @@ namespace ArqueStructuresTools
         /// Initializes a new instance of the TestWarehouseComponent class.
         /// </summary>
         public WarehouseComponent()
-          : base("TestWarehouseComponent", "Nickname",
-              "Description",
-              "Arque Structures", "Warehouse")
+            : base("WarehouseComponent", "Nickname",
+                "Description",
+                "Arque Structures", "Warehouses")
         {
         }
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
+        // ReSharper disable once RedundantNameQualifier
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("Plane", "P", "p", GH_ParamAccess.item, Plane.WorldXY);
@@ -32,7 +32,7 @@ namespace ArqueStructuresTools
             pManager.AddNumberParameter("Clear Height", "ch", "h", GH_ParamAccess.item, 3.5);
             pManager.AddIntegerParameter("Typology", "T", "T", GH_ParamAccess.item, 2);
             pManager.AddIntegerParameter("Count", "C", "C", GH_ParamAccess.item, 3);
-
+            pManager.AddTextParameter("Truss Type", "tt", "tt", GH_ParamAccess.item, "Warren");
         }
 
         /// <summary>
@@ -40,9 +40,7 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Warehouse", "w", "w",GH_ParamAccess.item);
-            pManager.AddCurveParameter("L", "L", "l", GH_ParamAccess.list);
-            pManager.AddPointParameter("P", "P", "P", GH_ParamAccess.list);
+            pManager.AddParameter(new WarehouseParameter());
         }
 
         /// <summary>
@@ -51,14 +49,15 @@ namespace ArqueStructuresTools
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Plane plane=Plane.WorldXY;
+            var plane = Plane.WorldXY;
             double length = 15;
             double width = 10;
             double height = 4;
             double maxHeight = 6;
-            double clearHeight = 3.5;
-            int typology = 2;
-            int count = 3;
+            var clearHeight = 3.5;
+            var typology = 2;
+            var count = 3;
+            var trussType = "";
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref width)) return;
@@ -67,11 +66,14 @@ namespace ArqueStructuresTools
             if (!DA.GetData(5, ref clearHeight)) return;
             if (!DA.GetData(6, ref typology)) return;
             if (!DA.GetData(7, ref count)) return;
+            if (!DA.GetData(8, ref trussType)) return;
 
             Warehouse warehouse = null;
+
             try
             {
-                warehouse = new Warehouse(plane, length, width, height, maxHeight,clearHeight, typology, count);
+                warehouse = new Warehouse(plane, length, width, height, maxHeight, clearHeight, typology, count,
+                    trussType);
             }
             catch (Exception e)
             {
@@ -79,23 +81,22 @@ namespace ArqueStructuresTools
                 return;
             }
 
-            var lines = new List<Curve>();
-            var nodes = new List<Point3d>();
-            foreach (var column in warehouse.Columns)
-            {
-                lines.Add(column.Axis.ToNurbsCurve());
-            }
-
-            foreach (var truss in warehouse.Trusses)
-            {
-                lines.AddRange(truss.TopBars);
-                //lines.AddRange(truss.BottomBars);
-                nodes.AddRange(truss.TopNodes);
-                nodes.AddRange(truss.BottomNodes);
-            }
-            DA.SetData(0, warehouse);
-            DA.SetDataList(1, lines);
-            DA.SetDataList(2, nodes);
+            // var lines = new List<Curve>();
+            // var nodes = new List<Point3d>();
+            // foreach (var column in warehouse.Columns)
+            // {
+            //     lines.Add(column.Axis.ToNurbsCurve());
+            // }
+            //
+            // foreach (var truss in warehouse.Trusses)
+            // {
+            //     lines.AddRange(truss.TopBars);
+            //     lines.AddRange(truss.BottomBars);
+            //     lines.AddRange(truss.IntermediateBars);
+            //     nodes.AddRange(truss.TopNodes);
+            //     nodes.AddRange(truss.BottomNodes);
+            // }
+            DA.SetData(0, new WarehouseGoo(warehouse));
         }
 
         /// <summary>
@@ -116,7 +117,7 @@ namespace ArqueStructuresTools
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("a9d0129f-f0f0-4f9c-9118-edba94a4f0bd"); }
+            get { return new Guid("A312F2DD-14A6-4196-8450-87079DA67FB5"); }
         }
     }
 }

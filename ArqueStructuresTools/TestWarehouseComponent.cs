@@ -15,7 +15,7 @@ namespace ArqueStructuresTools
         public TestWarehouseComponent()
           : base("TestWarehouseComponent", "Nickname",
               "Description",
-              "Arque Structures", "Warehouse")
+              "Arque Structures", "Warehouses")
         {
         }
 

@@ -62,7 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchTrussComponent.cs" />
+    <Compile Include="DeckStrapParameter.cs" />
     <Compile Include="DeconstructTruss.cs" />
+    <Compile Include="DeconstructWarehouse.cs" />
     <Compile Include="DoublepichTrussComponent.cs" />
     <Compile Include="FlatTrussComponent.cs" />
     <Compile Include="MonopichTrussComponent.cs" />
@@ -70,6 +72,8 @@
     <Compile Include="TrussParameter.cs" />
     <Compile Include="ArqueStructuresToolsInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WarehouseComponent.cs" />
+    <Compile Include="WarehouseParameter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WarehouseLib\WarehouseLib.csproj">

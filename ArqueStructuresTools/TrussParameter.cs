@@ -10,7 +10,7 @@ namespace ArqueStructuresTools
     public class TrussParameter : Grasshopper.Kernel.GH_Param<TrussGoo>, IGH_PreviewObject
     {
 
-        public TrussParameter() : base("Truss Parameter", "TP", "Truss...", "Arque Structures", "test", GH_ParamAccess.item)
+        public TrussParameter() : base("Truss Parameter", "TP", "Truss...", "Arque Structures", "Parameters", GH_ParamAccess.item)
         {
         }
 
