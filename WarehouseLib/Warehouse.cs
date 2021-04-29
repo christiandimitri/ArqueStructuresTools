@@ -21,7 +21,8 @@ namespace WarehouseLib
         public List<Column> Columns;
         public List<Strap> DeckStraps;
 
-        public Warehouse(Plane plane,double length, double width, double height, double maxHeight,double clearHeight, int typology, int count, string trussType)
+        public Warehouse(Plane plane, double length, double width, double height, double maxHeight, double clearHeight,
+            int typology, int count, string trussType)
         {
             if (width <= 0) throw new Exception("Warehouse cannot have 0 width!!");
             if (length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
@@ -40,6 +41,7 @@ namespace WarehouseLib
             GenerateTrusses();
             GenerateNodes();
             GenerateColumns();
+            GenerateDeckStraps();
         }
 
         private void GenerateColumns()
@@ -49,13 +51,38 @@ namespace WarehouseLib
             // TODO: Create columns here using trusses!
             foreach (var truss in Trusses)
             {
-                Line axisA = new Line(new Point3d(truss.StartingNodes[0].X, truss.StartingNodes[0].Y,Plane.Origin.Z), truss.StartingNodes[0]);
-                Line axisB = new Line(new Point3d(truss.StartingNodes[2].X, truss.StartingNodes[2].Y, Plane.Origin.Z), truss.StartingNodes[2]);
+                Line axisA = new Line(new Point3d(truss.StartingNodes[0].X, truss.StartingNodes[0].Y, Plane.Origin.Z),
+                    truss.StartingNodes[0]);
+                Line axisB = new Line(new Point3d(truss.StartingNodes[2].X, truss.StartingNodes[2].Y, Plane.Origin.Z),
+                    truss.StartingNodes[2]);
                 columns.Add(new Column(axisA));
                 columns.Add(new Column(axisB));
             }
+
             Columns = columns;
         }
+
+        public void GenerateDeckStraps()
+        {
+            var deckStraps = new List<Strap>();
+
+            for (var i = 0; i < Trusses.Count; i++)
+            {
+                for (int j = 0; j < Trusses[i].TopNodes.Count; j++)
+                {
+                    if (i < Trusses.Count - 1)
+                    {
+                        Point3d ptA = Trusses[i].TopNodes[j];
+                        Point3d ptB = Trusses[i + 1].TopNodes[j];
+                        Line axis = new Line(ptA, ptB);
+                        deckStraps.Add(new Strap(axis));
+                    }
+                }
+            }
+
+            DeckStraps = deckStraps;
+        }
+
         private void GenerateNodes()
         {
             var nodes = new List<Point3d>();
@@ -65,36 +92,43 @@ namespace WarehouseLib
                 nodes = truss.TopNodes;
                 nodes = truss.BottomNodes;
             }
+
             Nodes = nodes;
         }
+
         private void GenerateTrusses()
         {
             var trusses = new List<Truss>();
             for (int i = 0; i <= Count; i++)
             {
                 var span = (Width / Count) * i;
-                var tempPlane = new Plane(Plane.PointAt(0,span, 0), Plane.ZAxis);
-                if (Typology ==0)
+                var tempPlane = new Plane(Plane.PointAt(0, span, 0), Plane.ZAxis);
+                if (Typology == 0)
                 {
-                    var trussA = new FlatTruss(tempPlane, Length, Height, MaxHeight,ClearHeight, 4, TrussType, "Articulated");
+                    var trussA = new FlatTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 4, TrussType,
+                        "Articulated");
                     trusses.Add(trussA);
                 }
-                else if(Typology == 1)
+                else if (Typology == 1)
                 {
-                    var trussA = new ArchTruss(tempPlane, Length, Height, MaxHeight,ClearHeight, 4, TrussType, "Articulated",0);
+                    var trussA = new ArchTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 4, TrussType,
+                        "Articulated", 0);
                     trusses.Add(trussA);
                 }
-                else if(Typology == 2)
+                else if (Typology == 2)
                 {
-                    var trussA = new MonopichedTruss(tempPlane, Length, Height, MaxHeight,ClearHeight, 4, TrussType,"Articulated",0);
+                    var trussA = new MonopichedTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 4, TrussType,
+                        "Articulated", 0);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 3)
                 {
-                    var trussA = new DoublepichedTruss(tempPlane, 0, Height, MaxHeight,ClearHeight, 4, TrussType, "Articulated", Length,Length*0.8,0);
+                    var trussA = new DoublepichedTruss(tempPlane, 0, Height, MaxHeight, ClearHeight, 4, TrussType,
+                        "Articulated", Length, Length * 0.8, 0);
                     trusses.Add(trussA);
                 }
             }
+
             Trusses = trusses;
         }
     }

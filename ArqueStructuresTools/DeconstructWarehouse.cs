@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Grasshopper.Kernel;
+using Rhino.Geometry;
+using WarehouseLib;
 
 namespace ArqueStructuresTools
 {
@@ -24,6 +26,7 @@ namespace ArqueStructuresTools
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new TrussParameter());
+            pManager.AddParameter(new StrapParameter());
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -39,7 +42,15 @@ namespace ArqueStructuresTools
             {
                 trusses.Add(new TrussGoo(truss));
             }
+
+            var deckStraps = new List<StrapGoo>();
+            foreach (var deckStrap in warehouse.DeckStraps)
+            {
+                deckStraps.Add(new StrapGoo(deckStrap));
+            }
+
             DA.SetDataList(0, new List<TrussGoo>(trusses));
+            DA.SetDataList(1, new List<StrapGoo>(deckStraps));
         }
     }
 }

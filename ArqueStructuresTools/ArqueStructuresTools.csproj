@@ -62,7 +62,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchTrussComponent.cs" />
-    <Compile Include="DeckStrapParameter.cs" />
+    <Compile Include="DeckStrapsComponent.cs" />
+    <Compile Include="StrapParameter.cs" />
     <Compile Include="DeconstructTruss.cs" />
     <Compile Include="DeconstructWarehouse.cs" />
     <Compile Include="DoublepichTrussComponent.cs" />

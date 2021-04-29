@@ -47,29 +47,29 @@ namespace ArqueStructuresTools
                                 _box.Union(column.Axis.ToNurbsCurve().GetBoundingBox(false));
                                 args.Display.DrawCurve(column.Axis.ToNurbsCurve(), System.Drawing.Color.Purple);
                             }
-                        }
-                        foreach (var truss in warehouse.Trusses)
-                        {
+
                             foreach (var topBars in truss.TopBars)
                             {
                                 _box.Union(topBars.GetBoundingBox(false));
                                 args.Display.DrawCurve(topBars, System.Drawing.Color.Blue);
                             }
-                        }
-                        foreach (var truss in warehouse.Trusses)
-                        {
+
                             foreach (var bottomBars in truss.BottomBars)
                             {
                                 _box.Union(bottomBars.GetBoundingBox(false));
                                 args.Display.DrawCurve(bottomBars, System.Drawing.Color.Red);
                             }
-                        }
-                        foreach (var truss in warehouse.Trusses)
-                        {
+
                             foreach (var interBars in truss.IntermediateBars)
                             {
                                 _box.Union(interBars.GetBoundingBox(false));
                                 args.Display.DrawCurve(interBars, System.Drawing.Color.Green);
+                            }
+
+                            foreach (var deck in warehouse.DeckStraps)
+                            {
+                                _box.Union(deck.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                args.Display.DrawCurve(deck.Axis.ToNurbsCurve(), System.Drawing.Color.Yellow);
                             }
                         }
                     }
@@ -77,6 +77,7 @@ namespace ArqueStructuresTools
             }
         }
     }
+
     public class WarehouseGoo : GH_Goo<Warehouse>
     {
         public WarehouseGoo(Warehouse warehouse)
