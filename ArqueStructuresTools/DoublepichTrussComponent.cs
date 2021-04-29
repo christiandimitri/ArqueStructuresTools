@@ -55,10 +55,10 @@ namespace ArqueStructuresTools
             double leftLength = 0;
             double maxHeight = 0;
             double clearHeight = 0;
-            int divisions = 0;
-            string trussType = "";
-            string articulationType = "";
-            int baseType = 0;
+            var divisions = 0;
+            var trussType = "";
+            var articulationType = "";
+            var baseType = 0;
             if (!DA.GetData(0, ref worldXy)) return;
             if (!DA.GetData(1, ref rightLength)) return;
             if (!DA.GetData(2, ref leftLength)) return;

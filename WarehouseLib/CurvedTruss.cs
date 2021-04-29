@@ -13,11 +13,21 @@ namespace WarehouseLib
         {
         }
 
-        protected override void GenerateTickBottomBars()
+        protected override void GenerateThickBottomBars()
         {
             throw new NotImplementedException();
         }
 
+        protected override void GenerateBottomNodes(Curve crv)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GeneratePerpendicularBottomNodes(Curve crv)
+        {
+            throw new NotImplementedException();
+        }
+        
         protected override void IsArticulatedToColumns()
         {
             throw new NotImplementedException();
@@ -53,6 +63,8 @@ namespace WarehouseLib
             var offset = Vector3d.Multiply(vertical, normal);
             return offset;
         }
+
+        
 
         public override void ConstructTruss(int divisions)
         {

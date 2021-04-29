@@ -47,15 +47,15 @@ namespace ArqueStructuresTools
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Plane worldXy = Plane.WorldXY;
+            var worldXy = Plane.WorldXY;
             double height = 0;
             double length = 0;
             double maxHeight = 0;
             double clearHeight = 0;
-            int divisions = 0;
-            string trussType = "";
-            string articulationType = "";
-            int baseType = 0;
+            var divisions = 0;
+            var trussType = "";
+            var articulationType = "";
+            var baseType = 0;
             if (!DA.GetData(0, ref worldXy)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref height)) return;

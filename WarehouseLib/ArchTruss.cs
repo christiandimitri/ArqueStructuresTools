@@ -9,9 +9,10 @@ namespace WarehouseLib
 {
     public class ArchTruss : CurvedTruss
     {
-        public int BaseType;
+        private int BaseType;
         public ArchTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
-            string trussType, string articulationType, int baseType) : base(plane, length, height, maxHeight, clearHeight, divisions,
+            string trussType, string articulationType, int baseType) : base(plane, length, height, maxHeight,
+            clearHeight, divisions,
             trussType, articulationType)
         {
             BaseType = baseType;
@@ -40,7 +41,7 @@ namespace WarehouseLib
             BottomBars = splitCrvs;
         }
 
-        protected override void GenerateTickBottomBars()
+        protected override void GenerateThickBottomBars()
         {
             if (Height == MaxHeight)
             {
@@ -91,6 +92,33 @@ namespace WarehouseLib
                 // tempCrvs[1].Reverse();
                 TopBars = tempCrvs.ToList();
             }
+        }
+
+        protected override void GenerateBottomNodes(Curve crv)
+        {
+            if ((TrussType == "Warren" || TrussType == "Warren_Studs") && BaseType == 0)
+            {
+                GeneratePerpendicularBottomNodes(crv);
+            }
+            else
+            {
+                GenerateVerticalBottomNodes(crv);
+            }
+        }
+
+        public override void GeneratePerpendicularBottomNodes(Curve crv)
+        {
+            var nodes = new List<Point3d>();
+            var points = new List<Point3d>(TopNodes);
+            BottomNodes = new List<Point3d>();
+            foreach (var pt in points)
+            {
+                double t;
+                crv.ClosestPoint(pt, out t);
+                nodes.Add(crv.PointAt(t));
+            }
+
+            BottomNodes.AddRange(nodes);
         }
 
         public override void ConstructTruss(int divisions)

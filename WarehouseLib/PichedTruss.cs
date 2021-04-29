@@ -1,6 +1,7 @@
 ﻿using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
+using Rhino.Geometry.Intersect;
 
 namespace WarehouseLib
 {
@@ -13,7 +14,7 @@ namespace WarehouseLib
         {
         }
 
-        protected override void GenerateTickBottomBars()
+        protected override void GenerateThickBottomBars()
         {
             List<Curve> bars = new List<Curve>();
             for (int i = 0; i < StartingNodes.Count; i++)
@@ -29,6 +30,17 @@ namespace WarehouseLib
 
             BottomBars = bars;
         }
+
+        protected override void GenerateBottomNodes(Curve crv)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GeneratePerpendicularBottomNodes(Curve crv)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public override void ConstructTruss(int divisions)
         {

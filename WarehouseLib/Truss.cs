@@ -71,7 +71,7 @@ namespace WarehouseLib
 
         private void BaseIsThickened()
         {
-            GenerateTickBottomBars();
+            GenerateThickBottomBars();
         }
 
         private void BaseIsStraight()
@@ -133,7 +133,7 @@ namespace WarehouseLib
         }
 
         public abstract void GenerateTopBars();
-        protected abstract void GenerateTickBottomBars();
+        protected abstract void GenerateThickBottomBars();
 
         public void GenerateStraightBottomBars()
         {
@@ -146,28 +146,11 @@ namespace WarehouseLib
             BottomBars = bars;
         }
 
-        protected void GenerateBottomNodes(Curve crv)
-        {
-            if (TrussType == "Warren" || TrussType == "Warren_Studs")
-            {
-                GeneratePerpedicularBottomNodes(crv);
-            }
-            else
-            {
-                GenerateVerticalBottomNodes(crv);
-            }
-        }
+        protected abstract void GenerateBottomNodes(Curve crv);
 
-        private void GeneratePerpedicularBottomNodes(Curve crv)
-        {
-            List<Point3d> nodes = new List<Point3d>();
-            var points = new List<Point3d>(TopNodes);
-            
+        public abstract void GeneratePerpendicularBottomNodes(Curve crv);
 
-            BottomNodes.AddRange(nodes);
-        }
-
-        private void GenerateVerticalBottomNodes(Curve crv)
+        protected void GenerateVerticalBottomNodes(Curve crv)
         {
             List<Point3d> nodes = new List<Point3d>();
             var points = new List<Point3d>(TopNodes);
@@ -200,27 +183,25 @@ namespace WarehouseLib
             if (trussType == "Warren")
                 ConstructWarrenTruss();
             else if (trussType == "Warren_Studs")
-                ConstructWarrenStudsTruss();
+                ConstructWarrenStudsTruss(index);
             else if (trussType == "Pratt")
                 ConstructPrattTruss(index);
             else if (trussType == "Howe") ConstructHoweTruss(index);
-            RecomputeNodes();
+            // RecomputeNodes();
         }
 
         private void ConstructWarrenTruss()
         {
+            var tempTopNodes = BottomNodes;
+            var tempBottomNodes = TopNodes;
             var bars = new List<Curve>();
-            for (var i = 0; i < TopNodes.Count; i += 2)
+            for (var i = 0; i < tempTopNodes.Count; i++)
             {
-                if (i < TopNodes.Count - 1)
+                if (i % 2 == 1)
                 {
-                    var lineA = new Line(TopNodes[i], BottomNodes[i + 1]);
+                    var lineA = new Line(tempBottomNodes[i - 1], tempTopNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
-                }
-
-                if (i > 0)
-                {
-                    var lineA = new Line(TopNodes[i], BottomNodes[i - 1]);
+                    lineA = new Line(tempBottomNodes[i + 1], tempTopNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
             }
@@ -302,9 +283,25 @@ namespace WarehouseLib
             IntermediateBars = bars;
         }
 
-        private void ConstructWarrenStudsTruss()
+        private void ConstructWarrenStudsTruss(int index)
         {
-            throw new NotImplementedException();
+            var tempTopNodes = BottomNodes;
+            var tempBottomNodes = TopNodes;
+            var bars = new List<Curve>();
+            for (var i = 0; i < tempTopNodes.Count; i++)
+            {
+                if (i % 2 == 1)
+                {
+                    var lineA = new Line(tempBottomNodes[i - 1], tempTopNodes[i]);
+                    bars.Add(lineA.ToNurbsCurve());
+                    lineA = new Line(tempBottomNodes[i], tempTopNodes[i]);
+                    bars.Add(lineA.ToNurbsCurve());
+                    lineA = new Line(tempBottomNodes[i + 1], tempTopNodes[i]);
+                    bars.Add(lineA.ToNurbsCurve());
+                }
+            }
+
+            IntermediateBars = bars;
         }
 
         public abstract List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index);
@@ -328,11 +325,11 @@ namespace WarehouseLib
                 }
                 else if (TrussType == "Warren_Studs")
                 {
-                    // tempTopList.Add(TopNodes[i]);
-                    // if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
-                    // {
-                    //     tempBottomList.Add(BottomNodes[i]);
-                    // }
+                    tempTopList.Add(TopNodes[i]);
+                    if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
+                    {
+                        tempBottomList.Add(BottomNodes[i]);
+                    }
                 }
                 else if (TrussType == "Howe" || TrussType == "Pratt")
                 {

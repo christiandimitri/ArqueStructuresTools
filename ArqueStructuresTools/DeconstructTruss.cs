@@ -51,12 +51,12 @@ namespace ArqueStructuresTools
             if (!DA.GetData(0, ref trussGoo)) return;
 
             var truss = trussGoo.Value;
-            List<Curve> topBars = truss.TopBars;
-            List<Curve> bottomBars = truss.BottomBars;
-            List<Curve> intermediateBars = truss.IntermediateBars;
-            List<Curve> columns = new List<Curve>();
-            List<Point3d> topNodes = truss.TopNodes;
-            List<Point3d> bottomNodes = truss.BottomNodes;
+            var topBars = truss.TopBars;
+            var bottomBars = truss.BottomBars;
+            var intermediateBars = truss.IntermediateBars;
+            var columns = new List<Curve>();
+            var topNodes = truss.TopNodes;
+            var bottomNodes = truss.BottomNodes;
 
             foreach (var cl in truss.Columns)
             {
