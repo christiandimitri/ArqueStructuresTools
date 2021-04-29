@@ -1,10 +1,6 @@
 ﻿using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Rhino.Geometry.Intersect;
 
 namespace WarehouseLib
 {
@@ -16,26 +12,13 @@ namespace WarehouseLib
             clearHeight, divisions, trussType, articulationType)
         {
         }
-        public override void GenerateTickBottomBars()
-        {
-            throw new NotImplementedException();
-        }
-        public override void ChangeArticulationAtColumnsByType(string type)
+
+        protected override void GenerateTickBottomBars()
         {
             throw new NotImplementedException();
         }
 
-        public override void ChangeBaseByType(int type)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void IsRigidToColumns()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void IsArticulatedToColumns()
+        protected override void IsArticulatedToColumns()
         {
             throw new NotImplementedException();
         }
@@ -48,25 +31,13 @@ namespace WarehouseLib
         public Vector3d ComputeNormal(int index)
         {
             var crv = TopBars[index == 0 ? 0 : 1];
-            var vertical = Vector3d.ZAxis * ComputeDifference();
             var vectorA = index == 0 ? crv.TangentAtStart : crv.TangentAtEnd;
             var perp = Vector3d.CrossProduct(vectorA, Plane.ZAxis);
             perp.Unitize();
             var normal = Vector3d.CrossProduct(vectorA, perp);
             return normal;
         }
-
-        public static double Center(double offsetFactor, Curve curve, Vector3d normalVector)
-        {
-            // get tangent vector at end point
-            Vector3d endTangent = curve.TangentAtEnd;
-
-            // compute at center index, the move factor => offset / sin(angle)
-            double angle = Vector3d.VectorAngle(endTangent, normalVector);
-            double hypothenus = offsetFactor / Math.Sin(angle);
-            return hypothenus;
-        }
-
+        
         // TODO index compute from max min height
         public double ComputeOffsetFromTrigo(int index)
         {
@@ -86,6 +57,21 @@ namespace WarehouseLib
         public override void ConstructTruss(int divisions)
         {
             throw new NotImplementedException();
+        }
+
+        public override List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index)
+        {
+            List<Vector3d> normals = new List<Vector3d>();
+            for (int i = 0; i < points.Count; i++)
+            {
+                var vectorA = index == 0 ? crv.TangentAtStart : crv.TangentAtEnd;
+                var perp = Vector3d.CrossProduct(vectorA, Plane.ZAxis);
+                perp.Unitize();
+                var normal = Vector3d.CrossProduct(vectorA, perp);
+                normals.Add(normal);
+            }
+
+            return normals;
         }
     }
 }

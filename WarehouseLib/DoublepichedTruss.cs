@@ -8,17 +8,15 @@ namespace WarehouseLib
     {
         private double RightLength;
         private double LeftLength;
-        public int BaseType;
         public DoublepichedTruss(Plane plane, double length, double height, double maxHeight,double clearHeight, int divisions, string trussType, string articulationType, double rightLength, double leftLength, int baseType) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType, articulationType)
         {
             RightLength = rightLength;
             LeftLength = leftLength;
-            BaseType = baseType;
             GenerateTopBars();
             GenerateColumns();
             ChangeBaseByType(baseType);
             ConstructTruss(divisions);
-            // ChangeArticulationAtColumnsByType(articulationType);
+            ChangeArticulationAtColumnsByType(articulationType);
         }
 
         public override void GenerateTopBars()

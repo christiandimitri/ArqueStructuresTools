@@ -22,6 +22,7 @@ namespace ArqueStructuresTools
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
+        // ReSharper disable once RedundantNameQualifier
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("Plane", "P", "p", GH_ParamAccess.item, Plane.WorldXY);
@@ -52,15 +53,15 @@ namespace ArqueStructuresTools
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Plane plane=Plane.WorldXY;
+            var plane=Plane.WorldXY;
             double length = 15;
             double width = 10;
             double height = 4;
             double maxHeight = 6;
-            double clearHeight = 3.5;
-            int typology = 2;
-            int count = 3;
-            string trussType = "";
+            var clearHeight = 3.5;
+            var typology = 2;
+            var count = 3;
+            var trussType = "";
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref width)) return;
@@ -95,8 +96,8 @@ namespace ArqueStructuresTools
                 lines.AddRange(truss.TopBars);
                 lines.AddRange(truss.BottomBars);
                 lines.AddRange(truss.IntermediateBars);
-                //nodes.AddRange(truss.TopNodes);
-                //nodes.AddRange(truss.BottomNodes);
+                nodes.AddRange(truss.TopNodes);
+                nodes.AddRange(truss.BottomNodes);
             }
             DA.SetData(0, warehouse);
             DA.SetDataList(1, lines);

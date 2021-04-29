@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using WarehouseLib;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
@@ -21,6 +20,7 @@ namespace ArqueStructuresTools
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
+        // ReSharper disable once RedundantNameQualifier
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("p", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
@@ -38,6 +38,7 @@ namespace ArqueStructuresTools
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
+        // ReSharper disable once RedundantNameQualifier
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new TrussParameter());
@@ -47,9 +48,10 @@ namespace ArqueStructuresTools
         /// This is the method that actually does the work.
         /// </summary>
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
+        // ReSharper disable once InconsistentNaming
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Plane worldXY = Plane.WorldXY;
+            Plane worldXy = Plane.WorldXY;
             double height = 0;
             double length = 0;
             double maxHeight = 0;
@@ -58,7 +60,7 @@ namespace ArqueStructuresTools
             string trussType = "";
             string articulationType = "";
             int baseType = 0;
-            if (!DA.GetData(0, ref worldXY)) return;
+            if (!DA.GetData(0, ref worldXy)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref height)) return;
             if (!DA.GetData(3, ref maxHeight)) return;
@@ -69,7 +71,7 @@ namespace ArqueStructuresTools
             if (!DA.GetData(8, ref baseType)) return;
 
 
-            var truss = new MonopichedTruss(worldXY, length, height, maxHeight, clearHeight, divisions, trussType, articulationType,baseType );
+            var truss = new MonopichedTruss(worldXy, length, height, maxHeight, clearHeight, divisions, trussType, articulationType,baseType );
 
             DA.SetData(0, new TrussGoo(truss));
         }

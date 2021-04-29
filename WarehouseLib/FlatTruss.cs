@@ -15,7 +15,7 @@ namespace WarehouseLib
             GenerateColumns();
             GenerateTickBottomBars();
             ConstructTruss(divisions);
-            // ChangeArticulationAtColumnsByType(articulationType);
+            ChangeArticulationAtColumnsByType(articulationType);
         }
         public override void GenerateTopBars()
         {

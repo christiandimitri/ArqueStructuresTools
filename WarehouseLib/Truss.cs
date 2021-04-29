@@ -56,10 +56,45 @@ namespace WarehouseLib
             return startingPoints;
         }
 
-        public abstract void ChangeArticulationAtColumnsByType(string type);
-        public abstract void ChangeBaseByType(int type);
-        public abstract void IsRigidToColumns();
-        public abstract void IsArticulatedToColumns();
+        protected void ChangeBaseByType(int index)
+        {
+            if (index == 0)
+            {
+                BaseIsThickened();
+            }
+            else
+            {
+                BaseIsStraight();
+            }
+        }
+        private void BaseIsThickened()
+        {
+            GenerateTickBottomBars();
+        }
+
+        private void BaseIsStraight()
+        {
+            GenerateStraightBottomBars();
+        }
+
+        protected void ChangeArticulationAtColumnsByType(string type)
+        {
+            if (type == "Articulated")
+            {
+                IsArticulatedToColumns();
+            }
+            else if (type == "Rigid")
+            {
+                IsRigidToColumns();
+            }
+        }
+
+        private void IsRigidToColumns()
+        {
+            BottomBars = new List<Curve>(BottomBars);
+        }
+
+        protected abstract void IsArticulatedToColumns();
 
         protected void GenerateTopNodes(Curve curve, int divisions, int index)
         {
@@ -96,7 +131,7 @@ namespace WarehouseLib
         }
 
         public abstract void GenerateTopBars();
-        public abstract void GenerateTickBottomBars();
+        protected abstract void GenerateTickBottomBars();
 
         public void GenerateStraightBottomBars()
         {
@@ -109,11 +144,9 @@ namespace WarehouseLib
             BottomBars = bars;
         }
 
-        public void GenerateThickBottomNodes(Curve crv)
+        protected void GenerateThickBottomNodes(Curve crv)
         {
             List<Point3d> nodes = new List<Point3d>();
-            List<double> parameters = new List<double>();
-            var difference = ComputeDifference();
             var points = new List<Point3d>(TopNodes);
             var intersectingLines = new List<Line>();
             for (int i = 0; i < points.Count; i++)
@@ -126,13 +159,11 @@ namespace WarehouseLib
             foreach (var line in intersectingLines)
             {
                 var intersectionEvents = Intersection.CurveCurve(crv, line.ToNurbsCurve(), 0.01, 0.0);
-                if (intersectionEvents != null)
+                if (intersectionEvents == null) continue;
+                for (int i = 0; i < intersectionEvents.Count; i++)
                 {
-                    for (int i = 0; i < intersectionEvents.Count; i++)
-                    {
-                        var intEv = intersectionEvents[0];
-                        nodes.Add(intEv.PointA);
-                    }
+                    var intEv = intersectionEvents[0];
+                    nodes.Add(intEv.PointA);
                 }
             }
 
@@ -253,6 +284,8 @@ namespace WarehouseLib
             throw new NotImplementedException();
         }
 
+        public abstract List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index);
+
         private void RecomputeNodes()
         {
             List<Point3d> tempTopList = new List<Point3d>();
@@ -272,11 +305,11 @@ namespace WarehouseLib
                 }
                 else if (TrussType == "Warren_Studs")
                 {
-                    tempTopList.Add(TopNodes[i]);
-                    if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
-                    {
-                        tempBottomList.Add(BottomNodes[i]);
-                    }
+                    // tempTopList.Add(TopNodes[i]);
+                    // if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
+                    // {
+                    //     tempBottomList.Add(BottomNodes[i]);
+                    // }
                 }
                 else if (TrussType == "Howe" || TrussType == "Pratt")
                 {

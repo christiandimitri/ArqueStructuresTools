@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using WarehouseLib;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
+// ReSharper disable RedundantNameQualifier
 
 namespace ArqueStructuresTools
 {
@@ -44,17 +44,18 @@ namespace ArqueStructuresTools
         /// This is the method that actually does the work.
         /// </summary>
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
+        // ReSharper disable once InconsistentNaming
         protected override void SolveInstance(IGH_DataAccess DA)
         {
 
-            Plane worldXY = Plane.WorldXY;
+            Plane worldXy = Plane.WorldXY;
             double length = 0;
             double height = 0;
             double clearHeight = 0;
             int divisions = 0;
             string trussType = "";
             string articulationType = "";
-            if (!DA.GetData(0, ref worldXY)) return;
+            if (!DA.GetData(0, ref worldXy)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref height)) return;
             if (!DA.GetData(3, ref clearHeight)) return;
@@ -62,7 +63,7 @@ namespace ArqueStructuresTools
             if (!DA.GetData(5, ref trussType)) return;
             if (!DA.GetData(6, ref articulationType)) return;
 
-            var truss = new FlatTruss(worldXY, length, height, 0, clearHeight, divisions, trussType,articulationType);
+            var truss = new FlatTruss(worldXy, length, height, 0, clearHeight, divisions, trussType,articulationType);
 
             DA.SetData(0, new TrussGoo(truss));
         }

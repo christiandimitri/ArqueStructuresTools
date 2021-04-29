@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
@@ -24,9 +21,9 @@ namespace ArqueStructuresTools
 
         public bool IsPreviewCapable => true;
 
-        public BoundingBox ClippingBox => box;
+        public BoundingBox ClippingBox => _box;
 
-        private BoundingBox box = new BoundingBox();
+        private BoundingBox _box = new BoundingBox();
         public void DrawViewportMeshes(IGH_PreviewArgs args)
         {
  
@@ -34,44 +31,49 @@ namespace ArqueStructuresTools
 
         public void DrawViewportWires(IGH_PreviewArgs args)
         {
-            box = new BoundingBox();
+            _box = new BoundingBox();
             foreach (var path in VolatileData.Paths)
             {
-                var branch = VolatileData.get_Branch(path) as List<TrussGoo>;
-                foreach (var trussGoo in branch)
+                if (VolatileData.get_Branch(path) is List<TrussGoo> branch)
                 {
-                    var truss = trussGoo.Value;
-                    foreach (var line in truss.TopBars)
+                    foreach (var trussGoo in branch)
                     {
-                        box.Union(line.GetBoundingBox(false));
-                        args.Display.DrawCurve(line, System.Drawing.Color.Blue);
+                        var truss = trussGoo.Value;
+                        foreach (var line in truss.TopBars)
+                        {
+                            _box.Union(line.GetBoundingBox(false));
+                            args.Display.DrawCurve(line, System.Drawing.Color.Blue);
+                        }
                     }
-                }
-                foreach (var trussGoo in branch)
-                {
-                    var truss = trussGoo.Value;
-                    foreach (var line in truss.BottomBars)
+
+                    foreach (var trussGoo in branch)
                     {
-                        box.Union(line.GetBoundingBox(false));
-                        args.Display.DrawCurve(line, System.Drawing.Color.Red);
+                        var truss = trussGoo.Value;
+                        foreach (var line in truss.BottomBars)
+                        {
+                            _box.Union(line.GetBoundingBox(false));
+                            args.Display.DrawCurve(line, System.Drawing.Color.Red);
+                        }
                     }
-                }
-                foreach (var trussGoo in branch)
-                {
-                    var truss = trussGoo.Value;
+
+                    foreach (var trussGoo in branch)
+                    {
+                        var truss = trussGoo.Value;
                         foreach (var line in truss.IntermediateBars)
                         {
-                            box.Union(line.GetBoundingBox(false));
+                            _box.Union(line.GetBoundingBox(false));
                             args.Display.DrawCurve(line, System.Drawing.Color.Green);
                         }
-                }
-                foreach (var trussGoo in branch)
-                {
-                    var truss = trussGoo.Value;
-                    foreach (var line in truss.Columns)
+                    }
+
+                    foreach (var trussGoo in branch)
                     {
-                        box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
-                        args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.Purple);
+                        var truss = trussGoo.Value;
+                        foreach (var line in truss.Columns)
+                        {
+                            _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
+                            args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.Purple);
+                        }
                     }
                 }
             }
@@ -91,7 +93,7 @@ namespace ArqueStructuresTools
             Value = null;
         }
 
-        public override Truss Value { get => base.Value; set => base.Value = value; }
+        public sealed override Truss Value { get => base.Value; set => base.Value = value; }
 
         public override bool IsValid => true;
 

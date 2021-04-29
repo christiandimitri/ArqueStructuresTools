@@ -1,14 +1,12 @@
 ﻿using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WarehouseLib
 {
     public class PichedTruss : Truss
     {
+        
         protected PichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
             int divisions, string trussType, string articulationType) : base(plane, length, height,
             maxHeight,
@@ -16,7 +14,7 @@ namespace WarehouseLib
         {
         }
 
-        public override void GenerateTickBottomBars()
+        protected override void GenerateTickBottomBars()
         {
             List<Curve> bars = new List<Curve>();
             for (int i = 0; i < StartingNodes.Count; i++)
@@ -35,67 +33,49 @@ namespace WarehouseLib
 
         public override void ConstructTruss(int divisions)
         {
-            int recomputedDivisions = RecomputeDivisions(divisions);
+            var recomputedDivisions = RecomputeDivisions(divisions);
             TopNodes = new List<Point3d>();
             BottomNodes = new List<Point3d>();
+            var angle = Vector3d.VectorAngle(TopBars[0].TangentAtStart, Plane.XAxis);
             for (int i = 0; i < TopBars.Count; i++)
             {
                 GenerateTopNodes(TopBars[i], recomputedDivisions, i);
+                // ComputeNormals(TopBars[i], TopNodes, i);
                 GenerateThickBottomNodes(BottomBars[i]);
             }
 
-            PointCloud cloud = new PointCloud(TopNodes);
-            int index = cloud.ClosestPoint(StartingNodes[1]);
+            var cloud = new PointCloud(TopNodes);
+            var index = cloud.ClosestPoint(StartingNodes[1]);
             GenerateIntermediateBars(TrussType, index);
         }
-        
-        public override void ChangeBaseByType(int index)
+
+        public override List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index)
         {
-            if (index == 0)
+            var normals = new List<Vector3d>();
+            var lines = new List<Curve>();
+            foreach (var t in points)
             {
-                BaseIsThickened();
+                var vectorA = index == 0 ? crv.TangentAtStart : crv.TangentAtEnd;
+                var perp = Vector3d.CrossProduct(vectorA, Plane.ZAxis);
+                perp.Unitize();
+                var normal = Vector3d.CrossProduct(vectorA, perp);
+                normals.Add(normal);
+                var line = new Line(t, normal * 100);
+                lines.Add(line.ToNurbsCurve());
             }
-            else
+
+            BottomBars.AddRange(lines);
+            return normals;
+        }
+
+        protected override void IsArticulatedToColumns()
+        {
+            var splitCrvs = new List<Curve>();
+            for (var i = 0; i < BottomBars.Count; i++)
             {
-                BaseIsStraight();
-            }
-        }
-
-        private void BaseIsThickened()
-        {
-            GenerateTickBottomBars();
-        }
-
-        private void BaseIsStraight()
-        {
-            GenerateStraightBottomBars();
-        }
-
-        public override void ChangeArticulationAtColumnsByType(string type)
-        {
-            if (type == "Articulated")
-            {
-                IsArticulatedToColumns();
-            }
-            else if (type == "Rigid")
-            {
-                IsRigidToColumns();
-            }
-        }
-
-        public override void IsRigidToColumns()
-        {
-            BottomBars = new List<Curve>(BottomBars);
-        }
-
-        public override void IsArticulatedToColumns()
-        {
-            Point3d ptA = new Point3d();
-            List<Curve> splitCrvs = new List<Curve>();
-            for (int i = 0; i < BottomBars.Count; i++)
-            {
+                
                 var bar = BottomBars[i];
-                ptA = BottomNodes[i == 0 ? 1 : BottomNodes.Count - 2];
+                var ptA = BottomNodes[i == 0 ? 1 : BottomNodes.Count - 2];
                 double t;
                 bar.ClosestPoint(ptA, out t);
                 splitCrvs.Add(bar.Split(t)[i == 0 ? 1 : 0]);

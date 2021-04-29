@@ -19,49 +19,10 @@ namespace WarehouseLib
             GenerateColumns();
             ChangeBaseByType(baseType);
             ConstructTruss(divisions);
-            // ChangeArticulationAtColumnsByType(articulationType);
+            ChangeArticulationAtColumnsByType(articulationType);
         }
 
-        public override void ChangeArticulationAtColumnsByType(string type)
-        {
-            if (type == "Articulated")
-            {
-                IsArticulatedToColumns();
-            }
-            else if (type == "Rigid")
-            {
-                IsRigidToColumns();
-            }
-        }
-
-        public override void ChangeBaseByType(int index)
-        {
-            if (index == 0)
-            {
-                BaseIsThickened();
-            }
-            else
-            {
-                BaseIsStraight();
-            }
-        }
-
-        private void BaseIsThickened()
-        {
-            GenerateTickBottomBars();
-        }
-
-        private void BaseIsStraight()
-        {
-            GenerateStraightBottomBars();
-        }
-
-        public override void IsRigidToColumns()
-        {
-            BottomBars = new List<Curve>(BottomBars);
-        }
-
-        public override void IsArticulatedToColumns()
+        protected override void IsArticulatedToColumns()
         {
             Point3d ptA = new Point3d();
             List<Curve> splitCrvs = new List<Curve>();
@@ -79,7 +40,7 @@ namespace WarehouseLib
             BottomBars = splitCrvs;
         }
 
-        public override void GenerateTickBottomBars()
+        protected override void GenerateTickBottomBars()
         {
             if (Height == MaxHeight)
             {

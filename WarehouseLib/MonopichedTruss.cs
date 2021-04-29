@@ -15,7 +15,7 @@ namespace WarehouseLib
             GenerateColumns();
             ChangeBaseByType(baseType);
             ConstructTruss(divisions);
-            // ChangeArticulationAtColumnsByType(articulationType);
+            ChangeArticulationAtColumnsByType(articulationType);
         }
 
         public override void GenerateTopBars()

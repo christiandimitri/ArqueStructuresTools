@@ -66,7 +66,6 @@
     <Compile Include="DoublepichedTruss.cs" />
     <Compile Include="FlatTruss.cs" />
     <Compile Include="MonopichedTruss.cs" />
-    <Compile Include="Portico.cs" />
     <Compile Include="Column.cs" />
     <Compile Include="PichedTruss.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
