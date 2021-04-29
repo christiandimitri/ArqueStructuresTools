@@ -13,13 +13,9 @@ namespace WarehouseLib
         {
             GenerateTopBars();
             GenerateColumns();
-            GenerateTickBottomBars();
+            GenerateThickBottomBars();
             ConstructTruss(divisions);
             ChangeArticulationAtColumnsByType(articulationType);
-        }
-        protected void GeneratePerpendicularBottomNodes(Curve crv)
-        {
-            GenerateVerticalBottomNodes(crv);
         }
         public override void GenerateTopBars()
         {

@@ -148,8 +148,6 @@ namespace WarehouseLib
 
         protected abstract void GenerateBottomNodes(Curve crv);
 
-        public abstract void GeneratePerpendicularBottomNodes(Curve crv);
-
         protected void GenerateVerticalBottomNodes(Curve crv)
         {
             List<Point3d> nodes = new List<Point3d>();
@@ -187,7 +185,7 @@ namespace WarehouseLib
             else if (trussType == "Pratt")
                 ConstructPrattTruss(index);
             else if (trussType == "Howe") ConstructHoweTruss(index);
-            // RecomputeNodes();
+            RecomputeNodes();
         }
 
         private void ConstructWarrenTruss()

@@ -23,11 +23,6 @@ namespace WarehouseLib
             throw new NotImplementedException();
         }
 
-        public override void GeneratePerpendicularBottomNodes(Curve crv)
-        {
-            throw new NotImplementedException();
-        }
-        
         protected override void IsArticulatedToColumns()
         {
             throw new NotImplementedException();

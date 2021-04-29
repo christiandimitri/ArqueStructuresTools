@@ -35,13 +35,7 @@ namespace WarehouseLib
         {
             throw new NotImplementedException();
         }
-
-        public override void GeneratePerpendicularBottomNodes(Curve crv)
-        {
-            throw new NotImplementedException();
-        }
-
-
+        
         public override void ConstructTruss(int divisions)
         {
             var recomputedDivisions = RecomputeDivisions(divisions);

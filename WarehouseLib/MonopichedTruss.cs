@@ -9,6 +9,7 @@ namespace WarehouseLib
     public class MonopichedTruss : PichedTruss
     {
         private int BaseType;
+
         public MonopichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
             int divisions, string trussType, string articulationType, int baseType) : base(plane, length, height,
             maxHeight, clearHeight, divisions, trussType, articulationType)
@@ -32,14 +33,7 @@ namespace WarehouseLib
 
         protected override void GenerateBottomNodes(Curve crv)
         {
-            if ((TrussType == "Warren" || TrussType == "Warren_Studs") && BaseType == 0)
-            {
-                GeneratePerpendicularBottomNodes(crv);
-            }
-            else
-            {
-                GenerateVerticalBottomNodes(crv);
-            }
+            GenerateVerticalBottomNodes(crv);
         }
     }
 }
