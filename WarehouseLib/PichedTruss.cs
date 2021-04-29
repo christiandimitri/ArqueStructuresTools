@@ -6,7 +6,6 @@ namespace WarehouseLib
 {
     public class PichedTruss : Truss
     {
-        
         protected PichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
             int divisions, string trussType, string articulationType) : base(plane, length, height,
             maxHeight,
@@ -40,8 +39,7 @@ namespace WarehouseLib
             for (int i = 0; i < TopBars.Count; i++)
             {
                 GenerateTopNodes(TopBars[i], recomputedDivisions, i);
-                // ComputeNormals(TopBars[i], TopNodes, i);
-                GenerateThickBottomNodes(BottomBars[i]);
+                GenerateBottomNodes(BottomBars[i]);
             }
 
             var cloud = new PointCloud(TopNodes);
@@ -73,7 +71,6 @@ namespace WarehouseLib
             var splitCrvs = new List<Curve>();
             for (var i = 0; i < BottomBars.Count; i++)
             {
-                
                 var bar = BottomBars[i];
                 var ptA = BottomNodes[i == 0 ? 1 : BottomNodes.Count - 2];
                 double t;

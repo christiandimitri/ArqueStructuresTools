@@ -45,7 +45,8 @@ namespace WarehouseLib
             return recomputedDivisions;
         }
 
-        protected List<Point3d> GetStartingPoints(Plane plane, double leftLength, double rightLength, double leftHeight,
+        protected static List<Point3d> GetStartingPoints(Plane plane, double leftLength, double rightLength,
+            double leftHeight,
             double centerHeight,
             double rightHeight)
         {
@@ -67,6 +68,7 @@ namespace WarehouseLib
                 BaseIsStraight();
             }
         }
+
         private void BaseIsThickened()
         {
             GenerateTickBottomBars();
@@ -144,7 +146,28 @@ namespace WarehouseLib
             BottomBars = bars;
         }
 
-        protected void GenerateThickBottomNodes(Curve crv)
+        protected void GenerateBottomNodes(Curve crv)
+        {
+            if (TrussType == "Warren" || TrussType == "Warren_Studs")
+            {
+                GeneratePerpedicularBottomNodes(crv);
+            }
+            else
+            {
+                GenerateVerticalBottomNodes(crv);
+            }
+        }
+
+        private void GeneratePerpedicularBottomNodes(Curve crv)
+        {
+            List<Point3d> nodes = new List<Point3d>();
+            var points = new List<Point3d>(TopNodes);
+            
+
+            BottomNodes.AddRange(nodes);
+        }
+
+        private void GenerateVerticalBottomNodes(Curve crv)
         {
             List<Point3d> nodes = new List<Point3d>();
             var points = new List<Point3d>(TopNodes);

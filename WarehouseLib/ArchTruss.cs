@@ -102,7 +102,7 @@ namespace WarehouseLib
             for (int i = 0; i < TopBars.Count; i++)
             {
                 GenerateTopNodes(TopBars[i], recomputedDivisions, i);
-                GenerateThickBottomNodes(BottomBars[i]);
+                GenerateBottomNodes(BottomBars[i]);
             }
 
             PointCloud cloud = new PointCloud(TopNodes);
