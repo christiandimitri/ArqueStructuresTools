@@ -22,7 +22,7 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter(), "Truss", "t", "t", GH_ParamAccess.list);
+            pManager.AddParameter(new TrussParameter(), "Truss", "t", "t", GH_ParamAccess.item);
         }
 
         /// <summary>
