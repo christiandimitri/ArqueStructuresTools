@@ -9,12 +9,10 @@ namespace ArqueStructuresTools
 {
     public class StrapParameter : GH_Param<StrapGoo>, IGH_PreviewObject
     {
-        public StrapParameter() : base("Strap Parameter", "S", "Description", "Arque Structures", "Straps",
+        public StrapParameter() : base("Strap Parameter", "S", "Description", "Arque Structures", "Parameters",
             GH_ParamAccess.item)
         {
         }
-
-
         public override Guid ComponentGuid => new Guid("3C3D0887-4CB2-4292-BF85-AA39DCBC0B0E");
 
         public void DrawViewportWires(IGH_PreviewArgs args)
@@ -22,16 +20,14 @@ namespace ArqueStructuresTools
             _box = new BoundingBox();
             foreach (var path in VolatileData.Paths)
             {
-                if (VolatileData.get_Branch(path) is List<WarehouseGoo> branch)
+                if (VolatileData.get_Branch(path) is List<StrapGoo> branch)
                 {
-                    foreach (var warehouseGoo in branch)
+                    foreach (var strapGoo in branch)
                     {
-                        var warehouse = warehouseGoo.Value;
-                        foreach (var deckStrap in warehouse.DeckStraps)
-                        {
-                            _box.Union(deckStrap.Axis.ToNurbsCurve().GetBoundingBox(false));
-                            args.Display.DrawCurve(deckStrap.Axis.ToNurbsCurve(), System.Drawing.Color.Yellow);
-                        }
+                        var strap = strapGoo.Value;
+                        _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
+                        args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Yellow);
+
                     }
                 }
             }

@@ -38,12 +38,14 @@ namespace ArqueStructuresTools
             var warehouse = warehouseGoo.Value;
 
             var trusses = new List<TrussGoo>();
+
             foreach (var truss in warehouse.Trusses)
             {
                 trusses.Add(new TrussGoo(truss));
             }
 
             var deckStraps = new List<StrapGoo>();
+
             foreach (var deckStrap in warehouse.DeckStraps)
             {
                 deckStraps.Add(new StrapGoo(deckStrap));

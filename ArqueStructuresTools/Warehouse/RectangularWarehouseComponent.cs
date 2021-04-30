@@ -6,13 +6,13 @@ using WarehouseLib;
 
 namespace ArqueStructuresTools
 {
-    public class WarehouseComponent : GH_Component
+    public class RectangularWarehouseComponent : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the TestWarehouseComponent class.
         /// </summary>
-        public WarehouseComponent()
-            : base("WarehouseComponent", "Nickname",
+        public RectangularWarehouseComponent()
+            : base("RectangularWarehouseComponent", "Nickname",
                 "Description",
                 "Arque Structures", "Warehouses")
         {

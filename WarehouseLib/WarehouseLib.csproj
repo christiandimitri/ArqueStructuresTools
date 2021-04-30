@@ -61,17 +61,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArchTruss.cs" />
-    <Compile Include="CurvedTruss.cs" />
-    <Compile Include="Strap.cs" />
-    <Compile Include="DoublepichedTruss.cs" />
-    <Compile Include="FlatTruss.cs" />
-    <Compile Include="MonopichedTruss.cs" />
-    <Compile Include="Column.cs" />
-    <Compile Include="PichedTruss.cs" />
+    <Compile Include="Columns\Column.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Truss.cs" />
-    <Compile Include="Warehouse.cs" />
+    <Compile Include="Straps\Strap.cs" />
+    <Compile Include="Trusses\ArchTruss.cs" />
+    <Compile Include="Trusses\CurvedTruss.cs" />
+    <Compile Include="Trusses\DoublepichedTruss.cs" />
+    <Compile Include="Trusses\FlatTruss.cs" />
+    <Compile Include="Trusses\MonopichedTruss.cs" />
+    <Compile Include="Trusses\PichedTruss.cs" />
+    <Compile Include="Trusses\Truss.cs" />
+    <Compile Include="Warehouses\Warehouse.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
