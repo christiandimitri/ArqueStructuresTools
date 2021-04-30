@@ -39,8 +39,6 @@ namespace WarehouseLib
             Count = count;
             TrussType = trussType;
             GenerateTrusses();
-            GenerateNodes();
-            GenerateColumns();
             GenerateRoofStraps();
             GenerateFacadeStraps();
         }
