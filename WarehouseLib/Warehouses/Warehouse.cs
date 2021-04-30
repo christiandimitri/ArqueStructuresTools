@@ -43,24 +43,6 @@ namespace WarehouseLib
             GenerateFacadeStraps();
         }
 
-        private void GenerateColumns()
-        {
-            var columns = new List<Column>();
-
-            // TODO: Create columns here using trusses!
-            foreach (var truss in Trusses)
-            {
-                Line axisA = new Line(new Point3d(truss.StartingNodes[0].X, truss.StartingNodes[0].Y, Plane.Origin.Z),
-                    truss.StartingNodes[0]);
-                Line axisB = new Line(new Point3d(truss.StartingNodes[2].X, truss.StartingNodes[2].Y, Plane.Origin.Z),
-                    truss.StartingNodes[2]);
-                columns.Add(new Column(axisA));
-                columns.Add(new Column(axisB));
-            }
-
-            Columns = columns;
-        }
-
         public void GenerateRoofStraps()
         {
             RoofStraps = new List<Strap>();
@@ -85,19 +67,6 @@ namespace WarehouseLib
             }
 
             FacadeStraps = tempStraps;
-        }
-
-        private void GenerateNodes()
-        {
-            var nodes = new List<Point3d>();
-            foreach (var truss in Trusses)
-            {
-                //nodes = truss.StartingNodes;
-                nodes = truss.TopNodes;
-                nodes = truss.BottomNodes;
-            }
-
-            Nodes = nodes;
         }
 
         private void GenerateTrusses()
