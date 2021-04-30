@@ -42,6 +42,7 @@ namespace WarehouseLib
             GenerateNodes();
             GenerateColumns();
             GenerateRoofStraps();
+            GenerateFacadeStraps();
         }
 
         private void GenerateColumns()
@@ -65,21 +66,27 @@ namespace WarehouseLib
         public void GenerateRoofStraps()
         {
             RoofStraps = new List<Strap>();
+            var tempStraps = new List<Strap>();
             var straps = new RoofStrap(Line.Unset).ConstructStrapsAxis(Trusses, 0);
             foreach (var strap in straps)
             {
-                RoofStraps.Add(new RoofStrap(strap.Axis));
+                tempStraps.Add(new RoofStrap(strap.Axis));
             }
+
+            RoofStraps = tempStraps;
         }
 
         public void GenerateFacadeStraps()
         {
             FacadeStraps = new List<Strap>();
+            var tempStraps = new List<Strap>();
             var straps = new FacadeStrap(Line.Unset).ConstructStrapsAxis(Trusses, 0.5);
             foreach (var strap in straps)
             {
-                FacadeStraps.Add(new FacadeStrap(strap.Axis));
+                tempStraps.Add(new FacadeStrap(strap.Axis));
             }
+
+            FacadeStraps = tempStraps;
         }
 
         private void GenerateNodes()

@@ -12,8 +12,8 @@ namespace WarehouseLib
 
         public override List<Strap> ConstructStrapsAxis(List<Truss> trusses, double distance)
         {
-            var straps = new List<Strap>();
-            for (int i = 0; i < trusses.Count-1; i++)
+            var facadeStraps = new List<Strap>();
+            for (int i = 0; i < trusses.Count - 1; i++)
             {
                 var trussA = trusses[i];
                 var trussB = trusses[i + 1];
@@ -26,14 +26,14 @@ namespace WarehouseLib
                     for (int k = 0; k < parametersA.Length; k++)
                     {
                         var ptA = columnA.Axis.ToNurbsCurve().PointAt(parametersA[k]);
-                        var ptB = columnA.Axis.ToNurbsCurve().PointAt(parametersB[k]);
+                        var ptB = columnB.Axis.ToNurbsCurve().PointAt(parametersB[k]);
                         Line line = new Line(ptA, ptB);
-                        straps.Add(new FacadeStrap(line));
+                        facadeStraps.Add(new FacadeStrap(line));
                     }
                 }
             }
 
-            return straps;
+            return facadeStraps;
         }
     }
 }

@@ -20,13 +20,13 @@ namespace ArqueStructuresTools
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new StrapParameter());
+            pManager.AddParameter(new StrapParameter(), "Strap", "", "", GH_ParamAccess.list);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddLineParameter("s", "s", "s", GH_ParamAccess.item);
-            pManager.AddPlaneParameter("p", "p", "p", GH_ParamAccess.item);
+            pManager.AddLineParameter("Strap axis", "s", "s", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Strap plane", "p", "p", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)

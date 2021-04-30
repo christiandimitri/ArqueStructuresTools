@@ -20,14 +20,14 @@ namespace ArqueStructuresTools
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new WarehouseParameter());
+            pManager.AddParameter(new WarehouseParameter(), "Warehouse", "w", "w", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter());
-            pManager.AddParameter(new StrapParameter());
-            // pManager.AddParameter(new StrapParameter());
+            pManager.AddParameter(new TrussParameter(), "Trusses", "t", "t", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "Roof straps", "rs", "rs", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "Facade Straps", "fs", "fs", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -51,15 +51,17 @@ namespace ArqueStructuresTools
             {
                 roofStraps.Add(new StrapGoo(roofStrap));
             }
+
             var facadeStraps = new List<StrapGoo>();
 
             foreach (var facadeStrap in warehouse.FacadeStraps)
             {
                 facadeStraps.Add(new StrapGoo(facadeStrap));
             }
+
             DA.SetDataList(0, new List<TrussGoo>(trusses));
             DA.SetDataList(1, new List<StrapGoo>(roofStraps));
-            // DA.SetDataList(2, new List<StrapGoo>(facadeStraps));
+            DA.SetDataList(2, new List<StrapGoo>(facadeStraps));
         }
     }
 }

@@ -28,11 +28,11 @@ namespace ArqueStructuresTools
             pManager.AddNumberParameter("Length", "L", "L", GH_ParamAccess.item, 10);
             pManager.AddNumberParameter("Width", "w", "w", GH_ParamAccess.item, 5);
             pManager.AddNumberParameter("Height", "h", "h", GH_ParamAccess.item, 4);
-            pManager.AddNumberParameter("Max Height", "mh", "h", GH_ParamAccess.item, 6);
-            pManager.AddNumberParameter("Clear Height", "ch", "h", GH_ParamAccess.item, 3.5);
+            pManager.AddNumberParameter("Max height", "mh", "h", GH_ParamAccess.item, 6);
+            pManager.AddNumberParameter("Clear height", "ch", "h", GH_ParamAccess.item, 3.5);
             pManager.AddIntegerParameter("Typology", "T", "T", GH_ParamAccess.item, 2);
             pManager.AddIntegerParameter("Count", "C", "C", GH_ParamAccess.item, 3);
-            pManager.AddTextParameter("Truss Type", "tt", "tt", GH_ParamAccess.item, "Warren");
+            pManager.AddTextParameter("Truss type", "tt", "tt", GH_ParamAccess.item, "Warren");
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new WarehouseParameter());
+            pManager.AddParameter(new WarehouseParameter(), "Warehouse", "", "", GH_ParamAccess.list);
         }
 
         /// <summary>

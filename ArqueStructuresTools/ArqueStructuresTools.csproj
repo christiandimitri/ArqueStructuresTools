@@ -61,7 +61,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bracings\RoofBracings.cs" />
+    <Compile Include="Bracings\RoofBracing.cs" />
     <Compile Include="Params\StrapParameter.cs" />
     <Compile Include="Params\TrussParameter.cs" />
     <Compile Include="Params\WarehouseParameter.cs" />

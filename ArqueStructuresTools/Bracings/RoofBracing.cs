@@ -4,38 +4,34 @@ using Grasshopper.Kernel;
 using Rhino.Geometry;
 using WarehouseLib;
 
-namespace ArqueStructuresTools
+namespace ArqueStructuresTools.Bracings
 {
-    public class FacadeStrapsComponent : GH_Component
+    public class RoofBracing : GH_Component
     {
-        public FacadeStrapsComponent() : base("Construct Facade Straps", "Nickname", "Description", "Arque Structures",
-            "Straps")
+        public RoofBracing() : base("Roof Bracing", "Nickname", "Description", "Arque Structures", "Bracing")
         {
         }
 
         public override Guid ComponentGuid
         {
-            get { return new Guid("D42A93FA-3CC8-4F74-BCB2-35A80CD5CF74"); }
+            get { return new Guid("498401B2-CCA1-44A2-A654-D2D60AF5A6D6"); }
         }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter(), "Trusses", "", "", GH_ParamAccess.list);
-            pManager.AddNumberParameter("distance", "d", "d", GH_ParamAccess.item, 0.5);
+            pManager.AddParameter(new TrussParameter(), "Trusses", "t", "t", GH_ParamAccess.list);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new StrapParameter(), "Facade straps", "st", "st", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "Roof bracing", "rb", "rb", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var trussesGoo = new List<TrussGoo>();
-            var distance = 0.5;
-            if (!DA.GetDataList(0, trussesGoo)) return;
-            if (!DA.GetData(1, ref distance)) return;
 
+            if (!DA.GetDataList(0, trussesGoo)) return;
             var trusses = new List<Truss>();
             for (var i = 0; i < trussesGoo.Count; i++)
             {
@@ -45,7 +41,7 @@ namespace ArqueStructuresTools
             }
 
             var roofStraps = new List<StrapGoo>();
-            var tempStraps = new FacadeStrap(Line.Unset).ConstructStrapsAxis(trusses, distance);
+            var tempStraps = new RoofStrap(Line.Unset).ConstructStrapsAxis(trusses, 0);
             foreach (var strap in tempStraps)
             {
                 roofStraps.Add(new StrapGoo(strap));

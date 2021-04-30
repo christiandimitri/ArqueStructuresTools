@@ -22,16 +22,16 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddPlaneParameter("p", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddNumberParameter("rl", "rl", "rl", GH_ParamAccess.item, 7);
-            pManager.AddNumberParameter("ll", "ll", "ll", GH_ParamAccess.item, 5);
-            pManager.AddNumberParameter("h", "h", "h", GH_ParamAccess.item, 2);
-            pManager.AddNumberParameter("mH", "mh", "mh", GH_ParamAccess.item, 3);
-            pManager.AddNumberParameter("ch", "ch", "ch", GH_ParamAccess.item, 1.8);
-            pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 4);
-            pManager.AddTextParameter("type", "t", "t", GH_ParamAccess.item, "Pratt");
-            pManager.AddTextParameter("at", "at", "at", GH_ParamAccess.item, "Rigid");
-            pManager.AddIntegerParameter("bt", "bt", "bt", GH_ParamAccess.item, 0);
+            pManager.AddPlaneParameter("Plane", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
+            pManager.AddNumberParameter("Right length", "rl", "rl", GH_ParamAccess.item, 7);
+            pManager.AddNumberParameter("Left length", "ll", "ll", GH_ParamAccess.item, 5);
+            pManager.AddNumberParameter("Height", "h", "h", GH_ParamAccess.item, 2);
+            pManager.AddNumberParameter("Max height", "mh", "mh", GH_ParamAccess.item, 3);
+            pManager.AddNumberParameter("Clear height", "ch", "ch", GH_ParamAccess.item, 1.8);
+            pManager.AddIntegerParameter("Division", "d", "d", GH_ParamAccess.item, 4);
+            pManager.AddTextParameter("Truss type", "t", "t", GH_ParamAccess.item, "Pratt");
+            pManager.AddTextParameter("Articulation type", "at", "at", GH_ParamAccess.item, "Rigid");
+            pManager.AddIntegerParameter("Base type", "bt", "bt", GH_ParamAccess.item, 0);
 
         }
 
@@ -40,7 +40,7 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter());
+            pManager.AddParameter(new TrussParameter(), "Doublepich truss", "t", "t", GH_ParamAccess.list);
         }
 
         /// <summary>

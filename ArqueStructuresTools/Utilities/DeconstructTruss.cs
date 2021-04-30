@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 
@@ -12,9 +11,9 @@ namespace ArqueStructuresTools
         /// Initializes a new instance of the DeconstructTruss class.
         /// </summary>
         public DeconstructTruss()
-          : base("Deconstruct Truss", "Nickname",
-              "Description",
-              "Arque Structures", "Utilities")
+            : base("Deconstruct Truss", "Nickname",
+                "Description",
+                "Arque Structures", "Utilities")
         {
         }
 
@@ -23,7 +22,7 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter());
+            pManager.AddParameter(new TrussParameter(), "Truss", "t", "t", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -31,12 +30,12 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("top bar", "tb", "tb", GH_ParamAccess.list);
-            pManager.AddCurveParameter("bottom bar", "bb", "bb", GH_ParamAccess.list);
-            pManager.AddCurveParameter("intermediate bar", "ib", "ib", GH_ParamAccess.list);
-            pManager.AddCurveParameter("column bar", "cb", "cb", GH_ParamAccess.list);
-            pManager.AddPointParameter("top nodes", "tn", "tn", GH_ParamAccess.list);
-            pManager.AddPointParameter("bottom nodes", "bn", "bn", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Top bar", "tb", "tb", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Bottom bar", "bb", "bb", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Intermediate bar", "ib", "ib", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Column bar", "cb", "cb", GH_ParamAccess.list);
+            pManager.AddPointParameter("Top nodes", "tn", "tn", GH_ParamAccess.list);
+            pManager.AddPointParameter("Bottom nodes", "bn", "bn", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -45,7 +44,6 @@ namespace ArqueStructuresTools
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-
             TrussGoo trussGoo = new TrussGoo();
 
             if (!DA.GetData(0, ref trussGoo)) return;

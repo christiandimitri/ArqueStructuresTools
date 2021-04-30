@@ -2,6 +2,7 @@
 using WarehouseLib;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
+
 // ReSharper disable RedundantNameQualifier
 
 namespace ArqueStructuresTools
@@ -12,9 +13,9 @@ namespace ArqueStructuresTools
         /// Initializes a new instance of the FlatTrussComponent class.
         /// </summary>
         public FlatTrussComponent()
-          : base("Construct Flat Truss", "Nickname",
-              "Description",
-              "Arque Structures", "Trusses")
+            : base("Construct Flat Truss", "Nickname",
+                "Description",
+                "Arque Structures", "Trusses")
         {
         }
 
@@ -23,13 +24,13 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddPlaneParameter("p", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddNumberParameter("l", "l", "l", GH_ParamAccess.item, 10);
-            pManager.AddNumberParameter("h", "h", "h", GH_ParamAccess.item, 3);
-            pManager.AddNumberParameter("ch", "ch", "ch", GH_ParamAccess.item, 1.8);
-            pManager.AddIntegerParameter("d", "d", "d", GH_ParamAccess.item, 4);
-            pManager.AddTextParameter("type", "t", "t", GH_ParamAccess.item, "Pratt");
-            pManager.AddTextParameter("at", "at", "at", GH_ParamAccess.item, "Rigid");
+            pManager.AddPlaneParameter("Plane", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
+            pManager.AddNumberParameter("Length", "l", "l", GH_ParamAccess.item, 10);
+            pManager.AddNumberParameter("Height", "h", "h", GH_ParamAccess.item, 3);
+            pManager.AddNumberParameter("Clear height", "ch", "ch", GH_ParamAccess.item, 1.8);
+            pManager.AddIntegerParameter("Division", "d", "d", GH_ParamAccess.item, 4);
+            pManager.AddTextParameter("Truss type", "t", "t", GH_ParamAccess.item, "Pratt");
+            pManager.AddTextParameter("Articulation type", "at", "at", GH_ParamAccess.item, "Rigid");
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter());
+            pManager.AddParameter(new TrussParameter(), "Flat truss", "t", "t", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -47,7 +48,6 @@ namespace ArqueStructuresTools
         // ReSharper disable once InconsistentNaming
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-
             Plane worldXy = Plane.WorldXY;
             double length = 0;
             double height = 0;
@@ -63,7 +63,7 @@ namespace ArqueStructuresTools
             if (!DA.GetData(5, ref trussType)) return;
             if (!DA.GetData(6, ref articulationType)) return;
 
-            var truss = new FlatTruss(worldXy, length, height, 0, clearHeight, divisions, trussType,articulationType);
+            var truss = new FlatTruss(worldXy, length, height, 0, clearHeight, divisions, trussType, articulationType);
 
             DA.SetData(0, new TrussGoo(truss));
         }
