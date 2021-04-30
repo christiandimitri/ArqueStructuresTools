@@ -10,7 +10,7 @@ namespace ArqueStructuresTools
 {
     public class WarehouseParameter : Grasshopper.Kernel.GH_Param<WarehouseGoo>, IGH_PreviewObject
     {
-        public WarehouseParameter() : base("Warehouse Parameter", "W", "Warehouse...", "Arque Structures", "Parameters",
+        public WarehouseParameter() : base("Warehouse Parameter", "W", "Warehouse...", "Arque Structures", "Params",
             GH_ParamAccess.item)
         {
         }
@@ -42,34 +42,58 @@ namespace ArqueStructuresTools
                         var warehouse = warehouseGoo.Value;
                         foreach (var truss in warehouse.Trusses)
                         {
-                            foreach (var column in truss.Columns)
+                            if (truss.Columns != null)
                             {
-                                _box.Union(column.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                args.Display.DrawCurve(column.Axis.ToNurbsCurve(), System.Drawing.Color.Purple);
+                                foreach (var column in truss.Columns)
+                                {
+                                    _box.Union(column.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                    args.Display.DrawCurve(column.Axis.ToNurbsCurve(), System.Drawing.Color.Purple);
+                                }
                             }
 
-                            foreach (var topBars in truss.TopBars)
+                            if (truss.TopBars != null)
                             {
-                                _box.Union(topBars.GetBoundingBox(false));
-                                args.Display.DrawCurve(topBars, System.Drawing.Color.Blue);
+                                foreach (var bar in truss.TopBars)
+                                {
+                                    _box.Union(bar.GetBoundingBox(false));
+                                    args.Display.DrawCurve(bar, System.Drawing.Color.Blue);
+                                }
                             }
 
-                            foreach (var bottomBars in truss.BottomBars)
+                            if (truss.BottomBars != null)
                             {
-                                _box.Union(bottomBars.GetBoundingBox(false));
-                                args.Display.DrawCurve(bottomBars, System.Drawing.Color.Red);
+                                foreach (var bar in truss.BottomBars)
+                                {
+                                    _box.Union(bar.GetBoundingBox(false));
+                                    args.Display.DrawCurve(bar, System.Drawing.Color.Red);
+                                }
                             }
 
-                            foreach (var interBars in truss.IntermediateBars)
+                            if (truss.IntermediateBars != null)
                             {
-                                _box.Union(interBars.GetBoundingBox(false));
-                                args.Display.DrawCurve(interBars, System.Drawing.Color.Green);
+                                foreach (var bar in truss.IntermediateBars)
+                                {
+                                    _box.Union(bar.GetBoundingBox(false));
+                                    args.Display.DrawCurve(bar, System.Drawing.Color.Green);
+                                }
                             }
 
-                            foreach (var deck in warehouse.DeckStraps)
+                            if (warehouse.RoofStraps != null)
                             {
-                                _box.Union(deck.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                args.Display.DrawCurve(deck.Axis.ToNurbsCurve(), System.Drawing.Color.Yellow);
+                                foreach (var strap in warehouse.RoofStraps)
+                                {
+                                    _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                    args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Yellow);
+                                }
+                            }
+
+                            if (warehouse.FacadeStraps != null)
+                            {
+                                foreach (var strap in warehouse.FacadeStraps)
+                                {
+                                    _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                    args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Orange);
+                                }
                             }
                         }
                     }

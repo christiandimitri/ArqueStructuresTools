@@ -9,10 +9,11 @@ namespace ArqueStructuresTools
 {
     public class StrapParameter : GH_Param<StrapGoo>, IGH_PreviewObject
     {
-        public StrapParameter() : base("Strap Parameter", "S", "Description", "Arque Structures", "Parameters",
+        public StrapParameter() : base("Strap Parameter", "S", "Description", "Arque Structures", "Params",
             GH_ParamAccess.item)
         {
         }
+
         public override Guid ComponentGuid => new Guid("3C3D0887-4CB2-4292-BF85-AA39DCBC0B0E");
 
         public void DrawViewportWires(IGH_PreviewArgs args)
@@ -25,9 +26,11 @@ namespace ArqueStructuresTools
                     foreach (var strapGoo in branch)
                     {
                         var strap = strapGoo.Value;
-                        _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
-                        args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Yellow);
-
+                        if (strap != null)
+                        {
+                            _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
+                            args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Yellow);
+                        }
                     }
                 }
             }

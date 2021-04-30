@@ -8,7 +8,7 @@ namespace ArqueStructuresTools
 {
     public class DeconstructWarehouse : GH_Component
     {
-        public DeconstructWarehouse() : base("DeconstructWarehouse", "Nickname", "Description", "Arque Structures",
+        public DeconstructWarehouse() : base("Deconstruct Warehouse", "Nickname", "Description", "Arque Structures",
             "Utilities")
         {
         }
@@ -27,6 +27,7 @@ namespace ArqueStructuresTools
         {
             pManager.AddParameter(new TrussParameter());
             pManager.AddParameter(new StrapParameter());
+            // pManager.AddParameter(new StrapParameter());
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -44,15 +45,21 @@ namespace ArqueStructuresTools
                 trusses.Add(new TrussGoo(truss));
             }
 
-            var deckStraps = new List<StrapGoo>();
+            var roofStraps = new List<StrapGoo>();
 
-            foreach (var deckStrap in warehouse.DeckStraps)
+            foreach (var roofStrap in warehouse.RoofStraps)
             {
-                deckStraps.Add(new StrapGoo(deckStrap));
+                roofStraps.Add(new StrapGoo(roofStrap));
             }
+            var facadeStraps = new List<StrapGoo>();
 
+            foreach (var facadeStrap in warehouse.FacadeStraps)
+            {
+                facadeStraps.Add(new StrapGoo(facadeStrap));
+            }
             DA.SetDataList(0, new List<TrussGoo>(trusses));
-            DA.SetDataList(1, new List<StrapGoo>(deckStraps));
+            DA.SetDataList(1, new List<StrapGoo>(roofStraps));
+            // DA.SetDataList(2, new List<StrapGoo>(facadeStraps));
         }
     }
 }

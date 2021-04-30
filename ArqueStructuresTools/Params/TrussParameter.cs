@@ -9,8 +9,8 @@ namespace ArqueStructuresTools
 {
     public class TrussParameter : Grasshopper.Kernel.GH_Param<TrussGoo>, IGH_PreviewObject
     {
-
-        public TrussParameter() : base("Truss Parameter", "TP", "Truss...", "Arque Structures", "Parameters", GH_ParamAccess.item)
+        public TrussParameter() : base("Truss Parameter", "TP", "Truss...", "Arque Structures", "Params",
+            GH_ParamAccess.item)
         {
         }
 
@@ -24,9 +24,9 @@ namespace ArqueStructuresTools
         public BoundingBox ClippingBox => _box;
 
         private BoundingBox _box = new BoundingBox();
+
         public void DrawViewportMeshes(IGH_PreviewArgs args)
         {
- 
         }
 
         public void DrawViewportWires(IGH_PreviewArgs args)
@@ -39,40 +39,40 @@ namespace ArqueStructuresTools
                     foreach (var trussGoo in branch)
                     {
                         var truss = trussGoo.Value;
-                        foreach (var line in truss.TopBars)
+                        if (truss.TopBars != null)
                         {
-                            _box.Union(line.GetBoundingBox(false));
-                            args.Display.DrawCurve(line, System.Drawing.Color.Blue);
+                            foreach (var line in truss.TopBars)
+                            {
+                                _box.Union(line.GetBoundingBox(false));
+                                args.Display.DrawCurve(line, System.Drawing.Color.Blue);
+                            }
                         }
-                    }
 
-                    foreach (var trussGoo in branch)
-                    {
-                        var truss = trussGoo.Value;
-                        foreach (var line in truss.BottomBars)
+                        if (truss.BottomBars != null)
                         {
-                            _box.Union(line.GetBoundingBox(false));
-                            args.Display.DrawCurve(line, System.Drawing.Color.Red);
+                            foreach (var line in truss.BottomBars)
+                            {
+                                _box.Union(line.GetBoundingBox(false));
+                                args.Display.DrawCurve(line, System.Drawing.Color.Red);
+                            }
                         }
-                    }
 
-                    foreach (var trussGoo in branch)
-                    {
-                        var truss = trussGoo.Value;
-                        foreach (var line in truss.IntermediateBars)
+                        if (truss.IntermediateBars != null)
                         {
-                            _box.Union(line.GetBoundingBox(false));
-                            args.Display.DrawCurve(line, System.Drawing.Color.Green);
+                            foreach (var line in truss.IntermediateBars)
+                            {
+                                _box.Union(line.GetBoundingBox(false));
+                                args.Display.DrawCurve(line, System.Drawing.Color.Green);
+                            }
                         }
-                    }
 
-                    foreach (var trussGoo in branch)
-                    {
-                        var truss = trussGoo.Value;
-                        foreach (var line in truss.Columns)
+                        if (truss.Columns != null)
                         {
-                            _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
-                            args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.Purple);
+                            foreach (var line in truss.Columns)
+                            {
+                                _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.Purple);
+                            }
                         }
                     }
                 }
@@ -82,7 +82,6 @@ namespace ArqueStructuresTools
 
     public class TrussGoo : GH_Goo<Truss>
     {
-
         public TrussGoo(Truss truss)
         {
             Value = truss;
@@ -93,13 +92,17 @@ namespace ArqueStructuresTools
             Value = null;
         }
 
-        public sealed override Truss Value { get => base.Value; set => base.Value = value; }
+        public sealed override Truss Value
+        {
+            get => base.Value;
+            set => base.Value = value;
+        }
 
         public override bool IsValid => true;
 
         public override string TypeName => "Truss";
 
-        public override string TypeDescription =>"This is the desc of the truss.....";
+        public override string TypeDescription => "This is the desc of the truss.....";
 
         public override bool CastFrom(object source)
         {
@@ -125,6 +128,5 @@ namespace ArqueStructuresTools
         {
             return Value.ToString();
         }
-
     }
 }

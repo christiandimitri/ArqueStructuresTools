@@ -12,7 +12,7 @@ namespace ArqueStructuresTools
         /// Initializes a new instance of the DeconstructTruss class.
         /// </summary>
         public DeconstructTruss()
-          : base("DeconstructTruss", "Nickname",
+          : base("Deconstruct Truss", "Nickname",
               "Description",
               "Arque Structures", "Utilities")
         {

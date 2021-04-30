@@ -6,9 +6,9 @@ using WarehouseLib;
 
 namespace ArqueStructuresTools
 {
-    public class DeckStrapsComponent : GH_Component
+    public class RoofStrapsComponent : GH_Component
     {
-        public DeckStrapsComponent() : base("DeckStrapsComponent", "Nickname", "Description", "Arque Structures",
+        public RoofStrapsComponent() : base("Construct Roof Straps", "Nickname", "Description", "Arque Structures",
             "Straps")
         {
         }
@@ -41,34 +41,14 @@ namespace ArqueStructuresTools
                 trusses.Add(truss);
             }
 
-            var deckStraps = new List<StrapGoo>();
-            var tempStraps = new List<Strap>(GenerateDeckStraps(trusses));
+            var roofStraps = new List<StrapGoo>();
+            var tempStraps = new RoofStrap(Line.Unset).ConstructStrapsAxis(trusses, 0);
             foreach (var strap in tempStraps)
             {
-                deckStraps.Add(new StrapGoo(strap));
-            }
-            DA.SetData(0,new List<StrapGoo>(deckStraps));
-        }
-
-        public List<Strap> GenerateDeckStraps(List<Truss> trusses)
-        {
-            var deckStraps = new List<Strap>();
-
-            for (var i = 0; i < trusses.Count; i++)
-            {
-                for (int j = 0; j < trusses[i].TopNodes.Count; j++)
-                {
-                    if (i < trusses.Count - 1)
-                    {
-                        Point3d ptA = trusses[i].TopNodes[j];
-                        Point3d ptB = trusses[i + 1].TopNodes[j];
-                        Line axis = new Line(ptA, ptB);
-                        deckStraps.Add(new Strap(axis));
-                    }
-                }
+                roofStraps.Add(new StrapGoo(strap));
             }
 
-            return deckStraps;
+            DA.SetDataList(0, new List<StrapGoo>(roofStraps));
         }
     }
 }

@@ -1,14 +1,17 @@
-﻿using Rhino.Geometry;
+﻿using System.Collections.Generic;
+using Rhino.Geometry;
 
 namespace WarehouseLib
 {
-    public class Strap
+    public abstract class Strap
     {
         public Line Axis;
-
-        public Strap(Line axis)
+        protected Strap(Line axis)
         {
             Axis = axis;
         }
+
+        public abstract List<Strap> ConstructStrapsAxis(List<Truss> trusses, double distance);
+
     }
 }

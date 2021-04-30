@@ -11,7 +11,7 @@ namespace ArqueStructuresTools
         /// Initializes a new instance of the MonopichTruss class.
         /// </summary>
         public MonopichTrussComponent()
-          : base("MonopichTruss", "Nickname",
+          : base("Construct Monopich Truss", "Nickname",
               "Description",
               "Arque Structures", "Trusses")
         {

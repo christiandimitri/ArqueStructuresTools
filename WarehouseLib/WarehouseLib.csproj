@@ -61,8 +61,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bracings\Bracing.cs" />
     <Compile Include="Columns\Column.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Straps\FacadeStrap.cs" />
+    <Compile Include="Straps\RoofStrap.cs" />
     <Compile Include="Straps\Strap.cs" />
     <Compile Include="Trusses\ArchTruss.cs" />
     <Compile Include="Trusses\CurvedTruss.cs" />

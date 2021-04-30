@@ -61,16 +61,19 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Parameters\StrapParameter.cs" />
-    <Compile Include="Parameters\TrussParameter.cs" />
-    <Compile Include="Parameters\WarehouseParameter.cs" />
+    <Compile Include="Bracings\RoofBracings.cs" />
+    <Compile Include="Params\StrapParameter.cs" />
+    <Compile Include="Params\TrussParameter.cs" />
+    <Compile Include="Params\WarehouseParameter.cs" />
     <Compile Include="ArqueStructuresToolsInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Straps\DeckStrapsComponent.cs" />
+    <Compile Include="Straps\FacadeStrapsComponent.cs" />
+    <Compile Include="Straps\RoofStrapsComponent.cs" />
     <Compile Include="Trusses\ArchTrussComponent.cs" />
     <Compile Include="Trusses\DoublepichTrussComponent.cs" />
     <Compile Include="Trusses\FlatTrussComponent.cs" />
     <Compile Include="Trusses\MonopichTrussComponent.cs" />
+    <Compile Include="Utilities\DeconstructStrap.cs" />
     <Compile Include="Utilities\DeconstructTruss.cs" />
     <Compile Include="Utilities\DeconstructWarehouse.cs" />
     <Compile Include="Warehouse\RectangularWarehouseComponent.cs" />

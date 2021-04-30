@@ -7,10 +7,9 @@ namespace WarehouseLib
 {
     public abstract class Truss
     {
-        public List<Line> Beams;
         public List<Curve> BottomBars;
         public List<Point3d> BottomNodes;
-        public double ClearHeight;
+        private double ClearHeight;
         public List<Column> Columns;
         public int Divisions;
         public double Height;
@@ -347,6 +346,15 @@ namespace WarehouseLib
 
             TopNodes = new List<Point3d>(tempTopList);
             BottomNodes = new List<Point3d>(tempBottomList);
+        }
+
+        public void ConstructPorticFromTruss()
+        {
+            TopBars = new List<Curve>(TopBars);
+            TopNodes = new List<Point3d>(TopNodes);
+            BottomBars = null;
+            BottomNodes = null;
+            IntermediateBars = null;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace ArqueStructuresTools
         /// Initializes a new instance of the DoublepichTruss class.
         /// </summary>
         public DoublepichTrussComponent()
-          : base("DoublepichTruss", "Nickname",
+          : base("Construct Doublepich Truss", "Nickname",
               "Description",
               "Arque Structures", "Trusses")
         {

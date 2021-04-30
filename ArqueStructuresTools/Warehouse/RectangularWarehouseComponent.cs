@@ -12,7 +12,7 @@ namespace ArqueStructuresTools
         /// Initializes a new instance of the TestWarehouseComponent class.
         /// </summary>
         public RectangularWarehouseComponent()
-            : base("RectangularWarehouseComponent", "Nickname",
+            : base("Construct Rectangular Warehouse", "Nickname",
                 "Description",
                 "Arque Structures", "Warehouses")
         {

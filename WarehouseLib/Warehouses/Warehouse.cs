@@ -17,9 +17,9 @@ namespace WarehouseLib
         public string TrussType;
         public List<Truss> Trusses;
         public List<Point3d> Nodes;
-        public List<Plane> TempPlanes;
         public List<Column> Columns;
-        public List<Strap> DeckStraps;
+        public List<Strap> RoofStraps;
+        public List<Strap> FacadeStraps;
 
         public Warehouse(Plane plane, double length, double width, double height, double maxHeight, double clearHeight,
             int typology, int count, string trussType)
@@ -41,7 +41,7 @@ namespace WarehouseLib
             GenerateTrusses();
             GenerateNodes();
             GenerateColumns();
-            GenerateDeckStraps();
+            GenerateRoofStraps();
         }
 
         private void GenerateColumns()
@@ -62,25 +62,24 @@ namespace WarehouseLib
             Columns = columns;
         }
 
-        public void GenerateDeckStraps()
+        public void GenerateRoofStraps()
         {
-            var deckStraps = new List<Strap>();
-
-            for (var i = 0; i < Trusses.Count; i++)
+            RoofStraps = new List<Strap>();
+            var straps = new RoofStrap(Line.Unset).ConstructStrapsAxis(Trusses, 0);
+            foreach (var strap in straps)
             {
-                for (int j = 0; j < Trusses[i].TopNodes.Count; j++)
-                {
-                    if (i < Trusses.Count - 1)
-                    {
-                        Point3d ptA = Trusses[i].TopNodes[j];
-                        Point3d ptB = Trusses[i + 1].TopNodes[j];
-                        Line axis = new Line(ptA, ptB);
-                        deckStraps.Add(new Strap(axis));
-                    }
-                }
+                RoofStraps.Add(new RoofStrap(strap.Axis));
             }
+        }
 
-            DeckStraps = deckStraps;
+        public void GenerateFacadeStraps()
+        {
+            FacadeStraps = new List<Strap>();
+            var straps = new FacadeStrap(Line.Unset).ConstructStrapsAxis(Trusses, 0.5);
+            foreach (var strap in straps)
+            {
+                FacadeStraps.Add(new FacadeStrap(strap.Axis));
+            }
         }
 
         private void GenerateNodes()
@@ -129,7 +128,22 @@ namespace WarehouseLib
                 }
             }
 
+            trusses = new List<Truss>(WarehouseHasPorticAtBoundary(trusses));
+
             Trusses = trusses;
+        }
+
+        public List<Truss> WarehouseHasPorticAtBoundary(List<Truss> trusses)
+        {
+            var trussA = trusses[0];
+            trussA.ConstructPorticFromTruss();
+            var trussB = trusses[trusses.Count - 1];
+            trussB.ConstructPorticFromTruss();
+            trusses.RemoveAt(0);
+            trusses.Insert(0, trussA);
+            trusses.RemoveAt(trusses.Count - 1);
+            trusses.Add(trussB);
+            return trusses;
         }
     }
 }

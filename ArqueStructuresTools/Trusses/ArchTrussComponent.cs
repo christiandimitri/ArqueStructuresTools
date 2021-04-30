@@ -11,7 +11,7 @@ namespace ArqueStructuresTools
         /// Initializes a new instance of the ArchTrussComponent class.
         /// </summary>
         public ArchTrussComponent()
-            : base("ArchTrussComponent", "Nickname",
+            : base("Construct Arch Truss", "Nickname",
                 "Description",
                 "Arque Structures", "Trusses")
         {
