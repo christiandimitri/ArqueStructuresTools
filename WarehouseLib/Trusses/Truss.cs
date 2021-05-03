@@ -44,7 +44,8 @@ namespace WarehouseLib
         {
             var recomputedDivisions = divisions;
             if ((TrussType == "Howe" || TrussType == "Pratt") && divisions % 2 == 1) recomputedDivisions++;
-
+            else if (TrussType == "Warren_Studs") recomputedDivisions = divisions / 2;
+            
             return recomputedDivisions;
         }
 
