@@ -71,7 +71,7 @@ namespace ArqueStructuresTools
                             foreach (var line in truss.StaticColumns)
                             {
                                 _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.Purple);
+                                args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.HotPink);
                             }
                         }
                         if (truss.BoundaryColumns != null)
@@ -79,7 +79,7 @@ namespace ArqueStructuresTools
                             foreach (var line in truss.BoundaryColumns)
                             {
                                 _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.Maroon);
+                                args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.DeepPink);
                             }
                         }
                     }

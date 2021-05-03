@@ -40,24 +40,30 @@ namespace ArqueStructuresTools
             var warehouse = warehouseGoo.Value;
 
             var trusses = new List<TrussGoo>();
-
-            foreach (var truss in warehouse.Trusses)
+            if (warehouse.Trusses != null)
             {
-                trusses.Add(new TrussGoo(truss));
+                foreach (var truss in warehouse.Trusses)
+                {
+                    trusses.Add(new TrussGoo(truss));
+                }
             }
 
             var roofStraps = new List<StrapGoo>();
-
-            foreach (var roofStrap in warehouse.RoofStraps)
+            if (warehouse.RoofStraps != null)
             {
-                roofStraps.Add(new StrapGoo(roofStrap));
+                foreach (var roofStrap in warehouse.RoofStraps)
+                {
+                    roofStraps.Add(new StrapGoo(roofStrap));
+                }
             }
 
             var facadeStraps = new List<StrapGoo>();
-
-            foreach (var facadeStrap in warehouse.FacadeStraps)
+            if (warehouse.FacadeStraps != null)
             {
-                facadeStraps.Add(new StrapGoo(facadeStrap));
+                foreach (var facadeStrap in warehouse.FacadeStraps)
+                {
+                    facadeStraps.Add(new StrapGoo(facadeStrap));
+                }
             }
 
             DA.SetDataList(0, new List<TrussGoo>(trusses));
