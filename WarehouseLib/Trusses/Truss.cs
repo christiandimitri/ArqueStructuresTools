@@ -360,7 +360,7 @@ namespace WarehouseLib
 
         public Column ConstructColumn(Point3d node)
         {
-            var axis = new Line(Plane.PointAt(node.X, 0, Plane.OriginZ), node);
+            var axis = new Line(Plane.ClosestPoint(node), node);
             var column = new Column(axis);
             return column;
         }
@@ -394,8 +394,8 @@ namespace WarehouseLib
         {
             BoundaryColumns = new List<Column>();
             var positions = truss.BoundaryTopNodes;
-            positions.RemoveAt(0);
-            positions.RemoveAt(positions.Count - 1);
+            // positions.RemoveAt(0);
+            // positions.RemoveAt(positions.Count - 1);
             var columns = new List<Column>();
             for (int i = 0; i < positions.Count; i++)
             {

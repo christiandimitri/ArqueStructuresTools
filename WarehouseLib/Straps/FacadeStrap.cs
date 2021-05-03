@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Rhino.Geometry;
 
 namespace WarehouseLib
@@ -42,13 +43,17 @@ namespace WarehouseLib
             for (int i = 0; i < trusses.Count; i++)
             {
                 var trussA = trusses[i];
-                for (int j = 0; j < trussA.BoundaryColumns.Count-1; j++)
+                for (int j = 0; j < trussA.BoundaryColumns.Count - 1; j++)
                 {
                     var columnA = trussA.BoundaryColumns[j];
-                    var columnB = trussA.BoundaryColumns[j+1];
+                    var columnB = trussA.BoundaryColumns[j + 1];
+                    // Point3d ptA = columnA.Axis.PointAt(0.5);
+                    // Point3d ptB = columnB.Axis.PointAt(0.5);
+
                     var parametersA = columnA.Axis.ToNurbsCurve().DivideByLength(distance, true);
                     var parametersB = columnB.Axis.ToNurbsCurve().DivideByLength(distance, true);
-                    for (int k = 0; k < parametersA.Length; k++)
+                    var tempArray = new int[] {parametersA.Length, parametersB.Length};
+                    for (int k = 0; k < tempArray.Min(); k++)
                     {
                         var ptA = columnA.Axis.ToNurbsCurve().PointAt(parametersA[k]);
                         var ptB = columnB.Axis.ToNurbsCurve().PointAt(parametersB[k]);
@@ -60,6 +65,5 @@ namespace WarehouseLib
 
             return facadeStraps;
         }
-        
     }
 }

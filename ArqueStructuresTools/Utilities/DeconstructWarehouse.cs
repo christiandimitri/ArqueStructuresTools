@@ -27,8 +27,8 @@ namespace ArqueStructuresTools
         {
             pManager.AddParameter(new TrussParameter(), "Trusses", "t", "t", GH_ParamAccess.list);
             pManager.AddParameter(new StrapParameter(), "Roof straps", "rs", "rs", GH_ParamAccess.list);
-            pManager.AddParameter(new StrapParameter(), "XFacade Straps", "yfs", "xfs", GH_ParamAccess.list);
-            pManager.AddParameter(new StrapParameter(), "YFacade Straps", "xfs", "yfs", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "X Facade Straps", "yfs", "xfs", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "Y Facade Straps", "xfs", "yfs", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -57,18 +57,28 @@ namespace ArqueStructuresTools
                 }
             }
 
-            var facadeStraps = new List<StrapGoo>();
-            if (warehouse.FacadeStraps != null)
+            var facadeStrapsX = new List<StrapGoo>();
+            if (warehouse.FacadeStrapsX != null)
             {
-                foreach (var facadeStrap in warehouse.FacadeStraps)
+                foreach (var facadeStrap in warehouse.FacadeStrapsX)
                 {
-                    facadeStraps.Add(new StrapGoo(facadeStrap));
+                    facadeStrapsX.Add(new StrapGoo(facadeStrap));
+                }
+            }
+
+            var facadeStrapsY = new List<StrapGoo>();
+            if (warehouse.FacadeStrapsY != null)
+            {
+                foreach (var facadeStrap in warehouse.FacadeStrapsY)
+                {
+                    facadeStrapsY.Add(new StrapGoo(facadeStrap));
                 }
             }
 
             DA.SetDataList(0, new List<TrussGoo>(trusses));
             DA.SetDataList(1, new List<StrapGoo>(roofStraps));
-            DA.SetDataList(2, new List<StrapGoo>(facadeStraps));
+            DA.SetDataList(2, new List<StrapGoo>(facadeStrapsX));
+            DA.SetDataList(3, new List<StrapGoo>(facadeStrapsY));
         }
     }
 }

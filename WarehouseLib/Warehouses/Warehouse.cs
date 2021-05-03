@@ -22,7 +22,8 @@ namespace WarehouseLib
         public List<Column> StaticColumns;
         public List<Column> BoundaryColumns;
         public List<Strap> RoofStraps;
-        public List<Strap> FacadeStraps;
+        public List<Strap> FacadeStrapsX;
+        public List<Strap> FacadeStrapsY;
 
         public Warehouse(Plane plane, double length, double width, double height, double maxHeight, double clearHeight,
             int typology, int poticsCount, string trussType, int columnsCount)
@@ -45,7 +46,7 @@ namespace WarehouseLib
             GenerateTrusses();
             GenerateRoofStraps();
             GetColumns();
-            // GenerateFacadeStraps();
+            GenerateFacadeStraps();
         }
 
         public void GenerateRoofStraps()
@@ -63,24 +64,26 @@ namespace WarehouseLib
 
         public void GenerateFacadeStraps()
         {
-            FacadeStraps = new List<Strap>();
+            FacadeStrapsX = new List<Strap>();
+            FacadeStrapsY = new List<Strap>();
             var tempStraps = new List<Strap>();
             var strapsX = new FacadeStrap(Line.Unset).ConstructStrapsAxisOnStaticColumns(Trusses, 0.5);
-            var portics = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
-            var strapsY = new FacadeStrap(Line.Unset).ConstructStrapsAxisOnBoundaryColumns(portics, 0.5);
             foreach (var strap in strapsX)
             {
                 tempStraps.Add(new FacadeStrap(strap.Axis));
             }
 
-            FacadeStraps = tempStraps;
+            FacadeStrapsX = tempStraps;
+            tempStraps = new List<Strap>();
+            var portics = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
+            var strapsY = new FacadeStrap(Line.Unset).ConstructStrapsAxisOnBoundaryColumns(portics, 0.5);
 
-            // foreach (var strap in strapsY)
-            // {
-            //     tempStraps.Add(new FacadeStrap(strap.Axis));
-            // }
+            foreach (var strap in strapsY)
+            {
+                tempStraps.Add(new FacadeStrap(strap.Axis));
+            }
 
-            // FacadeStraps.AddRange(tempStraps);
+            FacadeStrapsY = tempStraps;
         }
 
         private void GenerateTrusses()

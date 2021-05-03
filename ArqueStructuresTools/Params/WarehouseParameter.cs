@@ -40,7 +40,7 @@ namespace ArqueStructuresTools
                     foreach (var warehouseGoo in branch)
                     {
                         var warehouse = warehouseGoo.Value;
-                        
+
                         foreach (var truss in warehouse.Trusses)
                         {
                             if (truss.TopBars != null)
@@ -80,14 +80,24 @@ namespace ArqueStructuresTools
                                 }
                             }
 
-                            if (warehouse.FacadeStraps != null)
+                            if (warehouse.FacadeStrapsX != null)
                             {
-                                foreach (var strap in warehouse.FacadeStraps)
+                                foreach (var strap in warehouse.FacadeStrapsX)
                                 {
                                     _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
                                     args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Orange);
                                 }
                             }
+
+                            if (warehouse.FacadeStrapsY != null)
+                            {
+                                foreach (var strap in warehouse.FacadeStrapsY)
+                                {
+                                    _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                    args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Orange);
+                                }
+                            }
+
                             if (truss.StaticColumns != null)
                             {
                                 foreach (var bar in truss.StaticColumns)
