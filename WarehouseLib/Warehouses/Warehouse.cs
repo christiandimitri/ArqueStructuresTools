@@ -174,21 +174,27 @@ namespace WarehouseLib
         {
             if (PoticsCount < 2) throw new Exception("Portics count has to be >=2");
             RoofBracings = new List<Bracing>();
-            if (RoofBracingType=="Bracing")
+            if (RoofBracingType == "Bracing")
             {
-                var roofBracingsStart = new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, 0, ColumnsCount, RoofBracingType);
-                RoofBracings.AddRange(roofBracingsStart);
-                var roofBracingsEnd =
-                    new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, Trusses.Count - 1, ColumnsCount, RoofBracingType);
-                RoofBracings.AddRange(roofBracingsEnd);
+                var roofBracingsStart =
+                    new RoofBracing(Line.Unset).ConstructBracings(Trusses, 0, ColumnsCount,
+                        RoofBracingType);
+                RoofBracings = roofBracingsStart;
+                // var roofBracingsEnd =
+                //     new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, Trusses.Count - 1,
+                //         ColumnsCount, RoofBracingType);
+                // RoofBracings.AddRange(roofBracingsEnd);
             }
-            else if (RoofBracingType == "Tensor")
+            else if (RoofBracingType == "Cable")
             {
-                var roofBracingsStart = new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, 0, ColumnsCount, RoofBracingType);
+                var roofBracingsStart =
+                    new RoofBracing(Line.Unset).ConstructBracings(Trusses, 0, ColumnsCount,
+                        RoofBracingType);
                 RoofBracings.AddRange(roofBracingsStart);
-                var roofBracingsEnd =
-                    new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, Trusses.Count - 1, ColumnsCount, RoofBracingType);
-                RoofBracings.AddRange(roofBracingsEnd);
+                // var roofBracingsEnd =
+                //     new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, Trusses.Count - 1,
+                //         ColumnsCount, RoofBracingType);
+                // RoofBracings.AddRange(roofBracingsEnd);
             }
         }
     }

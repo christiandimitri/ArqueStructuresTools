@@ -6,11 +6,10 @@ namespace WarehouseLib.Bracings
     public abstract class Bracing
     {
         public Line Axis;
-        public string Type;
-        public Bracing(Line axis, string type)
+
+        public Bracing(Line axis)
         {
             Axis = axis;
-            Type = type;
         }
     }
 }
