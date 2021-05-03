@@ -33,6 +33,7 @@ namespace ArqueStructuresTools
             pManager.AddIntegerParameter("Typology", "T", "T", GH_ParamAccess.item, 2);
             pManager.AddIntegerParameter("Count", "C", "C", GH_ParamAccess.item, 3);
             pManager.AddTextParameter("Truss type", "tt", "tt", GH_ParamAccess.item, "Warren");
+            pManager.AddIntegerParameter("Columns count", "cc", "cc", GH_ParamAccess.item, 2);
         }
 
         /// <summary>
@@ -58,6 +59,7 @@ namespace ArqueStructuresTools
             var typology = 2;
             var count = 3;
             var trussType = "";
+            var columsCount = 0;
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref width)) return;
@@ -67,35 +69,20 @@ namespace ArqueStructuresTools
             if (!DA.GetData(6, ref typology)) return;
             if (!DA.GetData(7, ref count)) return;
             if (!DA.GetData(8, ref trussType)) return;
+            if (!DA.GetData(9, ref columsCount)) return;
 
             Warehouse warehouse = null;
 
             try
             {
                 warehouse = new Warehouse(plane, length, width, height, maxHeight, clearHeight, typology, count,
-                    trussType);
+                    trussType, columsCount);
             }
             catch (Exception e)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, e.Message);
                 return;
             }
-
-            // var lines = new List<Curve>();
-            // var nodes = new List<Point3d>();
-            // foreach (var column in warehouse.Columns)
-            // {
-            //     lines.Add(column.Axis.ToNurbsCurve());
-            // }
-            //
-            // foreach (var truss in warehouse.Trusses)
-            // {
-            //     lines.AddRange(truss.TopBars);
-            //     lines.AddRange(truss.BottomBars);
-            //     lines.AddRange(truss.IntermediateBars);
-            //     nodes.AddRange(truss.TopNodes);
-            //     nodes.AddRange(truss.BottomNodes);
-            // }
             DA.SetData(0, new WarehouseGoo(warehouse));
         }
 

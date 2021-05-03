@@ -66,12 +66,20 @@ namespace ArqueStructuresTools
                             }
                         }
 
-                        if (truss.Columns != null)
+                        if (truss.StaticColumns != null)
                         {
-                            foreach (var line in truss.Columns)
+                            foreach (var line in truss.StaticColumns)
                             {
                                 _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
                                 args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.Purple);
+                            }
+                        }
+                        if (truss.BoundaryColumns != null)
+                        {
+                            foreach (var line in truss.BoundaryColumns)
+                            {
+                                _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.Maroon);
                             }
                         }
                     }

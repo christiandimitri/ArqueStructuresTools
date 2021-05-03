@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using WarehouseLib;
@@ -13,9 +12,9 @@ namespace ArqueStructuresTools
         /// Initializes a new instance of the TestWarehouseComponent class.
         /// </summary>
         public TestWarehouseComponent()
-          : base("Test Warehouse Component", "Nickname",
-              "Description",
-              "Arque Structures", "Warehouses")
+            : base("Test Warehouse Component", "Nickname",
+                "Description",
+                "Arque Structures", "Warehouses")
         {
         }
 
@@ -34,7 +33,7 @@ namespace ArqueStructuresTools
             pManager.AddIntegerParameter("Typology", "T", "T", GH_ParamAccess.item, 2);
             pManager.AddIntegerParameter("Count", "C", "C", GH_ParamAccess.item, 3);
             pManager.AddTextParameter("Truss Type", "tt", "tt", GH_ParamAccess.item, "Warren");
-
+            pManager.AddIntegerParameter("Columns count", "cc", "cc", GH_ParamAccess.item, 3);
         }
 
         /// <summary>
@@ -42,9 +41,7 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Warehouse", "w", "w",GH_ParamAccess.item);
-            pManager.AddCurveParameter("L", "L", "l", GH_ParamAccess.list);
-            pManager.AddPointParameter("P", "P", "P", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Warehouse", "w", "w", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -53,7 +50,7 @@ namespace ArqueStructuresTools
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var plane=Plane.WorldXY;
+            var plane = Plane.WorldXY;
             double length = 15;
             double width = 10;
             double height = 4;
@@ -62,6 +59,7 @@ namespace ArqueStructuresTools
             var typology = 2;
             var count = 3;
             var trussType = "";
+            var columnsCount = 0;
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref width)) return;
@@ -71,12 +69,14 @@ namespace ArqueStructuresTools
             if (!DA.GetData(6, ref typology)) return;
             if (!DA.GetData(7, ref count)) return;
             if (!DA.GetData(8, ref trussType)) return;
+            if (!DA.GetData(9, ref columnsCount)) return;
 
             Warehouse warehouse = null;
-            
+
             try
             {
-                warehouse = new Warehouse(plane, length, width, height, maxHeight, clearHeight, typology, count, trussType);
+                warehouse = new Warehouse(plane, length, width, height, maxHeight, clearHeight, typology, count,
+                    trussType, columnsCount);
             }
             catch (Exception e)
             {
@@ -86,7 +86,12 @@ namespace ArqueStructuresTools
 
             var lines = new List<Curve>();
             var nodes = new List<Point3d>();
-            foreach (var column in warehouse.Columns)
+            foreach (var column in warehouse.StaticColumns)
+            {
+                lines.Add(column.Axis.ToNurbsCurve());
+            }
+
+            foreach (var column in warehouse.BoundaryColumns)
             {
                 lines.Add(column.Axis.ToNurbsCurve());
             }
@@ -99,6 +104,7 @@ namespace ArqueStructuresTools
                 nodes.AddRange(truss.TopNodes);
                 nodes.AddRange(truss.BottomNodes);
             }
+
             DA.SetData(0, warehouse);
             DA.SetDataList(1, lines);
             DA.SetDataList(2, nodes);

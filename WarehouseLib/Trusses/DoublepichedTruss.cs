@@ -15,13 +15,13 @@ namespace WarehouseLib
 
         public DoublepichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
             int divisions, string trussType, string articulationType, double rightLength, double leftLength,
-            int baseType) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType, articulationType)
+            int baseType, int columnsCount) : base(plane, length, height, maxHeight, clearHeight, divisions, trussType, articulationType, columnsCount)
         {
             RightLength = rightLength;
             LeftLength = leftLength;
             BaseType = baseType;
             GenerateTopBars();
-            GenerateColumns();
+            GenerateStaticColumns();
             ChangeBaseByType(baseType);
             ConstructTruss(divisions);
             ChangeArticulationAtColumnsByType(articulationType);

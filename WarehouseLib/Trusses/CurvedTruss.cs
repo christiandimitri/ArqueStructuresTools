@@ -7,9 +7,9 @@ namespace WarehouseLib
     public class CurvedTruss : Truss
     {
         public CurvedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
-            int divisions, string trussType, string articulationType) : base(plane, length, height,
+            int divisions, string trussType, string articulationType, int columnsCount) : base(plane, length, height,
             maxHeight,
-            clearHeight, divisions, trussType, articulationType)
+            clearHeight, divisions, trussType, articulationType, columnsCount)
         {
         }
 

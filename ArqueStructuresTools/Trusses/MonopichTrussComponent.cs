@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using WarehouseLib;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
@@ -11,9 +11,9 @@ namespace ArqueStructuresTools
         /// Initializes a new instance of the MonopichTruss class.
         /// </summary>
         public MonopichTrussComponent()
-          : base("Construct Monopich Truss", "Nickname",
-              "Description",
-              "Arque Structures", "Trusses")
+            : base("Construct Monopich Truss", "Nickname",
+                "Description",
+                "Arque Structures", "Trusses")
         {
         }
 
@@ -32,7 +32,7 @@ namespace ArqueStructuresTools
             pManager.AddTextParameter("Truss type", "tt", "tt", GH_ParamAccess.item, "Pratt");
             pManager.AddTextParameter("Articulation type", "at", "at", GH_ParamAccess.item, "Rigid");
             pManager.AddIntegerParameter("Base type", "bt", "bt", GH_ParamAccess.item, 0);
-
+            pManager.AddIntegerParameter("Columns count", "ct", "ct", GH_ParamAccess.item, 0);
         }
 
         /// <summary>
@@ -60,6 +60,7 @@ namespace ArqueStructuresTools
             string trussType = "";
             string articulationType = "";
             int baseType = 0;
+            int columnsCount = 0;
             if (!DA.GetData(0, ref worldXy)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref height)) return;
@@ -69,9 +70,11 @@ namespace ArqueStructuresTools
             if (!DA.GetData(6, ref trussType)) return;
             if (!DA.GetData(7, ref articulationType)) return;
             if (!DA.GetData(8, ref baseType)) return;
+            if (!DA.GetData(9, ref columnsCount)) return;
 
 
-            var truss = new MonopichedTruss(worldXy, length, height, maxHeight, clearHeight, divisions, trussType, articulationType,baseType );
+            var truss = new MonopichedTruss(worldXy, length, height, maxHeight, clearHeight, divisions, trussType,
+                articulationType, baseType, columnsCount);
 
             DA.SetData(0, new TrussGoo(truss));
         }

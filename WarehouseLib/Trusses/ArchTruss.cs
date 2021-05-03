@@ -12,13 +12,14 @@ namespace WarehouseLib
         private int BaseType;
 
         public ArchTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
-            string trussType, string articulationType, int baseType) : base(plane, length, height, maxHeight,
+            string trussType, string articulationType, int baseType, int columnsCount) : base(plane, length, height,
+            maxHeight,
             clearHeight, divisions,
-            trussType, articulationType)
+            trussType, articulationType, columnsCount)
         {
             BaseType = baseType;
             GenerateTopBars();
-            GenerateColumns();
+            GenerateStaticColumns();
             ChangeBaseByType(baseType);
             ConstructTruss(divisions);
             ChangeArticulationAtColumnsByType(articulationType);

@@ -26,7 +26,7 @@ namespace ArqueStructuresTools
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new StrapParameter(), "Facade straps", "st", "st", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "FacadeX straps", "stx", "stx", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -44,14 +44,16 @@ namespace ArqueStructuresTools
                 trusses.Add(truss);
             }
 
-            var roofStraps = new List<StrapGoo>();
-            var tempStraps = new FacadeStrap(Line.Unset).ConstructStrapsAxis(trusses, distance);
-            foreach (var strap in tempStraps)
+            var facadeStrapX = new List<StrapGoo>();
+            var strapsX = new FacadeStrap(Line.Unset).ConstructStrapsAxisOnStaticColumns(trusses, distance);
+
+            foreach (var strap in strapsX)
             {
-                roofStraps.Add(new StrapGoo(strap));
+                facadeStrapX.Add(new StrapGoo(strap));
             }
 
-            DA.SetDataList(0, new List<StrapGoo>(roofStraps));
+
+            DA.SetDataList(0, new List<StrapGoo>(facadeStrapX));
         }
     }
 }

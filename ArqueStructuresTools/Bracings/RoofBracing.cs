@@ -41,7 +41,7 @@ namespace ArqueStructuresTools.Bracings
             }
 
             var roofStraps = new List<StrapGoo>();
-            var tempStraps = new RoofStrap(Line.Unset).ConstructStrapsAxis(trusses, 0);
+            var tempStraps = new RoofStrap(Line.Unset).ConstructRoofStraps(trusses, 0);
             foreach (var strap in tempStraps)
             {
                 roofStraps.Add(new StrapGoo(strap));

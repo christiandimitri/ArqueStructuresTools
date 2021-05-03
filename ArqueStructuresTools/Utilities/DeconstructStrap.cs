@@ -20,7 +20,7 @@ namespace ArqueStructuresTools
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new StrapParameter(), "Strap", "", "", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "Strap", "", "", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)

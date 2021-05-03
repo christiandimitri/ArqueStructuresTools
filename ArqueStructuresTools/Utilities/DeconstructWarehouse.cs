@@ -27,7 +27,8 @@ namespace ArqueStructuresTools
         {
             pManager.AddParameter(new TrussParameter(), "Trusses", "t", "t", GH_ParamAccess.list);
             pManager.AddParameter(new StrapParameter(), "Roof straps", "rs", "rs", GH_ParamAccess.list);
-            pManager.AddParameter(new StrapParameter(), "Facade Straps", "fs", "fs", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "XFacade Straps", "yfs", "xfs", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "YFacade Straps", "xfs", "yfs", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)

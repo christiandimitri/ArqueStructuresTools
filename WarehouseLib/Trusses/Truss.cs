@@ -10,8 +10,10 @@ namespace WarehouseLib
         public List<Curve> BottomBars;
         public List<Point3d> BottomNodes;
         private double ClearHeight;
-        public List<Column> Columns;
+        public List<Column> StaticColumns;
+        public List<Column> BoundaryColumns;
         public int Divisions;
+        public int ColumnsCount;
         public double Height;
         public List<Curve> IntermediateBars;
         public double Length;
@@ -20,11 +22,12 @@ namespace WarehouseLib
         public List<Point3d> StartingNodes;
         public List<Curve> TopBars;
         public List<Point3d> TopNodes;
+        public List<Point3d> BoundaryTopNodes;
         public string TrussType;
         public string ArticulationType;
 
         protected Truss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
-            string trussType, string articulationType)
+            string trussType, string articulationType, int columnsCount)
         {
             Plane = plane;
             Length = length;
@@ -34,6 +37,7 @@ namespace WarehouseLib
             Divisions = divisions;
             TrussType = trussType;
             ArticulationType = articulationType;
+            ColumnsCount = columnsCount;
         }
 
         protected int RecomputeDivisions(int divisions)
@@ -116,21 +120,6 @@ namespace WarehouseLib
             return difference;
         }
 
-        protected void GenerateColumns()
-        {
-            var columns = new List<Column>();
-
-            // TODO: Create columns here using trusses!
-            var axisA = new Line(new Point3d(StartingNodes[0].X, StartingNodes[0].Y, Plane.Origin.Z),
-                StartingNodes[0]);
-            var axisB = new Line(new Point3d(StartingNodes[2].X, StartingNodes[2].Y, Plane.Origin.Z),
-                StartingNodes[2]);
-            columns.Add(new Column(axisA));
-            columns.Add(new Column(axisB));
-
-            Columns = columns;
-        }
-
         public abstract void GenerateTopBars();
         protected abstract void GenerateThickBottomBars();
 
@@ -151,8 +140,11 @@ namespace WarehouseLib
         {
             List<Point3d> nodes = new List<Point3d>();
             var points = new List<Point3d>(TopNodes);
+
             var intersectingLines = new List<Line>();
-            for (int i = 0; i < points.Count; i++)
+            for (int i = 0;
+                i < points.Count;
+                i++)
             {
                 var tempPt = Plane.Origin - Vector3d.ZAxis * MaxHeight;
                 var lineA = new Line(points[i], new Point3d(points[i].X, points[i].Y, tempPt.Z));
@@ -163,7 +155,9 @@ namespace WarehouseLib
             {
                 var intersectionEvents = Intersection.CurveCurve(crv, line.ToNurbsCurve(), 0.01, 0.0);
                 if (intersectionEvents == null) continue;
-                for (int i = 0; i < intersectionEvents.Count; i++)
+                for (int i = 0;
+                    i < intersectionEvents.Count;
+                    i++)
                 {
                     var intEv = intersectionEvents[0];
                     nodes.Add(intEv.PointA);
@@ -348,13 +342,83 @@ namespace WarehouseLib
             BottomNodes = new List<Point3d>(tempBottomList);
         }
 
-        public void ConstructPorticFromTruss()
+        protected void GenerateStaticColumns()
+        {
+            var columns = new List<Column>();
+
+            // TODO: Create columns here using trusses!
+            var axisA = new Line(new Point3d(StartingNodes[0].X, StartingNodes[0].Y, Plane.Origin.Z),
+                StartingNodes[0]);
+
+            var axisB = new Line(new Point3d(StartingNodes[2].X, StartingNodes[2].Y, Plane.Origin.Z),
+                StartingNodes[2]);
+
+            columns.Add(new Column(axisA));
+            columns.Add(new Column(axisB));
+            StaticColumns = new List<Column>(columns);
+        }
+
+        public Column ConstructColumn(Point3d node)
+        {
+            var axis = new Line(Plane.PointAt(node.X, 0, Plane.OriginZ), node);
+            var column = new Column(axis);
+            return column;
+        }
+
+        public void GenerateBoundaryColumnsNodes(Truss truss, bool isPortic, int divisions)
+        {
+            if (!isPortic)
+            {
+                throw new Exception("The boundary columns are only implemented on a Portic");
+            }
+            else
+            {
+                BoundaryTopNodes = new List<Point3d>();
+                var nodes = new List<Point3d>();
+                for (int index = 0; index < truss.TopBars.Count; index++)
+                {
+                    var curve = truss.TopBars[index];
+                    var parameters =
+                        curve.DivideByCount(divisions, true);
+
+                    for (var i = 0; i < parameters.Length; i++) nodes.Add(curve.PointAt(parameters[i]));
+
+                    if (index == 0) nodes.RemoveAt(nodes.Count - 1);
+                }
+
+                BoundaryTopNodes.AddRange(nodes);
+            }
+        }
+
+        public void GenerateBoundaryColumns(Truss truss)
+        {
+            BoundaryColumns = new List<Column>();
+            var positions = truss.BoundaryTopNodes;
+            positions.RemoveAt(0);
+            positions.RemoveAt(positions.Count - 1);
+            var columns = new List<Column>();
+            for (int i = 0; i < positions.Count; i++)
+            {
+                var column = ConstructColumn(positions[i]);
+                columns.Add(column);
+            }
+
+            BoundaryColumns.AddRange(columns);
+        }
+
+        public void ConstructPorticFromTruss(Truss truss)
         {
             TopBars = new List<Curve>(TopBars);
             TopNodes = new List<Point3d>(TopNodes);
             BottomBars = null;
             BottomNodes = null;
             IntermediateBars = null;
+
+            if (ColumnsCount > 0)
+            {
+                truss.GenerateBoundaryColumnsNodes(truss, true, ColumnsCount);
+                truss.GenerateBoundaryColumns(truss);
+            }
         }
     }
 }

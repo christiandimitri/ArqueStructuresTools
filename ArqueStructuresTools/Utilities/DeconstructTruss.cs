@@ -33,9 +33,11 @@ namespace ArqueStructuresTools
             pManager.AddCurveParameter("Top bar", "tb", "tb", GH_ParamAccess.list);
             pManager.AddCurveParameter("Bottom bar", "bb", "bb", GH_ParamAccess.list);
             pManager.AddCurveParameter("Intermediate bar", "ib", "ib", GH_ParamAccess.list);
-            pManager.AddCurveParameter("Column bar", "cb", "cb", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Static column bar", "cb", "cb", GH_ParamAccess.list);
             pManager.AddPointParameter("Top nodes", "tn", "tn", GH_ParamAccess.list);
             pManager.AddPointParameter("Bottom nodes", "bn", "bn", GH_ParamAccess.list);
+            pManager.AddPointParameter("Boundary nodes", "bn", "bn", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Boundary columns", "bc", "bc", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -52,21 +54,35 @@ namespace ArqueStructuresTools
             var topBars = truss.TopBars;
             var bottomBars = truss.BottomBars;
             var intermediateBars = truss.IntermediateBars;
-            var columns = new List<Curve>();
+            var staticColumns = new List<Curve>();
             var topNodes = truss.TopNodes;
             var bottomNodes = truss.BottomNodes;
-
-            foreach (var cl in truss.Columns)
+            var boundaryNodes = truss.BoundaryTopNodes;
+            var boundaryColumns = new List<Curve>();
+            if (truss.StaticColumns != null)
             {
-                columns.Add(cl.Axis.ToNurbsCurve());
+                foreach (var cl in truss.StaticColumns)
+                {
+                    staticColumns.Add(cl.Axis.ToNurbsCurve());
+                }
+            }
+
+            if (truss.BoundaryColumns != null)
+            {
+                foreach (var cl in truss.BoundaryColumns)
+                {
+                    boundaryColumns.Add(cl.Axis.ToNurbsCurve());
+                }
             }
 
             DA.SetDataList(0, topBars);
             DA.SetDataList(1, bottomBars);
             DA.SetDataList(2, intermediateBars);
-            DA.SetDataList(3, columns);
+            DA.SetDataList(3, staticColumns);
             DA.SetDataList(4, topNodes);
             DA.SetDataList(5, bottomNodes);
+            DA.SetDataList(6, boundaryNodes);
+            DA.SetDataList(7, boundaryColumns);
         }
 
         /// <summary>

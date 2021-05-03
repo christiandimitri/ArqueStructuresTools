@@ -40,17 +40,9 @@ namespace ArqueStructuresTools
                     foreach (var warehouseGoo in branch)
                     {
                         var warehouse = warehouseGoo.Value;
+                        
                         foreach (var truss in warehouse.Trusses)
                         {
-                            if (truss.Columns != null)
-                            {
-                                foreach (var column in truss.Columns)
-                                {
-                                    _box.Union(column.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(column.Axis.ToNurbsCurve(), System.Drawing.Color.Purple);
-                                }
-                            }
-
                             if (truss.TopBars != null)
                             {
                                 foreach (var bar in truss.TopBars)
@@ -59,6 +51,7 @@ namespace ArqueStructuresTools
                                     args.Display.DrawCurve(bar, System.Drawing.Color.Blue);
                                 }
                             }
+
 
                             if (truss.BottomBars != null)
                             {
@@ -93,6 +86,23 @@ namespace ArqueStructuresTools
                                 {
                                     _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
                                     args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Orange);
+                                }
+                            }
+                            if (truss.StaticColumns != null)
+                            {
+                                foreach (var bar in truss.StaticColumns)
+                                {
+                                    _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.HotPink);
+                                }
+                            }
+
+                            if (truss.BoundaryColumns != null)
+                            {
+                                foreach (var bar in truss.BoundaryColumns)
+                                {
+                                    _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.DeepPink);
                                 }
                             }
                         }

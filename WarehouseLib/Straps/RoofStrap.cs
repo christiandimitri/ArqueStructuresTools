@@ -8,8 +8,7 @@ namespace WarehouseLib
         public RoofStrap(Line axis) : base(axis)
         {
         }
-
-        public override List<Strap> ConstructStrapsAxis(List<Truss> trusses, double distance)
+        public List<Strap> ConstructRoofStraps(List<Truss> trusses, double distance)
         {
             var roofStraps = new List<Strap>();
 
