@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Eto.Drawing;
+using WarehouseLib.Bracings;
 
 namespace WarehouseLib
 {
@@ -17,6 +18,7 @@ namespace WarehouseLib
         public int PoticsCount;
         public int ColumnsCount;
         public string TrussType;
+        public string RoofBracingType;
         public List<Truss> Trusses;
         public List<Point3d> Nodes;
         public List<Column> StaticColumns;
@@ -24,9 +26,10 @@ namespace WarehouseLib
         public List<Strap> RoofStraps;
         public List<Strap> FacadeStrapsX;
         public List<Strap> FacadeStrapsY;
+        public List<Bracing> RoofBracings;
 
         public Warehouse(Plane plane, double length, double width, double height, double maxHeight, double clearHeight,
-            int typology, int poticsCount, string trussType, int columnsCount)
+            int typology, int poticsCount, string trussType, int columnsCount, string roofBracingType)
         {
             if (width <= 0) throw new Exception("Warehouse cannot have 0 width!!");
             if (length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
@@ -43,10 +46,12 @@ namespace WarehouseLib
             PoticsCount = poticsCount;
             TrussType = trussType;
             ColumnsCount = columnsCount;
+            RoofBracingType = roofBracingType;
             GenerateTrusses();
             GenerateRoofStraps();
             GetColumns();
             GenerateFacadeStraps();
+            GenerateBracings();
         }
 
         public void GenerateRoofStraps()
@@ -163,6 +168,28 @@ namespace WarehouseLib
 
             StaticColumns = staticList;
             BoundaryColumns = boundaryList;
+        }
+
+        private void GenerateBracings()
+        {
+            if (PoticsCount < 2) throw new Exception("Portics count has to be >=2");
+            RoofBracings = new List<Bracing>();
+            if (RoofBracingType=="Bracing")
+            {
+                var roofBracingsStart = new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, 0, ColumnsCount, RoofBracingType);
+                RoofBracings.AddRange(roofBracingsStart);
+                var roofBracingsEnd =
+                    new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, Trusses.Count - 1, ColumnsCount, RoofBracingType);
+                RoofBracings.AddRange(roofBracingsEnd);
+            }
+            else if (RoofBracingType == "Tensor")
+            {
+                var roofBracingsStart = new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, 0, ColumnsCount, RoofBracingType);
+                RoofBracings.AddRange(roofBracingsStart);
+                var roofBracingsEnd =
+                    new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, Trusses.Count - 1, ColumnsCount, RoofBracingType);
+                RoofBracings.AddRange(roofBracingsEnd);
+            }
         }
     }
 }

@@ -376,11 +376,12 @@ namespace WarehouseLib
             {
                 BoundaryTopNodes = new List<Point3d>();
                 var nodes = new List<Point3d>();
+                var joinedBar = Curve.JoinCurves(TopBars);
                 for (int index = 0; index < truss.TopBars.Count; index++)
                 {
                     var curve = truss.TopBars[index];
                     var parameters =
-                        curve.DivideByCount(divisions, true);
+                        curve.DivideByCount(divisions/2, true);
 
                     for (var i = 0; i < parameters.Length; i++) nodes.Add(curve.PointAt(parameters[i]));
 

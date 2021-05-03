@@ -76,7 +76,7 @@ namespace ArqueStructuresTools
             try
             {
                 warehouse = new Warehouse(plane, length, width, height, maxHeight, clearHeight, typology, count,
-                    trussType, columnsCount);
+                    trussType, columnsCount,"Bracing");
             }
             catch (Exception e)
             {

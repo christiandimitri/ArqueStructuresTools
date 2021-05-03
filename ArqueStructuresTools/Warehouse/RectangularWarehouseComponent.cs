@@ -34,6 +34,7 @@ namespace ArqueStructuresTools
             pManager.AddIntegerParameter("Count", "C", "C", GH_ParamAccess.item, 3);
             pManager.AddTextParameter("Truss type", "tt", "tt", GH_ParamAccess.item, "Warren");
             pManager.AddIntegerParameter("Columns count", "cc", "cc", GH_ParamAccess.item, 2);
+            pManager.AddTextParameter("Roof bracing type", "rbt", "rbt", GH_ParamAccess.item, "Bracing");
         }
 
         /// <summary>
@@ -60,6 +61,7 @@ namespace ArqueStructuresTools
             var count = 3;
             var trussType = "";
             var columsCount = 0;
+            var roofBracingType = "";
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref width)) return;
@@ -70,19 +72,20 @@ namespace ArqueStructuresTools
             if (!DA.GetData(7, ref count)) return;
             if (!DA.GetData(8, ref trussType)) return;
             if (!DA.GetData(9, ref columsCount)) return;
-
+            if (!DA.GetData(10, ref roofBracingType)) return;
             Warehouse warehouse = null;
 
             try
             {
                 warehouse = new Warehouse(plane, length, width, height, maxHeight, clearHeight, typology, count,
-                    trussType, columsCount);
+                    trussType, columsCount, roofBracingType);
             }
             catch (Exception e)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, e.Message);
                 return;
             }
+
             DA.SetData(0, new WarehouseGoo(warehouse));
         }
 
