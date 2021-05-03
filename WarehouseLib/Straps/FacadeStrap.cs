@@ -47,8 +47,6 @@ namespace WarehouseLib
                 {
                     var columnA = trussA.BoundaryColumns[j];
                     var columnB = trussA.BoundaryColumns[j + 1];
-                    // Point3d ptA = columnA.Axis.PointAt(0.5);
-                    // Point3d ptB = columnB.Axis.PointAt(0.5);
 
                     var parametersA = columnA.Axis.ToNurbsCurve().DivideByLength(distance, true);
                     var parametersB = columnB.Axis.ToNurbsCurve().DivideByLength(distance, true);
