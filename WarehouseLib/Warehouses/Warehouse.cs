@@ -95,25 +95,25 @@ namespace WarehouseLib
                 var tempPlane = new Plane(Plane.PointAt(0, span, 0), Plane.ZAxis);
                 if (Typology == 0)
                 {
-                    var trussA = new FlatTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 4, TrussType,
+                    var trussA = new FlatTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 6, TrussType,
                         "Articulated", ColumnsCount);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 1)
                 {
-                    var trussA = new ArchTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 4, TrussType,
+                    var trussA = new ArchTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 6, TrussType,
                         "Articulated", 0, ColumnsCount);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 2)
                 {
-                    var trussA = new MonopichedTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 4, TrussType,
+                    var trussA = new MonopichedTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 6, TrussType,
                         "Articulated", 0, ColumnsCount);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 3)
                 {
-                    var trussA = new DoublepichedTruss(tempPlane, 0, Height, MaxHeight, ClearHeight, 4, TrussType,
+                    var trussA = new DoublepichedTruss(tempPlane, 0, Height, MaxHeight, ClearHeight, 6, TrussType,
                         "Articulated", Length, Length * 0.8, 0, ColumnsCount);
                     trusses.Add(trussA);
                 }
