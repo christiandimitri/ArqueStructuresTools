@@ -4,13 +4,15 @@ using WarehouseLib.Bracings;
 
 namespace WarehouseLib.Cables
 {
-    public class Cable
+    public abstract class Cable
     {
         public Line Axis;
 
-        public Cable(Line axis)
+        protected Cable(Line axis)
         {
             Axis = axis;
         }
+
+        public abstract List<Cable> ConstructCables(List<Truss> trusses);
     }
 }

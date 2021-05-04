@@ -191,13 +191,13 @@ namespace WarehouseLib
                 var roofBracingsStart =
                     new RoofBracing(Line.Unset).ConstructBracings(Trusses, 0, ColumnsCount);
                 var roofCablesStart =
-                    new RoofCable(Line.Unset).ConstructCables(Trusses, 0, ColumnsCount);
+                    new RoofCable(Line.Unset, 0, ColumnsCount).ConstructCables(Trusses);
                 RoofBracings.AddRange(roofBracingsStart);
                 RoofCables.AddRange(roofCablesStart);
                 var roofBracingsEnd =
                     new RoofBracing(Line.Unset).ConstructBracings(Trusses, Trusses.Count - 1, ColumnsCount);
                 var roofCablesEnd =
-                    new RoofCable(Line.Unset).ConstructCables(Trusses, Trusses.Count - 1, ColumnsCount);
+                    new RoofCable(Line.Unset, Trusses.Count - 1, ColumnsCount).ConstructCables(Trusses);
                 RoofBracings.AddRange(roofBracingsEnd);
                 RoofCables.AddRange(roofCablesEnd);
             }
