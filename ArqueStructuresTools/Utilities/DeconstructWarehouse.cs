@@ -30,6 +30,7 @@ namespace ArqueStructuresTools
             pManager.AddParameter(new StrapParameter(), "X Facade straps", "yfs", "xfs", GH_ParamAccess.list);
             pManager.AddParameter(new StrapParameter(), "Y Facade straps", "xfs", "yfs", GH_ParamAccess.list);
             pManager.AddParameter(new BracingParameter(), "Roof bracing", "rb", "rb", GH_ParamAccess.list);
+            pManager.AddParameter(new CableParameter(), "Roof Cable", "rc", "rc", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -84,12 +85,20 @@ namespace ArqueStructuresTools
                     roofBracings.Add(new BracingGoo(bracing));
                 }
             }
-            
+            var roofCables = new List<CableGoo>();
+            if (warehouse.RoofBracings != null)
+            {
+                foreach (var cable in warehouse.RoofCables)
+                {
+                    roofCables.Add(new CableGoo(cable));
+                }
+            }
             DA.SetDataList(0, new List<TrussGoo>(trusses));
             DA.SetDataList(1, new List<StrapGoo>(roofStraps));
             DA.SetDataList(2, new List<StrapGoo>(facadeStrapsX));
             DA.SetDataList(3, new List<StrapGoo>(facadeStrapsY));
             DA.SetDataList(4, new List<BracingGoo>(roofBracings));
+            DA.SetDataList(5, new List<CableGoo>(roofCables));
         }
     }
 }

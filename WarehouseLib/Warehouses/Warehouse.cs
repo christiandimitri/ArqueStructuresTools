@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Eto.Drawing;
 using WarehouseLib.Bracings;
+using WarehouseLib.Cables;
 
 namespace WarehouseLib
 {
@@ -27,6 +28,7 @@ namespace WarehouseLib
         public List<Strap> FacadeStrapsX;
         public List<Strap> FacadeStrapsY;
         public List<Bracing> RoofBracings;
+        public List<Cable> RoofCables;
 
         public Warehouse(Plane plane, double length, double width, double height, double maxHeight, double clearHeight,
             int typology, int poticsCount, string trussType, int columnsCount, string roofBracingType)
@@ -174,27 +176,24 @@ namespace WarehouseLib
         {
             if (PoticsCount < 2) throw new Exception("Portics count has to be >=2");
             RoofBracings = new List<Bracing>();
+            RoofCables = new List<Cable>();
             if (RoofBracingType == "Bracing")
             {
                 var roofBracingsStart =
-                    new RoofBracing(Line.Unset).ConstructBracings(Trusses, 0, ColumnsCount,
-                        RoofBracingType);
-                RoofBracings = roofBracingsStart;
-                // var roofBracingsEnd =
-                //     new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, Trusses.Count - 1,
-                //         ColumnsCount, RoofBracingType);
-                // RoofBracings.AddRange(roofBracingsEnd);
+                    new RoofBracing(Line.Unset).ConstructWarrenStudsBracings(Trusses, 0, ColumnsCount);
+                RoofBracings.AddRange(roofBracingsStart);
+                var roofBracingsEnd =
+                    new RoofBracing(Line.Unset).ConstructWarrenStudsBracings(Trusses, Trusses.Count - 1, ColumnsCount);
+                RoofBracings.AddRange(roofBracingsEnd);
             }
             else if (RoofBracingType == "Cable")
             {
                 var roofBracingsStart =
-                    new RoofBracing(Line.Unset).ConstructBracings(Trusses, 0, ColumnsCount,
-                        RoofBracingType);
+                    new RoofBracing(Line.Unset).ConstructBracings(Trusses, 0, ColumnsCount);
+                var roofCablesStart =
+                    new RoofCable(Line.Unset).ConstructCables(Trusses, 0, ColumnsCount);
                 RoofBracings.AddRange(roofBracingsStart);
-                // var roofBracingsEnd =
-                //     new RoofBracing(Line.Unset, RoofBracingType).ConstructBracings(Trusses, Trusses.Count - 1,
-                //         ColumnsCount, RoofBracingType);
-                // RoofBracings.AddRange(roofBracingsEnd);
+                RoofCables.AddRange(roofCablesStart);
             }
         }
     }

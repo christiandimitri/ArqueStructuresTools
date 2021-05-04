@@ -10,7 +10,7 @@ namespace WarehouseLib.Bracings
         {
         }
 
-        public List<Bracing> ConstructBracings(List<Truss> trusses, int index, int count, string type)
+        public List<Bracing> ConstructBracings(List<Truss> trusses, int index, int count)
         {
             var bracings = new List<Bracing>();
 
@@ -20,40 +20,41 @@ namespace WarehouseLib.Bracings
             var parametersA = topBarA.DivideByCount(count - 1, true);
             var parametersB = topBarB.DivideByCount(count - 1, true);
 
-            // var warenBars = ConstructWarrenConnection(count, topBarA, topBarB, parametersA, parametersB);
 
-            for (int i = 1; i < count; i++)
+            for (int i = 1; i < count - 1; i++)
             {
-                Point3d ptA = topBarA.PointAt(parametersA[i]);
-                Point3d ptB = topBarB.PointAt(parametersB[i]);
-                Line bar = new Line(ptA, ptB);
-                if (bar.Length > 0 || bar.IsValid) bracings.Add(new RoofBracing(bar));
+                var ptA = new Point3d(topBarA.PointAt(parametersA[i]));
+                var ptB = new Point3d(topBarB.PointAt(parametersB[i]));
+                var bracing = new Line(ptA, ptB);
+                if (bracing.IsValid) bracings.Add(new RoofBracing(bracing));
             }
 
-            // bracings.RemoveAt(0);
-            // bracings.RemoveAt(bracings.Count - 1);
             return bracings;
         }
 
-        private List<Bracing> ConstructWarrenConnection(int count, Curve topBarA, Curve topBarB, double[] parametersA,
-            double[] parametersB)
+        public List<Bracing> ConstructWarrenStudsBracings(List<Truss> trusses, int index, int count)
         {
             var bracings = new List<Bracing>();
 
-            for (int i = 0; i <= count; i++)
-            {
-                if (i % 2 == 1)
-                {
-                    Point3d ptA = topBarB.PointAt(parametersA[i]);
-                    Point3d ptB = topBarA.PointAt(parametersB[i - 1]);
-                    var bar = new Line(ptB, ptA);
-                    if (bar.Length > 0 || bar.IsValid) bracings.Add(new RoofBracing(bar));
+            var topBarA = Curve.JoinCurves(trusses[index].TopBars)[0];
+            var topBarB = Curve.JoinCurves(trusses[index > 0 ? index - 1 : index + 1].TopBars)[0];
 
-                    ptA = topBarB.PointAt(parametersA[i]);
-                    ptB = topBarA.PointAt(count % 2 == 1 && i == count ? parametersA[i] : parametersB[i + 1]);
-                    bar = new Line(ptB, ptA);
-                    if (bar.Length > 0 || bar.IsValid) bracings.Add(new RoofBracing(bar));
-                }
+            var parametersA = topBarA.DivideByCount(count - 1, true);
+            var parametersB = topBarB.DivideByCount(count - 1, true);
+
+            for (int i = 0; i < count; i++)
+            {
+                Point3d ptA = new Point3d(topBarA.PointAt(parametersA[i]));
+                Point3d ptB = (i > 0)
+                    ? new Point3d(topBarB.PointAt(parametersB[i - 1]))
+                    : new Point3d(topBarA.PointAt(parametersA[i]));
+                Line bracing = new Line(ptA, ptB);
+                if (bracing.IsValid) bracings.Add(new RoofBracing(bracing));
+                ptB = (i < count - 1)
+                    ? new Point3d(topBarB.PointAt(parametersB[i + 1]))
+                    : new Point3d(topBarA.PointAt(parametersA[i]));
+                bracing = new Line(ptA, ptB);
+                if (bracing.IsValid) bracings.Add(new RoofBracing(bracing));
             }
 
             return bracings;

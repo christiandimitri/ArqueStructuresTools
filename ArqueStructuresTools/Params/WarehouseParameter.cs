@@ -124,6 +124,15 @@ namespace ArqueStructuresTools
                                     args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Olive);
                                 }
                             }
+
+                            if (warehouse.RoofCables != null)
+                            {
+                                foreach (var bar in warehouse.RoofCables)
+                                {
+                                    _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Olive);
+                                }
+                            }
                         }
                     }
                 }
