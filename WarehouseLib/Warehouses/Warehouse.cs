@@ -119,6 +119,7 @@ namespace WarehouseLib
             StaticColumns = staticList;
             BoundaryColumns = boundaryList;
         }
+
         public List<Truss> WarehouseHasPorticAtBoundaries(List<Truss> trusses)
         {
             var trussA = trusses[0];
@@ -179,7 +180,7 @@ namespace WarehouseLib
 
         private void GenerateBracings()
         {
-            if (PoticsCount < 2) throw new Exception("Portics count has to be >=2");
+            if (PoticsCount <= 2) throw new Exception("Portics count has to be >2");
             RoofBracings = new List<Bracing>();
             RoofCables = new List<Cable>();
             if (RoofBracingType == "Bracing")
