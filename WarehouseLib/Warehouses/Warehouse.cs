@@ -182,9 +182,9 @@ namespace WarehouseLib
                 var roofBracingsStart =
                     new RoofBracing(Line.Unset).ConstructWarrenStudsBracings(Trusses, 0, ColumnsCount);
                 RoofBracings.AddRange(roofBracingsStart);
-                // var roofBracingsEnd =
-                //     new RoofBracing(Line.Unset).ConstructWarrenStudsBracings(Trusses, Trusses.Count - 1, ColumnsCount);
-                // RoofBracings.AddRange(roofBracingsEnd);
+                var roofBracingsEnd =
+                    new RoofBracing(Line.Unset).ConstructWarrenStudsBracings(Trusses, Trusses.Count - 1, ColumnsCount);
+                RoofBracings.AddRange(roofBracingsEnd);
             }
             else if (RoofBracingType == "Cable")
             {
@@ -194,6 +194,12 @@ namespace WarehouseLib
                     new RoofCable(Line.Unset).ConstructCables(Trusses, 0, ColumnsCount);
                 RoofBracings.AddRange(roofBracingsStart);
                 RoofCables.AddRange(roofCablesStart);
+                var roofBracingsEnd =
+                    new RoofBracing(Line.Unset).ConstructBracings(Trusses, Trusses.Count - 1, ColumnsCount);
+                var roofCablesEnd =
+                    new RoofCable(Line.Unset).ConstructCables(Trusses, Trusses.Count - 1, ColumnsCount);
+                RoofBracings.AddRange(roofBracingsEnd);
+                RoofCables.AddRange(roofCablesEnd);
             }
         }
     }
