@@ -42,21 +42,36 @@ namespace WarehouseLib.Bracings
             var parametersA = topBarA.DivideByCount(count - 1, true);
             var parametersB = topBarB.DivideByCount(count - 1, true);
 
-            for (int i = 0; i < count; i += 2)
+            for (int i = 0; i < count - 1; i++)
             {
-                Point3d ptA = new Point3d(topBarA.PointAt(parametersA[i]));
-                Point3d ptB = (i > 0)
-                    ? new Point3d(topBarB.PointAt(parametersB[i - 1]))
-                    : new Point3d(topBarA.PointAt(parametersA[i]));
-                Line bracing = new Line(ptA, ptB);
-                if (bracing.IsValid) bracings.Add(new RoofBracing(bracing));
-                ptB = (i < count - 1)
-                    ? new Point3d(topBarB.PointAt(parametersB[i + 1]))
-                    : new Point3d(topBarA.PointAt(parametersA[i]));
-                bracing = new Line(ptA, ptB);
-                if (bracing.IsValid) bracings.Add(new RoofBracing(bracing));
+                var ptA = new Point3d(topBarA.PointAt(parametersA[i]));
+                var ptB = new Point3d(topBarB.PointAt(parametersB[i]));
+                var line = new Line(ptA, ptB);
+                // bracings.Add(new RoofBracing(line));
             }
 
+            var warrenConnections = new List<Bracing>();
+            for (int i = 0; i < count - 1; i++)
+            {
+                var ptA = new Point3d(topBarA.PointAt(parametersA[i]));
+                var ptB = new Point3d(topBarB.PointAt(parametersB[i]));
+                var line = new Line(ptA, ptB);
+                bracings.Add(new RoofBracing(line));
+                ptA = new Point3d(topBarA.PointAt(parametersA[i]));
+                ptB = new Point3d(topBarB.PointAt(parametersB[i + 1]));
+                line = new Line(ptA, ptB);
+
+                if (i % 2 == 0) bracings.Add(new RoofBracing(line));
+                if (i % 2 == 1)
+                {
+                    ptA = new Point3d(topBarA.PointAt(parametersA[i + 1]));
+                    ptB = new Point3d(topBarB.PointAt(parametersB[i]));
+                    line = new Line(ptA, ptB);
+                    bracings.Add(new RoofBracing(line));
+                }
+            }
+
+            bracings.RemoveAt(0);
             return bracings;
         }
     }

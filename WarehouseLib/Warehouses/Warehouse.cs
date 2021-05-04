@@ -182,9 +182,9 @@ namespace WarehouseLib
                 var roofBracingsStart =
                     new RoofBracing(Line.Unset).ConstructWarrenStudsBracings(Trusses, 0, ColumnsCount);
                 RoofBracings.AddRange(roofBracingsStart);
-                var roofBracingsEnd =
-                    new RoofBracing(Line.Unset).ConstructWarrenStudsBracings(Trusses, Trusses.Count - 1, ColumnsCount);
-                RoofBracings.AddRange(roofBracingsEnd);
+                // var roofBracingsEnd =
+                //     new RoofBracing(Line.Unset).ConstructWarrenStudsBracings(Trusses, Trusses.Count - 1, ColumnsCount);
+                // RoofBracings.AddRange(roofBracingsEnd);
             }
             else if (RoofBracingType == "Cable")
             {
