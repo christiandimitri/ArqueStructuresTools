@@ -15,7 +15,7 @@ namespace WarehouseLib.Bracings
             Index = index;
         }
 
-        public override List<Bracing> ConstructBracings(List<Truss> trusses)
+        public override List<Bracing> ConstructBracings(List<Truss>trusses)
         {
             var bracings = new List<Bracing>();
 
@@ -36,7 +36,7 @@ namespace WarehouseLib.Bracings
 
             return bracings;
         }
-
+        
         public List<Bracing> ConstructWarrenStudsBracings(List<Truss> trusses)
         {
             var bracings = new List<Bracing>();
