@@ -42,7 +42,7 @@ namespace WarehouseLib.Bracings
             var parametersA = topBarA.DivideByCount(count - 1, true);
             var parametersB = topBarB.DivideByCount(count - 1, true);
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i += 2)
             {
                 Point3d ptA = new Point3d(topBarA.PointAt(parametersA[i]));
                 Point3d ptB = (i > 0)
