@@ -7,9 +7,11 @@ namespace WarehouseLib.Bracings
     {
         public Line Axis;
 
-        public Bracing(Line axis)
+        protected Bracing(Line axis)
         {
             Axis = axis;
         }
+
+        public abstract List<Bracing> ConstructBracings(List<Truss> trusses);
     }
 }

@@ -32,12 +32,12 @@ namespace WarehouseLib.Cables
                     ? new Point3d(topBarB.PointAt(parametersB[i - 1]))
                     : new Point3d(topBarA.PointAt(parametersA[i]));
                 Line cable = new Line(ptA, ptB);
-                if (cable.IsValid) cables.Add(new RoofCable(cable, Count, Index));
+                if (cable.IsValid) cables.Add(new RoofCable(cable, Index, Count));
                 ptB = (i < Count - 1)
                     ? new Point3d(topBarB.PointAt(parametersB[i + 1]))
                     : new Point3d(topBarA.PointAt(parametersA[i]));
                 cable = new Line(ptA, ptB);
-                if (cable.IsValid) cables.Add(new RoofCable(cable, Count, Index));
+                if (cable.IsValid) cables.Add(new RoofCable(cable, Index, Count));
             }
 
             return cables;
