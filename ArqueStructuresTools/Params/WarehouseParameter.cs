@@ -121,7 +121,7 @@ namespace ArqueStructuresTools
                                 foreach (var bar in warehouse.RoofBracings)
                                 {
                                     _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Olive);
+                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Indigo);
                                 }
                             }
 
@@ -130,7 +130,7 @@ namespace ArqueStructuresTools
                                 foreach (var bar in warehouse.RoofCables)
                                 {
                                     _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Olive);
+                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Firebrick);
                                 }
                             }
                         }

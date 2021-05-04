@@ -29,7 +29,7 @@ namespace ArqueStructuresTools
                         if (cable != null)
                         {
                             _box.Union(cable.Axis.ToNurbsCurve().GetBoundingBox(false));
-                            args.Display.DrawCurve(cable.Axis.ToNurbsCurve(), System.Drawing.Color.Chocolate);
+                            args.Display.DrawCurve(cable.Axis.ToNurbsCurve(), System.Drawing.Color.Firebrick);
                         }
                     }
                 }

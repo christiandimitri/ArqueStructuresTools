@@ -29,8 +29,8 @@ namespace ArqueStructuresTools
             pManager.AddParameter(new StrapParameter(), "Roof straps", "rs", "rs", GH_ParamAccess.list);
             pManager.AddParameter(new StrapParameter(), "X Facade straps", "yfs", "xfs", GH_ParamAccess.list);
             pManager.AddParameter(new StrapParameter(), "Y Facade straps", "xfs", "yfs", GH_ParamAccess.list);
-            pManager.AddParameter(new BracingParameter(), "Roof bracing", "rb", "rb", GH_ParamAccess.list);
-            pManager.AddParameter(new CableParameter(), "Roof Cable", "rc", "rc", GH_ParamAccess.list);
+            pManager.AddParameter(new BracingParameter(), "Roof bracings", "rb", "rb", GH_ParamAccess.list);
+            pManager.AddParameter(new CableParameter(), "Roof cables", "rc", "rc", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
