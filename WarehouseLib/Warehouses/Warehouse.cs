@@ -50,10 +50,10 @@ namespace WarehouseLib
             ColumnsCount = columnsCount;
             RoofBracingType = roofBracingType;
             GenerateTrusses();
-            GenerateRoofStraps();
             GetColumns();
+            GenerateRoofStraps();
             GenerateFacadeStraps();
-            GenerateBracings();
+            GenerateRoofBracings();
         }
 
         private void GenerateTrusses()
@@ -120,7 +120,7 @@ namespace WarehouseLib
             BoundaryColumns = boundaryList;
         }
 
-        public List<Truss> WarehouseHasPorticAtBoundaries(List<Truss> trusses)
+        private List<Truss> WarehouseHasPorticAtBoundaries(List<Truss> trusses)
         {
             var trussA = trusses[0];
             trussA.ConstructPorticFromTruss(trussA);
@@ -135,7 +135,7 @@ namespace WarehouseLib
             return trusses;
         }
 
-        public void GenerateRoofStraps()
+        private void GenerateRoofStraps()
         {
             RoofStraps = new List<Strap>();
             var tempStraps = new List<Strap>();
@@ -149,7 +149,7 @@ namespace WarehouseLib
             RoofStraps = tempStraps;
         }
 
-        public void GenerateFacadeStraps()
+        private void GenerateFacadeStraps()
         {
             FacadeStrapsX = new List<Strap>();
             FacadeStrapsY = new List<Strap>();
@@ -177,8 +177,7 @@ namespace WarehouseLib
             FacadeStrapsY = tempStraps;
         }
 
-
-        private void GenerateBracings()
+        private void GenerateRoofBracings()
         {
             if (PoticsCount <= 2) throw new Exception("Portics count has to be >2");
             RoofBracings = new List<Bracing>();
