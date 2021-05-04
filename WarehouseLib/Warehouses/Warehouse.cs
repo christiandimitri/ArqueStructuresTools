@@ -94,7 +94,7 @@ namespace WarehouseLib
         private void GenerateTrusses()
         {
             var trusses = new List<Truss>();
-            for (int i = 0; i <= PoticsCount; i++)
+            for (int i = 0; i < PoticsCount; i++)
             {
                 var span = (Width / PoticsCount) * i;
                 var tempPlane = new Plane(Plane.PointAt(0, span, 0), Plane.ZAxis);
