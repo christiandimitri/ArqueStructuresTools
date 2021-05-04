@@ -45,7 +45,7 @@ namespace WarehouseLib
             var recomputedDivisions = divisions;
             if ((TrussType == "Howe" || TrussType == "Pratt") && divisions % 2 == 1) recomputedDivisions++;
             else if (TrussType == "Warren_Studs") recomputedDivisions = divisions / 2;
-            
+
             return recomputedDivisions;
         }
 
@@ -376,17 +376,12 @@ namespace WarehouseLib
             {
                 BoundaryTopNodes = new List<Point3d>();
                 var nodes = new List<Point3d>();
-                var joinedBar = Curve.JoinCurves(TopBars);
-                for (int index = 0; index < truss.TopBars.Count; index++)
-                {
-                    var curve = truss.TopBars[index];
-                    var parameters =
-                        curve.DivideByCount(divisions/2, true);
+                var joinedBar = Curve.JoinCurves(TopBars)[0];
 
-                    for (var i = 0; i < parameters.Length; i++) nodes.Add(curve.PointAt(parameters[i]));
+                var parameters =
+                    joinedBar.DivideByCount(divisions - 1, true);
 
-                    if (index == 0) nodes.RemoveAt(nodes.Count - 1);
-                }
+                for (var i = 0; i < parameters.Length; i++) nodes.Add(joinedBar.PointAt(parameters[i]));
 
                 BoundaryTopNodes.AddRange(nodes);
             }
@@ -416,11 +411,12 @@ namespace WarehouseLib
             BottomNodes = null;
             IntermediateBars = null;
 
-            if (ColumnsCount > 0)
+            if (ColumnsCount > 1)
             {
                 truss.GenerateBoundaryColumnsNodes(truss, true, ColumnsCount);
                 truss.GenerateBoundaryColumns(truss);
             }
+            else throw new Exception("the columns count should be >=2");
         }
     }
 }

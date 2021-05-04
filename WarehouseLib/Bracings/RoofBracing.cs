@@ -17,18 +17,28 @@ namespace WarehouseLib.Bracings
             var topBarA = Curve.JoinCurves(trusses[index].TopBars)[0];
             var topBarB = Curve.JoinCurves(trusses[index > 0 ? index - 1 : index + 1].TopBars)[0];
 
-            var parametersA = topBarA.DivideByCount(count, true);
-            var parametersB = topBarB.DivideByCount(count, true);
+            var parametersA = topBarA.DivideByCount(count - 1, true);
+            var parametersB = topBarB.DivideByCount(count - 1, true);
 
-            for (int i = 0; i <= count; i++)
+            // var warenBars = ConstructWarrenConnection(count, topBarA, topBarB, parametersA, parametersB);
+
+            for (int i = 1; i < count; i++)
             {
                 Point3d ptA = topBarA.PointAt(parametersA[i]);
                 Point3d ptB = topBarB.PointAt(parametersB[i]);
                 Line bar = new Line(ptA, ptB);
-                if (bar.Length > 0 ||bar.IsValid) bracings.Add(new RoofBracing(bar));
+                if (bar.Length > 0 || bar.IsValid) bracings.Add(new RoofBracing(bar));
             }
 
-            var warenBars = new List<Bracing>();
+            // bracings.RemoveAt(0);
+            // bracings.RemoveAt(bracings.Count - 1);
+            return bracings;
+        }
+
+        private List<Bracing> ConstructWarrenConnection(int count, Curve topBarA, Curve topBarB, double[] parametersA,
+            double[] parametersB)
+        {
+            var bracings = new List<Bracing>();
 
             for (int i = 0; i <= count; i++)
             {
@@ -46,8 +56,6 @@ namespace WarehouseLib.Bracings
                 }
             }
 
-            // bracings.RemoveAt(0);
-            // bracings.RemoveAt(bracings.Count - 1);
             return bracings;
         }
     }
