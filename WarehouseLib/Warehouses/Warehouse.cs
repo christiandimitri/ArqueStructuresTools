@@ -60,7 +60,8 @@ namespace WarehouseLib
         {
             RoofStraps = new List<Strap>();
             var tempStraps = new List<Strap>();
-            var straps = new RoofStrap(Line.Unset).ConstructRoofStraps(Trusses, 0);
+            var straps =
+                new RoofStrap(Line.Unset).ConstructStraps(new RoofStrap(Line.Unset).ConstructRoofStraps(Trusses, 0));
             foreach (var strap in straps)
             {
                 tempStraps.Add(new RoofStrap(strap.Axis));
@@ -74,7 +75,9 @@ namespace WarehouseLib
             FacadeStrapsX = new List<Strap>();
             FacadeStrapsY = new List<Strap>();
             var tempStraps = new List<Strap>();
-            var strapsX = new FacadeStrap(Line.Unset).ConstructStrapsAxisOnStaticColumns(Trusses, 0.5);
+            var strapsX =
+                new FacadeStrap(Line.Unset).ConstructStraps(
+                    new FacadeStrap(Line.Unset).ConstructStrapsAxisOnStaticColumns(Trusses, 0.5));
             foreach (var strap in strapsX)
             {
                 tempStraps.Add(new FacadeStrap(strap.Axis));
@@ -83,7 +86,9 @@ namespace WarehouseLib
             FacadeStrapsX = tempStraps;
             tempStraps = new List<Strap>();
             var portics = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
-            var strapsY = new FacadeStrap(Line.Unset).ConstructStrapsAxisOnBoundaryColumns(portics, 0.5);
+            var strapsY =
+                new FacadeStrap(Line.Unset).ConstructStraps(
+                    new FacadeStrap(Line.Unset).ConstructStrapsAxisOnBoundaryColumns(portics, 0.5));
 
             foreach (var strap in strapsY)
             {

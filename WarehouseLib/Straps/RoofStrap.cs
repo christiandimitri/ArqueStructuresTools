@@ -8,6 +8,7 @@ namespace WarehouseLib
         public RoofStrap(Line axis) : base(axis)
         {
         }
+
         public List<Strap> ConstructRoofStraps(List<Truss> trusses, double distance)
         {
             var roofStraps = new List<Strap>();
@@ -25,7 +26,13 @@ namespace WarehouseLib
                     }
                 }
             }
+
             return roofStraps;
+        }
+
+        public override List<Strap> ConstructStraps(List<Strap> strapMethod)
+        {
+            return strapMethod;
         }
     }
 }

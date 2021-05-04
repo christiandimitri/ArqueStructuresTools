@@ -63,5 +63,10 @@ namespace WarehouseLib
 
             return facadeStraps;
         }
+
+        public override List<Strap> ConstructStraps(List<Strap> strapList)
+        {
+            return strapList;
+        }
     }
 }
