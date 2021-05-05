@@ -83,25 +83,6 @@ namespace WarehouseLib
             GenerateStraightBottomBars();
         }
 
-        protected void ChangeArticulationAtColumnsByType(string type)
-        {
-            if (type == "Articulated")
-            {
-                IsArticulatedToColumns();
-            }
-            else if (type == "Rigid")
-            {
-                IsRigidToColumns();
-            }
-        }
-
-        private void IsRigidToColumns()
-        {
-            BottomBars = new List<Curve>(BottomBars);
-        }
-
-        protected abstract void IsArticulatedToColumns();
-
         protected void GenerateTopNodes(Curve curve, int divisions, int index)
         {
             var nodes = new List<Point3d>();
@@ -343,6 +324,25 @@ namespace WarehouseLib
             BottomNodes = new List<Point3d>(tempBottomList);
         }
 
+        protected void ChangeArticulationAtColumnsByType(string type)
+        {
+            if (type == "Articulated")
+            {
+                IsArticulatedToColumns();
+            }
+            else if (type == "Rigid")
+            {
+                IsRigidToColumns();
+            }
+        }
+
+        private void IsRigidToColumns()
+        {
+            BottomBars = new List<Curve>(BottomBars);
+        }
+
+        protected abstract void IsArticulatedToColumns();
+
         protected void GenerateStaticColumns()
         {
             var columns = new List<Column>();
@@ -358,14 +358,7 @@ namespace WarehouseLib
             columns.Add(new Column(axisB));
             StaticColumns = new List<Column>(columns);
         }
-
-        public Column ConstructColumn(Point3d node)
-        {
-            var axis = new Line(Plane.ClosestPoint(node), node);
-            var column = new Column(axis);
-            return column;
-        }
-
+        
         public void GenerateBoundaryColumnsNodes(Truss truss, bool isPortic, int divisions)
         {
             if (!isPortic)
@@ -396,7 +389,7 @@ namespace WarehouseLib
             var columns = new List<Column>();
             for (int i = 0; i < positions.Count; i++)
             {
-                var column = ConstructColumn(positions[i]);
+                var column = new Column(Line.Unset).ConstructColumn(positions[i], Plane);
                 columns.Add(column);
             }
 
