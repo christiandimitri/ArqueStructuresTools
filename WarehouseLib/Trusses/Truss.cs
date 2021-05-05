@@ -343,22 +343,6 @@ namespace WarehouseLib
 
         protected abstract void IsArticulatedToColumns();
 
-        protected void GenerateStaticColumns()
-        {
-            var columns = new List<Column>();
-
-            // TODO: Create columns here using trusses!
-            var axisA = new Line(new Point3d(StartingNodes[0].X, StartingNodes[0].Y, Plane.Origin.Z),
-                StartingNodes[0]);
-
-            var axisB = new Line(new Point3d(StartingNodes[2].X, StartingNodes[2].Y, Plane.Origin.Z),
-                StartingNodes[2]);
-
-            columns.Add(new Column(axisA));
-            columns.Add(new Column(axisB));
-            StaticColumns = new List<Column>(columns);
-        }
-        
         public void GenerateBoundaryColumnsNodes(List<Curve> topBars, bool isPortic, int divisions)
         {
             if (!isPortic)
@@ -393,7 +377,6 @@ namespace WarehouseLib
                 truss.GenerateBoundaryColumnsNodes(truss.TopBars, true, ColumnsCount);
                 BoundaryColumns =
                     new List<Column>(new Column(Line.Unset).GenerateBoundaryColumns(truss.BoundaryTopNodes, Plane));
-                // truss.GenerateBoundaryColumns(truss.BoundaryTopNodes);
             }
             else throw new Exception("the columns count should be >=2");
         }

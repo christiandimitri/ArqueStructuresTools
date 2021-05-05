@@ -21,7 +21,7 @@ namespace WarehouseLib
             LeftLength = leftLength;
             BaseType = baseType;
             GenerateTopBars();
-            GenerateStaticColumns();
+            StaticColumns = new List<Column>(new Column(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
             ChangeBaseByType(baseType);
             ConstructTruss(divisions);
             ChangeArticulationAtColumnsByType(articulationType);
