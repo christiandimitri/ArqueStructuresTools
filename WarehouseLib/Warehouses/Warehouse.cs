@@ -52,8 +52,8 @@ namespace WarehouseLib
             GenerateTrusses();
             GetColumns();
             GenerateRoofStraps();
-            GenerateFacadeStraps();
-            GenerateRoofBracings();
+            // GenerateFacadeStraps();
+            // GenerateRoofBracings();
         }
 
         private void GenerateTrusses()
@@ -89,7 +89,7 @@ namespace WarehouseLib
                 }
             }
 
-            trusses = new List<Truss>(WarehouseHasPorticAtBoundaries(trusses));
+            // trusses = new List<Truss>(WarehouseHasPorticAtBoundaries(trusses));
 
             Trusses = trusses;
         }

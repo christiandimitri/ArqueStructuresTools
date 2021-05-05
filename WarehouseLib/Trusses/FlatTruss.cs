@@ -14,7 +14,7 @@ namespace WarehouseLib
             clearHeight, divisions, trussType, articulationType, columnsCount)
         {
             GenerateTopBars();
-            StaticColumns = new List<Column>(new Column(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
+            // StaticColumns = new List<Column>(new Column(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
             GenerateThickBottomBars();
             ConstructTruss(divisions);
             ChangeArticulationAtColumnsByType(articulationType);
