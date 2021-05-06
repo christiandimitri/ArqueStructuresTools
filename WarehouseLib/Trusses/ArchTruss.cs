@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WarehouseLib.Columns;
+using WarehouseLib.Trusses;
 
 namespace WarehouseLib
 {
     public class ArchTruss : CurvedTruss
     {
-        private int BaseType;
+        public int BaseType;
 
         public ArchTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
             string trussType, string articulationType, int baseType, int columnsCount) : base(plane, length, height,

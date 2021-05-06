@@ -70,6 +70,8 @@
     <Compile Include="Columns\BoundaryColumn.cs" />
     <Compile Include="Columns\Column.cs" />
     <Compile Include="Columns\StaticColumn.cs" />
+    <Compile Include="Options\TrussOptions.cs" />
+    <Compile Include="Options\WarehouseOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Straps\FacadeStrap.cs" />
     <Compile Include="Straps\RoofStrap.cs" />

@@ -1,10 +1,8 @@
-﻿using Rhino.Geometry;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Rhino.Geometry.Intersect;
-using WarehouseLib.Trusses;
+using Rhino.Geometry;
 
-namespace WarehouseLib
+namespace WarehouseLib.Trusses
 {
     public class PichedTruss : Truss
     {

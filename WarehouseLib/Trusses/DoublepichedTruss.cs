@@ -1,18 +1,15 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Rhino.Geometry;
-using System.Collections.Generic;
-using Rhino.Geometry.Intersect;
-using WarehouseLib.Columns;
 
 // ReSharper disable VirtualMemberCallInConstructor
 
-namespace WarehouseLib
+namespace WarehouseLib.Trusses
 {
     public class DoublepichedTruss : PichedTruss
     {
-        private double RightLength;
-        private double LeftLength;
-        private int BaseType;
+        public double RightLength;
+        public double LeftLength;
+        public int BaseType;
 
         public DoublepichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
             int divisions, string trussType, string articulationType, double rightLength, double leftLength,

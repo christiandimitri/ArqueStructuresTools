@@ -5,6 +5,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using WarehouseLib;
+using WarehouseLib.Warehouses;
 
 namespace ArqueStructuresTools
 {

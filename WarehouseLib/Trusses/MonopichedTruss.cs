@@ -8,7 +8,7 @@ namespace WarehouseLib.Trusses
 {
     public class MonopichedTruss : PichedTruss
     {
-        private int BaseType;
+        public int BaseType;
 
         public MonopichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
             int divisions, string trussType, string articulationType, int baseType, int columnsCount) : base(plane, length, height,

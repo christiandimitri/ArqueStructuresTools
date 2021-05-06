@@ -1,14 +1,13 @@
-﻿using Rhino.Geometry;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Eto.Drawing;
+using Rhino.Geometry;
 using WarehouseLib.Bracings;
 using WarehouseLib.Cables;
 using WarehouseLib.Columns;
 using WarehouseLib.Straps;
 using WarehouseLib.Trusses;
 
-namespace WarehouseLib
+namespace WarehouseLib.Warehouses
 {
     public class Warehouse
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
 using WarehouseLib.Columns;
+using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
 {
@@ -364,7 +365,7 @@ namespace WarehouseLib.Trusses
                 BoundaryTopNodes.AddRange(nodes);
             }
         }
-
+        
         public void ConstructPorticFromTruss(Truss truss)
         {
             TopBars = new List<Curve>(TopBars);
@@ -377,8 +378,7 @@ namespace WarehouseLib.Trusses
             {
                 truss.GenerateBoundaryColumnsNodes(truss.TopBars, true, ColumnsCount);
                 BoundaryColumns =
-                    new List<Column>(
-                        new BoundaryColumn(Line.Unset).GenerateBoundaryColumns(truss.BoundaryTopNodes, Plane));
+                    new List<Column>(new BoundaryColumn(Line.Unset).GenerateBoundaryColumns(truss.BoundaryTopNodes, Plane));
             }
             else throw new Exception("the columns count should be >=2");
         }
