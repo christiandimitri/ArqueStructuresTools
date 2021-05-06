@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WarehouseLib.Columns;
 
 namespace WarehouseLib
 {
@@ -19,7 +20,6 @@ namespace WarehouseLib
         {
             BaseType = baseType;
             GenerateTopBars();
-            // StaticColumns = new List<Column>(new Column(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
             ChangeBaseByType(baseType);
             ConstructTruss(divisions);
             ChangeArticulationAtColumnsByType(articulationType);

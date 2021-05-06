@@ -1,6 +1,7 @@
 ﻿using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
+using WarehouseLib.Trusses;
 
 namespace WarehouseLib
 {

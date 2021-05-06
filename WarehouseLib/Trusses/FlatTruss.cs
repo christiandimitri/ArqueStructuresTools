@@ -1,11 +1,7 @@
-﻿using Rhino.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Rhino.Geometry;
 
-namespace WarehouseLib
+namespace WarehouseLib.Trusses
 {
     public class FlatTruss : PichedTruss
     {
@@ -14,7 +10,6 @@ namespace WarehouseLib
             clearHeight, divisions, trussType, articulationType, columnsCount)
         {
             GenerateTopBars();
-            // StaticColumns = new List<Column>(new Column(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
             GenerateThickBottomBars();
             ConstructTruss(divisions);
             ChangeArticulationAtColumnsByType(articulationType);

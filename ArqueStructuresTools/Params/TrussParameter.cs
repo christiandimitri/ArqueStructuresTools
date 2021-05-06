@@ -4,6 +4,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using WarehouseLib;
+using WarehouseLib.Trusses;
 
 namespace ArqueStructuresTools
 {

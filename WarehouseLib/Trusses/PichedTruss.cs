@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Rhino.Geometry.Intersect;
+using WarehouseLib.Trusses;
 
 namespace WarehouseLib
 {

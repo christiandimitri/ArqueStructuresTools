@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using WarehouseLib;
+using WarehouseLib.Straps;
+using WarehouseLib.Trusses;
 
 namespace ArqueStructuresTools
 {

@@ -2,6 +2,7 @@ using System;
 using WarehouseLib;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
+using WarehouseLib.Trusses;
 
 // ReSharper disable RedundantNameQualifier
 

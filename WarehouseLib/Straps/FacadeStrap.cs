@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Rhino.Geometry;
+using WarehouseLib.Trusses;
 
-namespace WarehouseLib
+namespace WarehouseLib.Straps
 {
     public class FacadeStrap : Strap
     {
@@ -22,6 +22,7 @@ namespace WarehouseLib
                 {
                     var columnA = trussA.StaticColumns[j];
                     var columnB = trussB.StaticColumns[j];
+
                     var parametersA = columnA.Axis.ToNurbsCurve().DivideByLength(distance, true);
                     var parametersB = columnB.Axis.ToNurbsCurve().DivideByLength(distance, true);
                     for (int k = 0; k < parametersA.Length; k++)

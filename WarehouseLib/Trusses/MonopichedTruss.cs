@@ -1,10 +1,10 @@
-﻿using Rhino.Geometry;
-using System.Collections.Generic;
-using Rhino.Geometry.Intersect;
+﻿using System.Collections.Generic;
+using Rhino.Geometry;
+using WarehouseLib.Columns;
 
 // ReSharper disable VirtualMemberCallInConstructor
 
-namespace WarehouseLib
+namespace WarehouseLib.Trusses
 {
     public class MonopichedTruss : PichedTruss
     {
@@ -16,7 +16,7 @@ namespace WarehouseLib
         {
             BaseType = baseType;
             GenerateTopBars();
-            // StaticColumns = new List<Column>(new Column(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
+            // StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
             ChangeBaseByType(baseType);
             ConstructTruss(divisions);
             ChangeArticulationAtColumnsByType(articulationType);

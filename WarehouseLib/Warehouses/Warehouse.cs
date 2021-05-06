@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using Eto.Drawing;
 using WarehouseLib.Bracings;
 using WarehouseLib.Cables;
+using WarehouseLib.Columns;
+using WarehouseLib.Straps;
+using WarehouseLib.Trusses;
 
 namespace WarehouseLib
 {
@@ -50,8 +53,8 @@ namespace WarehouseLib
             ColumnsCount = columnsCount;
             RoofBracingType = roofBracingType;
             GenerateTrusses();
-            GetColumns();
-            GenerateRoofStraps();
+            // GetColumns();
+            // GenerateRoofStraps();
             // GenerateFacadeStraps();
             // GenerateRoofBracings();
         }

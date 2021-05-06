@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Rhino.Geometry;
+using WarehouseLib.Trusses;
 
 namespace WarehouseLib.Cables
 {
