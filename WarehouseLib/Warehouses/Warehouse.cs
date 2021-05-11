@@ -39,7 +39,7 @@ namespace WarehouseLib.Warehouses
             // if (inputs.Length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
             if (trussInputs.Height <= 0) throw new Exception("Warehouse cannot have 0 height!!");
             if (trussInputs.MaxHeight <= 0) throw new Exception("Warehouse cannot have 0 max height!!");
-            if (trussInputs.Typology >= 4) throw new Exception("Warehouse root typology is between 0 to 3!!");
+            if (Typology >= 4) throw new Exception("Warehouse root typology is between 0 to 3!!");
 
             GenerateTrusses(trussInputs);
             GetColumns();

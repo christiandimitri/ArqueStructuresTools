@@ -50,33 +50,28 @@ namespace ArqueStructuresTools
             Plane plane = Plane.WorldXY;
             var trussInputs = new TrussInputs();
             var typology = "";
+            
             if (!DA.GetData(0, ref typology)) return;
 
-            if (!DA.GetData(0, ref plane)) return;
-            if (!DA.GetData(1, ref trussInputs)) return;
+            if (!DA.GetData(1, ref plane)) return;
+            if (!DA.GetData(2, ref trussInputs)) return;
             Truss truss = null;
-            switch (typology)
+
+            if (typology == Typology.Flat.ToString())
             {
-                case "Flat":
-                {
-                    truss = new FlatTruss(plane, trussInputs);
-                    break;
-                }
-                case "Arch":
-                {
-                    truss = new ArchTruss(plane, trussInputs);
-                    break;
-                }
-                case "Monopiched":
-                {
-                    truss = new MonopichedTruss(plane, trussInputs);
-                    break;
-                }
-                case "Doublepiched":
-                {
-                    truss = new DoublepichedTruss(plane, trussInputs);
-                    break;
-                }
+                truss = new FlatTruss(plane, trussInputs);
+            }
+            else if (typology == Typology.Arch.ToString())
+            {
+                truss = new ArchTruss(plane, trussInputs);
+            }
+            else if (typology == Typology.Monopiched.ToString())
+            {
+                truss = new MonopichedTruss(plane, trussInputs);
+            }
+            else if (typology == Typology.Duopiched.ToString())
+            {
+                truss = new DoublepichedTruss(plane, trussInputs);
             }
 
             DA.SetData(0, new TrussGoo(truss));

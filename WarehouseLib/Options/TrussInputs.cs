@@ -2,11 +2,10 @@
 {
     public struct TrussInputs
     {
-        public TrussInputs(string trussType, int typology, double width, double height, double maxHeight,
+        public TrussInputs(string trussType, double width, double height, double maxHeight,
             double clearHeight, int baseType, string articulationType, int divisions, string porticoType)
         {
             TrussType = trussType;
-            Typology = typology;
             Width = width;
             Height = height;
             MaxHeight = maxHeight;
@@ -16,8 +15,8 @@
             Divisions = divisions;
             PorticoType = porticoType;
         }
+
         public string TrussType { get; set; }
-        public int Typology { get; set; }
         public double Width { get; set; }
         public double Height { get; set; }
         public double MaxHeight { get; set; }
