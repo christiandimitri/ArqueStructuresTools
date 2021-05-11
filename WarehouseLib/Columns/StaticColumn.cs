@@ -5,26 +5,16 @@ namespace WarehouseLib.Columns
 {
     public class StaticColumn : Column
     {
-        public Line Axis;
-        public StaticColumn(Line axis)
+        public StaticColumn(Line axis) : base(axis)
         {
-            Axis = axis;
         }
 
         public List<Column> GenerateStaticColumns(List<Point3d> startingNodes, Plane plane)
         {
-            var columns = new List<Column>();
-
             // TODO: Create columns here using trusses!
-            var axisA = new Line(new Point3d(startingNodes[0].X, startingNodes[0].Y, plane.Origin.Z),
-                startingNodes[0]);
-
-            var axisB = new Line(new Point3d(startingNodes[2].X, startingNodes[2].Y, plane.Origin.Z),
-                startingNodes[2]);
-
-            columns.Add(new StaticColumn(axisA));
-            columns.Add(new StaticColumn(axisB));
-            var staticColumns = new List<Column>(columns);
+            var axisA = ConstructColumn(startingNodes[0], plane);
+            var axisB = ConstructColumn(startingNodes[2], plane);
+            var staticColumns = new List<Column> {axisA, axisB};
             return staticColumns;
         }
     }

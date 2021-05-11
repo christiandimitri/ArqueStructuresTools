@@ -11,12 +11,13 @@ namespace WarehouseLib.Trusses
         public int BaseType;
 
         public MonopichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
-            int divisions, string trussType, string articulationType, int baseType, int columnsCount) : base(plane, length, height,
+            int divisions, string trussType, string articulationType, int baseType, int columnsCount) : base(plane,
+            length, height,
             maxHeight, clearHeight, divisions, trussType, articulationType, columnsCount)
         {
             BaseType = baseType;
             GenerateTopBars();
-            // StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
+            StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
             ChangeBaseByType(baseType);
             ConstructTruss(divisions);
             ChangeArticulationAtColumnsByType(articulationType);

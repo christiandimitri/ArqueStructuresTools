@@ -21,7 +21,7 @@ namespace ArqueStructuresTools.Options
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Truss type", "tt", "tt", GH_ParamAccess.item, "Warren");
-            pManager.AddIntegerParameter("Typology", "t", "t", GH_ParamAccess.item, 1);
+            pManager.AddIntegerParameter("Typology", "t", "t", GH_ParamAccess.item, 0);
             pManager.AddNumberParameter("Width", "w", "w", GH_ParamAccess.item, 5);
             pManager.AddNumberParameter("Height", "h", "h", GH_ParamAccess.item, 3.0);
             pManager.AddNumberParameter("Max height", "mh", "mh", GH_ParamAccess.item, 4.0);
@@ -47,15 +47,16 @@ namespace ArqueStructuresTools.Options
             var baseType = 0;
             var articulationType = "";
             var divisions = 0;
+            
             if (!DA.GetData(0, ref trussType)) return;
             if (!DA.GetData(1, ref typology)) return;
             if (!DA.GetData(2, ref width)) return;
             if (!DA.GetData(3, ref height)) return;
-            // if (!DA.GetData(4, ref maxHeight)) return;
-            // if (!DA.GetData(5, ref clearHeight)) return;
-            // if (!DA.GetData(6, ref baseType)) return;
-            // if (!DA.GetData(7, ref articulationType)) return;
-            // if (!DA.GetData(8, ref divisions)) return;
+            if (!DA.GetData(4, ref maxHeight)) return;
+            if (!DA.GetData(5, ref clearHeight)) return;
+            if (!DA.GetData(6, ref baseType)) return;
+            if (!DA.GetData(7, ref articulationType)) return;
+            if (!DA.GetData(8, ref divisions)) return;
             
             var options = new TrussInputs();
             

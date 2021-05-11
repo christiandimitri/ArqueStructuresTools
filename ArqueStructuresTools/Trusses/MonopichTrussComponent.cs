@@ -34,6 +34,7 @@ namespace ArqueStructuresTools
             pManager.AddTextParameter("Articulation type", "at", "at", GH_ParamAccess.item, "Rigid");
             pManager.AddIntegerParameter("Base type", "bt", "bt", GH_ParamAccess.item, 0);
             pManager.AddIntegerParameter("Columns count", "ct", "ct", GH_ParamAccess.item, 0);
+            pManager.AddIntervalParameter("Panels interval", "pi", "pi", GH_ParamAccess.item, new Interval(1500, 2000));
         }
 
         /// <summary>
@@ -62,6 +63,7 @@ namespace ArqueStructuresTools
             string articulationType = "";
             int baseType = 0;
             int columnsCount = 0;
+            var panelsInterval = new Interval();
             if (!DA.GetData(0, ref worldXy)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref height)) return;
@@ -72,7 +74,9 @@ namespace ArqueStructuresTools
             if (!DA.GetData(7, ref articulationType)) return;
             if (!DA.GetData(8, ref baseType)) return;
             if (!DA.GetData(9, ref columnsCount)) return;
+            if (!DA.GetData(10, ref panelsInterval)) return;
 
+            var interval = panelsInterval;
 
             var truss = new MonopichedTruss(worldXy, length, height, maxHeight, clearHeight, divisions, trussType,
                 articulationType, baseType, columnsCount);

@@ -52,7 +52,7 @@ namespace WarehouseLib.Warehouses
             ColumnsCount = columnsCount;
             RoofBracingType = roofBracingType;
             GenerateTrusses();
-            // GetColumns();
+            GetColumns();
             // GenerateRoofStraps();
             // GenerateFacadeStraps();
             // GenerateRoofBracings();

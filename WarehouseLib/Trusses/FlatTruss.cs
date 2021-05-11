@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Columns;
 
 namespace WarehouseLib.Trusses
 {
@@ -10,6 +11,7 @@ namespace WarehouseLib.Trusses
             clearHeight, divisions, trussType, articulationType, columnsCount)
         {
             GenerateTopBars();
+            StaticColumns=new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
             GenerateThickBottomBars();
             ConstructTruss(divisions);
             ChangeArticulationAtColumnsByType(articulationType);

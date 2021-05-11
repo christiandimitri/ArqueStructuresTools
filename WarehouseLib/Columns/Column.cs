@@ -4,16 +4,16 @@ namespace WarehouseLib.Columns
 {
     public class Column
     {
-        public Column()
+        public Line Axis;
+        public Column(Line axis)
         {
+            Axis = axis;
         }
-
-        public Line Axis { get; set; }
-
-        public Line ConstructColumn(Point3d node, Plane plane)
+        public Column ConstructColumn(Point3d node, Plane plane)
         {
             var axis = new Line(plane.ClosestPoint(node), node);
-            return axis;
+            var column = new Column(axis);
+            return column;
         }
     }
 }
