@@ -37,27 +37,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Eto, Version=2.5.0.0, Culture=neutral, PublicKeyToken=552281e97c755530">
-      <HintPath>..\packages\RhinoCommon.7.5.21100.3001\lib\net48\Eto.dll</HintPath>
+      <HintPath>..\packages\RhinoCommon.6.28.20199.17141\lib\net45\Eto.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="GH_IO, Version=7.5.21100.3000, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97">
-      <HintPath>..\packages\Grasshopper.7.5.21100.3001\lib\net48\GH_IO.dll</HintPath>
+    <Reference Include="GH_IO, Version=6.28.20199.17140, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97">
+      <HintPath>..\packages\Grasshopper.6.28.20199.17141\lib\net45\GH_IO.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Grasshopper, Version=7.5.21100.3000, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803">
-      <HintPath>..\packages\Grasshopper.7.5.21100.3001\lib\net48\Grasshopper.dll</HintPath>
+    <Reference Include="Grasshopper, Version=6.28.20199.17140, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803">
+      <HintPath>..\packages\Grasshopper.6.28.20199.17141\lib\net45\Grasshopper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json.Rhino, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b9a188c8922137c6">
-      <HintPath>..\packages\RhinoCommon.7.5.21100.3001\lib\net48\Newtonsoft.Json.Rhino.dll</HintPath>
+    <Reference Include="Rhino.UI, Version=6.28.20199.17140, Culture=neutral, PublicKeyToken=552281e97c755530">
+      <HintPath>..\packages\RhinoCommon.6.28.20199.17141\lib\net45\Rhino.UI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Rhino.UI, Version=7.5.21100.3000, Culture=neutral, PublicKeyToken=552281e97c755530">
-      <HintPath>..\packages\RhinoCommon.7.5.21100.3001\lib\net48\Rhino.UI.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="RhinoCommon, Version=7.5.21100.3000, Culture=neutral, PublicKeyToken=552281e97c755530">
-      <HintPath>..\packages\RhinoCommon.7.5.21100.3001\lib\net48\RhinoCommon.dll</HintPath>
+    <Reference Include="RhinoCommon, Version=6.28.20199.17140, Culture=neutral, PublicKeyToken=552281e97c755530">
+      <HintPath>..\packages\RhinoCommon.6.28.20199.17141\lib\net45\RhinoCommon.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -128,10 +124,6 @@ Erase "$(TargetPath)"</PostBuildEvent>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\RhinoCommon.6.28.20199.17141\build\net45\RhinoCommon.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RhinoCommon.6.28.20199.17141\build\net45\RhinoCommon.targets'))" />
     <Error Condition="!Exists('..\packages\Grasshopper.6.28.20199.17141\build\net45\Grasshopper.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Grasshopper.6.28.20199.17141\build\net45\Grasshopper.targets'))" />
-    <Error Condition="!Exists('..\packages\RhinoCommon.7.5.21100.3001\build\RhinoCommon.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RhinoCommon.7.5.21100.3001\build\RhinoCommon.targets'))" />
-    <Error Condition="!Exists('..\packages\Grasshopper.7.5.21100.3001\build\Grasshopper.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Grasshopper.7.5.21100.3001\build\Grasshopper.targets'))" />
   </Target>
   <Import Project="..\packages\Grasshopper.6.28.20199.17141\build\net45\Grasshopper.targets" Condition="Exists('..\packages\Grasshopper.6.28.20199.17141\build\net45\Grasshopper.targets')" />
-  <Import Project="..\packages\RhinoCommon.7.5.21100.3001\build\RhinoCommon.targets" Condition="Exists('..\packages\RhinoCommon.7.5.21100.3001\build\RhinoCommon.targets')" />
-  <Import Project="..\packages\Grasshopper.7.5.21100.3001\build\Grasshopper.targets" Condition="Exists('..\packages\Grasshopper.7.5.21100.3001\build\Grasshopper.targets')" />
 </Project>
