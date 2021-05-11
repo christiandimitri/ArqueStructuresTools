@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
 using WarehouseLib.Columns;
+using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
 {
     public class FlatTruss : PichedTruss
     {
-        public FlatTruss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
-            string trussType, string articulationType, int columnsCount) : base(plane, length, height, maxHeight,
-            clearHeight, divisions, trussType, articulationType, columnsCount)
+        public FlatTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
             GenerateTopBars();
-            StaticColumns=new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
+            StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
             GenerateThickBottomBars();
-            ConstructTruss(divisions);
-            ChangeArticulationAtColumnsByType(articulationType);
+            ConstructTruss(inputs.Divisions);
+            ChangeArticulationAtColumnsByType(inputs.ArticulationType);
         }
 
         public override void GenerateTopBars()

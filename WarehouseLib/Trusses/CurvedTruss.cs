@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
 {
     public class CurvedTruss : Truss
     {
-        public CurvedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
-            int divisions, string trussType, string articulationType, int columnsCount) : base(plane, length, height,
-            maxHeight,
-            clearHeight, divisions, trussType, articulationType, columnsCount)
+        public CurvedTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
         }
 
@@ -42,7 +40,7 @@ namespace WarehouseLib.Trusses
             var normal = Vector3d.CrossProduct(vectorA, perp);
             return normal;
         }
-        
+
         // TODO index compute from max min height
         public double ComputeOffsetFromTrigo(int index)
         {
@@ -59,7 +57,6 @@ namespace WarehouseLib.Trusses
             return offset;
         }
 
-        
 
         public override void ConstructTruss(int divisions)
         {

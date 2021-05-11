@@ -27,19 +27,19 @@ namespace WarehouseLib.Trusses
         public List<Point3d> BoundaryTopNodes;
         public string TrussType;
         public string ArticulationType;
+        public string PorticoType;
 
-        protected Truss(Plane plane, double length, double height, double maxHeight, double clearHeight, int divisions,
-            string trussType, string articulationType, int columnsCount)
+        protected Truss(Plane plane,TrussInputs inputs)
         {
             Plane = plane;
-            Length = length;
-            Height = height;
-            MaxHeight = maxHeight;
-            ClearHeight = clearHeight;
-            Divisions = divisions;
-            TrussType = trussType;
-            ArticulationType = articulationType;
-            ColumnsCount = columnsCount;
+            Length = inputs.Width;
+            Height = inputs.Height;
+            MaxHeight = inputs.MaxHeight;
+            ClearHeight = inputs.ClearHeight;
+            Divisions = inputs.Divisions;
+            TrussType = inputs.TrussType;
+            ArticulationType = inputs.ArticulationType;
+            PorticoType = inputs.PorticoType;
         }
 
         protected int RecomputeDivisions(int divisions)

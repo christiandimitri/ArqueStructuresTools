@@ -2,6 +2,7 @@ using System;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using WarehouseLib;
+using WarehouseLib.Options;
 
 namespace ArqueStructuresTools
 {
@@ -23,16 +24,7 @@ namespace ArqueStructuresTools
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("Plane", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddNumberParameter("Length", "l", "l", GH_ParamAccess.item, 10);
-            pManager.AddNumberParameter("Height", "h", "h", GH_ParamAccess.item, 2);
-            pManager.AddNumberParameter("Max height", "mh", "mh", GH_ParamAccess.item, 3);
-            pManager.AddNumberParameter("Clear height", "ch", "ch", GH_ParamAccess.item, 1.8);
-            pManager.AddIntegerParameter("Division", "d", "d", GH_ParamAccess.item, 4);
-            pManager.AddTextParameter("Truss type", "t", "t", GH_ParamAccess.item, "Pratt");
-            pManager.AddTextParameter("Articulation type", "at", "at", GH_ParamAccess.item, "Rigid");
-            pManager.AddIntegerParameter("Base type", "bt", "bt", GH_ParamAccess.item, 0);
-            pManager.AddIntegerParameter("Columns count", "ct", "ct", GH_ParamAccess.item, 0);
-            pManager.AddIntegerParameter("Columns count", "ct", "ct", GH_ParamAccess.item, 0);
+            pManager.AddGenericParameter("Options", "o", "o", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -49,30 +41,11 @@ namespace ArqueStructuresTools
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var worldXy = Plane.WorldXY;
-            double height = 0;
-            double length = 0;
-            double maxHeight = 0;
-            double clearHeight = 0;
-            var divisions = 0;
-            var trussType = "";
-            var articulationType = "";
-            var baseType = 0;
-            int columnsCount = 0;
-
-            if (!DA.GetData(0, ref worldXy)) return;
-            if (!DA.GetData(1, ref length)) return;
-            if (!DA.GetData(2, ref height)) return;
-            if (!DA.GetData(3, ref maxHeight)) return;
-            if (!DA.GetData(4, ref clearHeight)) return;
-            if (!DA.GetData(5, ref divisions)) return;
-            if (!DA.GetData(6, ref trussType)) return;
-            if (!DA.GetData(7, ref articulationType)) return;
-            if (!DA.GetData(8, ref baseType)) return;
-            if (!DA.GetData(9, ref columnsCount)) return;
-
-            var truss = new ArchTruss(worldXy, length, height, maxHeight, clearHeight, divisions, trussType,
-                articulationType, baseType, columnsCount);
+            var plane = Plane.WorldXY;
+            var trussInputs = new TrussInputs();
+            if (!DA.GetData(0, ref plane)) return;
+            if (!DA.GetData(1, ref trussInputs)) return;
+            var truss = new ArchTruss(plane, trussInputs);
 
             DA.SetData(0, new TrussGoo(truss));
         }

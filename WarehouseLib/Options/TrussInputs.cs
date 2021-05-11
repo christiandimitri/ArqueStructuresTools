@@ -3,7 +3,7 @@
     public struct TrussInputs
     {
         public TrussInputs(string trussType, int typology, double width, double height, double maxHeight,
-            double clearHeight, int baseType, string articulationType, int divisions)
+            double clearHeight, int baseType, string articulationType, int divisions, string porticoType)
         {
             TrussType = trussType;
             Typology = typology;
@@ -14,6 +14,7 @@
             BaseType = baseType;
             ArticulationType = articulationType;
             Divisions = divisions;
+            PorticoType = porticoType;
         }
         public string TrussType { get; set; }
         public int Typology { get; set; }
@@ -24,5 +25,6 @@
         public int BaseType { get; set; }
         public string ArticulationType { get; set; }
         public int Divisions { get; set; }
+        public string PorticoType { get; set; }
     }
 }

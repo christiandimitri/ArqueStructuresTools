@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
 {
     public class PichedTruss : Truss
     {
-        protected PichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
-            int divisions, string trussType, string articulationType, int columnsCount) : base(plane, length, height,
-            maxHeight,
-            clearHeight, divisions, trussType, articulationType, columnsCount)
+        protected PichedTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
         }
 
@@ -34,7 +32,7 @@ namespace WarehouseLib.Trusses
         {
             throw new NotImplementedException();
         }
-        
+
         public override void ConstructTruss(int divisions)
         {
             var recomputedDivisions = RecomputeDivisions(divisions);

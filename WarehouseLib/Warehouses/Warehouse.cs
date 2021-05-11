@@ -4,6 +4,7 @@ using Rhino.Geometry;
 using WarehouseLib.Bracings;
 using WarehouseLib.Cables;
 using WarehouseLib.Columns;
+using WarehouseLib.Options;
 using WarehouseLib.Straps;
 using WarehouseLib.Trusses;
 
@@ -18,7 +19,7 @@ namespace WarehouseLib.Warehouses
         public double MaxHeight;
         public double ClearHeight;
         public int Typology;
-        public int PoticsCount;
+        public int PoticosCount;
         public int ColumnsCount;
         public string TrussType;
         public string RoofBracingType;
@@ -32,61 +33,46 @@ namespace WarehouseLib.Warehouses
         public List<Bracing> RoofBracings;
         public List<Cable> RoofCables;
 
-        public Warehouse(Plane plane, double length, double width, double height, double maxHeight, double clearHeight,
-            int typology, int poticsCount, string trussType, int columnsCount, string roofBracingType)
+        public Warehouse(Plane plane, TrussInputs trussInputs, int porticosCount, string roofBracingType)
         {
-            if (width <= 0) throw new Exception("Warehouse cannot have 0 width!!");
-            if (length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
-            if (height <= 0) throw new Exception("Warehouse cannot have 0 height!!");
-            if (maxHeight <= 0) throw new Exception("Warehouse cannot have 0 max height!!");
-            if (typology >= 4) throw new Exception("Warehouse root typology is between 0 to 3!!");
-            Plane = plane;
-            Length = length;
-            Width = width;
-            Height = height;
-            MaxHeight = maxHeight;
-            ClearHeight = clearHeight;
-            Typology = typology;
-            PoticsCount = poticsCount;
-            TrussType = trussType;
-            ColumnsCount = columnsCount;
-            RoofBracingType = roofBracingType;
-            GenerateTrusses();
+            if (trussInputs.Width <= 0) throw new Exception("Warehouse cannot have 0 width!!");
+            // if (inputs.Length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
+            if (trussInputs.Height <= 0) throw new Exception("Warehouse cannot have 0 height!!");
+            if (trussInputs.MaxHeight <= 0) throw new Exception("Warehouse cannot have 0 max height!!");
+            if (trussInputs.Typology >= 4) throw new Exception("Warehouse root typology is between 0 to 3!!");
+
+            GenerateTrusses(trussInputs);
             GetColumns();
             // GenerateRoofStraps();
             // GenerateFacadeStraps();
             // GenerateRoofBracings();
         }
 
-        private void GenerateTrusses()
+        private void GenerateTrusses(TrussInputs trussInputs)
         {
             var trusses = new List<Truss>();
-            for (int i = 0; i < PoticsCount; i++)
+            for (int i = 0; i < PoticosCount; i++)
             {
-                var span = (Width / PoticsCount) * i;
+                var span = (Width / PoticosCount) * i;
                 var tempPlane = new Plane(Plane.PointAt(0, span, 0), Plane.ZAxis);
                 if (Typology == 0)
                 {
-                    var trussA = new FlatTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 6, TrussType,
-                        "Articulated", ColumnsCount);
+                    var trussA = new FlatTruss(tempPlane, trussInputs);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 1)
                 {
-                    var trussA = new ArchTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 6, TrussType,
-                        "Articulated", 0, ColumnsCount);
+                    var trussA = new ArchTruss(tempPlane, trussInputs);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 2)
                 {
-                    var trussA = new MonopichedTruss(tempPlane, Length, Height, MaxHeight, ClearHeight, 6, TrussType,
-                        "Articulated", 0, ColumnsCount);
+                    var trussA = new MonopichedTruss(tempPlane, trussInputs);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 3)
                 {
-                    var trussA = new DoublepichedTruss(tempPlane, 0, Height, MaxHeight, ClearHeight, 6, TrussType,
-                        "Articulated", Length, Length * 0.8, 0, ColumnsCount);
+                    var trussA = new DoublepichedTruss(tempPlane, trussInputs);
                     trusses.Add(trussA);
                 }
             }
@@ -181,7 +167,7 @@ namespace WarehouseLib.Warehouses
 
         private void GenerateRoofBracings()
         {
-            if (PoticsCount <= 2) throw new Exception("Portics count has to be >2");
+            if (PoticosCount <= 2) throw new Exception("Portics count has to be >2");
             RoofBracings = new List<Bracing>();
             RoofCables = new List<Cable>();
             if (RoofBracingType == "Bracing")

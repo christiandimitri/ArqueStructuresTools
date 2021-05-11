@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
 using WarehouseLib.Columns;
+using WarehouseLib.Options;
 
 // ReSharper disable VirtualMemberCallInConstructor
 
@@ -10,17 +11,14 @@ namespace WarehouseLib.Trusses
     {
         public int BaseType;
 
-        public MonopichedTruss(Plane plane, double length, double height, double maxHeight, double clearHeight,
-            int divisions, string trussType, string articulationType, int baseType, int columnsCount) : base(plane,
-            length, height,
-            maxHeight, clearHeight, divisions, trussType, articulationType, columnsCount)
+        public MonopichedTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
-            BaseType = baseType;
+            BaseType = inputs.BaseType;
             GenerateTopBars();
             StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
-            ChangeBaseByType(baseType);
-            ConstructTruss(divisions);
-            ChangeArticulationAtColumnsByType(articulationType);
+            ChangeBaseByType(BaseType);
+            ConstructTruss(inputs.Divisions);
+            ChangeArticulationAtColumnsByType(inputs.ArticulationType);
         }
 
         public override void GenerateTopBars()

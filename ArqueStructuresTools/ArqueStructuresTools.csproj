@@ -85,7 +85,6 @@
     <Compile Include="Utilities\DeconstructTruss.cs" />
     <Compile Include="Utilities\DeconstructWarehouse.cs" />
     <Compile Include="Warehouse\RectangularWarehouseComponent.cs" />
-    <Compile Include="Warehouse\TestWarehouseComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WarehouseLib\WarehouseLib.csproj">

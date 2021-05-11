@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using WarehouseLib;
+using WarehouseLib.Options;
 using WarehouseLib.Warehouses;
 
 namespace ArqueStructuresTools
@@ -26,15 +27,8 @@ namespace ArqueStructuresTools
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("Plane", "P", "p", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddNumberParameter("Length", "L", "L", GH_ParamAccess.item, 10);
-            pManager.AddNumberParameter("Width", "w", "w", GH_ParamAccess.item, 5);
-            pManager.AddNumberParameter("Height", "h", "h", GH_ParamAccess.item, 4);
-            pManager.AddNumberParameter("Max height", "mh", "h", GH_ParamAccess.item, 6);
-            pManager.AddNumberParameter("Clear height", "ch", "h", GH_ParamAccess.item, 3.5);
-            pManager.AddIntegerParameter("Typology", "T", "T", GH_ParamAccess.item, 2);
-            pManager.AddIntegerParameter("Count", "C", "C", GH_ParamAccess.item, 3);
-            pManager.AddTextParameter("Truss type", "tt", "tt", GH_ParamAccess.item, "Warren");
-            pManager.AddIntegerParameter("Columns count", "cc", "cc", GH_ParamAccess.item, 2);
+            pManager.AddGenericParameter("Truss inputs", "ti", "ti", GH_ParamAccess.item);
+            pManager.AddIntegerParameter("Porticos count", "pc", "pc", GH_ParamAccess.item, 4);
             pManager.AddTextParameter("Roof bracing type", "rbt", "rbt", GH_ParamAccess.item, "Bracing");
         }
 
@@ -53,33 +47,18 @@ namespace ArqueStructuresTools
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var plane = Plane.WorldXY;
-            double length = 15;
-            double width = 10;
-            double height = 4;
-            double maxHeight = 6;
-            var clearHeight = 3.5;
-            var typology = 2;
-            var count = 3;
-            var trussType = "";
-            var columsCount = 0;
+            var trussInputs = new TrussInputs();
+            var porticosCount = 0;
             var roofBracingType = "";
             if (!DA.GetData(0, ref plane)) return;
-            if (!DA.GetData(1, ref length)) return;
-            if (!DA.GetData(2, ref width)) return;
-            if (!DA.GetData(3, ref height)) return;
-            if (!DA.GetData(4, ref maxHeight)) return;
-            if (!DA.GetData(5, ref clearHeight)) return;
-            if (!DA.GetData(6, ref typology)) return;
-            if (!DA.GetData(7, ref count)) return;
-            if (!DA.GetData(8, ref trussType)) return;
-            if (!DA.GetData(9, ref columsCount)) return;
-            if (!DA.GetData(10, ref roofBracingType)) return;
+            if (!DA.GetData(1, ref trussInputs)) return;
+            if (!DA.GetData(2, ref porticosCount)) return;
+            if (!DA.GetData(3, ref roofBracingType)) return;
             Warehouse warehouse = null;
 
             try
             {
-                warehouse = new Warehouse(plane, length, width, height, maxHeight, clearHeight, typology, count,
-                    trussType, columsCount, roofBracingType);
+                warehouse = new Warehouse(plane, trussInputs,porticosCount, roofBracingType);
             }
             catch (Exception e)
             {

@@ -26,6 +26,7 @@ namespace ArqueStructuresTools
         // ReSharper disable once RedundantNameQualifier
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+            pManager.AddTextParameter("Typology", "t", "t", GH_ParamAccess.item, "Arch");
             pManager.AddPlaneParameter("Plane", "p", "p", GH_ParamAccess.item, Plane.WorldXY);
             pManager.AddGenericParameter("Options", "o", "o", GH_ParamAccess.item);
         }
@@ -48,44 +49,32 @@ namespace ArqueStructuresTools
         {
             Plane plane = Plane.WorldXY;
             var trussInputs = new TrussInputs();
+            var typology = "";
+            if (!DA.GetData(0, ref typology)) return;
+
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref trussInputs)) return;
-            var height = trussInputs.Height;
-            var length = trussInputs.Width;
-            var maxHeight = trussInputs.MaxHeight;
-            var clearHeight = trussInputs.ClearHeight;
-            var divisions = trussInputs.Divisions;
-            var trussType = trussInputs.TrussType;
-            var articulationType = trussInputs.ArticulationType;
-            var baseType = trussInputs.BaseType;
-            var columnsCount = 2;
-            var typology = trussInputs.Typology;
             Truss truss = null;
             switch (typology)
             {
-                case 0:
+                case "Flat":
                 {
-                    truss = new FlatTruss(plane, length, height, maxHeight, clearHeight, divisions, trussType,
-                        articulationType, columnsCount);
+                    truss = new FlatTruss(plane, trussInputs);
                     break;
                 }
-                case 1:
+                case "Arch":
                 {
-                    truss = new ArchTruss(plane, length, height, maxHeight, clearHeight, divisions, trussType,
-                        articulationType, baseType, columnsCount);
+                    truss = new ArchTruss(plane, trussInputs);
                     break;
                 }
-                case 2:
+                case "Monopiched":
                 {
-                    truss = new MonopichedTruss(plane, length, height, maxHeight, clearHeight, divisions,
-                        trussType,
-                        articulationType, baseType, columnsCount);
+                    truss = new MonopichedTruss(plane, trussInputs);
                     break;
                 }
-                case 3:
+                case "Doublepiched":
                 {
-                    truss = new DoublepichedTruss(plane, 0, height, maxHeight, clearHeight, divisions, trussType,
-                        articulationType, length / 2, length / 2, baseType, columnsCount);
+                    truss = new DoublepichedTruss(plane, trussInputs);
                     break;
                 }
             }

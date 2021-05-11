@@ -29,6 +29,7 @@ namespace ArqueStructuresTools.Options
             pManager.AddIntegerParameter("Base type", "bt", "bt", GH_ParamAccess.item, 0);
             pManager.AddTextParameter("Articulation type", "at", "at", GH_ParamAccess.item, "Rigid");
             pManager.AddIntegerParameter("Divisions", "d", "d", GH_ParamAccess.item, 5);
+            pManager.AddTextParameter("Portico type", "pt", "pt", GH_ParamAccess.item, "Truss");
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -47,6 +48,7 @@ namespace ArqueStructuresTools.Options
             var baseType = 0;
             var articulationType = "";
             var divisions = 0;
+            var porticoType = "";
             
             if (!DA.GetData(0, ref trussType)) return;
             if (!DA.GetData(1, ref typology)) return;
@@ -57,6 +59,7 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(6, ref baseType)) return;
             if (!DA.GetData(7, ref articulationType)) return;
             if (!DA.GetData(8, ref divisions)) return;
+            if (!DA.GetData(9, ref porticoType)) return;
             
             var options = new TrussInputs();
             
@@ -69,6 +72,7 @@ namespace ArqueStructuresTools.Options
             options.BaseType = baseType;
             options.ArticulationType = articulationType;
             options.Divisions = divisions;
+            options.PorticoType = porticoType;
             
             DA.SetData(0, options);
         }
