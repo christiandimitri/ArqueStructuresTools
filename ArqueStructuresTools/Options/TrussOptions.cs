@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using Grasshopper.Kernel;
-using Rhino.Geometry;
-using WarehouseLib;
-using WarehouseLib.Options;
 
 namespace ArqueStructuresTools.Options
 {

@@ -30,7 +30,7 @@ namespace WarehouseLib.Trusses
         public string ArticulationType;
         public string PorticoType;
 
-        protected Truss(Plane plane,TrussOptions options)
+        protected Truss(Plane plane, TrussOptions options)
         {
             Plane = plane;
             Length = options.Width;
@@ -156,106 +156,33 @@ namespace WarehouseLib.Trusses
 
         protected void GenerateIntermediateBars(string trussType, int index)
         {
-            if (trussType == "Warren")
-                ConstructWarrenTruss();
-            else if (trussType == "Warren_Studs")
-                ConstructWarrenStudsTruss(index);
-            else if (trussType == "Pratt")
-                ConstructPrattTruss(index);
-            else if (trussType == "Howe") ConstructHoweTruss(index);
+            Connections.Connections connections = null;
+            var bars = new List<Curve>();
+            if (trussType == ConnectionType.Warren.ToString())
+            {
+                connections = new WarrenConnection(TopNodes, BottomNodes);
+                bars = connections.ConstructConnections();
+            }
+
+            else if (trussType == ConnectionType.WarrenStuds.ToString())
+            {
+                connections = new WarrenStudsConnection(TopNodes, BottomNodes, index);
+                bars = connections.ConstructConnections();
+            }
+            else if (trussType == ConnectionType.Pratt.ToString())
+            {
+                connections = new PrattConnection(TopNodes, BottomNodes, index);
+                bars = connections.ConstructConnections();
+            }
+            else if (trussType == ConnectionType.Howe.ToString())
+            {
+                connections = new HoweConnection(TopNodes, BottomNodes, index, ArticulationType);
+                bars = connections.ConstructConnections();
+            }
+
+            IntermediateBars = bars;
             RecomputeNodes();
         }
-
-        private void ConstructWarrenTruss()
-        {
-            var tempTopNodes = BottomNodes;
-            var tempBottomNodes = TopNodes;
-            var bars = new List<Curve>();
-            for (var i = 0; i < tempTopNodes.Count; i++)
-            {
-                if (i % 2 == 1)
-                {
-                    var lineA = new Line(tempBottomNodes[i - 1], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(tempBottomNodes[i + 1], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                }
-            }
-
-            IntermediateBars = bars;
-        }
-
-        private void ConstructPrattTruss(int index)
-        {
-            var prattConnection = new PrattConnection(TopNodes, BottomNodes);
-            var bars = prattConnection.ConstructPrattTruss(index);
-            IntermediateBars = bars;
-        }
-
-        private void ConstructHoweTruss(int index)
-        {
-            var tempTopNodes = BottomNodes;
-            var tempBottomNodes = TopNodes;
-            var bars = new List<Curve>();
-            for (var i = 0; i < tempTopNodes.Count; i += 2)
-            {
-                if (i < index)
-                {
-                    var lineA = new Line(tempBottomNodes[i], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(tempBottomNodes[i + 2], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                }
-                else if (i == index)
-                {
-                    var lineA = new Line(TopNodes[i], BottomNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                }
-                else if (i > index)
-                {
-                    var lineA = new Line(tempBottomNodes[i - 2], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(tempBottomNodes[i], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                }
-            }
-
-            bars.RemoveAt(0);
-            bars.RemoveAt(bars.Count - 1);
-            if (ArticulationType == "Articulated")
-            {
-                bars.RemoveAt(0);
-                var lineA = new Line(TopNodes[0], BottomNodes[2]);
-                bars.Insert(0, lineA.ToNurbsCurve());
-                bars.RemoveAt(bars.Count - 1);
-                lineA = new Line(TopNodes[TopNodes.Count - 1], BottomNodes[BottomNodes.Count - 3]);
-                bars.Add(lineA.ToNurbsCurve());
-            }
-
-            IntermediateBars = bars;
-        }
-
-        private void ConstructWarrenStudsTruss(int index)
-        {
-            var tempTopNodes = BottomNodes;
-            var tempBottomNodes = TopNodes;
-            var bars = new List<Curve>();
-            for (var i = 0; i < tempTopNodes.Count; i++)
-            {
-                if (i % 2 == 1)
-                {
-                    var lineA = new Line(tempBottomNodes[i - 1], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(tempBottomNodes[i], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(tempBottomNodes[i + 1], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                }
-            }
-
-            IntermediateBars = bars;
-        }
-
         public abstract List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index);
 
         private void RecomputeNodes()
@@ -342,7 +269,7 @@ namespace WarehouseLib.Trusses
                 BoundaryTopNodes.AddRange(nodes);
             }
         }
-        
+
         public void ConstructPorticFromTruss(Truss truss)
         {
             TopBars = new List<Curve>(TopBars);
@@ -355,7 +282,8 @@ namespace WarehouseLib.Trusses
             {
                 truss.GenerateBoundaryColumnsNodes(truss.TopBars, true, ColumnsCount);
                 BoundaryColumns =
-                    new List<Column>(new BoundaryColumn(Line.Unset).GenerateBoundaryColumns(truss.BoundaryTopNodes, Plane));
+                    new List<Column>(
+                        new BoundaryColumn(Line.Unset).GenerateBoundaryColumns(truss.BoundaryTopNodes, Plane));
             }
             else throw new Exception("the columns count should be >=2");
         }

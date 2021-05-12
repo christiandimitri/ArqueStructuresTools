@@ -47,7 +47,7 @@ namespace ArqueStructuresTools
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref trussInputs)) return;
 
-            var truss = new DoublepichedTruss(plane, trussInputs);
+            var truss = new DoublepichTruss(plane, trussInputs);
 
             DA.SetData(0, new TrussGoo(truss));
         }

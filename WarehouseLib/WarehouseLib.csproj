@@ -70,7 +70,12 @@
     <Compile Include="Columns\BoundaryColumn.cs" />
     <Compile Include="Columns\Column.cs" />
     <Compile Include="Columns\StaticColumn.cs" />
-    <Compile Include="Connections\Connection.cs" />
+    <Compile Include="Connections\Connections.cs" />
+    <Compile Include="Connections\ConnectionType.cs" />
+    <Compile Include="Connections\HoweConnection.cs" />
+    <Compile Include="Connections\PrattConnection.cs" />
+    <Compile Include="Connections\WarrenConnection.cs" />
+    <Compile Include="Connections\WarrenStudsConnection.cs" />
     <Compile Include="Options\PorticoType.cs" />
     <Compile Include="Options\TrussOptions.cs" />
     <Compile Include="Options\Typology.cs" />
