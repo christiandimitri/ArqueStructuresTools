@@ -13,14 +13,15 @@ namespace WarehouseLib
     public class ArchTruss : CurvedTruss
     {
         public int BaseType;
+        private TrussOptions _options;
 
         public ArchTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
-            BaseType = options.BaseType;
+            _options = options;
             GenerateTopBars();
             StaticColumns=
                 new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
-            ChangeBaseByType(BaseType);
+            ChangeBaseByType(_options.BaseType);
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options.ArticulationType);
         }

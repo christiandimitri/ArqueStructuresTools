@@ -9,14 +9,14 @@ namespace WarehouseLib.Trusses
 {
     public class MonopichTruss : PichedTruss
     {
-        public int BaseType;
+        private TrussOptions _options;
 
         public MonopichTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
-            BaseType = options.BaseType;
+            _options = options;
             GenerateTopBars();
             StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
-            ChangeBaseByType(BaseType);
+            ChangeBaseByType(options.BaseType);
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options.ArticulationType);
         }

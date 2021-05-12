@@ -12,37 +12,37 @@ namespace WarehouseLib.Connections
 
     public class PrattConnection : Connection
     {
-        private List<Point3d> TopNodes;
-        private List<Point3d> BottomNodes;
+        private readonly List<Point3d> _topNodes;
+        private readonly List<Point3d> _bottomNodes;
 
         public PrattConnection(List<Point3d> topNodes, List<Point3d> bottomNodes)
         {
-            TopNodes = topNodes;
-            BottomNodes = bottomNodes;
+            _topNodes = topNodes;
+            _bottomNodes = bottomNodes;
         }
 
         public List<Curve> ConstructPrattTruss(int index)
         {
             var bars = new List<Curve>();
-            for (var i = 0; i < TopNodes.Count; i += 2)
+            for (var i = 0; i < _topNodes.Count; i += 2)
             {
                 if (i < index)
                 {
-                    var lineA = new Line(TopNodes[i], BottomNodes[i]);
+                    var lineA = new Line(_topNodes[i], _bottomNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(TopNodes[i], BottomNodes[i + 2]);
+                    lineA = new Line(_topNodes[i], _bottomNodes[i + 2]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
                 else if (i == index)
                 {
-                    var lineA = new Line(TopNodes[i], BottomNodes[i]);
+                    var lineA = new Line(_topNodes[i], _bottomNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
                 else if (i > index)
                 {
-                    var lineA = new Line(TopNodes[i], BottomNodes[i - 2]);
+                    var lineA = new Line(_topNodes[i], _bottomNodes[i - 2]);
                     bars.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(TopNodes[i], BottomNodes[i]);
+                    lineA = new Line(_topNodes[i], _bottomNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
             }
