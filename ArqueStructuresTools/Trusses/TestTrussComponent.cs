@@ -57,19 +57,19 @@ namespace ArqueStructuresTools
 
             Truss truss = null;
 
-            if (typology == Typology.Flat.ToString())
+            if (typology == GeometricalTypology.Flat.ToString())
             {
                 truss = new FlatTruss(plane, trussInputs);
             }
-            else if (typology == Typology.Arch.ToString())
+            else if (typology == GeometricalTypology.Arch.ToString())
             {
                 truss = new ArchTruss(plane, trussInputs);
             }
-            else if (typology == Typology.Monopich.ToString())
+            else if (typology == GeometricalTypology.Monopich.ToString())
             {
                 truss = new MonopichTruss(plane, trussInputs);
             }
-            else if (typology == Typology.Doublepich.ToString())
+            else if (typology == GeometricalTypology.Doublepich.ToString())
             {
                 truss = new DoublepichTruss(plane, trussInputs);
             }

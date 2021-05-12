@@ -14,17 +14,13 @@ namespace WarehouseLib.Warehouses
     {
         public Plane Plane;
         public TrussOptions _trussOptions;
-        public double Length;
 
         // public double Width;
         // public double Height;
         // public double MaxHeight;
         // public double ClearHeight;
-        public int Typology;
-        public int PorticosCount;
         public int ColumnsCount;
         public string TrussType;
-        public string RoofBracingType;
         public List<Truss> Trusses;
         public List<Point3d> Nodes;
         public List<Column> StaticColumns;
@@ -34,21 +30,19 @@ namespace WarehouseLib.Warehouses
         public List<Strap> FacadeStrapsY;
         public List<Bracing> RoofBracings;
         public List<Cable> RoofCables;
+        public WarehouseOptions _warehouseOptions;
 
-        public Warehouse(Plane plane, TrussOptions trussOptions, double length, int porticosCount,
-            string roofBracingType, int typology)
+        public Warehouse(Plane plane, TrussOptions trussOptions, WarehouseOptions warehouseOptions)
         {
             if (trussOptions.Width <= 0) throw new Exception("Warehouse cannot have 0 width!!");
             if (trussOptions.Height <= 0) throw new Exception("Warehouse cannot have 0 height!!");
             if (trussOptions.MaxHeight <= 0) throw new Exception("Warehouse cannot have 0 max height!!");
-            if (typology >= 4) throw new Exception("Warehouse root typology is between 0 to 3!!");
-            if (length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
+            if (!Enum.IsDefined(typeof(GeometricalTypology), warehouseOptions.Typology))
+                throw new Exception("Warehouse roof typology should be either: Flat, Arch, Monopich, Doublepich");
+            if (warehouseOptions.Length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
             Plane = plane;
-            Length = length;
-            PorticosCount = porticosCount;
-            RoofBracingType = roofBracingType;
-            Typology = typology;
             _trussOptions = trussOptions;
+            _warehouseOptions = warehouseOptions;
             ConstructTrusses(trussOptions);
             GetColumns();
             GenerateRoofStraps();
@@ -59,26 +53,26 @@ namespace WarehouseLib.Warehouses
         private void ConstructTrusses(TrussOptions trussOptions)
         {
             var trusses = new List<Truss>();
-            for (int i = 0; i < PorticosCount; i++)
+            for (int i = 0; i < _warehouseOptions.PorticoCount; i++)
             {
-                var span = (Length / PorticosCount) * i;
+                var span = (_warehouseOptions.Length / _warehouseOptions.PorticoCount) * i;
                 var tempPlane = new Plane(Plane.PointAt(0, span, 0), Plane.ZAxis);
-                if (Typology == 0)
+                if (_warehouseOptions.Typology == GeometricalTypology.Flat.ToString())
                 {
                     var trussA = new FlatTruss(tempPlane, trussOptions);
                     trusses.Add(trussA);
                 }
-                else if (Typology == 1)
+                else if (_warehouseOptions.Typology == GeometricalTypology.Arch.ToString())
                 {
                     var trussA = new ArchTruss(tempPlane, trussOptions);
                     trusses.Add(trussA);
                 }
-                else if (Typology == 2)
+                else if (_warehouseOptions.Typology == GeometricalTypology.Monopich.ToString())
                 {
                     var trussA = new MonopichTruss(tempPlane, trussOptions);
                     trusses.Add(trussA);
                 }
-                else if (Typology == 3)
+                else if (_warehouseOptions.Typology == GeometricalTypology.Doublepich.ToString())
                 {
                     var trussA = new DoublepichTruss(tempPlane, trussOptions);
                     trusses.Add(trussA);
@@ -149,10 +143,10 @@ namespace WarehouseLib.Warehouses
 
         private void GenerateRoofBracings()
         {
-            if (PorticosCount <= 2) throw new Exception("Portics count has to be >2");
+            if (_warehouseOptions.PorticoCount <= 2) throw new Exception("Portics count has to be >2");
             RoofBracings = new List<Bracing>();
             RoofCables = new List<Cable>();
-            if (RoofBracingType == "Bracing")
+            if (_warehouseOptions.RoofBracingType == "Bracing")
             {
                 var roofBracingsStart =
                     new RoofBracing(Line.Unset, 0, ColumnsCount).ConstructWarrenStudsBracings(Trusses);
@@ -161,7 +155,7 @@ namespace WarehouseLib.Warehouses
                     new RoofBracing(Line.Unset, Trusses.Count - 1, ColumnsCount).ConstructWarrenStudsBracings(Trusses);
                 RoofBracings.AddRange(roofBracingsEnd);
             }
-            else if (RoofBracingType == "Cable")
+            else if (_warehouseOptions.RoofBracingType == "Cable")
             {
                 var roofBracingsStart =
                     new RoofBracing(Line.Unset, 0, ColumnsCount).ConstructBracings(Trusses);

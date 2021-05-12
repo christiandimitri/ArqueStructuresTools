@@ -28,10 +28,7 @@ namespace ArqueStructuresTools
         {
             pManager.AddPlaneParameter("Plane", "P", "p", GH_ParamAccess.item, Plane.WorldXY);
             pManager.AddGenericParameter("Truss options", "ti", "ti", GH_ParamAccess.item);
-            pManager.AddNumberParameter("Length", "ti", "ti", GH_ParamAccess.item,100.0);
-            pManager.AddIntegerParameter("Porticos count", "pc", "pc", GH_ParamAccess.item, 4);
-            pManager.AddTextParameter("Roof bracing type", "rbt", "rbt", GH_ParamAccess.item, "Bracing");
-            pManager.AddIntegerParameter("Typology", "t", "t", GH_ParamAccess.item, 0);
+            pManager.AddGenericParameter("Warehouse options", "wo", "wo", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -50,22 +47,17 @@ namespace ArqueStructuresTools
         {
             var plane = Plane.WorldXY;
             var trussInputs = new TrussOptions();
-            var length = 100.0;
-            var porticosCount = 4;
-            var roofBracingType = "Cable";
-            var typology = 0;
+            var warehouseOptions = new WarehouseOptions();
+
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref trussInputs)) return;
-            if (!DA.GetData(2, ref length)) return;
-            if (!DA.GetData(3, ref porticosCount)) return;
-            if (!DA.GetData(4, ref roofBracingType)) return;
-            if (!DA.GetData(5, ref typology)) return;
-            
+            if (!DA.GetData(2, ref warehouseOptions)) ;
+
             Warehouse warehouse = null;
 
             try
             {
-                warehouse = new Warehouse(plane, trussInputs, length, porticosCount, roofBracingType, typology);
+                warehouse = new Warehouse(plane, trussInputs, warehouseOptions);
             }
             catch (Exception e)
             {

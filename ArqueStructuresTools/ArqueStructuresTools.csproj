@@ -66,7 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bracings\RoofBracing.cs" />
-    <Compile Include="Options\TrussOptions.cs" />
+    <Compile Include="Options\TrussOptionsComponent.cs" />
+    <Compile Include="Options\WarehouseOptionsComponent.cs" />
     <Compile Include="Params\BracingParameter.cs" />
     <Compile Include="Params\CableParameter.cs" />
     <Compile Include="Params\StrapParameter.cs" />

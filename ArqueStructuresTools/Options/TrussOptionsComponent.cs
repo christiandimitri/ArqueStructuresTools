@@ -1,11 +1,14 @@
 ﻿using System;
 using Grasshopper.Kernel;
+using WarehouseLib.Options;
+
 
 namespace ArqueStructuresTools.Options
 {
-    public class TrussOptions : GH_Component
+    public class TrussOptionsComponent : GH_Component
     {
-        public TrussOptions() : base("Truss Options", "Nickname", "description", "Arque Structures", "Utilities")
+        public TrussOptionsComponent() : base("Truss Options", "Nickname", "description", "Arque Structures",
+            "Utilities")
         {
         }
 
@@ -58,19 +61,21 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(8, ref porticoType)) return;
             if (!DA.GetData(9, ref columnsCount)) return;
 
-            var options = new WarehouseLib.Options.TrussOptions();
+            var options = new TrussOptions
+            {
+                TrussType = trussType,
+                Width = width,
+                Height = height,
+                MaxHeight = maxHeight,
+                ClearHeight = clearHeight,
+                BaseType = baseType,
+                ArticulationType = articulationType,
+                Divisions = divisions,
+                PorticoType = porticoType,
+                ColumnsCount = columnsCount
+            };
 
-            options.TrussType = trussType;
-            options.Width = width;
-            options.Height = height;
-            options.MaxHeight = maxHeight;
-            options.ClearHeight = clearHeight;
-            options.BaseType = baseType;
-            options.ArticulationType = articulationType;
-            options.Divisions = divisions;
-            options.PorticoType = porticoType;
-            options.ColumnsCount = columnsCount;
-            
+
             DA.SetData(0, options);
         }
     }

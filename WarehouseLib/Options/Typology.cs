@@ -1,10 +1,13 @@
-﻿namespace WarehouseLib.Options
+﻿using System;
+
+namespace WarehouseLib.Options
 {
-    public enum Typology
+    [Flags]
+    public enum GeometricalTypology
     {
-        Flat,
-        Arch,
-        Monopich,
-        Doublepich
+        Flat = 0,
+        Arch = 1,
+        Monopich = 2,
+        Doublepich = 3
     }
 }
