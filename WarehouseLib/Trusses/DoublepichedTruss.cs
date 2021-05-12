@@ -13,17 +13,17 @@ namespace WarehouseLib.Trusses
         public double LeftLength;
         public int BaseType;
 
-        public DoublepichedTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
+        public DoublepichedTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
-            RightLength = inputs.Width;
-            LeftLength = inputs.Width;
-            BaseType = inputs.BaseType;
+            RightLength = options.Width;
+            LeftLength = options.Width;
+            BaseType = options.BaseType;
             GenerateTopBars();
             StaticColumns=
                 new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
             ChangeBaseByType(BaseType);
-            ConstructTruss(inputs.Divisions);
-            ChangeArticulationAtColumnsByType(inputs.ArticulationType);
+            ConstructTruss(options.Divisions);
+            ChangeArticulationAtColumnsByType(options.ArticulationType);
         }
 
         public override void GenerateTopBars()

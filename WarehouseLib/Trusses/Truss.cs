@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
 using WarehouseLib.Columns;
+using WarehouseLib.Connections;
 using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
@@ -29,17 +30,17 @@ namespace WarehouseLib.Trusses
         public string ArticulationType;
         public string PorticoType;
 
-        protected Truss(Plane plane,TrussInputs inputs)
+        protected Truss(Plane plane,TrussOptions options)
         {
             Plane = plane;
-            Length = inputs.Width;
-            Height = inputs.Height;
-            MaxHeight = inputs.MaxHeight;
-            ClearHeight = inputs.ClearHeight;
-            Divisions = inputs.Divisions;
-            TrussType = inputs.TrussType;
-            ArticulationType = inputs.ArticulationType;
-            PorticoType = inputs.PorticoType;
+            Length = options.Width;
+            Height = options.Height;
+            MaxHeight = options.MaxHeight;
+            ClearHeight = options.ClearHeight;
+            Divisions = options.Divisions;
+            TrussType = options.TrussType;
+            ArticulationType = options.ArticulationType;
+            PorticoType = options.PorticoType;
         }
 
         protected int RecomputeDivisions(int divisions)
@@ -186,32 +187,8 @@ namespace WarehouseLib.Trusses
 
         private void ConstructPrattTruss(int index)
         {
-            var bars = new List<Curve>();
-            for (var i = 0; i < TopNodes.Count; i += 2)
-            {
-                if (i < index)
-                {
-                    var lineA = new Line(TopNodes[i], BottomNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(TopNodes[i], BottomNodes[i + 2]);
-                    bars.Add(lineA.ToNurbsCurve());
-                }
-                else if (i == index)
-                {
-                    var lineA = new Line(TopNodes[i], BottomNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                }
-                else if (i > index)
-                {
-                    var lineA = new Line(TopNodes[i], BottomNodes[i - 2]);
-                    bars.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(TopNodes[i], BottomNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
-                }
-            }
-
-            bars.RemoveAt(0);
-            bars.RemoveAt(bars.Count - 1);
+            var prattConnection = new PrattConnection(TopNodes, BottomNodes);
+            var bars = prattConnection.ConstructPrattTruss(index);
             IntermediateBars = bars;
         }
 

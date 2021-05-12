@@ -7,7 +7,7 @@ namespace WarehouseLib.Trusses
 {
     public class PichedTruss : Truss
     {
-        protected PichedTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
+        protected PichedTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
         }
 

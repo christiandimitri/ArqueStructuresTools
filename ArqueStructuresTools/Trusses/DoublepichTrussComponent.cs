@@ -43,7 +43,7 @@ namespace ArqueStructuresTools
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             Plane plane = Plane.WorldXY;
-            var trussInputs = new TrussInputs();
+            var trussInputs = new TrussOptions();
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref trussInputs)) return;
 

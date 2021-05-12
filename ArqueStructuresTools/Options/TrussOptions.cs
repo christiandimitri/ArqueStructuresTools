@@ -20,7 +20,9 @@ namespace ArqueStructuresTools.Options
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Truss type", "tt", "tt", GH_ParamAccess.item, "Warren");
+            pManager.AddTextParameter("Truss type", "Truss type",
+                "The input is a text, the available types are: Pratt, Howe, Warren, WarrenStuds", GH_ParamAccess.item,
+                "Warren");
             pManager.AddNumberParameter("Width", "w", "w", GH_ParamAccess.item, 5);
             pManager.AddNumberParameter("Height", "h", "h", GH_ParamAccess.item, 3.0);
             pManager.AddNumberParameter("Max height", "mh", "mh", GH_ParamAccess.item, 4.0);
@@ -33,7 +35,7 @@ namespace ArqueStructuresTools.Options
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Truss inputs", "n", "n", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Truss options", "n", "n", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -47,7 +49,7 @@ namespace ArqueStructuresTools.Options
             var articulationType = "";
             var divisions = 0;
             var porticoType = "";
-            
+
             if (!DA.GetData(0, ref trussType)) return;
             if (!DA.GetData(1, ref width)) return;
             if (!DA.GetData(2, ref height)) return;
@@ -57,9 +59,9 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(6, ref articulationType)) return;
             if (!DA.GetData(7, ref divisions)) return;
             if (!DA.GetData(8, ref porticoType)) return;
-            
-            var options = new TrussInputs();
-            
+
+            var options = new WarehouseLib.Options.TrussOptions();
+
             options.TrussType = trussType;
             options.Width = width;
             options.Height = height;
@@ -69,7 +71,7 @@ namespace ArqueStructuresTools.Options
             options.ArticulationType = articulationType;
             options.Divisions = divisions;
             options.PorticoType = porticoType;
-            
+
             DA.SetData(0, options);
         }
     }

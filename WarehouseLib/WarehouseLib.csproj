@@ -70,8 +70,9 @@
     <Compile Include="Columns\BoundaryColumn.cs" />
     <Compile Include="Columns\Column.cs" />
     <Compile Include="Columns\StaticColumn.cs" />
+    <Compile Include="Connections\Connection.cs" />
     <Compile Include="Options\PorticoType.cs" />
-    <Compile Include="Options\TrussInputs.cs" />
+    <Compile Include="Options\TrussOptions.cs" />
     <Compile Include="Options\Typology.cs" />
     <Compile Include="Options\WarehouseOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

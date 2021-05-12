@@ -1,8 +1,8 @@
 ﻿namespace WarehouseLib.Options
 {
-    public struct TrussInputs
+    public struct TrussOptions
     {
-        public TrussInputs(string trussType, double width, double height, double maxHeight,
+        public TrussOptions(string trussType, double width, double height, double maxHeight,
             double clearHeight, int baseType, string articulationType, int divisions, string porticoType)
         {
             TrussType = trussType;

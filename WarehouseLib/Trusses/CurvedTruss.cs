@@ -7,7 +7,7 @@ namespace WarehouseLib.Trusses
 {
     public class CurvedTruss : Truss
     {
-        public CurvedTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
+        public CurvedTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
         }
 

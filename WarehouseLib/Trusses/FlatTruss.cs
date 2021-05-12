@@ -7,13 +7,13 @@ namespace WarehouseLib.Trusses
 {
     public class FlatTruss : PichedTruss
     {
-        public FlatTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
+        public FlatTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
             GenerateTopBars();
             StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
             GenerateThickBottomBars();
-            ConstructTruss(inputs.Divisions);
-            ChangeArticulationAtColumnsByType(inputs.ArticulationType);
+            ConstructTruss(options.Divisions);
+            ChangeArticulationAtColumnsByType(options.ArticulationType);
         }
 
         public override void GenerateTopBars()

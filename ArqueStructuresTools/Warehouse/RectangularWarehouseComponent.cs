@@ -47,7 +47,7 @@ namespace ArqueStructuresTools
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var plane = Plane.WorldXY;
-            var trussInputs = new TrussInputs();
+            var trussInputs = new TrussOptions();
             var porticosCount = 0;
             var roofBracingType = "";
             if (!DA.GetData(0, ref plane)) return;

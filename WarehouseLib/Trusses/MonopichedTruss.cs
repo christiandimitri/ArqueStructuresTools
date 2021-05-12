@@ -11,14 +11,14 @@ namespace WarehouseLib.Trusses
     {
         public int BaseType;
 
-        public MonopichedTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
+        public MonopichedTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
-            BaseType = inputs.BaseType;
+            BaseType = options.BaseType;
             GenerateTopBars();
             StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
             ChangeBaseByType(BaseType);
-            ConstructTruss(inputs.Divisions);
-            ChangeArticulationAtColumnsByType(inputs.ArticulationType);
+            ConstructTruss(options.Divisions);
+            ChangeArticulationAtColumnsByType(options.ArticulationType);
         }
 
         public override void GenerateTopBars()

@@ -33,22 +33,22 @@ namespace WarehouseLib.Warehouses
         public List<Bracing> RoofBracings;
         public List<Cable> RoofCables;
 
-        public Warehouse(Plane plane, TrussInputs trussInputs, int porticosCount, string roofBracingType)
+        public Warehouse(Plane plane, TrussOptions trussOptions, int porticosCount, string roofBracingType)
         {
-            if (trussInputs.Width <= 0) throw new Exception("Warehouse cannot have 0 width!!");
+            if (trussOptions.Width <= 0) throw new Exception("Warehouse cannot have 0 width!!");
             // if (inputs.Length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
-            if (trussInputs.Height <= 0) throw new Exception("Warehouse cannot have 0 height!!");
-            if (trussInputs.MaxHeight <= 0) throw new Exception("Warehouse cannot have 0 max height!!");
+            if (trussOptions.Height <= 0) throw new Exception("Warehouse cannot have 0 height!!");
+            if (trussOptions.MaxHeight <= 0) throw new Exception("Warehouse cannot have 0 max height!!");
             if (Typology >= 4) throw new Exception("Warehouse root typology is between 0 to 3!!");
 
-            GenerateTrusses(trussInputs);
+            GenerateTrusses(trussOptions);
             GetColumns();
             // GenerateRoofStraps();
             // GenerateFacadeStraps();
             // GenerateRoofBracings();
         }
 
-        private void GenerateTrusses(TrussInputs trussInputs)
+        private void GenerateTrusses(TrussOptions trussOptions)
         {
             var trusses = new List<Truss>();
             for (int i = 0; i < PoticosCount; i++)
@@ -57,22 +57,22 @@ namespace WarehouseLib.Warehouses
                 var tempPlane = new Plane(Plane.PointAt(0, span, 0), Plane.ZAxis);
                 if (Typology == 0)
                 {
-                    var trussA = new FlatTruss(tempPlane, trussInputs);
+                    var trussA = new FlatTruss(tempPlane, trussOptions);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 1)
                 {
-                    var trussA = new ArchTruss(tempPlane, trussInputs);
+                    var trussA = new ArchTruss(tempPlane, trussOptions);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 2)
                 {
-                    var trussA = new MonopichedTruss(tempPlane, trussInputs);
+                    var trussA = new MonopichedTruss(tempPlane, trussOptions);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 3)
                 {
-                    var trussA = new DoublepichedTruss(tempPlane, trussInputs);
+                    var trussA = new DoublepichedTruss(tempPlane, trussOptions);
                     trusses.Add(trussA);
                 }
             }

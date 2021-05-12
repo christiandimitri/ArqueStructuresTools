@@ -5,6 +5,7 @@ using Grasshopper.Kernel;
 using Rhino.Geometry;
 using WarehouseLib.Trusses;
 using WarehouseLib.Options;
+using TrussOptions = WarehouseLib.Options.TrussOptions;
 
 namespace ArqueStructuresTools
 {
@@ -48,13 +49,12 @@ namespace ArqueStructuresTools
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             Plane plane = Plane.WorldXY;
-            var trussInputs = new TrussInputs();
+            var trussInputs = new TrussOptions();
             var typology = "";
-            
             if (!DA.GetData(0, ref typology)) return;
-
             if (!DA.GetData(1, ref plane)) return;
             if (!DA.GetData(2, ref trussInputs)) return;
+            
             Truss truss = null;
 
             if (typology == Typology.Flat.ToString())
