@@ -69,7 +69,8 @@ namespace ArqueStructuresTools.Options
             options.ArticulationType = articulationType;
             options.Divisions = divisions;
             options.PorticoType = porticoType;
-
+            options.ColumnsCount = columnsCount;
+            
             DA.SetData(0, options);
         }
     }
