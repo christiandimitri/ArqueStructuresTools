@@ -191,7 +191,7 @@ namespace WarehouseLib.Trusses
             List<Point3d> tempBottomList = new List<Point3d>();
             for (int i = 0; i < TopNodes.Count; i++)
             {
-                if (TrussType == "Warren")
+                if (TrussType == ConnectionType.Warren.ToString())
                 {
                     if (i % 2 == 0)
                     {
@@ -202,7 +202,7 @@ namespace WarehouseLib.Trusses
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (TrussType == "Warren_Studs")
+                else if (TrussType == ConnectionType.WarrenStuds.ToString())
                 {
                     tempTopList.Add(TopNodes[i]);
                     if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
@@ -210,7 +210,7 @@ namespace WarehouseLib.Trusses
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (TrussType == "Howe" || TrussType == "Pratt")
+                else if (TrussType == ConnectionType.Howe.ToString() || TrussType == ConnectionType.Pratt.ToString())
                 {
                     if (i % 2 == 0)
                     {
@@ -220,7 +220,7 @@ namespace WarehouseLib.Trusses
                 }
             }
 
-            if (TrussType == "Warren")
+            if (TrussType == ConnectionType.Warren.ToString())
             {
                 tempBottomList.Insert(0, BottomNodes[0]);
                 tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
