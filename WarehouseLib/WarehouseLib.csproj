@@ -81,9 +81,9 @@
     <Compile Include="Straps\Strap.cs" />
     <Compile Include="Trusses\ArchTruss.cs" />
     <Compile Include="Trusses\CurvedTruss.cs" />
-    <Compile Include="Trusses\DoublepichedTruss.cs" />
+    <Compile Include="Trusses\DoublepichTruss.cs" />
     <Compile Include="Trusses\FlatTruss.cs" />
-    <Compile Include="Trusses\MonopichedTruss.cs" />
+    <Compile Include="Trusses\MonopichTruss.cs" />
     <Compile Include="Trusses\PichedTruss.cs" />
     <Compile Include="Trusses\Truss.cs" />
     <Compile Include="Warehouses\Warehouse.cs" />

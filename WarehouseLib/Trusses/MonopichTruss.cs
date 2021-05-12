@@ -7,11 +7,11 @@ using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
 {
-    public class MonopichedTruss : PichedTruss
+    public class MonopichTruss : PichedTruss
     {
         public int BaseType;
 
-        public MonopichedTruss(Plane plane, TrussOptions options) : base(plane, options)
+        public MonopichTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
             BaseType = options.BaseType;
             GenerateTopBars();

@@ -18,6 +18,7 @@ namespace WarehouseLib.Connections
         public PrattConnection(List<Point3d> topNodes, List<Point3d> bottomNodes)
         {
             TopNodes = topNodes;
+            BottomNodes = bottomNodes;
         }
 
         public List<Curve> ConstructPrattTruss(int index)

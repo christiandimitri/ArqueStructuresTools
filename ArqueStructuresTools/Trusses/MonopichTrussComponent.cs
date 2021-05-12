@@ -50,7 +50,7 @@ namespace ArqueStructuresTools
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref trussInputs)) return;
 
-            var truss = new MonopichedTruss(plane, trussInputs);
+            var truss = new MonopichTruss(plane, trussInputs);
 
             DA.SetData(0, new TrussGoo(truss));
         }

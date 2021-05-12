@@ -67,7 +67,7 @@ namespace WarehouseLib.Warehouses
                 }
                 else if (Typology == 2)
                 {
-                    var trussA = new MonopichedTruss(tempPlane, trussOptions);
+                    var trussA = new MonopichTruss(tempPlane, trussOptions);
                     trusses.Add(trussA);
                 }
                 else if (Typology == 3)

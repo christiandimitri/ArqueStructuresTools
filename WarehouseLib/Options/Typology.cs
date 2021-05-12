@@ -4,7 +4,7 @@
     {
         Flat,
         Arch,
-        Monopiched,
-        Duopiched
+        Monopich,
+        Doublepich
     }
 }

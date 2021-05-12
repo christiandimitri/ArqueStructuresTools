@@ -65,11 +65,11 @@ namespace ArqueStructuresTools
             {
                 truss = new ArchTruss(plane, trussInputs);
             }
-            else if (typology == Typology.Monopiched.ToString())
+            else if (typology == Typology.Monopich.ToString())
             {
-                truss = new MonopichedTruss(plane, trussInputs);
+                truss = new MonopichTruss(plane, trussInputs);
             }
-            else if (typology == Typology.Duopiched.ToString())
+            else if (typology == Typology.Doublepich.ToString())
             {
                 truss = new DoublepichedTruss(plane, trussInputs);
             }
