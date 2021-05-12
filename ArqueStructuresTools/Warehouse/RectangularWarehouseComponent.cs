@@ -27,9 +27,11 @@ namespace ArqueStructuresTools
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("Plane", "P", "p", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddGenericParameter("Truss inputs", "ti", "ti", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Truss options", "ti", "ti", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Length", "ti", "ti", GH_ParamAccess.item,100.0);
             pManager.AddIntegerParameter("Porticos count", "pc", "pc", GH_ParamAccess.item, 4);
             pManager.AddTextParameter("Roof bracing type", "rbt", "rbt", GH_ParamAccess.item, "Bracing");
+            pManager.AddIntegerParameter("Typology", "t", "t", GH_ParamAccess.item, 0);
         }
 
         /// <summary>
@@ -48,17 +50,22 @@ namespace ArqueStructuresTools
         {
             var plane = Plane.WorldXY;
             var trussInputs = new TrussOptions();
-            var porticosCount = 0;
-            var roofBracingType = "";
+            var length = 100.0;
+            var porticosCount = 4;
+            var roofBracingType = "Cable";
+            var typology = 0;
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref trussInputs)) return;
-            if (!DA.GetData(2, ref porticosCount)) return;
-            if (!DA.GetData(3, ref roofBracingType)) return;
+            if (!DA.GetData(2, ref length)) return;
+            if (!DA.GetData(3, ref porticosCount)) return;
+            if (!DA.GetData(4, ref roofBracingType)) return;
+            if (!DA.GetData(5, ref typology)) return;
+            
             Warehouse warehouse = null;
 
             try
             {
-                warehouse = new Warehouse(plane, trussInputs,porticosCount, roofBracingType);
+                warehouse = new Warehouse(plane, trussInputs, length, porticosCount, roofBracingType, typology);
             }
             catch (Exception e)
             {
