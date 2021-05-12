@@ -13,16 +13,14 @@ namespace WarehouseLib.Trusses
 
         protected override void GenerateThickBottomBars()
         {
-            List<Curve> bars = new List<Curve>();
-            for (int i = 0; i < StartingNodes.Count; i++)
+            var bars = new List<Curve>();
+            for (var i = 0; i < StartingNodes.Count; i++)
             {
-                if (i < StartingNodes.Count - 1)
-                {
-                    Point3d ptA = StartingNodes[i] - Vector3d.ZAxis * ComputeDifference();
-                    Point3d ptB = StartingNodes[i + 1] - Vector3d.ZAxis * ComputeDifference();
-                    Line tempLine = new Line(ptA, ptB);
-                    bars.Add(tempLine.ToNurbsCurve());
-                }
+                if (i >= StartingNodes.Count - 1) continue;
+                var ptA = StartingNodes[i] - Vector3d.ZAxis * ComputeDifference();
+                var ptB = StartingNodes[i + 1] - Vector3d.ZAxis * ComputeDifference();
+                var tempLine = new Line(ptA, ptB);
+                bars.Add(tempLine.ToNurbsCurve());
             }
 
             BottomBars = bars;
@@ -38,8 +36,8 @@ namespace WarehouseLib.Trusses
             var recomputedDivisions = RecomputeDivisions(divisions);
             TopNodes = new List<Point3d>();
             BottomNodes = new List<Point3d>();
-            var angle = Vector3d.VectorAngle(TopBars[0].TangentAtStart, Plane.XAxis);
-            for (int i = 0; i < TopBars.Count; i++)
+            // var angle = Vector3d.VectorAngle(TopBars[0].TangentAtStart, Plane.XAxis);
+            for (var i = 0; i < TopBars.Count; i++)
             {
                 GenerateTopNodes(TopBars[i], recomputedDivisions, i);
                 GenerateBottomNodes(BottomBars[i]);
@@ -57,9 +55,9 @@ namespace WarehouseLib.Trusses
             foreach (var t in points)
             {
                 var vectorA = index == 0 ? crv.TangentAtStart : crv.TangentAtEnd;
-                var perp = Vector3d.CrossProduct(vectorA, Plane.ZAxis);
-                perp.Unitize();
-                var normal = Vector3d.CrossProduct(vectorA, perp);
+                var perpendicularVector = Vector3d.CrossProduct(vectorA, Plane.ZAxis);
+                perpendicularVector.Unitize();
+                var normal = Vector3d.CrossProduct(vectorA, perpendicularVector);
                 normals.Add(normal);
                 var line = new Line(t, normal * 100);
                 lines.Add(line.ToNurbsCurve());
@@ -71,19 +69,19 @@ namespace WarehouseLib.Trusses
 
         protected override void IsArticulatedToColumns()
         {
-            var splitCrvs = new List<Curve>();
+            var splitCurves = new List<Curve>();
             for (var i = 0; i < BottomBars.Count; i++)
             {
                 var bar = BottomBars[i];
                 var ptA = BottomNodes[i == 0 ? 1 : BottomNodes.Count - 2];
                 double t;
                 bar.ClosestPoint(ptA, out t);
-                splitCrvs.Add(bar.Split(t)[i == 0 ? 1 : 0]);
+                splitCurves.Add(bar.Split(t)[i == 0 ? 1 : 0]);
             }
 
             BottomNodes.RemoveAt(0);
             BottomNodes.RemoveAt(BottomNodes.Count - 1);
-            BottomBars = splitCrvs;
+            BottomBars = splitCurves;
         }
 
         public override void GenerateTopBars()

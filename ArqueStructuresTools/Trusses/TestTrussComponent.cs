@@ -71,7 +71,7 @@ namespace ArqueStructuresTools
             }
             else if (typology == Typology.Doublepich.ToString())
             {
-                truss = new DoublepichedTruss(plane, trussInputs);
+                truss = new DoublepichTruss(plane, trussInputs);
             }
 
             DA.SetData(0, new TrussGoo(truss));

@@ -7,13 +7,13 @@ using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
 {
-    public class DoublepichedTruss : PichedTruss
+    public class DoublepichTruss : PichedTruss
     {
         public double RightLength;
         public double LeftLength;
         public int BaseType;
 
-        public DoublepichedTruss(Plane plane, TrussOptions options) : base(plane, options)
+        public DoublepichTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
             RightLength = options.Width;
             LeftLength = options.Width;
