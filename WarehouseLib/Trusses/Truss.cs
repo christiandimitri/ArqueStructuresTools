@@ -28,7 +28,6 @@ namespace WarehouseLib.Trusses
         public List<Point3d> BoundaryTopNodes;
         public string TrussType;
         public string ArticulationType;
-        public string PorticoType;
 
         protected Truss(Plane plane, TrussOptions options)
         {
@@ -40,7 +39,6 @@ namespace WarehouseLib.Trusses
             Divisions = options.Divisions;
             TrussType = options.TrussType;
             ArticulationType = options.ArticulationType;
-            PorticoType = options.PorticoType;
         }
 
         protected int RecomputeDivisions(int divisions)
@@ -183,6 +181,7 @@ namespace WarehouseLib.Trusses
             IntermediateBars = bars;
             RecomputeNodes();
         }
+
         public abstract List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index);
 
         private void RecomputeNodes()
@@ -249,11 +248,11 @@ namespace WarehouseLib.Trusses
 
         protected abstract void IsArticulatedToColumns();
 
-        public void GenerateBoundaryColumnsNodes(List<Curve> topBars, bool isPortic, int divisions)
+        public void GenerateBoundaryColumnsNodes(List<Curve> topBars, bool isPortico, int divisions)
         {
-            if (!isPortic)
+            if (!isPortico)
             {
-                throw new Exception("The boundary columns are only implemented on a Portic");
+                throw new Exception("The boundary columns are only implemented on a Portico");
             }
             else
             {
@@ -270,7 +269,7 @@ namespace WarehouseLib.Trusses
             }
         }
 
-        public void ConstructPorticFromTruss(Truss truss)
+        public void ConstructPorticoFromTruss(Truss truss, int columnsCount)
         {
             TopBars = new List<Curve>(TopBars);
             TopNodes = new List<Point3d>(TopNodes);
@@ -278,12 +277,12 @@ namespace WarehouseLib.Trusses
             BottomNodes = null;
             IntermediateBars = null;
 
-            if (ColumnsCount > 1)
+            if (columnsCount >= 1)
             {
-                truss.GenerateBoundaryColumnsNodes(truss.TopBars, true, ColumnsCount);
-                BoundaryColumns =
-                    new List<Column>(
-                        new BoundaryColumn(Line.Unset).GenerateBoundaryColumns(truss.BoundaryTopNodes, Plane));
+                // truss.GenerateBoundaryColumnsNodes(truss.TopBars, true, ColumnsCount);
+                // BoundaryColumns =
+                //     new List<Column>(
+                //         new BoundaryColumn(Line.Unset).GenerateColumns(truss.BoundaryTopNodes, Plane));
             }
             else throw new Exception("the columns count should be >=2");
         }

@@ -15,10 +15,11 @@ namespace WarehouseLib.Trusses
         {
             _options = options;
             GenerateTopBars();
-            StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
+            StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateColumns(StartingNodes, plane));
             ChangeBaseByType(options.BaseType);
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options.ArticulationType);
+            
         }
 
         public override void GenerateTopBars()

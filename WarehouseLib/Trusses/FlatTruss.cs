@@ -10,7 +10,7 @@ namespace WarehouseLib.Trusses
         public FlatTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
             GenerateTopBars();
-            StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateStaticColumns(StartingNodes, Plane));
+            StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateColumns(StartingNodes, plane));
             GenerateThickBottomBars();
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options.ArticulationType);

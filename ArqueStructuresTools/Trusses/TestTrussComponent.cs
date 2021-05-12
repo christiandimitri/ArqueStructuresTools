@@ -54,7 +54,7 @@ namespace ArqueStructuresTools
             if (!DA.GetData(0, ref typology)) return;
             if (!DA.GetData(1, ref plane)) return;
             if (!DA.GetData(2, ref trussInputs)) return;
-            
+
             Truss truss = null;
 
             if (typology == Typology.Flat.ToString())
@@ -73,6 +73,10 @@ namespace ArqueStructuresTools
             {
                 truss = new DoublepichTruss(plane, trussInputs);
             }
+
+            if (trussInputs.PorticoType == PorticoType.Portico.ToString())
+                if (truss != null)
+                    truss.ConstructPorticoFromTruss(truss, trussInputs.ColumnsCount);
 
             DA.SetData(0, new TrussGoo(truss));
         }

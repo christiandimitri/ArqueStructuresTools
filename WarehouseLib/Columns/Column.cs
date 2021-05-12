@@ -1,19 +1,21 @@
-﻿using Rhino.Geometry;
+﻿using System.Collections.Generic;
+using Rhino.Geometry;
 
 namespace WarehouseLib.Columns
 {
-    public class Column
+    public abstract class Column
     {
         public Line Axis;
-        public Column(Line axis)
+        protected Column()
         {
-            Axis = axis;
         }
-        public Column ConstructColumn(Point3d node, Plane plane)
+
+        public abstract List<Column> GenerateColumns(List<Point3d> nodes, Plane plane);
+
+        protected Line ConstructAxis(Point3d node, Plane plane)
         {
             var axis = new Line(plane.ClosestPoint(node), node);
-            var column = new Column(axis);
-            return column;
+            return axis;
         }
     }
 }

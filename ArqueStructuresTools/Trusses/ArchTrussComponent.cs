@@ -45,7 +45,10 @@ namespace ArqueStructuresTools
             var trussInputs = new TrussOptions();
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref trussInputs)) return;
+
             var truss = new ArchTruss(plane, trussInputs);
+            if (trussInputs.PorticoType == PorticoType.Portico.ToString())
+                truss.ConstructPorticoFromTruss(truss, trussInputs.ColumnsCount);
 
             DA.SetData(0, new TrussGoo(truss));
         }

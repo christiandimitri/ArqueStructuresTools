@@ -13,7 +13,7 @@ namespace WarehouseLib.Warehouses
     public class Warehouse
     {
         public Plane Plane;
-
+        public TrussOptions _trussOptions;
         public double Length;
 
         // public double Width;
@@ -48,10 +48,11 @@ namespace WarehouseLib.Warehouses
             PorticosCount = porticosCount;
             RoofBracingType = roofBracingType;
             Typology = typology;
+            _trussOptions = trussOptions;
             ConstructTrusses(trussOptions);
-            // GetColumns();
-            // GenerateRoofStraps();
-            // GenerateFacadeStraps();
+            GetColumns();
+            GenerateRoofStraps();
+            GenerateFacadeStraps();
             // GenerateRoofBracings();
         }
 
@@ -84,43 +85,17 @@ namespace WarehouseLib.Warehouses
                 }
             }
 
-            // trusses = new List<Truss>(WarehouseHasPorticAtBoundaries(trusses));
+            // trusses = new List<Truss>(WarehouseHasPorticoAtBoundaries(trusses));
 
             Trusses = trusses;
         }
 
-        private void GetColumns()
-        {
-            var boundaryList = new List<Column>();
-            var staticList = new List<Column>();
-            foreach (var truss in Trusses)
-            {
-                if (truss.BoundaryColumns != null && ColumnsCount >= 1)
-                {
-                    foreach (var bc in truss.BoundaryColumns)
-                    {
-                        boundaryList.Add(bc);
-                    }
-                }
-                else if (truss.StaticColumns != null)
-                {
-                    foreach (var sc in truss.StaticColumns)
-                    {
-                        staticList.Add(sc);
-                    }
-                }
-            }
-
-            StaticColumns = staticList;
-            BoundaryColumns = boundaryList;
-        }
-
-        private List<Truss> WarehouseHasPorticAtBoundaries(List<Truss> trusses)
+        private List<Truss> WarehouseHasPorticoAtBoundaries(List<Truss> trusses)
         {
             var trussA = trusses[0];
-            trussA.ConstructPorticFromTruss(trussA);
+            trussA.ConstructPorticoFromTruss(trussA, ColumnsCount);
             var trussB = trusses[trusses.Count - 1];
-            trussB.ConstructPorticFromTruss(trussB);
+            trussB.ConstructPorticoFromTruss(trussB, _trussOptions.ColumnsCount);
 
             trusses.RemoveAt(0);
             trusses.Insert(0, trussA);
@@ -158,18 +133,18 @@ namespace WarehouseLib.Warehouses
             }
 
             FacadeStrapsX = tempStraps;
-            tempStraps = new List<Strap>();
-            var portics = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
-            var strapsY =
-                new FacadeStrap(Line.Unset).ConstructStraps(
-                    new FacadeStrap(Line.Unset).ConstructStrapsAxisOnBoundaryColumns(portics, 0.5));
-
-            foreach (var strap in strapsY)
-            {
-                tempStraps.Add(new FacadeStrap(strap.Axis));
-            }
-
-            FacadeStrapsY = tempStraps;
+            // tempStraps = new List<Strap>();
+            // var portics = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
+            // var strapsY =
+            //     new FacadeStrap(Line.Unset).ConstructStraps(
+            //         new FacadeStrap(Line.Unset).ConstructStrapsAxisOnBoundaryColumns(portics, 0.5));
+            //
+            // foreach (var strap in strapsY)
+            // {
+            //     tempStraps.Add(new FacadeStrap(strap.Axis));
+            // }
+            //
+            // FacadeStrapsY = tempStraps;
         }
 
         private void GenerateRoofBracings()
@@ -201,6 +176,32 @@ namespace WarehouseLib.Warehouses
                 RoofBracings.AddRange(roofBracingsEnd);
                 RoofCables.AddRange(roofCablesEnd);
             }
+        }
+
+        private void GetColumns()
+        {
+            var boundaryList = new List<Column>();
+            var staticList = new List<Column>();
+            foreach (var truss in Trusses)
+            {
+                if (truss.BoundaryColumns != null && ColumnsCount >= 1)
+                {
+                    foreach (var bc in truss.BoundaryColumns)
+                    {
+                        boundaryList.Add(bc);
+                    }
+                }
+                else if (truss.StaticColumns != null)
+                {
+                    foreach (var sc in truss.StaticColumns)
+                    {
+                        staticList.Add(sc);
+                    }
+                }
+            }
+
+            StaticColumns = staticList;
+            BoundaryColumns = boundaryList;
         }
     }
 }

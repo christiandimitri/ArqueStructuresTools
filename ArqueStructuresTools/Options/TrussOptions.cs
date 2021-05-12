@@ -5,7 +5,7 @@ namespace ArqueStructuresTools.Options
 {
     public class TrussOptions : GH_Component
     {
-        public TrussOptions() : base("Truss Inputs", "Nickname", "description", "Arque Structures", "Utilities")
+        public TrussOptions() : base("Truss Options", "Nickname", "description", "Arque Structures", "Utilities")
         {
         }
 
@@ -27,6 +27,7 @@ namespace ArqueStructuresTools.Options
             pManager.AddTextParameter("Articulation type", "at", "at", GH_ParamAccess.item, "Rigid");
             pManager.AddIntegerParameter("Divisions", "d", "d", GH_ParamAccess.item, 5);
             pManager.AddTextParameter("Portico type", "pt", "pt", GH_ParamAccess.item, "Truss");
+            pManager.AddIntegerParameter("Columns count", "cc", "cc", GH_ParamAccess.item, 1);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -45,7 +46,7 @@ namespace ArqueStructuresTools.Options
             var articulationType = "";
             var divisions = 0;
             var porticoType = "";
-
+            var columnsCount = 0;
             if (!DA.GetData(0, ref trussType)) return;
             if (!DA.GetData(1, ref width)) return;
             if (!DA.GetData(2, ref height)) return;
@@ -55,6 +56,7 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(6, ref articulationType)) return;
             if (!DA.GetData(7, ref divisions)) return;
             if (!DA.GetData(8, ref porticoType)) return;
+            if (!DA.GetData(9, ref columnsCount)) return;
 
             var options = new WarehouseLib.Options.TrussOptions();
 

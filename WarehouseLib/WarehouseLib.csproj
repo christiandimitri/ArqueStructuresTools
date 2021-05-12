@@ -69,6 +69,7 @@
     <Compile Include="Cables\RoofCable.cs" />
     <Compile Include="Columns\BoundaryColumn.cs" />
     <Compile Include="Columns\Column.cs" />
+    <Compile Include="Columns\ColumnType.cs" />
     <Compile Include="Columns\StaticColumn.cs" />
     <Compile Include="Connections\Connections.cs" />
     <Compile Include="Connections\ConnectionType.cs" />

@@ -51,6 +51,7 @@ namespace ArqueStructuresTools
             if (!DA.GetData(1, ref trussInputs)) return;
 
             var truss = new MonopichTruss(plane, trussInputs);
+            if (trussInputs.PorticoType == PorticoType.Portico.ToString()) truss.ConstructPorticoFromTruss(truss, trussInputs.ColumnsCount);
 
             DA.SetData(0, new TrussGoo(truss));
         }

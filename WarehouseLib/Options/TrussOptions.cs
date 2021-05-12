@@ -3,7 +3,8 @@
     public struct TrussOptions
     {
         public TrussOptions(string trussType, double width, double height, double maxHeight,
-            double clearHeight, int baseType, string articulationType, int divisions, string porticoType)
+            double clearHeight, int baseType, string articulationType, int divisions, string porticoType,
+            int columnsCount)
         {
             TrussType = trussType;
             Width = width;
@@ -14,6 +15,7 @@
             ArticulationType = articulationType;
             Divisions = divisions;
             PorticoType = porticoType;
+            ColumnsCount = columnsCount;
         }
 
         public string TrussType { get; set; }
@@ -25,5 +27,6 @@
         public string ArticulationType { get; set; }
         public int Divisions { get; set; }
         public string PorticoType { get; set; }
+        public int ColumnsCount { get; set; }
     }
 }

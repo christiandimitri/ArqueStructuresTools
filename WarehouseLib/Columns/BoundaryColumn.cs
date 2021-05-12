@@ -5,19 +5,22 @@ namespace WarehouseLib.Columns
 {
     public class BoundaryColumn : Column
     {
-        public BoundaryColumn(Line axis) : base(axis)
+        public BoundaryColumn(Line axis)
         {
+            Axis=axis;
         }
 
-        public List<Column> GenerateBoundaryColumns(List<Point3d> nodes, Plane plane)
+        public override List<Column> GenerateColumns(List<Point3d> nodes, Plane plane)
         {
-            var boundaryColumns = new List<Column>();
-            var positions = nodes;
             var columns = new List<Column>();
-
-
-            boundaryColumns.AddRange(columns);
-            return boundaryColumns;
+            foreach (var t in nodes)
+            {
+                var axis = ConstructAxis(t, plane);
+                var column = new BoundaryColumn(axis);
+                columns.Add(column);
+            }
+            
+            return columns;
         }
     }
 }
