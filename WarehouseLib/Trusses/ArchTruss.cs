@@ -12,7 +12,6 @@ namespace WarehouseLib
 {
     public class ArchTruss : CurvedTruss
     {
-        public int BaseType;
         private TrussOptions _options;
 
         public ArchTruss(Plane plane, TrussOptions options) : base(plane, options)
@@ -112,7 +111,6 @@ namespace WarehouseLib
                 GenerateTopNodes(TopBars[i], recomputedDivisions, i);
                 GenerateBottomNodes(BottomBars[i]);
             }
-
             PointCloud cloud = new PointCloud(TopNodes);
             int index = cloud.ClosestPoint(StartingNodes[1]);
             GenerateIntermediateBars(TrussType, index);

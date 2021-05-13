@@ -7,8 +7,10 @@ namespace WarehouseLib.Trusses
 {
     public class PichedTruss : Truss
     {
+        private TrussOptions _options;
         protected PichedTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
+            _options = options;
         }
 
         protected override void GenerateThickBottomBars()
@@ -42,7 +44,6 @@ namespace WarehouseLib.Trusses
                 GenerateTopNodes(TopBars[i], recomputedDivisions, i);
                 GenerateBottomNodes(BottomBars[i]);
             }
-
             var cloud = new PointCloud(TopNodes);
             var index = cloud.ClosestPoint(StartingNodes[1]);
             GenerateIntermediateBars(TrussType, index);
