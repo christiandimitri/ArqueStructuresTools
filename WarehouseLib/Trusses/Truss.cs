@@ -275,7 +275,7 @@ namespace WarehouseLib.Trusses
                 truss.GenerateBoundaryColumnsNodes(truss.TopBars, columnsCount);
                 BoundaryColumns =
                     new List<Column>(
-                        new BoundaryColumn(Line.Unset).GenerateColumns(truss.BoundaryTopNodes, Plane));
+                        new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, Plane));
             }
             else throw new Exception("the columns count should be >=2");
         }

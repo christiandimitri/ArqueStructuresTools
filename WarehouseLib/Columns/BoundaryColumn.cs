@@ -5,9 +5,8 @@ namespace WarehouseLib.Columns
 {
     public class BoundaryColumn : Column
     {
-        public BoundaryColumn(Line axis)
+        public BoundaryColumn()
         {
-            Axis=axis;
         }
 
         public override List<Column> GenerateColumns(List<Point3d> nodes, Plane plane)
@@ -16,7 +15,7 @@ namespace WarehouseLib.Columns
             foreach (var t in nodes)
             {
                 var axis = ConstructAxis(t, plane);
-                var column = new BoundaryColumn(axis);
+                var column = new BoundaryColumn {Axis = axis};
                 columns.Add(column);
             }
             

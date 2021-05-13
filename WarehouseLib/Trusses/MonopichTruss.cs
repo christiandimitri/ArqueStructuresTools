@@ -15,7 +15,7 @@ namespace WarehouseLib.Trusses
         {
             _options = options;
             GenerateTopBars();
-            StaticColumns = new List<Column>(new StaticColumn(Line.Unset).GenerateColumns(StartingNodes, plane));
+            StaticColumns = new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
             ChangeBaseByType(options.BaseType);
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options.ArticulationType);
