@@ -50,8 +50,18 @@ namespace ArqueStructuresTools
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref trussInputs)) return;
 
-            var truss = new FlatTruss(plane, trussInputs);
-            if (trussInputs.PorticoType == PorticoType.Portico.ToString()) truss.ConstructPorticoFromTruss(truss, trussInputs.ColumnsCount);
+            Truss truss = null;
+            try
+            {
+                truss = new FlatTruss(plane, trussInputs);
+                if (trussInputs.PorticoType == PorticoType.Portico.ToString())
+                    truss.ConstructPorticoFromTruss(truss, trussInputs.ColumnsCount);
+            }
+            catch (Exception e)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, e.Message);
+                return;
+            }
 
             DA.SetData(0, new TrussGoo(truss));
         }

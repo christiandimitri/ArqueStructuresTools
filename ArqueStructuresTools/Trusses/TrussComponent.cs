@@ -56,27 +56,35 @@ namespace ArqueStructuresTools
             if (!DA.GetData(2, ref trussInputs)) return;
 
             Truss truss = null;
+            try
+            {
+                if (typology == GeometricalTypology.Flat.ToString())
+                {
+                    truss = new FlatTruss(plane, trussInputs);
+                }
+                else if (typology == GeometricalTypology.Arch.ToString())
+                {
+                    truss = new ArchTruss(plane, trussInputs);
+                }
+                else if (typology == GeometricalTypology.Monopich.ToString())
+                {
+                    truss = new MonopichTruss(plane, trussInputs);
+                }
+                else if (typology == GeometricalTypology.Doublepich.ToString())
+                {
+                    truss = new DoublepichTruss(plane, trussInputs);
+                }
 
-            if (typology == GeometricalTypology.Flat.ToString())
-            {
-                truss = new FlatTruss(plane, trussInputs);
+                if (trussInputs.PorticoType == PorticoType.Portico.ToString())
+                    if (truss != null)
+                        truss.ConstructPorticoFromTruss(truss, trussInputs.ColumnsCount);
             }
-            else if (typology == GeometricalTypology.Arch.ToString())
+            catch (Exception e)
             {
-                truss = new ArchTruss(plane, trussInputs);
-            }
-            else if (typology == GeometricalTypology.Monopich.ToString())
-            {
-                truss = new MonopichTruss(plane, trussInputs);
-            }
-            else if (typology == GeometricalTypology.Doublepich.ToString())
-            {
-                truss = new DoublepichTruss(plane, trussInputs);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, e.Message);
+                return;
             }
 
-            if (trussInputs.PorticoType == PorticoType.Portico.ToString())
-                if (truss != null)
-                    truss.ConstructPorticoFromTruss(truss, trussInputs.ColumnsCount);
 
             DA.SetData(0, new TrussGoo(truss));
         }
