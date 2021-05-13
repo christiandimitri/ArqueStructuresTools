@@ -39,6 +39,7 @@ namespace WarehouseLib.Trusses
             Divisions = options.Divisions;
             TrussType = options.TrussType;
             ArticulationType = options.ArticulationType;
+            ColumnsCount = options.ColumnsCount;
         }
 
         protected int RecomputeDivisions(int divisions)
@@ -250,6 +251,11 @@ namespace WarehouseLib.Trusses
 
         private void GenerateBoundaryColumnsNodes(List<Curve> topBars, int divisions)
         {
+            if (divisions <= 1)
+            {
+                throw new Exception("the columns count should be >=2");
+            }
+
             BoundaryTopNodes = new List<Point3d>();
             var nodes = new List<Point3d>();
             var joinedBar = Curve.JoinCurves(topBars)[0];
@@ -262,7 +268,7 @@ namespace WarehouseLib.Trusses
             BoundaryTopNodes.AddRange(nodes);
         }
 
-        public void ConstructPorticoFromTruss(Truss truss, int columnsCount)
+        public void ConstructPorticoFromTruss(Truss truss)
         {
             TopBars = new List<Curve>(TopBars);
             TopNodes = new List<Point3d>(TopNodes);
@@ -270,14 +276,14 @@ namespace WarehouseLib.Trusses
             BottomNodes = null;
             IntermediateBars = null;
 
-            if (columnsCount >= 1)
-            {
-                truss.GenerateBoundaryColumnsNodes(truss.TopBars, columnsCount);
-                BoundaryColumns =
-                    new List<Column>(
-                        new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, Plane));
-            }
-            else throw new Exception("the columns count should be >=2");
+            // if (ColumnsCount >= 1)
+            // {
+            truss.GenerateBoundaryColumnsNodes(truss.TopBars, ColumnsCount);
+            BoundaryColumns =
+                new List<Column>(
+                    new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, Plane));
+            // }
+            // else throw new Exception("the columns count should be >=2");
         }
     }
 }

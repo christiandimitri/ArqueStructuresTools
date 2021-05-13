@@ -51,7 +51,7 @@ namespace ArqueStructuresTools
             {
                 truss = new DoublepichTruss(plane, trussInputs);
                 if (trussInputs.PorticoType == PorticoType.Portico.ToString())
-                    truss.ConstructPorticoFromTruss(truss, trussInputs.ColumnsCount);
+                    truss.ConstructPorticoFromTruss(truss);
             }
             catch (Exception e)
             {

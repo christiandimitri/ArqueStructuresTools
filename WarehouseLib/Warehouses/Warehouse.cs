@@ -14,7 +14,6 @@ namespace WarehouseLib.Warehouses
     {
         public Plane Plane;
         public TrussOptions _trussOptions;
-
         // public double Width;
         // public double Height;
         // public double MaxHeight;
@@ -42,7 +41,6 @@ namespace WarehouseLib.Warehouses
             if (warehouseOptions.Length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
             Plane = plane;
             _trussOptions = trussOptions;
-            ColumnsCount = _trussOptions.ColumnsCount;
             _warehouseOptions = warehouseOptions;
             ConstructTrusses(trussOptions);
             GetColumns();
@@ -92,9 +90,9 @@ namespace WarehouseLib.Warehouses
         private List<Truss> WarehouseHasPorticoAtBoundaries(List<Truss> trusses)
         {
             var trussA = trusses[0];
-            trussA.ConstructPorticoFromTruss(trussA, ColumnsCount);
+            trussA.ConstructPorticoFromTruss(trussA);
             var trussB = trusses[trusses.Count - 1];
-            trussB.ConstructPorticoFromTruss(trussB, ColumnsCount);
+            trussB.ConstructPorticoFromTruss(trussB);
 
             trusses.RemoveAt(0);
             trusses.Insert(0, trussA);

@@ -77,7 +77,7 @@ namespace ArqueStructuresTools
 
                 if (trussInputs.PorticoType == PorticoType.Portico.ToString())
                     if (truss != null)
-                        truss.ConstructPorticoFromTruss(truss, trussInputs.ColumnsCount);
+                        truss.ConstructPorticoFromTruss(truss);
             }
             catch (Exception e)
             {
