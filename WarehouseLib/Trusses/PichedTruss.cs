@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rhino.Geometry;
+using Rhino.Geometry.Intersect;
 using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
@@ -8,6 +9,7 @@ namespace WarehouseLib.Trusses
     public class PichedTruss : Truss
     {
         private TrussOptions _options;
+
         protected PichedTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
             _options = options;
@@ -16,16 +18,53 @@ namespace WarehouseLib.Trusses
         protected override void GenerateThickBottomBars()
         {
             var bars = new List<Curve>();
+            var ptA = new Point3d();
+            var ptB = new Point3d();
             for (var i = 0; i < StartingNodes.Count; i++)
             {
                 if (i >= StartingNodes.Count - 1) continue;
-                var ptA = StartingNodes[i] - Vector3d.ZAxis * ComputeDifference();
-                var ptB = StartingNodes[i + 1] - Vector3d.ZAxis * ComputeDifference();
+                ptA = StartingNodes[i] - Vector3d.ZAxis * ComputeDifference();
+                ptB = StartingNodes[i + 1] - Vector3d.ZAxis * ComputeDifference();
                 var tempLine = new Line(ptA, ptB);
                 bars.Add(tempLine.ToNurbsCurve());
             }
 
-            BottomBars = bars;
+
+            if (_options.ArticulationType == "Articulated" && _options.BaseType == 0 &&
+                _options.PorticoType == PorticoType.Truss.ToString())
+            {
+                var recomputedDivisions = RecomputeDivisions(Divisions);
+
+                var tempParams = TopBars[0].DivideByCount(recomputedDivisions, true);
+                var t1 = tempParams[1];
+                var tempPt = TopBars[0].PointAt(t1);
+                var tempPlane = new Plane(tempPt, Plane.XAxis);
+                var interPt = new Point3d();
+                var intersectionEvents = Intersection.CurvePlane(bars[0], tempPlane, 0.01);
+                if (intersectionEvents != null)
+                {
+                    for (int i = 0; i < intersectionEvents.Count; i++)
+                    {
+                        var intEv = intersectionEvents[0];
+                        interPt = intEv.PointA;
+                    }
+                }
+
+                bars = new List<Curve>();
+                double difference = interPt.Z - ptB.Z;
+                for (var i = 0; i < StartingNodes.Count; i++)
+                {
+                    if (i >= StartingNodes.Count - 1) continue;
+                    ptA = new Point3d(StartingNodes[i] -
+                                      (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
+                    ptB = new Point3d(StartingNodes[i + 1] -
+                                      (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
+                    var tempLine = new Line(ptA, ptB);
+                    bars.Add(tempLine.ToNurbsCurve());
+                }
+            }
+
+            BottomBars = new List<Curve>(bars);
         }
 
         protected override void GenerateBottomNodes(Curve crv)
@@ -44,6 +83,7 @@ namespace WarehouseLib.Trusses
                 GenerateTopNodes(TopBars[i], recomputedDivisions, i);
                 GenerateBottomNodes(BottomBars[i]);
             }
+
             var cloud = new PointCloud(TopNodes);
             var index = cloud.ClosestPoint(StartingNodes[1]);
             GenerateIntermediateBars(TrussType, index);

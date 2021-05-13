@@ -184,6 +184,7 @@ namespace WarehouseLib.Trusses
         }
 
         public abstract List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index);
+
         private void RecomputeNodes()
         {
             List<Point3d> tempTopList = new List<Point3d>();
