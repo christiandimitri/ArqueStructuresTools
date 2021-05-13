@@ -6,7 +6,7 @@ namespace WarehouseLib
 {
     public class RoofStrap : Strap
     {
-        public RoofStrap(Line axis) : base(axis)
+        public RoofStrap()
         {
         }
 
@@ -23,7 +23,9 @@ namespace WarehouseLib
                         Point3d ptA = trusses[i].TopNodes[j];
                         Point3d ptB = trusses[i + 1].TopNodes[j];
                         Line axis = new Line(ptA, ptB);
-                        roofStraps.Add(new RoofStrap(axis));
+                        var strap = new RoofStrap();
+                        strap.Axis = axis;
+                        roofStraps.Add(strap);
                     }
                 }
             }

@@ -7,9 +7,9 @@ namespace WarehouseLib
     {
         public Line Axis;
 
-        protected Strap(Line axis)
+        protected Strap()
         {
-            Axis = axis;
+            
         }
 
         public abstract List<Strap> ConstructStraps(List<Strap> strapMethod);

@@ -7,7 +7,7 @@ namespace WarehouseLib.Straps
 {
     public class FacadeStrap : Strap
     {
-        public FacadeStrap(Line axis) : base(axis)
+        public FacadeStrap()
         {
         }
 
@@ -29,8 +29,10 @@ namespace WarehouseLib.Straps
                     {
                         var ptA = columnA.Axis.ToNurbsCurve().PointAt(parametersA[k]);
                         var ptB = columnB.Axis.ToNurbsCurve().PointAt(parametersB[k]);
-                        Line line = new Line(ptA, ptB);
-                        facadeStraps.Add(new FacadeStrap(line));
+                        Line axis = new Line(ptA, ptB);
+                        var strap = new FacadeStrap();
+                        strap.Axis = axis;
+                        facadeStraps.Add(strap);
                     }
                 }
             }
@@ -56,8 +58,10 @@ namespace WarehouseLib.Straps
                     {
                         var ptA = columnA.Axis.ToNurbsCurve().PointAt(parametersA[k]);
                         var ptB = columnB.Axis.ToNurbsCurve().PointAt(parametersB[k]);
-                        Line line = new Line(ptA, ptB);
-                        facadeStraps.Add(new FacadeStrap(line));
+                        Line axis = new Line(ptA, ptB);
+                        var strap = new FacadeStrap();
+                        strap.Axis = axis;
+                        facadeStraps.Add(strap);
                     }
                 }
             }

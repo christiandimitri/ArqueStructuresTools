@@ -47,7 +47,7 @@ namespace ArqueStructuresTools
             }
 
             var facadeStrapX = new List<StrapGoo>();
-            var strapsX = new FacadeStrap(Line.Unset).ConstructStrapsAxisOnStaticColumns(trusses, distance);
+            var strapsX = new FacadeStrap().ConstructStrapsAxisOnStaticColumns(trusses, distance);
 
             foreach (var strap in strapsX)
             {

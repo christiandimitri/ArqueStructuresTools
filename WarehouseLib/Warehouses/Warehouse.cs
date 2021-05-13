@@ -109,10 +109,10 @@ namespace WarehouseLib.Warehouses
             RoofStraps = new List<Strap>();
             var tempStraps = new List<Strap>();
             var straps =
-                new RoofStrap(Line.Unset).ConstructStraps(new RoofStrap(Line.Unset).ConstructRoofStraps(Trusses, 0));
+                new RoofStrap().ConstructStraps(new RoofStrap().ConstructRoofStraps(Trusses, 0));
             foreach (var strap in straps)
             {
-                tempStraps.Add(new RoofStrap(strap.Axis));
+                tempStraps.Add(strap);
             }
 
             RoofStraps = tempStraps;
@@ -124,11 +124,11 @@ namespace WarehouseLib.Warehouses
             FacadeStrapsY = new List<Strap>();
             var tempStraps = new List<Strap>();
             var strapsX =
-                new FacadeStrap(Line.Unset).ConstructStraps(
-                    new FacadeStrap(Line.Unset).ConstructStrapsAxisOnStaticColumns(Trusses, 0.5));
+                new FacadeStrap().ConstructStraps(
+                    new FacadeStrap().ConstructStrapsAxisOnStaticColumns(Trusses, 0.5));
             foreach (var strap in strapsX)
             {
-                tempStraps.Add(new FacadeStrap(strap.Axis));
+                tempStraps.Add(strap);
             }
 
             FacadeStrapsX = tempStraps;
