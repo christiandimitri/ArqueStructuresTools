@@ -8,11 +8,11 @@ namespace WarehouseLib.Bracings
     {
         public Line Axis;
 
-        protected Bracing(Line axis)
+        protected Bracing()
         {
-            Axis = axis;
+            
         }
 
-        public abstract List<Bracing> ConstructBracings(List<Truss> trusses);
+        public abstract List<Bracing> ConstructBracings(List<Truss> trusses, int count, int index);
     }
 }

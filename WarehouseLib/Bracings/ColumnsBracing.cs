@@ -6,11 +6,11 @@ namespace WarehouseLib.Bracings
 {
     public class ColumnsBracing : Bracing
     {
-        public ColumnsBracing(Line axis) : base(axis)
+        public ColumnsBracing()
         {
         }
 
-        public override List<Bracing> ConstructBracings(List<Truss> trusses)
+        public override List<Bracing> ConstructBracings(List<Truss> trusses, int count, int index)
         {
             throw new System.NotImplementedException();
         }

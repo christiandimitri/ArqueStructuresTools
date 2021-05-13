@@ -81,7 +81,7 @@
     <Compile Include="Trusses\DoublepichTrussComponent.cs" />
     <Compile Include="Trusses\FlatTrussComponent.cs" />
     <Compile Include="Trusses\MonopichTrussComponent.cs" />
-    <Compile Include="Trusses\TestTrussComponent.cs" />
+    <Compile Include="Trusses\TrussComponent.cs" />
     <Compile Include="Utilities\DeconstructStrap.cs" />
     <Compile Include="Utilities\DeconstructTruss.cs" />
     <Compile Include="Utilities\DeconstructWarehouse.cs" />

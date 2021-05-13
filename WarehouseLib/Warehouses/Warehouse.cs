@@ -154,22 +154,22 @@ namespace WarehouseLib.Warehouses
             if (_warehouseOptions.RoofBracingType == "Bracing")
             {
                 var roofBracingsStart =
-                    new RoofBracing(Line.Unset, 0, ColumnsCount).ConstructWarrenStudsBracings(Trusses);
+                    new RoofBracing().ConstructWarrenStudsBracings(Trusses, ColumnsCount, 0);
                 RoofBracings.AddRange(roofBracingsStart);
                 var roofBracingsEnd =
-                    new RoofBracing(Line.Unset, Trusses.Count - 1, ColumnsCount).ConstructWarrenStudsBracings(Trusses);
+                    new RoofBracing().ConstructWarrenStudsBracings(Trusses, ColumnsCount, Trusses.Count - 1);
                 RoofBracings.AddRange(roofBracingsEnd);
             }
             else if (_warehouseOptions.RoofBracingType == "Cable")
             {
                 var roofBracingsStart =
-                    new RoofBracing(Line.Unset, 0, ColumnsCount).ConstructBracings(Trusses);
+                    new RoofBracing().ConstructBracings(Trusses, ColumnsCount, 0);
                 var roofCablesStart =
                     new RoofCable(Line.Unset, 0, ColumnsCount).ConstructCables(Trusses);
                 RoofBracings.AddRange(roofBracingsStart);
                 RoofCables.AddRange(roofCablesStart);
                 var roofBracingsEnd =
-                    new RoofBracing(Line.Unset, Trusses.Count - 1, ColumnsCount).ConstructBracings(Trusses);
+                    new RoofBracing().ConstructBracings(Trusses, ColumnsCount, Trusses.Count - 1);
                 var roofCablesEnd =
                     new RoofCable(Line.Unset, Trusses.Count - 1, ColumnsCount).ConstructCables(Trusses);
                 RoofBracings.AddRange(roofBracingsEnd);
