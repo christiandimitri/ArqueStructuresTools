@@ -19,13 +19,12 @@ namespace WarehouseLib.Trusses
             ChangeBaseByType(options.BaseType);
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options.ArticulationType);
-            
         }
 
         public override void GenerateTopBars()
         {
-            StartingNodes = GetStartingPoints(Plane, Length / 2, Length / 2, Height,
-                Height + ((MaxHeight - Height) / 2), MaxHeight);
+            StartingNodes = GetStartingPoints(_plane, _length / 2, _length / 2, _height,
+                _height + ((_maxHeight - _height) / 2), _maxHeight);
             var barA = new Line(StartingNodes[0], StartingNodes[1]);
             var barB = new Line(StartingNodes[1], StartingNodes[2]);
             TopBars = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};

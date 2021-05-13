@@ -25,7 +25,7 @@ namespace WarehouseLib.Trusses
 
         public override void GenerateTopBars()
         {
-            StartingNodes = GetStartingPoints(Plane, _options.Width, _options.Width, Height, MaxHeight, Height);
+            StartingNodes = GetStartingPoints(_plane, _options.Width, _options.Width, _height, _maxHeight, _height);
             var barA = new Line(StartingNodes[0], StartingNodes[1]);
             var barB = new Line(StartingNodes[1], StartingNodes[2]);
             TopBars = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};
