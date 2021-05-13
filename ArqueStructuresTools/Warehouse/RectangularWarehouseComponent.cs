@@ -51,7 +51,7 @@ namespace ArqueStructuresTools
 
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref trussInputs)) return;
-            if (!DA.GetData(2, ref warehouseOptions)) ;
+            if (!DA.GetData(2, ref warehouseOptions)) return;
 
             Warehouse warehouse = null;
 

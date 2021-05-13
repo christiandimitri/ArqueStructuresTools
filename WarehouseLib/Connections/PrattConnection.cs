@@ -16,13 +16,13 @@ namespace WarehouseLib.Connections
         public override List<Curve> ConstructConnections()
         {
             var bars = new List<Curve>();
-            for (var i = 0; i < TopNodes.Count; i += 2)
+            for (var i = 0; i < TopNodes.Count; i ++)
             {
                 if (i < _index)
                 {
                     var lineA = new Line(TopNodes[i], BottomNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(TopNodes[i], BottomNodes[i + 2]);
+                    lineA = new Line(TopNodes[i], BottomNodes[i + 1]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
                 else if (i == _index)
@@ -32,7 +32,7 @@ namespace WarehouseLib.Connections
                 }
                 else if (i > _index)
                 {
-                    var lineA = new Line(TopNodes[i], BottomNodes[i - 2]);
+                    var lineA = new Line(TopNodes[i], BottomNodes[i - 1]);
                     bars.Add(lineA.ToNurbsCurve());
                     lineA = new Line(TopNodes[i], BottomNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());

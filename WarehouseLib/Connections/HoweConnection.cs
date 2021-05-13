@@ -19,13 +19,13 @@ namespace WarehouseLib.Connections
             var tempTopNodes = BottomNodes;
             var tempBottomNodes = TopNodes;
             var bars = new List<Curve>();
-            for (var i = 0; i < tempTopNodes.Count; i += 2)
+            for (var i = 0; i < tempTopNodes.Count; i ++)
             {
                 if (i < _index)
                 {
                     var lineA = new Line(tempBottomNodes[i], tempTopNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(tempBottomNodes[i + 2], tempTopNodes[i]);
+                    lineA = new Line(tempBottomNodes[i + 1], tempTopNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
                 else if (i == _index)
@@ -35,7 +35,7 @@ namespace WarehouseLib.Connections
                 }
                 else if (i > _index)
                 {
-                    var lineA = new Line(tempBottomNodes[i - 2], tempTopNodes[i]);
+                    var lineA = new Line(tempBottomNodes[i - 1], tempTopNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                     lineA = new Line(tempBottomNodes[i], tempTopNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
@@ -47,10 +47,10 @@ namespace WarehouseLib.Connections
             if (_articulationType == "Articulated")
             {
                 bars.RemoveAt(0);
-                var lineA = new Line(TopNodes[0], BottomNodes[2]);
+                var lineA = new Line(TopNodes[0], BottomNodes[1]);
                 bars.Insert(0, lineA.ToNurbsCurve());
                 bars.RemoveAt(bars.Count - 1);
-                lineA = new Line(TopNodes[TopNodes.Count - 1], BottomNodes[BottomNodes.Count - 3]);
+                lineA = new Line(TopNodes[TopNodes.Count - 1], BottomNodes[BottomNodes.Count - 2]);
                 bars.Add(lineA.ToNurbsCurve());
             }
 

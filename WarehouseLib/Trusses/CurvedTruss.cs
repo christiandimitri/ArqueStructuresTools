@@ -16,6 +16,11 @@ namespace WarehouseLib.Trusses
             throw new NotImplementedException();
         }
 
+        protected override List<Curve> ComputeBottomBarsArticulatedToColumns(List<Curve> bars)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void GenerateBottomNodes(Curve crv)
         {
             throw new NotImplementedException();
@@ -35,7 +40,7 @@ namespace WarehouseLib.Trusses
         {
             var crv = TopBars[index == 0 ? 0 : 1];
             var vectorA = index == 0 ? crv.TangentAtStart : crv.TangentAtEnd;
-            var perp = Vector3d.CrossProduct(vectorA, Plane.ZAxis);
+            var perp = Vector3d.CrossProduct(vectorA, _plane.ZAxis);
             perp.Unitize();
             var normal = Vector3d.CrossProduct(vectorA, perp);
             return normal;
@@ -44,19 +49,19 @@ namespace WarehouseLib.Trusses
         // TODO index compute from max min height
         public double ComputeOffsetFromTrigo(int index)
         {
-            var angle = Vector3d.VectorAngle(-Plane.ZAxis, ComputeNormal(index));
+            var angle = Vector3d.VectorAngle(-_plane.ZAxis, ComputeNormal(index));
             var offset = Math.Cos(angle) * ComputeDifference();
             return offset;
         }
 
         public double ComputeOffsetFromDot(int index)
         {
-            Vector3d normal = ComputeNormal(index);
+            var normal = ComputeNormal(index);
             var vertical = Vector3d.ZAxis * ComputeDifference();
-            var offset = Vector3d.Multiply(vertical, normal);
+            double offset = 0;
+            offset = Vector3d.Multiply(normal, vertical);
             return offset;
         }
-
 
         public override void ConstructTruss(int divisions)
         {
@@ -69,7 +74,7 @@ namespace WarehouseLib.Trusses
             for (int i = 0; i < points.Count; i++)
             {
                 var vectorA = index == 0 ? crv.TangentAtStart : crv.TangentAtEnd;
-                var perp = Vector3d.CrossProduct(vectorA, Plane.ZAxis);
+                var perp = Vector3d.CrossProduct(vectorA, _plane.ZAxis);
                 perp.Unitize();
                 var normal = Vector3d.CrossProduct(vectorA, perp);
                 normals.Add(normal);

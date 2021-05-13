@@ -12,42 +12,40 @@ namespace WarehouseLib.Trusses
     {
         public List<Curve> BottomBars;
         public List<Point3d> BottomNodes;
-        private double ClearHeight;
+        private double _clearHeight;
         public List<Column> StaticColumns;
         public List<Column> BoundaryColumns;
-        public int Divisions;
-        public int ColumnsCount;
-        public double Height;
+        public int _divisions;
+        public int _columnsCount;
+        public double _height;
         public List<Curve> IntermediateBars;
-        public double Length;
-        public double MaxHeight;
-        public Plane Plane;
+        public double _length;
+        public double _maxHeight;
+        public Plane _plane;
         public List<Point3d> StartingNodes;
         public List<Curve> TopBars;
         public List<Point3d> TopNodes;
         public List<Point3d> BoundaryTopNodes;
-        public string TrussType;
-        public string ArticulationType;
+        public string _trussType;
+        public string _articulationType;
 
         protected Truss(Plane plane, TrussOptions options)
         {
-            Plane = plane;
-            Length = options.Width;
-            Height = options.Height;
-            MaxHeight = options.MaxHeight;
-            ClearHeight = options.ClearHeight;
-            Divisions = options.Divisions;
-            TrussType = options.TrussType;
-            ArticulationType = options.ArticulationType;
-            ColumnsCount = options.ColumnsCount;
+            _plane = plane;
+            _length = options.Width;
+            _height = options.Height;
+            _maxHeight = options.MaxHeight;
+            _clearHeight = options.ClearHeight;
+            _divisions = options.Divisions;
+            _trussType = options.TrussType;
+            _articulationType = options.ArticulationType;
+            _columnsCount = options.ColumnsCount;
         }
 
         protected int RecomputeDivisions(int divisions)
         {
             var recomputedDivisions = divisions;
-            if ((TrussType == "Howe" || TrussType == "Pratt") && divisions % 2 == 1) recomputedDivisions++;
-            else if (TrussType == "Warren_Studs") recomputedDivisions = divisions / 2;
-
+            // recomputedDivisions /= 2;
             return recomputedDivisions;
         }
 
@@ -100,12 +98,14 @@ namespace WarehouseLib.Trusses
 
         protected double ComputeDifference()
         {
-            var difference = Height - ClearHeight;
+            var difference = _height - _clearHeight;
             return difference;
         }
 
         public abstract void GenerateTopBars();
         protected abstract void GenerateThickBottomBars();
+
+        protected abstract List<Curve> ComputeBottomBarsArticulatedToColumns(List<Curve> bars);
 
         public void GenerateStraightBottomBars()
         {
@@ -130,7 +130,7 @@ namespace WarehouseLib.Trusses
                 i < points.Count;
                 i++)
             {
-                var tempPt = Plane.Origin - Vector3d.ZAxis * MaxHeight;
+                var tempPt = _plane.Origin - Vector3d.ZAxis * _maxHeight;
                 var lineA = new Line(points[i], new Point3d(points[i].X, points[i].Y, tempPt.Z));
                 intersectingLines.Add(lineA);
             }
@@ -175,7 +175,7 @@ namespace WarehouseLib.Trusses
             }
             else if (trussType == ConnectionType.Howe.ToString())
             {
-                connections = new HoweConnection(TopNodes, BottomNodes, index, ArticulationType);
+                connections = new HoweConnection(TopNodes, BottomNodes, index, _articulationType);
                 bars = connections.ConstructConnections();
             }
 
@@ -191,7 +191,7 @@ namespace WarehouseLib.Trusses
             List<Point3d> tempBottomList = new List<Point3d>();
             for (int i = 0; i < TopNodes.Count; i++)
             {
-                if (TrussType == ConnectionType.Warren.ToString())
+                if (_trussType == ConnectionType.Warren.ToString())
                 {
                     if (i % 2 == 0)
                     {
@@ -202,7 +202,7 @@ namespace WarehouseLib.Trusses
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (TrussType == ConnectionType.WarrenStuds.ToString())
+                else if (_trussType == ConnectionType.WarrenStuds.ToString())
                 {
                     tempTopList.Add(TopNodes[i]);
                     if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
@@ -210,17 +210,14 @@ namespace WarehouseLib.Trusses
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (TrussType == ConnectionType.Howe.ToString() || TrussType == ConnectionType.Pratt.ToString())
+                else if (_trussType == ConnectionType.Howe.ToString() || _trussType == ConnectionType.Pratt.ToString())
                 {
-                    if (i % 2 == 0)
-                    {
-                        tempTopList.Add(TopNodes[i]);
-                        tempBottomList.Add(BottomNodes[i]);
-                    }
+                    tempTopList.Add(TopNodes[i]);
+                    tempBottomList.Add(BottomNodes[i]);
                 }
             }
 
-            if (TrussType == ConnectionType.Warren.ToString())
+            if (_trussType == ConnectionType.Warren.ToString())
             {
                 tempBottomList.Insert(0, BottomNodes[0]);
                 tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
@@ -278,10 +275,10 @@ namespace WarehouseLib.Trusses
 
             // if (ColumnsCount >= 1)
             // {
-            truss.GenerateBoundaryColumnsNodes(truss.TopBars, ColumnsCount);
+            truss.GenerateBoundaryColumnsNodes(truss.TopBars, _columnsCount);
             BoundaryColumns =
                 new List<Column>(
-                    new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, Plane));
+                    new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, _plane));
             // }
             // else throw new Exception("the columns count should be >=2");
         }

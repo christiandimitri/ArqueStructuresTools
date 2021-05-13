@@ -61,10 +61,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Articulations\Articulated.cs" />
+    <Compile Include="Articulations\Articulation.cs" />
+    <Compile Include="Articulations\ArticulationType.cs" />
+    <Compile Include="Articulations\Rigid.cs" />
     <Compile Include="Bracings\Bracing.cs" />
+    <Compile Include="Bracings\BracingType.cs" />
     <Compile Include="Bracings\ColumnsBracing.cs" />
     <Compile Include="Bracings\RoofBracing.cs" />
     <Compile Include="Cables\Cable.cs" />
+    <Compile Include="Cables\CableType.cs" />
     <Compile Include="Cables\FacadeCable.cs" />
     <Compile Include="Cables\RoofCable.cs" />
     <Compile Include="Columns\BoundaryColumn.cs" />
@@ -79,7 +85,6 @@
     <Compile Include="Connections\WarrenStudsConnection.cs" />
     <Compile Include="Options\PorticoType.cs" />
     <Compile Include="Options\TrussOptions.cs" />
-    <Compile Include="Options\Typology.cs" />
     <Compile Include="Options\WarehouseOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Straps\FacadeStrap.cs" />
@@ -92,7 +97,9 @@
     <Compile Include="Trusses\MonopichTruss.cs" />
     <Compile Include="Trusses\PichedTruss.cs" />
     <Compile Include="Trusses\Truss.cs" />
+    <Compile Include="Trusses\Typology.cs" />
     <Compile Include="Warehouses\Warehouse.cs" />
+    <Compile Include="Warehouses\WarehouseType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -30,41 +30,48 @@ namespace WarehouseLib.Trusses
             }
 
 
-            if (_options.ArticulationType == "Articulated" && _options.BaseType == 0 &&
-                _options.PorticoType == PorticoType.Truss.ToString())
+            if (_options.ArticulationType == "Articulated" && _options.BaseType == 0 )
             {
-                var recomputedDivisions = RecomputeDivisions(Divisions);
-
-                var tempParams = TopBars[0].DivideByCount(recomputedDivisions, true);
-                var t1 = tempParams[1];
-                var tempPt = TopBars[0].PointAt(t1);
-                var tempPlane = new Plane(tempPt, Plane.XAxis);
-                var interPt = new Point3d();
-                var intersectionEvents = Intersection.CurvePlane(bars[0], tempPlane, 0.01);
-                if (intersectionEvents != null)
-                {
-                    for (int i = 0; i < intersectionEvents.Count; i++)
-                    {
-                        var intEv = intersectionEvents[0];
-                        interPt = intEv.PointA;
-                    }
-                }
-
-                bars = new List<Curve>();
-                double difference = interPt.Z - ptB.Z;
-                for (var i = 0; i < StartingNodes.Count; i++)
-                {
-                    if (i >= StartingNodes.Count - 1) continue;
-                    ptA = new Point3d(StartingNodes[i] -
-                                      (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
-                    ptB = new Point3d(StartingNodes[i + 1] -
-                                      (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
-                    var tempLine = new Line(ptA, ptB);
-                    bars.Add(tempLine.ToNurbsCurve());
-                }
+                bars = ComputeBottomBarsArticulatedToColumns(bars);
             }
 
             BottomBars = new List<Curve>(bars);
+        }
+
+        protected override List<Curve> ComputeBottomBarsArticulatedToColumns(List<Curve> bars)
+        {
+            var startingPoint = StartingNodes[0] - Vector3d.ZAxis * ComputeDifference();
+            var recomputedDivisions = RecomputeDivisions(_divisions);
+
+            var tempParams = TopBars[0].DivideByCount(recomputedDivisions, true);
+            var t1 = tempParams[1];
+            var tempPt = TopBars[0].PointAt(t1);
+            var tempPlane = new Plane(tempPt, _plane.XAxis);
+            var interPt = new Point3d();
+            var intersectionEvents = Intersection.CurvePlane(bars[0], tempPlane, 0.01);
+            if (intersectionEvents != null)
+            {
+                for (int i = 0; i < intersectionEvents.Count; i++)
+                {
+                    var intEv = intersectionEvents[0];
+                    interPt = intEv.PointA;
+                }
+            }
+
+            bars = new List<Curve>();
+            double difference = interPt.Z - startingPoint.Z;
+            for (var i = 0; i < StartingNodes.Count; i++)
+            {
+                if (i >= StartingNodes.Count - 1) continue;
+                var ptA = new Point3d(StartingNodes[i] -
+                                  (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
+                var ptB = new Point3d(StartingNodes[i + 1] -
+                                  (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
+                var tempLine = new Line(ptA, ptB);
+                bars.Add(tempLine.ToNurbsCurve());
+            }
+
+            return bars;
         }
 
         protected override void GenerateBottomNodes(Curve crv)
@@ -86,7 +93,7 @@ namespace WarehouseLib.Trusses
 
             var cloud = new PointCloud(TopNodes);
             var index = cloud.ClosestPoint(StartingNodes[1]);
-            GenerateIntermediateBars(TrussType, index);
+            GenerateIntermediateBars(_trussType, index);
         }
 
         public override List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index)
@@ -96,7 +103,7 @@ namespace WarehouseLib.Trusses
             foreach (var t in points)
             {
                 var vectorA = index == 0 ? crv.TangentAtStart : crv.TangentAtEnd;
-                var perpendicularVector = Vector3d.CrossProduct(vectorA, Plane.ZAxis);
+                var perpendicularVector = Vector3d.CrossProduct(vectorA, _plane.ZAxis);
                 perpendicularVector.Unitize();
                 var normal = Vector3d.CrossProduct(vectorA, perpendicularVector);
                 normals.Add(normal);
