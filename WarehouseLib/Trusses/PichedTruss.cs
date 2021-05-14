@@ -30,7 +30,7 @@ namespace WarehouseLib.Trusses
             }
 
 
-            if (_options.ArticulationType == "Articulated" && _options.BaseType == 0 )
+            if (_options._articulationType == "Articulated" && _options.BaseType == 0 )
             {
                 bars = ComputeBottomBarsArticulatedToColumns(bars);
             }

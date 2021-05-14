@@ -13,7 +13,9 @@ namespace WarehouseLib.Warehouses
     public class Warehouse
     {
         public Plane Plane;
+
         public TrussOptions _trussOptions;
+
         // public double Width;
         // public double Height;
         // public double MaxHeight;
@@ -39,6 +41,7 @@ namespace WarehouseLib.Warehouses
             if (!Enum.IsDefined(typeof(GeometricalTypology), warehouseOptions.Typology))
                 throw new Exception("Warehouse roof typology should be either: Flat, Arch, Monopich, Doublepich");
             if (warehouseOptions.Length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
+            if (warehouseOptions.PorticoCount <= 1) throw new Exception("Warehouse cannot have portico count < 2");
             Plane = plane;
             _trussOptions = trussOptions;
             _warehouseOptions = warehouseOptions;
@@ -52,9 +55,9 @@ namespace WarehouseLib.Warehouses
         private void ConstructTrusses(TrussOptions trussOptions)
         {
             var trusses = new List<Truss>();
-            for (int i = 0; i < _warehouseOptions.PorticoCount; i++)
+            for (int i = 0; i < _warehouseOptions.PorticoCount+1; i++)
             {
-                var span = (_warehouseOptions.Length / _warehouseOptions.PorticoCount) * i;
+                var span = (_warehouseOptions.Length / _warehouseOptions.PorticoCount * i);
                 var tempPlane = new Plane(Plane.PointAt(0, span, 0), Plane.ZAxis);
                 if (_warehouseOptions.Typology == GeometricalTypology.Flat.ToString())
                 {
@@ -82,8 +85,6 @@ namespace WarehouseLib.Warehouses
             {
                 trusses = new List<Truss>(WarehouseHasPorticoAtBoundaries(trusses));
             }
-
-
             Trusses = trusses;
         }
 

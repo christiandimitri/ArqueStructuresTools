@@ -22,7 +22,7 @@ namespace WarehouseLib
             StaticColumns = new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
             ChangeBaseByType(_options.BaseType);
             ConstructTruss(options.Divisions);
-            ChangeArticulationAtColumnsByType(options.ArticulationType);
+            ChangeArticulationAtColumnsByType(options._articulationType);
         }
 
         protected override void IsArticulatedToColumns()
@@ -57,7 +57,7 @@ namespace WarehouseLib
             {
                 List<Curve> finalList;
 
-                if (_options.ArticulationType == "Articulated" && _options.BaseType == 0)
+                if (_options._articulationType == "Articulated" && _options.BaseType == 0)
                 {
                     finalList = ComputeBottomBarsArticulatedToColumns(null);
                 }

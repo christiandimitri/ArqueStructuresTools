@@ -19,7 +19,7 @@ namespace WarehouseLib.Trusses
                 new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
             ChangeBaseByType(options.BaseType);
             ConstructTruss(options.Divisions);
-            ChangeArticulationAtColumnsByType(options.ArticulationType);
+            ChangeArticulationAtColumnsByType(options._articulationType);
             
         }
 

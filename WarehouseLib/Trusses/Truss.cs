@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
+using WarehouseLib.Articulations;
 using WarehouseLib.Columns;
 using WarehouseLib.Connections;
 using WarehouseLib.Options;
@@ -38,7 +39,7 @@ namespace WarehouseLib.Trusses
             _clearHeight = options.ClearHeight;
             _divisions = options.Divisions;
             _trussType = options.TrussType;
-            _articulationType = options.ArticulationType;
+            _articulationType = options._articulationType;
             _columnsCount = options.ColumnsCount;
         }
 
@@ -252,11 +253,6 @@ namespace WarehouseLib.Trusses
 
         private void GenerateBoundaryColumnsNodes(List<Curve> topBars, int divisions)
         {
-            if (divisions <= 1)
-            {
-                throw new Exception("the columns count should be >=2");
-            }
-
             BoundaryTopNodes = new List<Point3d>();
             var nodes = new List<Point3d>();
             var joinedBar = Curve.JoinCurves(topBars)[0];

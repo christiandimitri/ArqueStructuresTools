@@ -1,4 +1,7 @@
-﻿namespace WarehouseLib.Options
+﻿using System;
+using WarehouseLib.Articulations;
+
+namespace WarehouseLib.Options
 {
     public struct TrussOptions
     {
@@ -14,7 +17,7 @@
 
         public int BaseType { get; set; }
 
-        public string ArticulationType { get; set; }
+        public string _articulationType { get; set; }
 
         public int Divisions { get; set; }
 
@@ -32,10 +35,16 @@
             MaxHeight = maxHeight;
             ClearHeight = clearHeight;
             BaseType = baseType;
-            ArticulationType = articulationType;
+            _articulationType = articulationType;
             Divisions = divisions;
             PorticoType = porticoType;
             ColumnsCount = columnsCount;
+            if (trussType != "Warren" && divisions < 4 &&
+                articulationType == ArticulationType.Articulated.ToString())
+                throw new Exception(
+                    "The 'Articulated' truss types 'Howe', 'Pratt' and 'Warren with studs', cannot have a division count < 4");
+            // if (divisions <= 1)
+            //     throw new Exception("The columns count should be >= 2");
         }
     }
 }

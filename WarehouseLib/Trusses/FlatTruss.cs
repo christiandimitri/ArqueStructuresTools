@@ -13,7 +13,7 @@ namespace WarehouseLib.Trusses
             StaticColumns = new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
             GenerateThickBottomBars();
             ConstructTruss(options.Divisions);
-            ChangeArticulationAtColumnsByType(options.ArticulationType);
+            ChangeArticulationAtColumnsByType(options._articulationType);
         }
 
         public override void GenerateTopBars()

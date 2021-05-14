@@ -1,5 +1,6 @@
 ﻿using System;
 using Grasshopper.Kernel;
+using WarehouseLib.Articulations;
 using WarehouseLib.Options;
 
 
@@ -61,19 +62,18 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(8, ref porticoType)) return;
             if (!DA.GetData(9, ref columnsCount)) return;
 
-            var options = new TrussOptions
+
+            TrussOptions options;
+            try
             {
-                TrussType = trussType,
-                Width = width,
-                Height = height,
-                MaxHeight = maxHeight,
-                ClearHeight = clearHeight,
-                BaseType = baseType,
-                ArticulationType = articulationType,
-                Divisions = divisions,
-                PorticoType = porticoType,
-                ColumnsCount = columnsCount
-            };
+                options = new TrussOptions(trussType, width, height, maxHeight, clearHeight, baseType,
+                    articulationType, divisions, porticoType, columnsCount);
+            }
+            catch (Exception e)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, e.Message);
+                return;
+            }
 
 
             DA.SetData(0, options);
