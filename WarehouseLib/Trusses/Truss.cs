@@ -41,6 +41,7 @@ namespace WarehouseLib.Trusses
             _trussType = options.TrussType;
             _articulationType = options._articulationType;
             _columnsCount = options.ColumnsCount;
+            _divisions = RecomputeDivisions(_divisions);
         }
 
         protected int RecomputeDivisions(int divisions)
@@ -51,6 +52,7 @@ namespace WarehouseLib.Trusses
             {
                 recomputedDivisions /= 2;
             }
+
             return recomputedDivisions;
         }
 

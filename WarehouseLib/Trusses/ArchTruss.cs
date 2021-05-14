@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rhino.Geometry.Intersect;
 using WarehouseLib.Columns;
+using WarehouseLib.Connections;
 using WarehouseLib.Options;
 using WarehouseLib.Trusses;
 
@@ -63,50 +64,60 @@ namespace WarehouseLib
                 }
                 else
                 {
-                    var startPoint = StartingNodes[0] - ComputeNormal(0) * ComputeOffsetFromDot(0);
-                    var centerPoint = StartingNodes[1] - Vector3d.ZAxis * ComputeOffsetFromTrigo(0);
-                    var endPoint = StartingNodes[2] - ComputeNormal(1) * ComputeOffsetFromDot(1);
-                    var arch = new Arc(startPoint, centerPoint, endPoint);
-                    arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
-                    Curve[] tempCurves = arch.ToNurbsCurve().Split(t);
-                    Line lineA = new Line(StartingNodes[0] - Vector3d.ZAxis * ComputeDifference(),
-                        StartingNodes[0] - ComputeNormal(0) * ComputeOffsetFromDot(0));
-                    Line lineB = new Line(StartingNodes[2] - ComputeNormal(1) * ComputeOffsetFromDot(1),
-                        StartingNodes[2] - Vector3d.ZAxis * ComputeDifference()
-                    );
-                    List<Curve> leftCurves = new List<Curve> {lineA.ToNurbsCurve(), tempCurves[0]};
-                    List<Curve> rightCurves = new List<Curve> {tempCurves[1], lineB.ToNurbsCurve()};
-                    Curve[] joinedRight = Curve.JoinCurves(rightCurves, 0.001);
-                    Curve[] joinedLeft = Curve.JoinCurves(leftCurves, 0.001);
-                    leftCurves.AddRange(rightCurves);
-                    finalList = new List<Curve> {joinedLeft.ToList()[0], joinedRight.ToList()[0]};
-                    // tempCrvs[1].Reverse();
+                    finalList = ComputeRigidBottomBarsToColumns();
                 }
 
                 BottomBars = finalList;
             }
         }
 
+        private List<Curve> ComputeRigidBottomBarsToColumns()
+        {
+            var startPoint = StartingNodes[0] - ComputeNormalAtStartEnd(0) * ComputeOffsetFromDot(0);
+            var centerPoint = StartingNodes[1] - Vector3d.ZAxis * ComputeOffsetFromTrigo(0);
+            var endPoint = StartingNodes[2] - ComputeNormalAtStartEnd(1) * ComputeOffsetFromDot(1);
+            var arch = new Arc(startPoint, centerPoint, endPoint);
+            arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
+            Curve[] tempCurves = arch.ToNurbsCurve().Split(t);
+            Line lineA = new Line(StartingNodes[0] - Vector3d.ZAxis * ComputeDifference(),
+                StartingNodes[0] - ComputeNormalAtStartEnd(0) * ComputeOffsetFromDot(0));
+            Line lineB = new Line(StartingNodes[2] - ComputeNormalAtStartEnd(1) * ComputeOffsetFromDot(1),
+                StartingNodes[2] - Vector3d.ZAxis * ComputeDifference()
+            );
+            List<Curve> leftCurves = new List<Curve> {lineA.ToNurbsCurve(), tempCurves[0]};
+            List<Curve> rightCurves = new List<Curve> {tempCurves[1], lineB.ToNurbsCurve()};
+            Curve[] joinedRight = Curve.JoinCurves(rightCurves, 0.001);
+            Curve[] joinedLeft = Curve.JoinCurves(leftCurves, 0.001);
+            leftCurves.AddRange(rightCurves);
+            var finalList = new List<Curve> {joinedLeft.ToList()[0], joinedRight.ToList()[0]};
+            // tempCrvs[1].Reverse();
+            return finalList;
+        }
+
         protected override List<Curve> ComputeBottomBarsArticulatedToColumns(List<Curve> bars)
         {
-            var finalList = new List<Curve>();
-            var startPoint = StartingNodes[0] - ComputeNormal(0) * ComputeOffsetFromDot(0);
-            var centerPoint = StartingNodes[1] - Vector3d.ZAxis * ComputeOffsetFromTrigo(0);
-            var endPoint = StartingNodes[2] - ComputeNormal(1) * ComputeOffsetFromDot(1);
-            // Arc arch = new Arc(startPoint,centerPoint,endPoint);
-            // arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
-            // Curve[] tempCrvs = arch.ToNurbsCurve().Split(t);
-            // Line lineA = new Line(StartingNodes[0] - Vector3d.ZAxis * ComputeDifference(),
-            //     StartingNodes[0] - ComputeNormal(0) * ComputeOffsetFromDot(0, true));
-            // Line lineB = new Line(StartingNodes[2] - ComputeNormal(1) * ComputeOffsetFromDot(1, true),
-            //     StartingNodes[2] - Vector3d.ZAxis * ComputeDifference()
-            // );
-            // List<Curve> leftCrvs = new List<Curve> {lineA.ToNurbsCurve(), tempCrvs[0]};
-            // List<Curve> rightCrvs = new List<Curve> {tempCrvs[1], lineB.ToNurbsCurve()};
-            // Curve[] joinedRight = Curve.JoinCurves(rightCrvs, 0.001);
-            // Curve[] joinedLeft = Curve.JoinCurves(leftCrvs, 0.001);
-            // leftCrvs.AddRange(rightCrvs);
-            // finalList = new List<Curve> {joinedLeft.ToList()[0], joinedRight.ToList()[0]};
+            var tempParamsA = TopBars[0].DivideByCount(_divisions, true);
+            var tempParamsB = TopBars[1].DivideByCount(_divisions, true);
+            var t1 = tempParamsA[1];
+            var t2 = tempParamsB[0];
+            var t3 = tempParamsB[tempParamsB.Length - 2];
+            var startPoint = TopBars[0].PointAt(t1) -
+                             Vector3d.ZAxis * (ComputeDifference() + (TopBars[0].PointAt(t1).Z - StartingNodes[0].Z));
+            var centerPoint = TopBars[1].PointAt(t2) -
+                              Vector3d.ZAxis * startPoint.DistanceTo(StartingNodes[0]);
+            var endPoint = TopBars[1].PointAt(t3) -
+                           Vector3d.ZAxis * (ComputeDifference() + (TopBars[0].PointAt(t1).Z - StartingNodes[0].Z));
+            var arch = new Arc(startPoint, centerPoint, endPoint);
+            arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
+            Curve[] tempCurves = arch.ToNurbsCurve().Split(t);
+            Line lineA = new Line(StartingNodes[0] - Vector3d.ZAxis * ComputeDifference(), startPoint);
+            Line lineB = new Line(endPoint, StartingNodes[2] - Vector3d.ZAxis * ComputeDifference());
+            List<Curve> leftCurves = new List<Curve> {lineA.ToNurbsCurve(), tempCurves[0]};
+            List<Curve> rightCurves = new List<Curve> {tempCurves[1], lineB.ToNurbsCurve()};
+            Curve[] joinedRight = Curve.JoinCurves(rightCurves, 0.001);
+            Curve[] joinedLeft = Curve.JoinCurves(leftCurves, 0.001);
+            leftCurves.AddRange(rightCurves);
+            var finalList = new List<Curve> {joinedLeft.ToList()[0], joinedRight.ToList()[0]};
             return finalList;
         }
 
@@ -136,15 +147,20 @@ namespace WarehouseLib
             GenerateVerticalBottomNodes(crv);
         }
 
+        public override double ComputeArticulatedOffsetFromTrigo(int index, double difference)
+        {
+            return 0;
+        }
+
         public override void ConstructTruss(int divisions)
         {
-            int recomputedDivisions = RecomputeDivisions(divisions);
+            divisions = _divisions;
             TopNodes = new List<Point3d>();
             BottomNodes = new List<Point3d>();
             IntermediateBars = new List<Curve>();
             for (int i = 0; i < TopBars.Count; i++)
             {
-                GenerateTopNodes(TopBars[i], recomputedDivisions, i);
+                GenerateTopNodes(TopBars[i], divisions, i);
                 GenerateBottomNodes(BottomBars[i]);
             }
 

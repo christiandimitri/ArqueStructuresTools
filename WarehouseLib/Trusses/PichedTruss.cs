@@ -41,9 +41,7 @@ namespace WarehouseLib.Trusses
         protected override List<Curve> ComputeBottomBarsArticulatedToColumns(List<Curve> bars)
         {
             var startingPoint = StartingNodes[0] - Vector3d.ZAxis * ComputeDifference();
-            var recomputedDivisions = RecomputeDivisions(_divisions);
-
-            var tempParams = TopBars[0].DivideByCount(recomputedDivisions, true);
+            var tempParams = TopBars[0].DivideByCount(_divisions, true);
             var t1 = tempParams[1];
             var tempPt = TopBars[0].PointAt(t1);
             var tempPlane = new Plane(tempPt, _plane.XAxis);
@@ -81,13 +79,13 @@ namespace WarehouseLib.Trusses
 
         public override void ConstructTruss(int divisions)
         {
-            var recomputedDivisions = RecomputeDivisions(divisions);
+            divisions = _divisions;
             TopNodes = new List<Point3d>();
             BottomNodes = new List<Point3d>();
             // var angle = Vector3d.VectorAngle(TopBars[0].TangentAtStart, Plane.XAxis);
             for (var i = 0; i < TopBars.Count; i++)
             {
-                GenerateTopNodes(TopBars[i], recomputedDivisions, i);
+                GenerateTopNodes(TopBars[i], divisions, i);
                 GenerateBottomNodes(BottomBars[i]);
             }
 

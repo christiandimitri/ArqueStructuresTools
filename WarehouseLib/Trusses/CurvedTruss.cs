@@ -5,7 +5,7 @@ using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
 {
-    public class CurvedTruss : Truss
+    public abstract class CurvedTruss : Truss
     {
         public CurvedTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
@@ -36,7 +36,7 @@ namespace WarehouseLib.Trusses
             throw new NotImplementedException();
         }
 
-        public Vector3d ComputeNormal(int index)
+        public Vector3d ComputeNormalAtStartEnd(int index)
         {
             var crv = TopBars[index == 0 ? 0 : 1];
             var vectorA = index == 0 ? crv.TangentAtStart : crv.TangentAtEnd;
@@ -49,14 +49,15 @@ namespace WarehouseLib.Trusses
         // TODO index compute from max min height
         public double ComputeOffsetFromTrigo(int index)
         {
-            var angle = Vector3d.VectorAngle(-_plane.ZAxis, ComputeNormal(index));
+            var angle = Vector3d.VectorAngle(-_plane.ZAxis, ComputeNormalAtStartEnd(index));
             var offset = Math.Cos(angle) * ComputeDifference();
             return offset;
         }
 
+        public abstract double ComputeArticulatedOffsetFromTrigo(int index, double difference);
         public double ComputeOffsetFromDot(int index)
         {
-            var normal = ComputeNormal(index);
+            var normal = ComputeNormalAtStartEnd(index);
             var vertical = Vector3d.ZAxis * ComputeDifference();
             double offset = 0;
             offset = Vector3d.Multiply(normal, vertical);
@@ -70,17 +71,7 @@ namespace WarehouseLib.Trusses
 
         public override List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index)
         {
-            List<Vector3d> normals = new List<Vector3d>();
-            for (int i = 0; i < points.Count; i++)
-            {
-                var vectorA = index == 0 ? crv.TangentAtStart : crv.TangentAtEnd;
-                var perp = Vector3d.CrossProduct(vectorA, _plane.ZAxis);
-                perp.Unitize();
-                var normal = Vector3d.CrossProduct(vectorA, perp);
-                normals.Add(normal);
-            }
-
-            return normals;
+            throw new NotImplementedException();
         }
     }
 }
