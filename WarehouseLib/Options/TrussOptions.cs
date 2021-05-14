@@ -39,12 +39,15 @@ namespace WarehouseLib.Options
             Divisions = divisions;
             PorticoType = porticoType;
             ColumnsCount = columnsCount;
+            if (height < clearHeight) throw new Exception("The truss height cannot be < than the clear height");
+            if (maxHeight < clearHeight) throw new Exception("The truss max height cannot be < than the clear height");
+            if (Divisions <= 1) throw new Exception("A normal Truss cannot have a division <= 1");
             if (trussType != "Warren" && divisions < 4 &&
                 articulationType == ArticulationType.Articulated.ToString())
                 throw new Exception(
                     "The 'Articulated' truss types 'Howe', 'Pratt' and 'Warren with studs', cannot have a division count < 4");
-            // if (divisions <= 1)
-            //     throw new Exception("The columns count should be >= 2");
+            if (columnsCount <= 1)
+                throw new Exception("The columns count should be >= 2");
         }
     }
 }
