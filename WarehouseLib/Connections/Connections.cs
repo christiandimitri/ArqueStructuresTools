@@ -13,7 +13,6 @@ namespace WarehouseLib.Connections
             TopNodes = topNodes;
             BottomNodes = bottomNodes;
         }
-
         public abstract List<Curve> ConstructConnections();
     }
 }

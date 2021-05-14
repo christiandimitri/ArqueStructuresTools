@@ -44,8 +44,12 @@ namespace WarehouseLib.Trusses
 
         protected int RecomputeDivisions(int divisions)
         {
+            if (divisions <= 1) throw new Exception("truss division has to be >=2");
             var recomputedDivisions = divisions;
-            // recomputedDivisions /= 2;
+            if (_trussType != "Warren")
+            {
+                recomputedDivisions /= 2;
+            }
             return recomputedDivisions;
         }
 
