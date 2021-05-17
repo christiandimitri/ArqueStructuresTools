@@ -22,12 +22,19 @@ namespace WarehouseLib.Cables
                 innerPoints.Add(beam.PointAt(t));
             }
 
-            for (int i = 0; i < outerPoints.Count; i++)
+            for (int i = 0; i < outerPoints.Count - 1; i++)
             {
                 var cable = new RoofCable();
-                var axis = new Line(outerPoints[i], innerPoints[i]);
+                var axis = new Line(outerPoints[i], innerPoints[i + 1]);
                 cable.Axis = axis;
                 cables.Add(cable);
+                if (i > 0)
+                {
+                    axis = new Line(outerPoints[i], innerPoints[i - 1]);
+                    cable = new RoofCable();
+                    cable.Axis = axis;
+                    cables.Add(cable);
+                }
             }
 
             return cables;
