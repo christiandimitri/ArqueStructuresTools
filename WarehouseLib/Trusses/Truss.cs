@@ -48,7 +48,7 @@ namespace WarehouseLib.Trusses
         {
             if (divisions <= 1) throw new Exception("truss division has to be >=2");
             var recomputedDivisions = divisions;
-            if (_trussType != "Warren")
+            if (_trussType != ConnectionType.Warren.ToString())
             {
                 recomputedDivisions /= 2;
             }
@@ -236,11 +236,11 @@ namespace WarehouseLib.Trusses
 
         protected void ChangeArticulationAtColumnsByType(string type)
         {
-            if (type == "Articulated")
+            if (type == ArticulationType.Articulated.ToString())
             {
                 IsArticulatedToColumns();
             }
-            else if (type == "Rigid")
+            else if (type == ArticulationType.Rigid.ToString())
             {
                 IsRigidToColumns();
             }
@@ -289,14 +289,9 @@ namespace WarehouseLib.Trusses
             BottomNodes = null;
             IntermediateBars = null;
 
-            // if (ColumnsCount >= 1)
-            // {
+
             truss.GenerateBoundaryColumnsNodes(truss.TopBars, _columnsCount);
-            BoundaryColumns =
-                new List<Column>(
-                    new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, _plane));
-            // }
-            // else throw new Exception("the columns count should be >=2");
+            BoundaryColumns = new List<Column>(new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, _plane));
         }
     }
 }
