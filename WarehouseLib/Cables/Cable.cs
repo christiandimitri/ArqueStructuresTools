@@ -9,11 +9,10 @@ namespace WarehouseLib.Cables
     {
         public Line Axis;
 
-        protected Cable(Line axis)
+        protected Cable()
         {
-            Axis = axis;
         }
 
-        public abstract List<Cable> ConstructCables(List<Truss> trusses);
+        public abstract List<Cable> ConstructCables(List<Truss> trusses, int count, int index);
     }
 }

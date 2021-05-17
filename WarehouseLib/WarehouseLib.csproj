@@ -69,6 +69,7 @@
     <Compile Include="Bracings\BracingType.cs" />
     <Compile Include="Bracings\ColumnsBracing.cs" />
     <Compile Include="Bracings\RoofBracing.cs" />
+    <Compile Include="Bracings\RoofBracingType.cs" />
     <Compile Include="Cables\Cable.cs" />
     <Compile Include="Cables\CableType.cs" />
     <Compile Include="Cables\FacadeCable.cs" />
