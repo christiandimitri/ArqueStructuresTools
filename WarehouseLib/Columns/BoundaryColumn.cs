@@ -21,5 +21,10 @@ namespace WarehouseLib.Columns
             
             return columns;
         }
+
+        public override List<Plane> GenerateOrientatonPlanes(List<Curve> Axis)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

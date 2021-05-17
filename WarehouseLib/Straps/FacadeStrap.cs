@@ -7,10 +7,6 @@ namespace WarehouseLib.Straps
 {
     public class FacadeStrap : Strap
     {
-        public FacadeStrap()
-        {
-        }
-
         public List<Strap> ConstructStrapsAxisOnStaticColumns(List<Truss> trusses, double distance)
         {
             var facadeStraps = new List<Strap>();
@@ -30,8 +26,7 @@ namespace WarehouseLib.Straps
                         var ptA = columnA.Axis.ToNurbsCurve().PointAt(parametersA[k]);
                         var ptB = columnB.Axis.ToNurbsCurve().PointAt(parametersB[k]);
                         Line axis = new Line(ptA, ptB);
-                        var strap = new FacadeStrap();
-                        strap.Axis = axis;
+                        var strap = new FacadeStrap {Axis = axis};
                         facadeStraps.Add(strap);
                     }
                 }
@@ -40,15 +35,17 @@ namespace WarehouseLib.Straps
             return facadeStraps;
         }
 
-        public List<Strap> ConstructStrapsAxisOnBoundaryColumns(List<Truss> trusses, double distance)
+        public List<Strap> ConstructStrapsAxisOnBoundaryColumns(List<Truss> trusses, double distance, bool hasBoundary)
         {
             var facadeStraps = new List<Strap>();
             foreach (var truss in trusses)
             {
-                for (var j = 0; j < truss.BoundaryColumns.Count - 1; j++)
+                for (var j = 0;
+                    (hasBoundary == true) ? j < truss.BoundaryColumns.Count - 1 : j < 1;
+                    j++)
                 {
-                    var columnA = truss.BoundaryColumns[j];
-                    var columnB = truss.BoundaryColumns[j + 1];
+                    var columnA = (hasBoundary == true) ? truss.BoundaryColumns[j] : truss.StaticColumns[j];
+                    var columnB = (hasBoundary == true) ? truss.BoundaryColumns[j + 1] : truss.StaticColumns[j + 1];
 
                     var parametersA = columnA.Axis.ToNurbsCurve().DivideByLength(distance, true);
                     var parametersB = columnB.Axis.ToNurbsCurve().DivideByLength(distance, true);

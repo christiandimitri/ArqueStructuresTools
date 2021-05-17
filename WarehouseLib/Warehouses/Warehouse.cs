@@ -125,18 +125,16 @@ namespace WarehouseLib.Warehouses
 
             FacadeStrapsX = tempStraps;
             tempStraps = new List<Strap>();
-            var portics = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
+            var boundary = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
             var strapsY =
                 new FacadeStrap().ConstructStraps(
-                    new FacadeStrap().ConstructStrapsAxisOnBoundaryColumns(portics, 0.5));
-
+                    new FacadeStrap().ConstructStrapsAxisOnBoundaryColumns(boundary, 0.5, _warehouseOptions.HasBoundary));
+            
             foreach (var strap in strapsY)
             {
-                var tempStrap = new FacadeStrap();
-                tempStrap.Axis = strap.Axis;
-                tempStraps.Add(tempStrap);
+                tempStraps.Add(strap);
             }
-
+            
             FacadeStrapsY = tempStraps;
         }
 
