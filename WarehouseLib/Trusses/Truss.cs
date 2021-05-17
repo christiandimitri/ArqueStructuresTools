@@ -257,12 +257,26 @@ namespace WarehouseLib.Trusses
         {
             BoundaryTopNodes = new List<Point3d>();
             var nodes = new List<Point3d>();
-            var joinedBar = Curve.JoinCurves(topBars)[0];
 
+            var joinedBars = Curve.JoinCurves(topBars)[0];
+            var ptA = joinedBars.PointAtStart;
+            var ptB = joinedBars.PointAtEnd;
+            var columnsBase = new LineCurve(ptA, ptB);
             var parameters =
-                joinedBar.DivideByCount(divisions - 1, true);
+                columnsBase.DivideByCount(divisions - 1, true);
 
-            for (var i = 0; i < parameters.Length; i++) nodes.Add(joinedBar.PointAt(parameters[i]));
+            foreach (var t1 in parameters)
+            {
+                var node = columnsBase.PointAt(t1);
+                var tempPlane = new Plane(node, _plane.XAxis);
+                var intersectionEvents = Intersection.CurvePlane(joinedBars, tempPlane, 0.001);
+                if (intersectionEvents == null) continue;
+                foreach (var t in intersectionEvents)
+                {
+                    var intEv = intersectionEvents[0];
+                    nodes.Add(intEv.PointA);
+                }
+            }
 
             BoundaryTopNodes.AddRange(nodes);
         }

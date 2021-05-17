@@ -41,7 +41,7 @@ namespace WarehouseLib.Warehouses
             GetColumns();
             GenerateRoofStraps();
             GenerateFacadeStraps();
-            // GenerateRoofBracings();
+            GenerateRoofBracings();
         }
 
         private void ConstructTrusses(TrussOptions trussOptions)

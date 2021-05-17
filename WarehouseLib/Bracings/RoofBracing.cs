@@ -11,66 +11,69 @@ namespace WarehouseLib.Bracings
         {
         }
 
-        public override List<Bracing> ConstructBracings(List<Truss>trusses, int count, int index)
+        public override List<Bracing> ConstructBracings(List<Truss> trusses, int count, int index)
         {
             var bracings = new List<Bracing>();
-
-            var topBarA = Curve.JoinCurves(trusses[index].TopBars)[0];
-            var topBarB = Curve.JoinCurves(trusses[index > 0 ? index - 1 : index + 1].TopBars)[0];
-
-            var parametersA = topBarA.DivideByCount(count - 1, true);
-            var parametersB = topBarB.DivideByCount(count - 1, true);
-
-
-            for (int i = 1; i < count - 1; i++)
+            count /= 2;
+            for (int j = 0; j < trusses[index].TopBars.Count; j++)
             {
-                var ptA = new Point3d(topBarA.PointAt(parametersA[i]));
-                var ptB = new Point3d(topBarB.PointAt(parametersB[i]));
-                var axis = new Line(ptA, ptB);
-                var bracing = new RoofBracing();
-                bracing.Axis = axis;
-                if (bracing.Axis.IsValid) bracings.Add(bracing);
+                var curveA = trusses[index].TopBars[j];
+                var curveB = trusses[index > 0 ? index - 1 : index + 1].TopBars[j];
+                var parametersA = curveA.DivideByCount(count, true);
+                var parametersB = curveB.DivideByCount(count, true);
+
+                for (int i = 1; i < count; i++)
+                {
+                    var ptA = new Point3d(curveA.PointAt(parametersA[i]));
+                    var ptB = new Point3d(curveB.PointAt(parametersB[i]));
+                    var axis = new Line(ptA, ptB);
+                    var bracing = new RoofBracing {Axis = axis};
+                    if (bracing.Axis.IsValid) bracings.Add(bracing);
+                }
             }
 
             return bracings;
         }
-        
+
         public List<Bracing> ConstructWarrenStudsBracings(List<Truss> trusses, int count, int index)
         {
             var bracings = new List<Bracing>();
-
-            var topBarA = Curve.JoinCurves(trusses[index].TopBars)[0];
-            var topBarB = Curve.JoinCurves(trusses[index > 0 ? index - 1 : index + 1].TopBars)[0];
-
-            var parametersA = topBarA.DivideByCount(count - 1, true);
-            var parametersB = topBarB.DivideByCount(count - 1, true);
-
-            for (int i = 0; i < count - 1; i++)
+            count /= 2;
+            for (int j = 0; j < trusses[index].TopBars.Count; j++)
             {
-                var ptA = new Point3d(topBarA.PointAt(parametersA[i]));
-                var ptB = new Point3d(topBarB.PointAt(parametersB[i]));
-                var axis = new Line(ptA, ptB);
-                var bracing = new RoofBracing();
-                bracing.Axis = axis;
-                bracings.Add(bracing);
-                ptA = new Point3d(topBarA.PointAt(parametersA[i]));
-                ptB = new Point3d(topBarB.PointAt(parametersB[i + 1]));
-                axis = new Line(ptA, ptB);
+                var curveA = trusses[index].TopBars[j];
+                var curveB = trusses[index > 0 ? index - 1 : index + 1].TopBars[j];
+                var parametersA = curveA.DivideByCount(count, true);
+                var parametersB = curveB.DivideByCount(count, true);
 
-                if (i % 2 == 0)
+                for (int i = 0; i < count; i++)
                 {
-                    bracing = new RoofBracing();
+                    var ptA = new Point3d(curveA.PointAt(parametersA[i]));
+                    var ptB = new Point3d(curveB.PointAt(parametersB[i]));
+                    var axis = new Line(ptA, ptB);
+                    var bracing = new RoofBracing();
                     bracing.Axis = axis;
                     bracings.Add(bracing);
-                }
-                if (i % 2 == 1)
-                {
-                    ptA = new Point3d(topBarA.PointAt(parametersA[i + 1]));
-                    ptB = new Point3d(topBarB.PointAt(parametersB[i]));
+                    ptA = new Point3d(curveA.PointAt(parametersA[i]));
+                    ptB = new Point3d(curveB.PointAt(parametersB[i + 1]));
                     axis = new Line(ptA, ptB);
-                    bracing = new RoofBracing();
-                    bracing.Axis = axis;
-                    bracings.Add(bracing);
+
+                    if (i % 2 == 0)
+                    {
+                        bracing = new RoofBracing();
+                        bracing.Axis = axis;
+                        bracings.Add(bracing);
+                    }
+
+                    if (i % 2 == 1)
+                    {
+                        ptA = new Point3d(curveA.PointAt(parametersA[i + 1]));
+                        ptB = new Point3d(curveB.PointAt(parametersB[i]));
+                        axis = new Line(ptA, ptB);
+                        bracing = new RoofBracing();
+                        bracing.Axis = axis;
+                        bracings.Add(bracing);
+                    }
                 }
             }
 
