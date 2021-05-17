@@ -24,6 +24,8 @@ namespace WarehouseLib.Bracings
                 bracings.Add(bracing);
             }
 
+            bracings.RemoveAt(0);
+            bracings.RemoveAt(bracings.Count - 1);
             return bracings;
         }
 
