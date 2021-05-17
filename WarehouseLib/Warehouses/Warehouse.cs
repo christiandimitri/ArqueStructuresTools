@@ -12,18 +12,18 @@ namespace WarehouseLib.Warehouses
 {
     public class Warehouse
     {
-        public Plane Plane;
-        public TrussOptions _trussOptions;
+        private Plane _plane;
+        private readonly TrussOptions _trussOptions;
         public List<Truss> Trusses;
         public List<Point3d> Nodes;
-        public List<Column> StaticColumns;
-        public List<Column> BoundaryColumns;
+        private List<Column> _staticColumns;
+        private List<Column> _boundaryColumns;
         public List<Strap> RoofStraps;
         public List<Strap> FacadeStrapsX;
         public List<Strap> FacadeStrapsY;
         public List<Bracing> RoofBracings;
         public List<Cable> RoofCables;
-        public WarehouseOptions _warehouseOptions;
+        private readonly WarehouseOptions _warehouseOptions;
 
         public Warehouse(Plane plane, TrussOptions trussOptions, WarehouseOptions warehouseOptions)
         {
@@ -34,7 +34,7 @@ namespace WarehouseLib.Warehouses
                 throw new Exception("Warehouse roof typology should be either: Flat, Arch, Monopich, Doublepich");
             if (warehouseOptions.Length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
             if (warehouseOptions.PorticoCount <= 1) throw new Exception("Warehouse cannot have portico count < 2");
-            Plane = plane;
+            _plane = plane;
             _trussOptions = trussOptions;
             _warehouseOptions = warehouseOptions;
             ConstructTrusses(trussOptions);
@@ -50,7 +50,7 @@ namespace WarehouseLib.Warehouses
             for (int i = 0; i < _warehouseOptions.PorticoCount + 1; i++)
             {
                 var span = (_warehouseOptions.Length / _warehouseOptions.PorticoCount * i);
-                var tempPlane = new Plane(Plane.PointAt(0, span, 0), Plane.ZAxis);
+                var tempPlane = new Plane(_plane.PointAt(0, span, 0), _plane.ZAxis);
                 if (_warehouseOptions.Typology == GeometricalTypology.Flat.ToString())
                 {
                     var trussA = new FlatTruss(tempPlane, trussOptions);
@@ -196,8 +196,8 @@ namespace WarehouseLib.Warehouses
                 }
             }
 
-            StaticColumns = staticList;
-            BoundaryColumns = boundaryList;
+            _staticColumns = staticList;
+            _boundaryColumns = boundaryList;
         }
     }
 }
