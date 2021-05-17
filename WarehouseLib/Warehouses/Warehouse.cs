@@ -13,15 +13,7 @@ namespace WarehouseLib.Warehouses
     public class Warehouse
     {
         public Plane Plane;
-
         public TrussOptions _trussOptions;
-
-        // public double Width;
-        // public double Height;
-        // public double MaxHeight;
-        // public double ClearHeight;
-        public int ColumnsCount;
-        public string TrussType;
         public List<Truss> Trusses;
         public List<Point3d> Nodes;
         public List<Column> StaticColumns;
@@ -137,21 +129,21 @@ namespace WarehouseLib.Warehouses
             var strapsY =
                 new FacadeStrap().ConstructStraps(
                     new FacadeStrap().ConstructStrapsAxisOnBoundaryColumns(portics, 0.5));
-            
+
             foreach (var strap in strapsY)
             {
                 var tempStrap = new FacadeStrap();
                 tempStrap.Axis = strap.Axis;
                 tempStraps.Add(tempStrap);
             }
-            
+
             FacadeStrapsY = tempStraps;
         }
 
         private void GenerateFacadeBracings()
         {
-            
         }
+
         private void GenerateRoofBracings()
         {
             if (_warehouseOptions.PorticoCount <= 2) throw new Exception("Portics count has to be >2");
@@ -160,24 +152,25 @@ namespace WarehouseLib.Warehouses
             if (_warehouseOptions.RoofBracingType == RoofBracingType.Bracing.ToString())
             {
                 var roofBracingsStart =
-                    new RoofBracing().ConstructWarrenStudsBracings(Trusses, ColumnsCount, 0);
+                    new RoofBracing().ConstructWarrenStudsBracings(Trusses, _trussOptions.ColumnsCount, 0);
                 RoofBracings.AddRange(roofBracingsStart);
                 var roofBracingsEnd =
-                    new RoofBracing().ConstructWarrenStudsBracings(Trusses, ColumnsCount, Trusses.Count - 1);
+                    new RoofBracing().ConstructWarrenStudsBracings(Trusses, _trussOptions.ColumnsCount,
+                        Trusses.Count - 1);
                 RoofBracings.AddRange(roofBracingsEnd);
             }
             else if (_warehouseOptions.RoofBracingType == RoofBracingType.Cable.ToString())
             {
                 var roofBracingsStart =
-                    new RoofBracing().ConstructBracings(Trusses, ColumnsCount, 0);
+                    new RoofBracing().ConstructBracings(Trusses,  _trussOptions.ColumnsCount, 0);
                 var roofCablesStart =
-                    new RoofCable().ConstructCables(Trusses, ColumnsCount, 0);
+                    new RoofCable().ConstructCables(Trusses,  _trussOptions.ColumnsCount, 0);
                 RoofBracings.AddRange(roofBracingsStart);
                 RoofCables.AddRange(roofCablesStart);
                 var roofBracingsEnd =
-                    new RoofBracing().ConstructBracings(Trusses, ColumnsCount, Trusses.Count - 1);
+                    new RoofBracing().ConstructBracings(Trusses,  _trussOptions.ColumnsCount, Trusses.Count - 1);
                 var roofCablesEnd =
-                    new RoofCable().ConstructCables(Trusses, Trusses.Count - 1, ColumnsCount);
+                    new RoofCable().ConstructCables(Trusses, Trusses.Count - 1,  _trussOptions.ColumnsCount);
                 RoofBracings.AddRange(roofBracingsEnd);
                 RoofCables.AddRange(roofCablesEnd);
             }
@@ -189,7 +182,7 @@ namespace WarehouseLib.Warehouses
             var staticList = new List<Column>();
             foreach (var truss in Trusses)
             {
-                if (truss.BoundaryColumns != null && ColumnsCount >= 1)
+                if (truss.BoundaryColumns != null &&  _trussOptions.ColumnsCount >= 1)
                 {
                     foreach (var bc in truss.BoundaryColumns)
                     {

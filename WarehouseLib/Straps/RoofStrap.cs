@@ -16,20 +16,16 @@ namespace WarehouseLib
 
             for (var i = 0; i < trusses.Count; i++)
             {
-                for (int j = 0; j < trusses[i].TopNodes.Count; j++)
+                for (var j = 0; j < trusses[i].TopNodes.Count; j++)
                 {
-                    if (i < trusses.Count - 1)
-                    {
-                        Point3d ptA = trusses[i].TopNodes[j];
-                        Point3d ptB = trusses[i + 1].TopNodes[j];
-                        Line axis = new Line(ptA, ptB);
-                        var strap = new RoofStrap();
-                        strap.Axis = axis;
-                        roofStraps.Add(strap);
-                    }
+                    if (i >= trusses.Count - 1) continue;
+                    var ptA = trusses[i].TopNodes[j];
+                    var ptB = trusses[i + 1].TopNodes[j];
+                    var axis = new Line(ptA, ptB);
+                    var strap = new RoofStrap {Axis = axis};
+                    roofStraps.Add(strap);
                 }
             }
-
             return roofStraps;
         }
 

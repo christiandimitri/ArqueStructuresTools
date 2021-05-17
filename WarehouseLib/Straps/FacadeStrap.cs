@@ -43,10 +43,9 @@ namespace WarehouseLib.Straps
         public List<Strap> ConstructStrapsAxisOnBoundaryColumns(List<Truss> trusses, double distance)
         {
             var facadeStraps = new List<Strap>();
-            for (int i = 0; i < trusses.Count; i++)
+            foreach (var truss in trusses)
             {
-                var truss = trusses[i];
-                for (int j = 0; j < truss.BoundaryColumns.Count - 1; j++)
+                for (var j = 0; j < truss.BoundaryColumns.Count - 1; j++)
                 {
                     var columnA = truss.BoundaryColumns[j];
                     var columnB = truss.BoundaryColumns[j + 1];
@@ -54,13 +53,12 @@ namespace WarehouseLib.Straps
                     var parametersA = columnA.Axis.ToNurbsCurve().DivideByLength(distance, true);
                     var parametersB = columnB.Axis.ToNurbsCurve().DivideByLength(distance, true);
                     var tempArray = new int[] {parametersA.Length, parametersB.Length};
-                    for (int k = 0; k < tempArray.Min(); k++)
+                    for (var k = 0; k < tempArray.Min(); k++)
                     {
                         var ptA = columnA.Axis.ToNurbsCurve().PointAt(parametersA[k]);
                         var ptB = columnB.Axis.ToNurbsCurve().PointAt(parametersB[k]);
-                        Line axis = new Line(ptA, ptB);
-                        var strap = new FacadeStrap();
-                        strap.Axis = axis;
+                        var axis = new Line(ptA, ptB);
+                        var strap = new FacadeStrap {Axis = axis};
                         facadeStraps.Add(strap);
                     }
                 }
