@@ -128,13 +128,14 @@ namespace WarehouseLib.Warehouses
             var boundary = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
             var strapsY =
                 new FacadeStrap().ConstructStraps(
-                    new FacadeStrap().ConstructStrapsAxisOnBoundaryColumns(boundary, 0.5, _warehouseOptions.HasBoundary));
-            
+                    new FacadeStrap().ConstructStrapsAxisOnBoundaryColumns(boundary, 0.5,
+                        _warehouseOptions.HasBoundary));
+
             foreach (var strap in strapsY)
             {
                 tempStraps.Add(strap);
             }
-            
+
             FacadeStrapsY = tempStraps;
         }
 
@@ -144,34 +145,56 @@ namespace WarehouseLib.Warehouses
 
         private void GenerateRoofBracings()
         {
+            var startBracingPoints = ExtractBracingPoints(Trusses[0]);
+            var startTopBeam = Curve.JoinCurves(Trusses[1].TopBars)[0];
+            var endBracingPoints = ExtractBracingPoints(Trusses[Trusses.Count - 1]);
+            var endTopBeam = Curve.JoinCurves(Trusses[Trusses.Count - 2].TopBars)[0];
+
             if (_warehouseOptions.PorticoCount <= 2) throw new Exception("Portics count has to be >2");
             RoofBracings = new List<Bracing>();
             RoofCables = new List<Cable>();
             if (_warehouseOptions.RoofBracingType == RoofBracingType.Bracing.ToString())
             {
                 var roofBracingsStart =
-                    new RoofBracing().ConstructWarrenStudsBracings(Trusses, _trussOptions.ColumnsCount, 0);
+                    new RoofBracing().ConstructWarrenStudsBracings(startBracingPoints, startTopBeam);
                 RoofBracings.AddRange(roofBracingsStart);
                 var roofBracingsEnd =
-                    new RoofBracing().ConstructWarrenStudsBracings(Trusses, _trussOptions.ColumnsCount,
-                        Trusses.Count - 1);
+                    new RoofBracing().ConstructWarrenStudsBracings(endBracingPoints, endTopBeam);
                 RoofBracings.AddRange(roofBracingsEnd);
             }
             else if (_warehouseOptions.RoofBracingType == RoofBracingType.Cable.ToString())
             {
                 var roofBracingsStart =
-                    new RoofBracing().ConstructBracings(Trusses,  _trussOptions.ColumnsCount, 0);
+                    new RoofBracing().ConstructBracings(startBracingPoints, startTopBeam);
+
                 var roofCablesStart =
-                    new RoofCable().ConstructCables(Trusses,  _trussOptions.ColumnsCount, 0);
+                    new RoofCable().ConstructCables(startBracingPoints, startTopBeam);
                 RoofBracings.AddRange(roofBracingsStart);
                 RoofCables.AddRange(roofCablesStart);
                 var roofBracingsEnd =
-                    new RoofBracing().ConstructBracings(Trusses,  _trussOptions.ColumnsCount, Trusses.Count - 1);
+                    new RoofBracing().ConstructBracings(endBracingPoints, endTopBeam);
                 var roofCablesEnd =
-                    new RoofCable().ConstructCables(Trusses, Trusses.Count - 1,  _trussOptions.ColumnsCount);
+                    new RoofCable().ConstructCables(endBracingPoints, endTopBeam);
                 RoofBracings.AddRange(roofBracingsEnd);
                 RoofCables.AddRange(roofCablesEnd);
             }
+        }
+
+        private List<Point3d> ExtractBracingPoints(Truss truss)
+        {
+            var trussA = truss;
+            var tempPointList = new List<Point3d>();
+            foreach (var column in trussA.BoundaryColumns)
+            {
+                tempPointList.Add(column.Axis.ToNurbsCurve().PointAtEnd);
+            }
+
+            if (_trussOptions.ColumnsCount % 2 == 0)
+            {
+                tempPointList.Insert(tempPointList.Count / 2, trussA.TopBars[0].PointAtEnd);
+            }
+
+            return tempPointList;
         }
 
         private void GetColumns()
@@ -180,7 +203,7 @@ namespace WarehouseLib.Warehouses
             var staticList = new List<Column>();
             foreach (var truss in Trusses)
             {
-                if (truss.BoundaryColumns != null &&  _trussOptions.ColumnsCount >= 1)
+                if (truss.BoundaryColumns != null && _trussOptions.ColumnsCount >= 1)
                 {
                     foreach (var bc in truss.BoundaryColumns)
                     {

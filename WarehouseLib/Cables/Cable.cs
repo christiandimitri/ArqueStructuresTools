@@ -13,6 +13,6 @@ namespace WarehouseLib.Cables
         {
         }
 
-        public abstract List<Cable> ConstructCables(List<Truss> trusses, int count, int index);
+        public abstract List<Cable> ConstructCables(List<Point3d> nodes, Curve beam);
     }
 }

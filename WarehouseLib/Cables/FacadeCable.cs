@@ -10,7 +10,7 @@ namespace WarehouseLib.Cables
         {
         }
 
-        public override List<Cable> ConstructCables(List<Truss> trusses, int count, int index)
+        public override List<Cable> ConstructCables(List<Point3d> nodes, Curve beam)
         {
             throw new System.NotImplementedException();
         }

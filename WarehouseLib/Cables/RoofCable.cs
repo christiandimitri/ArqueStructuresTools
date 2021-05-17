@@ -7,35 +7,21 @@ namespace WarehouseLib.Cables
 {
     public class RoofCable : Cable
     {
-        public RoofCable() 
+        public RoofCable()
         {
         }
 
-        public override List<Cable> ConstructCables(List<Truss> trusses, int count, int index)
+        public override List<Cable> ConstructCables(List<Point3d> nodes, Curve beam)
         {
             var cables = new List<Cable>();
 
-            var topBarA = Curve.JoinCurves(trusses[index].TopBars)[0];
-            var topBarB = Curve.JoinCurves(trusses[index > 0 ? index - 1 : index + 1].TopBars)[0];
-
-            var parametersA = topBarA.DivideByCount(count - 1, true);
-            var parametersB = topBarB.DivideByCount(count - 1, true);
-
-            for (int i = 0; i < count; i++)
+            foreach (var node in nodes)
             {
-                Point3d ptA = new Point3d(topBarA.PointAt(parametersA[i]));
-                Point3d ptB = (i > 0)
-                    ? new Point3d(topBarB.PointAt(parametersB[i - 1]))
-                    : new Point3d(topBarA.PointAt(parametersA[i]));
-                Line axis = new Line(ptA, ptB);
-                var cable = new RoofCable();
-                cable.Axis = axis;
-                if (axis.IsValid) cables.Add(cable);
-                ptB = (i < count - 1)
-                    ? new Point3d(topBarB.PointAt(parametersB[i + 1]))
-                    : new Point3d(topBarA.PointAt(parametersA[i]));
-                axis = new Line(ptA, ptB);
-                if (axis.IsValid) cables.Add(cable);
+                beam.ClosestPoint(node, out double t);
+                var axis = new Line(node, beam.PointAt(t));
+                var bracing = new RoofCable();
+                bracing.Axis = axis;
+                cables.Add(bracing);
             }
 
             return cables;

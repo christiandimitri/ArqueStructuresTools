@@ -10,9 +10,8 @@ namespace WarehouseLib.Bracings
 
         protected Bracing()
         {
-            
         }
 
-        public abstract List<Bracing> ConstructBracings(List<Truss> trusses, int count, int index);
+        public abstract List<Bracing> ConstructBracings(List<Point3d> nodes, Curve beam);
     }
 }

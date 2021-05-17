@@ -9,8 +9,7 @@ namespace WarehouseLib.Bracings
         public ColumnsBracing()
         {
         }
-
-        public override List<Bracing> ConstructBracings(List<Truss> trusses, int count, int index)
+        public override List<Bracing> ConstructBracings(List<Point3d> nodes, Curve beam)
         {
             throw new System.NotImplementedException();
         }
