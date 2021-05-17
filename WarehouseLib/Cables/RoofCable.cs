@@ -14,14 +14,20 @@ namespace WarehouseLib.Cables
         public override List<Cable> ConstructCables(List<Point3d> nodes, Curve beam)
         {
             var cables = new List<Cable>();
-
-            foreach (var node in nodes)
+            var outerPoints = nodes;
+            var innerPoints = new List<Point3d>();
+            foreach (var node in outerPoints)
             {
                 beam.ClosestPoint(node, out double t);
-                var axis = new Line(node, beam.PointAt(t));
-                var bracing = new RoofCable();
-                bracing.Axis = axis;
-                cables.Add(bracing);
+                innerPoints.Add(beam.PointAt(t));
+            }
+
+            for (int i = 0; i < outerPoints.Count; i++)
+            {
+                var cable = new RoofCable();
+                var axis = new Line(outerPoints[i], innerPoints[i]);
+                cable.Axis = axis;
+                cables.Add(cable);
             }
 
             return cables;

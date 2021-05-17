@@ -150,7 +150,7 @@ namespace WarehouseLib.Warehouses
             var endBracingPoints = ExtractBracingPoints(Trusses[Trusses.Count - 1]);
             var endTopBeam = Curve.JoinCurves(Trusses[Trusses.Count - 2].TopBars)[0];
 
-            if (_warehouseOptions.PorticoCount <= 2) throw new Exception("Portics count has to be >2");
+            if (_warehouseOptions.PorticoCount <= 2) throw new Exception("Portico count has to be >2");
             RoofBracings = new List<Bracing>();
             RoofCables = new List<Cable>();
             if (_warehouseOptions.RoofBracingType == RoofBracingType.Bracing.ToString())
@@ -183,13 +183,16 @@ namespace WarehouseLib.Warehouses
         private List<Point3d> ExtractBracingPoints(Truss truss)
         {
             var trussA = truss;
+            var columns = (_trussOptions.ColumnsCount <= 2 || _warehouseOptions.HasBoundary == false)
+                ? trussA.StaticColumns
+                : trussA.BoundaryColumns;
             var tempPointList = new List<Point3d>();
-            foreach (var column in trussA.BoundaryColumns)
+            foreach (var column in columns)
             {
                 tempPointList.Add(column.Axis.ToNurbsCurve().PointAtEnd);
             }
 
-            if (_trussOptions.ColumnsCount % 2 == 0)
+            if (_warehouseOptions.HasBoundary == false || _trussOptions.ColumnsCount % 2 == 0)
             {
                 tempPointList.Insert(tempPointList.Count / 2, trussA.TopBars[0].PointAtEnd);
             }
