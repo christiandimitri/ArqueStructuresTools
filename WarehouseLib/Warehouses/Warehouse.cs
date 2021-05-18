@@ -23,6 +23,7 @@ namespace WarehouseLib.Warehouses
         public List<Strap> FacadeStrapsY;
         public List<Bracing> RoofBracings;
         public List<Cable> RoofCables;
+        public List<Bracing> ColumnsBracings;
         private readonly WarehouseOptions _warehouseOptions;
 
         public Warehouse(Plane plane, TrussOptions trussOptions, WarehouseOptions warehouseOptions)
@@ -42,6 +43,7 @@ namespace WarehouseLib.Warehouses
             GenerateRoofStraps();
             GenerateFacadeStraps();
             GenerateRoofBracings();
+            GenerateColumnsBracings();
         }
 
         private void ConstructTrusses(TrussOptions trussOptions)
@@ -171,7 +173,7 @@ namespace WarehouseLib.Warehouses
                     new RoofCable().ConstructCables(startBracingPoints, startTopBeam);
                 RoofBracings.AddRange(roofBracingsStart);
                 RoofCables.AddRange(roofCablesStart);
-                
+
                 var roofBracingsEnd =
                     new RoofBracing().ConstructBracings(endBracingPoints, endTopBeam);
                 var roofCablesEnd =
@@ -179,6 +181,18 @@ namespace WarehouseLib.Warehouses
                 RoofBracings.AddRange(roofBracingsEnd);
                 RoofCables.AddRange(roofCablesEnd);
             }
+        }
+
+        private void GenerateColumnsBracings()
+        {
+            var columnsBracing = new RoofBracing();
+            var trussA = Trusses[0];
+            var trussB = Trusses[1];
+            var nodes = trussA.StartingNodes;
+            var beam = Curve.JoinCurves(trussB.TopBars)[0];
+            var tempBracings = new ColumnsBracing().ConstructBracings(nodes, beam);
+
+            ColumnsBracings = tempBracings;
         }
 
         private List<Point3d> ExtractBracingPoints(Truss truss)
