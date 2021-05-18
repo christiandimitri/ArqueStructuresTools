@@ -99,7 +99,7 @@ namespace ArqueStructuresTools
             {
                 foreach (var bracing in warehouse.ColumnsBracings)
                 {
-                    roofBracings.Add(new BracingGoo(bracing));
+                    columnsBracings.Add(new BracingGoo(bracing));
                 }
             }
             DA.SetDataList(0, new List<TrussGoo>(trusses));

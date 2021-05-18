@@ -185,12 +185,22 @@ namespace WarehouseLib.Warehouses
 
         private void GenerateColumnsBracings()
         {
-            var columnsBracing = new RoofBracing();
-            var trussA = Trusses[0];
-            var trussB = Trusses[1];
-            var nodes = trussA.StartingNodes;
-            var beam = Curve.JoinCurves(trussB.TopBars)[0];
-            var tempBracings = new ColumnsBracing().ConstructBracings(nodes, beam);
+            var tempBracings = new List<Bracing>();
+
+            for (int i = 0; i < Trusses.Count - 1; i++)
+            {
+                var trussA = Trusses[i];
+                var trussB = Trusses[i + 1];
+                var tempList = trussA.StartingNodes;
+                if (i == 0 || i == Trusses.Count - 2)
+                {
+                    tempList.RemoveAt(1);
+                }
+
+                var nodes = tempList;
+                var beam = Curve.JoinCurves(trussB.TopBars)[0];
+                tempBracings.AddRange(new ColumnsBracing().ConstructBracings(nodes, beam));
+            }
 
             ColumnsBracings = tempBracings;
         }
