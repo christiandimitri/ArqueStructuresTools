@@ -32,10 +32,6 @@ namespace WarehouseLib.Warehouses
             if (trussOptions.Width <= 0) throw new Exception("Warehouse cannot have 0 width!!");
             if (trussOptions.Height <= 0) throw new Exception("Warehouse cannot have 0 height!!");
             if (trussOptions.MaxHeight <= 0) throw new Exception("Warehouse cannot have 0 max height!!");
-            if (!Enum.IsDefined(typeof(GeometricalTypology), warehouseOptions.Typology))
-                throw new Exception("Warehouse roof typology should be either: Flat, Arch, Monopich, Doublepich");
-            if (warehouseOptions.Length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
-            if (warehouseOptions.PorticoCount <= 1) throw new Exception("Warehouse cannot have portico count < 2");
             _plane = plane;
             _trussOptions = trussOptions;
             _warehouseOptions = warehouseOptions;

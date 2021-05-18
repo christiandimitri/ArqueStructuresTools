@@ -43,15 +43,16 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(3, ref hasBoundary)) return;
             if (!DA.GetData(4, ref roofBracingType)) return;
 
-            var warehouseInputs = new WarehouseOptions
+            WarehouseOptions warehouseInputs;
+            try
             {
-                Length = length,
-                Typology = typology,
-                HasBoundary = hasBoundary,
-                RoofBracingType = roofBracingType,
-                PorticoCount = porticoCount
-            };
-
+                warehouseInputs = new WarehouseOptions(typology, length, porticoCount, hasBoundary, roofBracingType);
+            }
+            catch (Exception e)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, e.Message);
+                return;
+            }
 
             DA.SetData(0, warehouseInputs);
         }

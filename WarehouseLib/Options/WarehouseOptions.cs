@@ -1,4 +1,8 @@
-﻿namespace WarehouseLib.Options
+﻿using System;
+using WarehouseLib.Bracings;
+using WarehouseLib.Trusses;
+
+namespace WarehouseLib.Options
 {
     public struct WarehouseOptions
     {
@@ -12,6 +16,13 @@
         public WarehouseOptions(string typology, double length, int porticoCount, bool hasBoundary,
             string roofBracingType)
         {
+            if (!Enum.IsDefined(typeof(GeometricalTypology), typology))
+                throw new Exception("Warehouse roof typology should be either: Flat, Arch, Monopich, Doublepich");
+            if (length <= 0) throw new Exception("Warehouse cannot have 0 length!!");
+            if (porticoCount <= 2) throw new Exception("Warehouse cannot have portico count <= 2");
+            if (!Enum.IsDefined(typeof(RoofBracingType), roofBracingType))
+                throw new Exception("Warehouse roof connection should be either be a: Cable, Bracing");
+
             Typology = typology;
             Length = length;
             PorticoCount = porticoCount;
