@@ -171,6 +171,7 @@ namespace WarehouseLib.Warehouses
                     new RoofCable().ConstructCables(startBracingPoints, startTopBeam);
                 RoofBracings.AddRange(roofBracingsStart);
                 RoofCables.AddRange(roofCablesStart);
+                
                 var roofBracingsEnd =
                     new RoofBracing().ConstructBracings(endBracingPoints, endTopBeam);
                 var roofCablesEnd =

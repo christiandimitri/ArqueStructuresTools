@@ -32,14 +32,40 @@ namespace WarehouseLib.Bracings
         public List<Bracing> ConstructWarrenStudsBracings(List<Point3d> nodes, Curve beam)
         {
             var bracings = new List<Bracing>();
-
-            foreach (var node in nodes)
+            var outerPoints = nodes;
+            var innerPoints = new List<Point3d>();
+            foreach (var node in outerPoints)
             {
                 beam.ClosestPoint(node, out double t);
-                var axis = new Line(node, beam.PointAt(t));
-                var bracing = new RoofBracing();
-                bracing.Axis = axis;
-                bracings.Add(bracing);
+                innerPoints.Add(beam.PointAt(t));
+            }
+
+            for (var i = 0; i < innerPoints.Count; i++)
+            {
+                var ptA = new Point3d();
+                var ptB = innerPoints[i];
+                    ptA = outerPoints[i];
+                    var axis = new Line(ptA, ptB);
+                    var bracing = new RoofBracing();
+                    bracing.Axis = axis;
+                    bracings.Add(bracing);
+                
+                if (i % 2 == 1)
+                {
+                    ptA = outerPoints[i - 1];
+                     axis = new Line(ptA, ptB);
+                     bracing = new RoofBracing();
+                    bracing.Axis = axis;
+                    bracings.Add(bracing);
+                    if (i < outerPoints.Count - 1)
+                    {
+                        ptA = outerPoints[i + 1];
+                        axis = new Line(ptA, ptB);
+                        bracing = new RoofBracing();
+                        bracing.Axis = axis;
+                        bracings.Add(bracing);
+                    }
+                }
             }
 
             return bracings;
