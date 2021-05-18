@@ -40,33 +40,31 @@ namespace WarehouseLib.Bracings
                 innerPoints.Add(beam.PointAt(t));
             }
 
-            for (var i = 0; i < innerPoints.Count; i++)
+            var straightBracings = ConstructBracings(nodes, beam);
+            // bracings.AddRange(straightBracings);
+            var diagonalBracings = new List<Bracing>();
+            for (int i = 0; i < innerPoints.Count; i++)
             {
-                var ptA = new Point3d();
-                var ptB = innerPoints[i];
-                    ptA = outerPoints[i];
-                    var axis = new Line(ptA, ptB);
-                    var bracing = new RoofBracing();
-                    bracing.Axis = axis;
-                    bracings.Add(bracing);
-                
-                if (i % 2 == 1)
-                {
-                    ptA = outerPoints[i - 1];
-                     axis = new Line(ptA, ptB);
-                     bracing = new RoofBracing();
-                    bracing.Axis = axis;
-                    bracings.Add(bracing);
-                    if (i < outerPoints.Count - 1)
-                    {
-                        ptA = outerPoints[i + 1];
-                        axis = new Line(ptA, ptB);
-                        bracing = new RoofBracing();
-                        bracing.Axis = axis;
-                        bracings.Add(bracing);
-                    }
-                }
+                var ptA = new Point3d(outerPoints[i]);
+                var ptB = new Point3d(i > 0 && i % 2 == 0 ? innerPoints[i - 1] : outerPoints[i]);
+                var axis = new Line(ptA, ptB);
+                var bracing = new RoofBracing();
+                bracing.Axis = axis;
+                if (bracing.Axis.IsValid) bracings.Add(bracing);
+                ptB = new Point3d(innerPoints[i]);
+                axis = new Line(ptA, ptB);
+                bracing = new RoofBracing();
+                bracing.Axis = axis;
+                if (bracing.Axis.IsValid) bracings.Add(bracing);
+                ptB = new Point3d(i < outerPoints.Count - 1 && i % 2 == 0 ? innerPoints[i + 1] : outerPoints[i]);
+                axis = new Line(ptA, ptB);
+                bracing = new RoofBracing();
+                bracing.Axis = axis;
+                if (bracing.Axis.IsValid) bracings.Add(bracing);
             }
+
+            bracings.RemoveAt(0);
+            bracings.RemoveAt(bracings.Count - 1);
 
             return bracings;
         }
