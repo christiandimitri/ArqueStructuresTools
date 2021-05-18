@@ -32,6 +32,7 @@ namespace ArqueStructuresTools
             pManager.AddParameter(new BracingParameter(), "Roof bracings", "rb", "rb", GH_ParamAccess.list);
             pManager.AddParameter(new BracingParameter(), "Columns bracings", "cb", "cb", GH_ParamAccess.list);
             pManager.AddParameter(new CableParameter(), "Roof cables", "rc", "rc", GH_ParamAccess.list);
+            pManager.AddParameter(new CableParameter(), "Facade cables", "fc", "fc", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -86,6 +87,7 @@ namespace ArqueStructuresTools
                     roofBracings.Add(new BracingGoo(bracing));
                 }
             }
+
             var roofCables = new List<CableGoo>();
             if (warehouse.RoofBracings != null)
             {
@@ -94,6 +96,7 @@ namespace ArqueStructuresTools
                     roofCables.Add(new CableGoo(cable));
                 }
             }
+
             var columnsBracings = new List<BracingGoo>();
             if (warehouse.ColumnsBracings != null)
             {
@@ -102,6 +105,16 @@ namespace ArqueStructuresTools
                     columnsBracings.Add(new BracingGoo(bracing));
                 }
             }
+
+            var facadeCables = new List<CableGoo>();
+            if (warehouse.FacadeCables != null)
+            {
+                foreach (var cable in warehouse.FacadeCables)
+                {
+                    facadeCables.Add(new CableGoo(cable));
+                }
+            }
+
             DA.SetDataList(0, new List<TrussGoo>(trusses));
             DA.SetDataList(1, new List<StrapGoo>(roofStraps));
             DA.SetDataList(2, new List<StrapGoo>(facadeStrapsX));
@@ -109,6 +122,7 @@ namespace ArqueStructuresTools
             DA.SetDataList(4, new List<BracingGoo>(roofBracings));
             DA.SetDataList(5, new List<BracingGoo>(columnsBracings));
             DA.SetDataList(6, new List<CableGoo>(roofCables));
+            DA.SetDataList(7, new List<CableGoo>(facadeCables));
         }
     }
 }

@@ -135,6 +135,15 @@ namespace ArqueStructuresTools
                                 }
                             }
 
+                            if (warehouse.FacadeCables != null)
+                            {
+                                foreach (var bar in warehouse.FacadeCables)
+                                {
+                                    _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Firebrick);
+                                }
+                            }
+
                             if (warehouse.ColumnsBracings != null)
                             {
                                 foreach (var bar in warehouse.ColumnsBracings)

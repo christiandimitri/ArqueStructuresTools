@@ -22,8 +22,9 @@ namespace WarehouseLib.Warehouses
         public List<Strap> FacadeStrapsX;
         public List<Strap> FacadeStrapsY;
         public List<Bracing> RoofBracings;
-        public List<Cable> RoofCables;
         public List<Bracing> ColumnsBracings;
+        public List<Cable> RoofCables;
+        public List<Cable> FacadeCables;
         private readonly WarehouseOptions _warehouseOptions;
 
         public Warehouse(Plane plane, TrussOptions trussOptions, WarehouseOptions warehouseOptions)
@@ -44,6 +45,7 @@ namespace WarehouseLib.Warehouses
             GenerateFacadeStraps();
             GenerateRoofBracings();
             GenerateColumnsBracings();
+            GenerateFacadeBracings();
         }
 
         private void ConstructTrusses(TrussOptions trussOptions)
@@ -143,6 +145,9 @@ namespace WarehouseLib.Warehouses
 
         private void GenerateFacadeBracings()
         {
+            var tempCables = new List<Cable>();
+
+            FacadeCables = tempCables;
         }
 
         private void GenerateRoofBracings()
