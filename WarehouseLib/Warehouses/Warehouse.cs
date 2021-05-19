@@ -144,11 +144,29 @@ namespace WarehouseLib.Warehouses
         private void GenerateFacadeBracings()
         {
             var cables = new List<Cable>();
-            var nodes = new List<Point3d> {Trusses[0].StaticColumns[0].Axis.ToNurbsCurve().PointAtStart};
-            var beamA = Trusses[1].StaticColumns[0];
-            var cable = new FacadeCable();
-            cable.ConstructCables(nodes, beamA.Axis.ToNurbsCurve());
-            cables.Add(cable);
+            for (int i = 0; i < Trusses[0].StaticColumns.Count; i++)
+            {
+                var trussA = Trusses[0];
+                var trussB = Trusses[1];
+                var nodes = new List<Point3d>
+                {
+                    trussA.StaticColumns[i].Axis.ToNurbsCurve().PointAtStart,
+                    trussA.StaticColumns[i].Axis.ToNurbsCurve().PointAtEnd
+                };
+                var beamB = trussB.StaticColumns[i].Axis.ToNurbsCurve();
+                cables.AddRange(new FacadeCable().ConstructCables(nodes, beamB));
+                
+                trussA = Trusses[Trusses.Count-2];
+                trussB = Trusses[Trusses.Count-1];
+                nodes = new List<Point3d>
+                {
+                    trussA.StaticColumns[i].Axis.ToNurbsCurve().PointAtStart,
+                    trussA.StaticColumns[i].Axis.ToNurbsCurve().PointAtEnd
+                };
+                beamB = trussB.StaticColumns[i].Axis.ToNurbsCurve();
+                cables.AddRange(new FacadeCable().ConstructCables(nodes, beamB));
+            }
+
             FacadeCables = cables;
         }
 

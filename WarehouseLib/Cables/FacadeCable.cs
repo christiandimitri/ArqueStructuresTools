@@ -16,8 +16,13 @@ namespace WarehouseLib.Cables
             var ptA = nodes[0];
             var ptB = beam.PointAtEnd;
             var axis = new Line(ptA, ptB);
-            var cable = new FacadeCable();
-            cable.Axis = axis;
+            var cable = new FacadeCable {Axis = axis};
+            cables.Add(cable);
+
+            ptA = nodes[1];
+            ptB = beam.PointAtStart;
+            axis = new Line(ptA, ptB);
+            cable = new FacadeCable {Axis = axis};
             cables.Add(cable);
 
             return cables;
