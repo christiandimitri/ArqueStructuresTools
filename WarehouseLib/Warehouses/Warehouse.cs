@@ -155,9 +155,9 @@ namespace WarehouseLib.Warehouses
                 };
                 var beamB = trussB.StaticColumns[i].Axis.ToNurbsCurve();
                 cables.AddRange(new FacadeCable().ConstructCables(nodes, beamB));
-                
-                trussA = Trusses[Trusses.Count-2];
-                trussB = Trusses[Trusses.Count-1];
+
+                trussA = Trusses[Trusses.Count - 2];
+                trussB = Trusses[Trusses.Count - 1];
                 nodes = new List<Point3d>
                 {
                     trussA.StaticColumns[i].Axis.ToNurbsCurve().PointAtStart,
@@ -206,7 +206,7 @@ namespace WarehouseLib.Warehouses
                 RoofBracings.AddRange(roofBracingsEnd);
                 RoofCables.AddRange(roofCablesEnd);
             }
-
+            
             foreach (var truss in Trusses)
             {
                 if (truss.BoundaryColumns != null)
@@ -214,6 +214,7 @@ namespace WarehouseLib.Warehouses
                     truss.BoundaryColumns.RemoveAt(0);
                     truss.BoundaryColumns.RemoveAt(truss.BoundaryColumns.Count - 1);
                 }
+                
             }
         }
 
