@@ -117,7 +117,8 @@ namespace WarehouseLib.Warehouses
             var tempStraps = new List<Strap>();
             var strapsX =
                 new FacadeStrap().ConstructStraps(
-                    new FacadeStrap().ConstructStrapsAxisOnStaticColumns(Trusses, _warehouseOptions.FacadeStrapsDistance));
+                    new FacadeStrap().ConstructStrapsAxisOnStaticColumns(Trusses,
+                        _warehouseOptions.FacadeStrapsDistance));
             foreach (var strap in strapsX)
             {
                 tempStraps.Add(strap);
@@ -128,7 +129,8 @@ namespace WarehouseLib.Warehouses
             var boundary = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
             var strapsY =
                 new FacadeStrap().ConstructStraps(
-                    new FacadeStrap().ConstructStrapsAxisOnBoundaryColumns(boundary,  _warehouseOptions.FacadeStrapsDistance,
+                    new FacadeStrap().ConstructStrapsAxisOnBoundaryColumns(boundary,
+                        _warehouseOptions.FacadeStrapsDistance,
                         _warehouseOptions.HasBoundary));
 
             foreach (var strap in strapsY)
@@ -141,9 +143,13 @@ namespace WarehouseLib.Warehouses
 
         private void GenerateFacadeBracings()
         {
-            var tempCables = new List<Cable>();
-
-            FacadeCables = tempCables;
+            var cables = new List<Cable>();
+            var nodes = new List<Point3d> {Trusses[0].StaticColumns[0].Axis.ToNurbsCurve().PointAtStart};
+            var beamA = Trusses[1].StaticColumns[0];
+            var cable = new FacadeCable();
+            cable.ConstructCables(nodes, beamA.Axis.ToNurbsCurve());
+            cables.Add(cable);
+            FacadeCables = cables;
         }
 
         private void GenerateRoofBracings()
@@ -181,6 +187,15 @@ namespace WarehouseLib.Warehouses
                     new RoofCable().ConstructCables(endBracingPoints, endTopBeam);
                 RoofBracings.AddRange(roofBracingsEnd);
                 RoofCables.AddRange(roofCablesEnd);
+            }
+
+            foreach (var truss in Trusses)
+            {
+                if (truss.BoundaryColumns != null)
+                {
+                    truss.BoundaryColumns.RemoveAt(0);
+                    truss.BoundaryColumns.RemoveAt(truss.BoundaryColumns.Count - 1);
+                }
             }
         }
 
