@@ -39,7 +39,7 @@ namespace ArqueStructuresTools.Options
             var porticoCount = 0;
             var hasBoundary = true;
             var roofBracingType = "";
-            var facadeStrapsDistance = 0;
+            var facadeStrapsDistance = 0.0;
             if (!DA.GetData(0, ref typology)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref porticoCount)) return;

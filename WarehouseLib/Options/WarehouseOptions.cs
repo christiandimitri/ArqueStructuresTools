@@ -10,7 +10,6 @@ namespace WarehouseLib.Options
         public double Length { get; set; }
         public int PorticoCount { get; set; }
         public bool HasBoundary { get; set; }
-
         public double FacadeStrapsDistance { get; set; }
         public string RoofBracingType { get; set; }
 
