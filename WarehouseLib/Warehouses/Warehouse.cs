@@ -117,7 +117,7 @@ namespace WarehouseLib.Warehouses
             var tempStraps = new List<Strap>();
             var strapsX =
                 new FacadeStrap().ConstructStraps(
-                    new FacadeStrap().ConstructStrapsAxisOnStaticColumns(Trusses, 0.5));
+                    new FacadeStrap().ConstructStrapsAxisOnStaticColumns(Trusses, _warehouseOptions.FacadeStrapsDistance));
             foreach (var strap in strapsX)
             {
                 tempStraps.Add(strap);
@@ -128,7 +128,7 @@ namespace WarehouseLib.Warehouses
             var boundary = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
             var strapsY =
                 new FacadeStrap().ConstructStraps(
-                    new FacadeStrap().ConstructStrapsAxisOnBoundaryColumns(boundary, 0.5,
+                    new FacadeStrap().ConstructStrapsAxisOnBoundaryColumns(boundary,  _warehouseOptions.FacadeStrapsDistance,
                         _warehouseOptions.HasBoundary));
 
             foreach (var strap in strapsY)
