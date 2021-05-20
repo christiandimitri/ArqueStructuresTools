@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Articulations;
 using WarehouseLib.Bracings;
 using WarehouseLib.Cables;
 using WarehouseLib.Columns;
+using WarehouseLib.Connections;
 using WarehouseLib.Crosses;
 using WarehouseLib.Options;
 using WarehouseLib.Straps;
@@ -247,12 +249,30 @@ namespace WarehouseLib.Warehouses
 
         private void GenerateStAndresCross()
         {
-            var outsideNodes = new List<Point3d>
-                {Trusses[1].TopNodes[1], Trusses[1].BottomNodes[Trusses[1].BottomNodes.Count - 2]};
-            var insideNodes = new List<Point3d>
-                {Trusses[2].TopNodes[1], Trusses[2].BottomNodes[Trusses[2].BottomNodes.Count - 2]};
-            var cross = new StAndres().ConstructCross(outsideNodes, insideNodes);
-            Crosses = new List<Cross> {cross};
+            Crosses = new List<Cross>();
+            if (_trussOptions.TrussType != ConnectionType.Warren.ToString())
+            {
+                
+                for (int i = 1; i < Trusses.Count - 2; i++)
+                {
+                    for (int j = 1; j < Trusses[i].TopNodes.Count; j += 2)
+                    {
+                        var ptA = Trusses[i].TopNodes[j];
+                        var tempCloud = new PointCloud(Trusses[i].BottomNodes);
+                        var index = tempCloud.ClosestPoint(ptA);
+                        var ptB = Trusses[i].BottomNodes[index];
+                        var outsideNodes = new List<Point3d> {ptA, ptB};
+                        ptA = Trusses[i + 1].TopNodes[j];
+                        tempCloud = new PointCloud(Trusses[i + 1].BottomNodes);
+                        index = tempCloud.ClosestPoint(ptA);
+                        ptB = Trusses[i + 1].BottomNodes[index];
+                        var insideNodes = new List<Point3d>
+                            {ptA, ptB};
+                        var cross = new StAndres().ConstructCross(outsideNodes, insideNodes);
+                        Crosses.AddRange(new List<Cross> {cross});
+                    }
+                }
+            }
         }
 
         private List<Point3d> ExtractRoofBracingPoints(Truss truss)
