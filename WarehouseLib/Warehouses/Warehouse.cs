@@ -39,9 +39,9 @@ namespace WarehouseLib.Warehouses
             GetColumns();
             GenerateRoofStraps();
             GenerateFacadeStraps();
-            GenerateRoofBracings();
-            GenerateColumnsBracings();
-            GenerateFacadeBracings();
+            GenerateRoofBracing();
+            GenerateColumnsBracing();
+            GenerateFacadeBracing();
         }
 
         private void ConstructTrusses(TrussOptions trussOptions)
@@ -141,7 +141,7 @@ namespace WarehouseLib.Warehouses
             FacadeStrapsY = tempStraps;
         }
 
-        private void GenerateFacadeBracings()
+        private void GenerateFacadeBracing()
         {
             var cables = new List<Cable>();
             for (int i = 0; i < Trusses[0].StaticColumns.Count; i++)
@@ -154,8 +154,7 @@ namespace WarehouseLib.Warehouses
                     trussA.StaticColumns[i].Axis.ToNurbsCurve().PointAtEnd
                 };
                 var beamB = trussB.StaticColumns[i].Axis.ToNurbsCurve();
-                var cable=new FacadeCable();
-                cable.Threshold = _warehouseOptions.FacadeCablesThreshold;
+                var cable = new FacadeCable {Threshold = _warehouseOptions.FacadeCablesThreshold};
                 cables.AddRange(cable.ConstructCables(nodes, beamB));
 
                 trussA = Trusses[Trusses.Count - 2];
@@ -174,11 +173,11 @@ namespace WarehouseLib.Warehouses
             FacadeCables = cables;
         }
 
-        private void GenerateRoofBracings()
+        private void GenerateRoofBracing()
         {
-            var startBracingPoints = ExtractBracingPoints(Trusses[0]);
+            var startBracingPoints = ExtractRoofBracingPoints(Trusses[0]);
             var startTopBeam = Curve.JoinCurves(Trusses[1].TopBars)[0];
-            var endBracingPoints = ExtractBracingPoints(Trusses[Trusses.Count - 1]);
+            var endBracingPoints = ExtractRoofBracingPoints(Trusses[Trusses.Count - 1]);
             var endTopBeam = Curve.JoinCurves(Trusses[Trusses.Count - 2].TopBars)[0];
 
             if (_warehouseOptions.PorticoCount <= 2) throw new Exception("Portico count has to be >2");
@@ -222,7 +221,7 @@ namespace WarehouseLib.Warehouses
             }
         }
 
-        private void GenerateColumnsBracings()
+        private void GenerateColumnsBracing()
         {
             var tempBracings = new List<Bracing>();
 
@@ -244,7 +243,7 @@ namespace WarehouseLib.Warehouses
             ColumnsBracings = tempBracings;
         }
 
-        private List<Point3d> ExtractBracingPoints(Truss truss)
+        private List<Point3d> ExtractRoofBracingPoints(Truss truss)
         {
             var trussA = truss;
             var columns = (_trussOptions.ColumnsCount <= 2 || _warehouseOptions.HasBoundary == false)

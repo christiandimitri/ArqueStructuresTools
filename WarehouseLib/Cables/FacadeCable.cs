@@ -45,25 +45,25 @@ namespace WarehouseLib.Cables
 
             for (int i = 0; i < outsideNodes.Count; i++)
             {
-                var axis = new Line();
-                var cable = new FacadeCable();
-                if (i > 0)
-                {
-                    axis = new Line(outsideNodes[i], insideNodes[i - 1]);
-                    cable.Axis = axis;
-                }
-                else if (i > 0 || i < outsideNodes.Count - 1)
-                {
-                    axis = new Line(outsideNodes[i], insideNodes[i]);
-                    cable.Axis = axis;
-                }
-                else if (i < outsideNodes.Count - 1)
-                {
-                    axis = new Line(outsideNodes[i], insideNodes[i + 1]);
-                    cable.Axis = axis;
-                }
+                Point3d ptA = outsideNodes[i];
+                Point3d ptB = (i > 0)
+                    ? insideNodes[i - 1]
+                    : outsideNodes[i];
+                Line axis = new Line(ptA, ptB);
+                var cable = new RoofCable();
+                cable.Axis = axis;
+                if (axis.IsValid) cables.Add(cable);
+                ptB = (i < outsideNodes.Count - 1)
+                    ? insideNodes[i + 1]
+                    : outsideNodes[i];
+                axis = new Line(ptA, ptB);
+                cable = new RoofCable();
+                cable.Axis = axis;
+                if (axis.IsValid) cables.Add(cable);
 
-                cables.Add(cable);
+                // axis = new Line(outsideNodes[i], insideNodes[i]);
+                // cable.Axis = axis;
+                // cables.Add(cable);
             }
 
             return cables;

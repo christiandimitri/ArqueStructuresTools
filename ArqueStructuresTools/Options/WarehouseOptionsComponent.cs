@@ -23,7 +23,7 @@ namespace ArqueStructuresTools.Options
             pManager.AddIntegerParameter("Portico count", "pc", "pc", GH_ParamAccess.item, 5);
             pManager.AddBooleanParameter("Portico at boundary", "pb", "pb", GH_ParamAccess.item, true);
             pManager.AddTextParameter("Roof Bracing type", "bt", "bt", GH_ParamAccess.item, "Bracing");
-            pManager.AddNumberParameter("Facade straps distance", "fsd", "fsd", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Facade straps distance", "fsd", "fsd", GH_ParamAccess.item,1.2);
             pManager.AddNumberParameter("Facade cables threshold", "fct", "fct", GH_ParamAccess.item, 1.0);
         }
 

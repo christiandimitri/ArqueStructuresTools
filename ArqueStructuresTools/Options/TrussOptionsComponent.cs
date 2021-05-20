@@ -31,7 +31,7 @@ namespace ArqueStructuresTools.Options
             pManager.AddTextParameter("Articulation type", "at", "at", GH_ParamAccess.item, "Rigid");
             pManager.AddIntegerParameter("Divisions", "d", "d", GH_ParamAccess.item, 5);
             pManager.AddTextParameter("Portico type", "pt", "pt", GH_ParamAccess.item, "Truss");
-            pManager.AddIntegerParameter("Columns count", "cc", "cc", GH_ParamAccess.item, 1);
+            pManager.AddIntegerParameter("Columns count", "cc", "cc", GH_ParamAccess.item, 2);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
