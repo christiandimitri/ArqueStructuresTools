@@ -15,6 +15,7 @@ namespace WarehouseLib.Options
         public double FacadeCablesThreshold { get; set; }
         public int StAndreCrossCount { get; set; }
 
+
         public WarehouseOptions(string typology, double length, int porticoCount, bool hasBoundary,
             string roofBracingType, double facadeStrapsDistance, double facadeCablesThreshold, int stAndreCrossCount)
         {

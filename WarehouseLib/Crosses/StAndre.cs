@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Connections;
 using WarehouseLib.Trusses;
 
 namespace WarehouseLib.Crosses
@@ -14,7 +15,7 @@ namespace WarehouseLib.Crosses
             List<Point3d> outerBottomNodes, List<Point3d> innerTopNodes)
         {
             var crosses = new List<Cross>();
-            for (int i = 0; i < outerTopNodes.Count; i++)
+            for (int i = 1; i < outerTopNodes.Count - 1; i++)
             {
                 var cross = new StAndre
                 {
@@ -28,14 +29,44 @@ namespace WarehouseLib.Crosses
 
         public override List<Point3d> ComputeCrossTopNodes(Truss truss, int count)
         {
-            var topNodes = new List<Point3d>(truss.TopNodes);
+            count += 1;
+            var topNodes = new List<Point3d>();
+            var tempList = new List<Point3d>();
+            if (truss._trussType == ConnectionType.WarrenStuds.ToString())
+            {
+                for (var i = 1; i < truss.TopNodes.Count; i += 2)
+                {
+                    tempList.Add(truss.TopNodes[i]);
+                }
+            }
+            else
+            {
+                tempList = truss.TopNodes;
+            }
+
+            var tempCloud = new PointCloud(tempList);
+            var topBeam = Curve.JoinCurves(truss.TopBars)[0];
+            var parameters = topBeam.DivideByCount(count, true);
+            foreach (var t in parameters)
+            {
+                var tempPt = topBeam.PointAt(t);
+                var index = tempCloud.ClosestPoint(tempPt);
+                topNodes.Add(tempList[index]);
+            }
+
 
             return topNodes;
         }
 
-        public override List<Point3d> ComputeCrossBottomNodes(Truss truss)
+        public override List<Point3d> ComputeCrossBottomNodes(Truss truss, List<Point3d> topNodes)
         {
-            var bottomNodes = new List<Point3d>(truss.BottomNodes);
+            var bottomNodes = new List<Point3d>();
+            var tempCloud = new PointCloud(truss.BottomNodes);
+            foreach (var node in topNodes)
+            {
+                var index = tempCloud.ClosestPoint(node);
+                bottomNodes.Add(truss.BottomNodes[index]);
+            }
 
             return bottomNodes;
         }

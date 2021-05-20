@@ -36,6 +36,9 @@ namespace WarehouseLib.Warehouses
             if (trussOptions.Width <= 0) throw new Exception("Warehouse cannot have 0 width!!");
             if (trussOptions.Height <= 0) throw new Exception("Warehouse cannot have 0 height!!");
             if (trussOptions.MaxHeight <= 0) throw new Exception("Warehouse cannot have 0 max height!!");
+            if (warehouseOptions.FacadeStrapsDistance >= trussOptions.Height)
+                throw new Exception("Warehouse facade straps distance should be < the truss height");
+
             _plane = plane;
             _trussOptions = trussOptions;
             _warehouseOptions = warehouseOptions;
@@ -256,10 +259,10 @@ namespace WarehouseLib.Warehouses
                 {
                     var outerTopNodes =
                         new StAndre().ComputeCrossTopNodes(Trusses[i], _warehouseOptions.StAndreCrossCount);
-                    var outerBottomNodes = new StAndre().ComputeCrossBottomNodes(Trusses[i]);
+                    var outerBottomNodes = new StAndre().ComputeCrossBottomNodes(Trusses[i], outerTopNodes);
                     var innerTopNodes =
                         new StAndre().ComputeCrossTopNodes(Trusses[i + 1], _warehouseOptions.StAndreCrossCount);
-                    var innerBottomNodes = new StAndre().ComputeCrossBottomNodes(Trusses[i + 1]);
+                    var innerBottomNodes = new StAndre().ComputeCrossBottomNodes(Trusses[i + 1], innerTopNodes);
                     var cross = new StAndre().ConstructCrosses(outerTopNodes, innerBottomNodes, outerBottomNodes,
                         innerTopNodes);
                     Crosses.AddRange(cross);
