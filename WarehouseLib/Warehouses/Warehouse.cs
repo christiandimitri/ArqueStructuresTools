@@ -154,7 +154,9 @@ namespace WarehouseLib.Warehouses
                     trussA.StaticColumns[i].Axis.ToNurbsCurve().PointAtEnd
                 };
                 var beamB = trussB.StaticColumns[i].Axis.ToNurbsCurve();
-                cables.AddRange(new FacadeCable().ConstructCables(nodes, beamB));
+                var cable=new FacadeCable();
+                cable.Threshold = _warehouseOptions.FacadeCablesThreshold;
+                cables.AddRange(cable.ConstructCables(nodes, beamB));
 
                 trussA = Trusses[Trusses.Count - 2];
                 trussB = Trusses[Trusses.Count - 1];
@@ -164,7 +166,9 @@ namespace WarehouseLib.Warehouses
                     trussA.StaticColumns[i].Axis.ToNurbsCurve().PointAtEnd
                 };
                 beamB = trussB.StaticColumns[i].Axis.ToNurbsCurve();
-                cables.AddRange(new FacadeCable().ConstructCables(nodes, beamB));
+                cable=new FacadeCable();
+                cable.Threshold = _warehouseOptions.FacadeCablesThreshold;
+                cables.AddRange(cable.ConstructCables(nodes, beamB));
             }
 
             FacadeCables = cables;

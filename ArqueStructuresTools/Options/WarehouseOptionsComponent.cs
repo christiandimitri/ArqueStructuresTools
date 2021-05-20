@@ -24,7 +24,7 @@ namespace ArqueStructuresTools.Options
             pManager.AddBooleanParameter("Portico at boundary", "pb", "pb", GH_ParamAccess.item, true);
             pManager.AddTextParameter("Roof Bracing type", "bt", "bt", GH_ParamAccess.item, "Bracing");
             pManager.AddNumberParameter("Facade straps distance", "fsd", "fsd", GH_ParamAccess.item);
-
+            pManager.AddNumberParameter("Facade cables threshold", "fct", "fct", GH_ParamAccess.item, 1.0);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -40,17 +40,20 @@ namespace ArqueStructuresTools.Options
             var hasBoundary = true;
             var roofBracingType = "";
             var facadeStrapsDistance = 0.0;
+            var facadeCablesThreshold = 0.0;
             if (!DA.GetData(0, ref typology)) return;
             if (!DA.GetData(1, ref length)) return;
             if (!DA.GetData(2, ref porticoCount)) return;
             if (!DA.GetData(3, ref hasBoundary)) return;
             if (!DA.GetData(4, ref roofBracingType)) return;
             if (!DA.GetData(5, ref facadeStrapsDistance)) return;
+            if (!DA.GetData(6, ref facadeCablesThreshold)) return;
 
             WarehouseOptions warehouseInputs;
             try
             {
-                warehouseInputs = new WarehouseOptions(typology, length, porticoCount, hasBoundary, roofBracingType, facadeStrapsDistance);
+                warehouseInputs = new WarehouseOptions(typology, length, porticoCount, hasBoundary, roofBracingType,
+                    facadeStrapsDistance, facadeCablesThreshold);
             }
             catch (Exception e)
             {
