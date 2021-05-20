@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Rhino.Geometry;
 using WarehouseLib.Trusses;
 
@@ -31,6 +32,11 @@ namespace WarehouseLib.Cables
             var width = Convert.ToInt32(nodes[0].DistanceTo(beam.PointAtStart));
             var height = Convert.ToInt32(beam.GetLength());
             var ratio = Convert.ToInt32(height / width * Threshold);
+            if (ratio == 0)
+            {
+                ratio = 1;
+            }
+
             var parameters = beam.DivideByCount(ratio, true);
             var outsideNodes = new List<Point3d>();
             var insideNodes = new List<Point3d>();
@@ -50,22 +56,28 @@ namespace WarehouseLib.Cables
                     ? insideNodes[i - 1]
                     : outsideNodes[i];
                 Line axis = new Line(ptA, ptB);
-                var cable = new RoofCable();
+                var cable = new FacadeCable();
                 cable.Axis = axis;
                 if (axis.IsValid) cables.Add(cable);
+                if (i > 0 || i < outsideNodes.Count - 1)
+                {
+                    axis = new Line(outsideNodes[i], insideNodes[i]);
+                    cable = new FacadeCable();
+                    cable.Axis = axis;
+                    if (axis.IsValid) cables.Add(cable);
+                }
+
                 ptB = (i < outsideNodes.Count - 1)
                     ? insideNodes[i + 1]
                     : outsideNodes[i];
                 axis = new Line(ptA, ptB);
-                cable = new RoofCable();
+                cable = new FacadeCable();
                 cable.Axis = axis;
                 if (axis.IsValid) cables.Add(cable);
-
-                // axis = new Line(outsideNodes[i], insideNodes[i]);
-                // cable.Axis = axis;
-                // cables.Add(cable);
             }
 
+            cables.RemoveAt(0);
+            cables.RemoveAt(cables.Count - 1);
             return cables;
         }
     }
