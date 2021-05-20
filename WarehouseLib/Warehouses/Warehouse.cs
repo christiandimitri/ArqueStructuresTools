@@ -252,25 +252,17 @@ namespace WarehouseLib.Warehouses
             Crosses = new List<Cross>();
             if (_trussOptions.TrussType != ConnectionType.Warren.ToString())
             {
-                
                 for (int i = 1; i < Trusses.Count - 2; i++)
                 {
-                    for (int j = 1; j < Trusses[i].TopNodes.Count; j += 2)
-                    {
-                        var ptA = Trusses[i].TopNodes[j];
-                        var tempCloud = new PointCloud(Trusses[i].BottomNodes);
-                        var index = tempCloud.ClosestPoint(ptA);
-                        var ptB = Trusses[i].BottomNodes[index];
-                        var outsideNodes = new List<Point3d> {ptA, ptB};
-                        ptA = Trusses[i + 1].TopNodes[j];
-                        tempCloud = new PointCloud(Trusses[i + 1].BottomNodes);
-                        index = tempCloud.ClosestPoint(ptA);
-                        ptB = Trusses[i + 1].BottomNodes[index];
-                        var insideNodes = new List<Point3d>
-                            {ptA, ptB};
-                        var cross = new StAndres().ConstructCross(outsideNodes, insideNodes);
-                        Crosses.AddRange(new List<Cross> {cross});
-                    }
+                    var outerTopNodes =
+                        new StAndre().ComputeCrossTopNodes(Trusses[i], _warehouseOptions.StAndreCrossCount);
+                    var outerBottomNodes = new StAndre().ComputeCrossBottomNodes(Trusses[i]);
+                    var innerTopNodes =
+                        new StAndre().ComputeCrossTopNodes(Trusses[i + 1], _warehouseOptions.StAndreCrossCount);
+                    var innerBottomNodes = new StAndre().ComputeCrossBottomNodes(Trusses[i + 1]);
+                    var cross = new StAndre().ConstructCrosses(outerTopNodes, innerBottomNodes, outerBottomNodes,
+                        innerTopNodes);
+                    Crosses.AddRange(cross);
                 }
             }
         }

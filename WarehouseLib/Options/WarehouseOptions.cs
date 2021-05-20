@@ -12,11 +12,11 @@ namespace WarehouseLib.Options
         public bool HasBoundary { get; set; }
         public double FacadeStrapsDistance { get; set; }
         public string RoofBracingType { get; set; }
-
         public double FacadeCablesThreshold { get; set; }
+        public int StAndreCrossCount { get; set; }
 
         public WarehouseOptions(string typology, double length, int porticoCount, bool hasBoundary,
-            string roofBracingType, double facadeStrapsDistance, double facadeCablesThreshold)
+            string roofBracingType, double facadeStrapsDistance, double facadeCablesThreshold, int stAndreCrossCount)
         {
             if (!Enum.IsDefined(typeof(GeometricalTypology), typology))
                 throw new Exception("Warehouse roof typology should be either: Flat, Arch, Monopich, Doublepich");
@@ -34,6 +34,7 @@ namespace WarehouseLib.Options
             RoofBracingType = roofBracingType;
             FacadeStrapsDistance = facadeStrapsDistance;
             FacadeCablesThreshold = facadeCablesThreshold;
+            StAndreCrossCount = stAndreCrossCount;
         }
     }
 }

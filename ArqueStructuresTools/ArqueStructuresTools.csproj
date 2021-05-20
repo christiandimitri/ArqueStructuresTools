@@ -85,6 +85,7 @@
     <Compile Include="Trusses\TrussComponent.cs" />
     <Compile Include="Utilities\DeconstructBracing.cs" />
     <Compile Include="Utilities\DeconstructCable.cs" />
+    <Compile Include="Utilities\DeconstructCross.cs" />
     <Compile Include="Utilities\DeconstructStrap.cs" />
     <Compile Include="Utilities\DeconstructTruss.cs" />
     <Compile Include="Utilities\DeconstructWarehouse.cs" />

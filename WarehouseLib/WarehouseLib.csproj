@@ -85,7 +85,7 @@
     <Compile Include="Connections\WarrenConnection.cs" />
     <Compile Include="Connections\WarrenStudsConnection.cs" />
     <Compile Include="Crosses\Cross.cs" />
-    <Compile Include="Crosses\StAndres.cs" />
+    <Compile Include="Crosses\StAndre.cs" />
     <Compile Include="Options\PorticoType.cs" />
     <Compile Include="Options\TrussOptions.cs" />
     <Compile Include="Options\WarehouseOptions.cs" />
