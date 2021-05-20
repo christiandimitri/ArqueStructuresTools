@@ -152,6 +152,21 @@ namespace ArqueStructuresTools
                                     args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.GreenYellow);
                                 }
                             }
+
+                            if (warehouse.Crosses != null)
+                            {
+                                foreach (var cross in warehouse.Crosses)
+                                {
+                                    if (cross.Axis != null)
+                                    {
+                                        foreach (var axis in cross.Axis)
+                                        {
+                                            _box.Union(axis.ToNurbsCurve().GetBoundingBox(false));
+                                            args.Display.DrawCurve(axis.ToNurbsCurve(), System.Drawing.Color.Purple);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

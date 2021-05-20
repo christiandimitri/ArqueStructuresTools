@@ -70,6 +70,7 @@
     <Compile Include="Options\WarehouseOptionsComponent.cs" />
     <Compile Include="Params\BracingParameter.cs" />
     <Compile Include="Params\CableParameter.cs" />
+    <Compile Include="Params\CrossParameter.cs" />
     <Compile Include="Params\StrapParameter.cs" />
     <Compile Include="Params\TrussParameter.cs" />
     <Compile Include="Params\WarehouseParameter.cs" />

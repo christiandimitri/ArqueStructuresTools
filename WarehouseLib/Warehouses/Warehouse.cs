@@ -4,6 +4,7 @@ using Rhino.Geometry;
 using WarehouseLib.Bracings;
 using WarehouseLib.Cables;
 using WarehouseLib.Columns;
+using WarehouseLib.Crosses;
 using WarehouseLib.Options;
 using WarehouseLib.Straps;
 using WarehouseLib.Trusses;
@@ -25,6 +26,7 @@ namespace WarehouseLib.Warehouses
         public List<Bracing> ColumnsBracings;
         public List<Cable> RoofCables;
         public List<Cable> FacadeCables;
+        public List<Cross> Crosses;
         private readonly WarehouseOptions _warehouseOptions;
 
         public Warehouse(Plane plane, TrussOptions trussOptions, WarehouseOptions warehouseOptions)
@@ -42,6 +44,7 @@ namespace WarehouseLib.Warehouses
             GenerateRoofBracing();
             GenerateColumnsBracing();
             GenerateFacadeBracing();
+            GenerateStAndresCross();
         }
 
         private void ConstructTrusses(TrussOptions trussOptions)
@@ -165,7 +168,7 @@ namespace WarehouseLib.Warehouses
                     trussA.StaticColumns[i].Axis.ToNurbsCurve().PointAtEnd
                 };
                 beamB = trussB.StaticColumns[i].Axis.ToNurbsCurve();
-                cable=new FacadeCable();
+                cable = new FacadeCable();
                 cable.Threshold = _warehouseOptions.FacadeCablesThreshold;
                 cables.AddRange(cable.ConstructCables(nodes, beamB));
             }
@@ -209,7 +212,7 @@ namespace WarehouseLib.Warehouses
                 RoofBracings.AddRange(roofBracingsEnd);
                 RoofCables.AddRange(roofCablesEnd);
             }
-            
+
             foreach (var truss in Trusses)
             {
                 if (truss.BoundaryColumns != null)
@@ -217,7 +220,6 @@ namespace WarehouseLib.Warehouses
                     truss.BoundaryColumns.RemoveAt(0);
                     truss.BoundaryColumns.RemoveAt(truss.BoundaryColumns.Count - 1);
                 }
-                
             }
         }
 
@@ -241,6 +243,16 @@ namespace WarehouseLib.Warehouses
             }
 
             ColumnsBracings = tempBracings;
+        }
+
+        private void GenerateStAndresCross()
+        {
+            var outsideNodes = new List<Point3d>
+                {Trusses[1].TopNodes[1], Trusses[1].BottomNodes[Trusses[1].BottomNodes.Count - 2]};
+            var insideNodes = new List<Point3d>
+                {Trusses[2].TopNodes[1], Trusses[2].BottomNodes[Trusses[2].BottomNodes.Count - 2]};
+            var cross = new StAndres().ConstructCross(outsideNodes, insideNodes);
+            Crosses = new List<Cross> {cross};
         }
 
         private List<Point3d> ExtractRoofBracingPoints(Truss truss)

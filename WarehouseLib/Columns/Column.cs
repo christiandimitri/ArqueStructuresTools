@@ -14,7 +14,7 @@ namespace WarehouseLib.Columns
         }
 
         public abstract List<Column> GenerateColumns(List<Point3d> nodes, Plane plane);
-        public abstract List<Plane> GenerateOrientatonPlanes(List<Curve> Axis);
+        public abstract List<Plane> GenerateOrientatonPlanes(List<Curve> axis);
 
         protected Plane ComputeOrientationPlane(Point3d node, Vector3d z)
         {

@@ -33,6 +33,7 @@ namespace ArqueStructuresTools
             pManager.AddParameter(new BracingParameter(), "Columns bracings", "cb", "cb", GH_ParamAccess.list);
             pManager.AddParameter(new CableParameter(), "Roof cables", "rc", "rc", GH_ParamAccess.list);
             pManager.AddParameter(new CableParameter(), "Facade cables", "fc", "fc", GH_ParamAccess.list);
+            pManager.AddParameter(new CrossParameter(), "St andre cross", "csa", "csa", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -115,6 +116,15 @@ namespace ArqueStructuresTools
                 }
             }
 
+            var crossStAndre = new List<CrossGoo>();
+            if (warehouse.Crosses != null)
+            {
+                foreach (var cross in warehouse.Crosses)
+                {
+                    crossStAndre.Add(new CrossGoo(cross));
+                }
+            }
+
             DA.SetDataList(0, new List<TrussGoo>(trusses));
             DA.SetDataList(1, new List<StrapGoo>(roofStraps));
             DA.SetDataList(2, new List<StrapGoo>(facadeStrapsX));
@@ -123,6 +133,7 @@ namespace ArqueStructuresTools
             DA.SetDataList(5, new List<BracingGoo>(columnsBracings));
             DA.SetDataList(6, new List<CableGoo>(roofCables));
             DA.SetDataList(7, new List<CableGoo>(facadeCables));
+            DA.SetDataList(8, new List<CrossGoo>(crossStAndre));
         }
     }
 }
