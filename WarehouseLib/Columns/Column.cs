@@ -1,26 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Rhino.Geometry;
+using WarehouseLib.Trusses;
 
 namespace WarehouseLib.Columns
 {
     public abstract class Column
     {
         public Line Axis;
-        public Plane ProfileOrientitionPlane;
+        public Plane ProfileOrientitionPlane { get; set; }
 
         protected Column()
         {
         }
 
         public abstract List<Column> GenerateColumns(List<Point3d> nodes, Plane plane);
-        public abstract List<Plane> GenerateOrientatonPlanes(List<Curve> axis);
 
-        protected Plane ComputeOrientationPlane(Point3d node, Vector3d z)
-        {
-            var plane = new Plane(node, z);
-            return plane;
-        }
 
         protected Line ConstructAxis(Point3d node, Plane plane)
         {
@@ -42,5 +37,7 @@ namespace WarehouseLib.Columns
 
             return columns;
         }
+
+        public abstract Plane GetColumnsOrientationPlane(Point3d node, Plane plane, int index);
     }
 }

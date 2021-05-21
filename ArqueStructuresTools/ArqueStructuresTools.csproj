@@ -66,10 +66,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bracings\RoofBracing.cs" />
-    <Compile Include="Options\TrussOptionsComponent.cs" />
+    <Compile Include="Options\TrussInputsComponent.cs" />
     <Compile Include="Options\WarehouseOptionsComponent.cs" />
     <Compile Include="Params\BracingParameter.cs" />
     <Compile Include="Params\CableParameter.cs" />
+    <Compile Include="Params\ColumnParameter.cs" />
     <Compile Include="Params\CrossParameter.cs" />
     <Compile Include="Params\StrapParameter.cs" />
     <Compile Include="Params\TrussParameter.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Trusses\TrussComponent.cs" />
     <Compile Include="Utilities\DeconstructBracing.cs" />
     <Compile Include="Utilities\DeconstructCable.cs" />
+    <Compile Include="Utilities\DeconstructColumn.cs" />
     <Compile Include="Utilities\DeconstructCross.cs" />
     <Compile Include="Utilities\DeconstructStrap.cs" />
     <Compile Include="Utilities\DeconstructTruss.cs" />

@@ -30,10 +30,10 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("Top bar", "tb", "tb", GH_ParamAccess.list);
-            pManager.AddCurveParameter("Bottom bar", "bb", "bb", GH_ParamAccess.list);
-            pManager.AddCurveParameter("Intermediate bar", "ib", "ib", GH_ParamAccess.list);
-            pManager.AddCurveParameter("Static column bar", "cb", "cb", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Top bars", "tb", "tb", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Bottom bars", "bb", "bb", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Intermediate bars", "ib", "ib", GH_ParamAccess.list);
+            pManager.AddParameter(new ColumnParameter(),"Static columns bar", "cb", "cb", GH_ParamAccess.list);
             pManager.AddPointParameter("Top nodes", "tn", "tn", GH_ParamAccess.list);
             pManager.AddPointParameter("Bottom nodes", "bn", "bn", GH_ParamAccess.list);
             pManager.AddPointParameter("Boundary nodes", "bn", "bn", GH_ParamAccess.list);
@@ -59,11 +59,12 @@ namespace ArqueStructuresTools
             var bottomNodes = truss.BottomNodes;
             var boundaryNodes = truss.BoundaryTopNodes;
             var boundaryColumns = new List<Curve>();
+            var staticColumnsGoo = new List<ColumnGoo>();
             if (truss.StaticColumns != null)
             {
                 foreach (var cl in truss.StaticColumns)
                 {
-                    staticColumns.Add(cl.Axis.ToNurbsCurve());
+                    staticColumnsGoo.Add(new ColumnGoo(cl));
                 }
             }
 
@@ -78,7 +79,7 @@ namespace ArqueStructuresTools
             DA.SetDataList(0, topBars);
             DA.SetDataList(1, bottomBars);
             DA.SetDataList(2, intermediateBars);
-            DA.SetDataList(3, staticColumns);
+            DA.SetDataList(3, staticColumnsGoo);
             DA.SetDataList(4, topNodes);
             DA.SetDataList(5, bottomNodes);
             DA.SetDataList(6, boundaryNodes);

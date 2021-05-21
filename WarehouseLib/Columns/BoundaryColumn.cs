@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Trusses;
 
 namespace WarehouseLib.Columns
 {
@@ -7,7 +8,9 @@ namespace WarehouseLib.Columns
     {
         public BoundaryColumn()
         {
+            
         }
+
 
         public override List<Column> GenerateColumns(List<Point3d> nodes, Plane plane)
         {
@@ -22,9 +25,10 @@ namespace WarehouseLib.Columns
             return columns;
         }
 
-        public override List<Plane> GenerateOrientatonPlanes(List<Curve> axis)
+        public override Plane GetColumnsOrientationPlane(Point3d node, Plane plane, int index)
         {
             throw new System.NotImplementedException();
         }
+
     }
 }
