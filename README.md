@@ -7,16 +7,14 @@ ArqueStructuresTools library code is written and designed by [Christian Dimitri]
 - [x] Create the base classes and derived ones to build a `Warehouse`
   - [x] Standard `Rectangular Warehouse` classses and its corresponding `grasshopper components`
   - [x] For now only 4 different geometrical typologies for the `Truss beam`
-  - [x] Compute different `Warehouse forms`
-- [ ] Push my commits to GitHub
-- [ ] Open a pull request
+  - [ ] Compute different `Warehouse forms`
+- [x] Connect to `Karamba3d`
+- [ ] Connect to `Tekla Structures`
 
 ### Usage
-
 -----
 
 ### Contribution
-
 -----
 
 ### License
