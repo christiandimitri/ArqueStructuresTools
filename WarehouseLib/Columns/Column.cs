@@ -14,9 +14,6 @@ namespace WarehouseLib.Columns
         {
         }
 
-        public abstract List<Column> GenerateColumns(List<Point3d> nodes, Plane plane);
-
-
         protected Line ConstructAxis(Point3d node, Plane plane)
         {
             var axis = new Line(plane.ClosestPoint(node), node);

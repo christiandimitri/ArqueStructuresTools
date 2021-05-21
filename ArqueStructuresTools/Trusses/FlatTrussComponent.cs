@@ -49,13 +49,13 @@ namespace ArqueStructuresTools
             var trussInputs = new TrussOptions();
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref trussInputs)) return;
-
+            var porticoIndex = 0;
             Truss truss = null;
             try
             {
                 truss = new FlatTruss(plane, trussInputs);
                 if (trussInputs.PorticoType == PorticoType.Portico.ToString())
-                    truss.ConstructPorticoFromTruss(truss);
+                    truss.ConstructPorticoFromTruss(truss, porticoIndex);
             }
             catch (Exception e)
             {

@@ -92,9 +92,9 @@ namespace WarehouseLib.Warehouses
         private List<Truss> WarehouseHasPorticoAtBoundaries(List<Truss> trusses)
         {
             var trussA = trusses[0];
-            trussA.ConstructPorticoFromTruss(trussA);
+            trussA.ConstructPorticoFromTruss(trussA, 0);
             var trussB = trusses[trusses.Count - 1];
-            trussB.ConstructPorticoFromTruss(trussB);
+            trussB.ConstructPorticoFromTruss(trussB, trusses.Count - 1);
 
             trusses.RemoveAt(0);
             trusses.Insert(0, trussA);

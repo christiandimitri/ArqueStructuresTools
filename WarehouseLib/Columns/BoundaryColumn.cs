@@ -12,13 +12,14 @@ namespace WarehouseLib.Columns
         }
 
 
-        public override List<Column> GenerateColumns(List<Point3d> nodes, Plane plane)
+        public List<Column> GenerateColumns(List<Point3d> nodes, Plane plane, int index)
         {
             var columns = new List<Column>();
             foreach (var t in nodes)
             {
                 var axis = ConstructAxis(t, plane);
                 var column = new BoundaryColumn {Axis = axis};
+                column.ProfileOrientitionPlane = GetColumnsOrientationPlane(t, plane, index);
                 columns.Add(column);
             }
             
@@ -27,7 +28,11 @@ namespace WarehouseLib.Columns
 
         public override Plane GetColumnsOrientationPlane(Point3d node, Plane plane, int index)
         {
-            throw new System.NotImplementedException();
+            var pt = plane.ClosestPoint(node);
+            var vectorX = Vector3d.ZAxis;
+            var vectorY = (index == 0) ? -plane.YAxis : plane.YAxis;
+            var profilePlane = new Plane(pt, vectorX, vectorY);
+            return profilePlane;
         }
 
     }

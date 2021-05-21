@@ -10,7 +10,7 @@ namespace WarehouseLib.Columns
         {
         }
 
-        public override List<Column> GenerateColumns(List<Point3d> nodes, Plane plane)
+        public List<Column> GenerateColumns(List<Point3d> nodes, Plane plane)
         {
             // TODO: Create columns here using trusses!
             var axisA = ConstructAxis(nodes[0], plane);
@@ -30,8 +30,8 @@ namespace WarehouseLib.Columns
         public override Plane GetColumnsOrientationPlane(Point3d node, Plane plane, int index)
         {
             var pt = plane.ClosestPoint(node);
-            var vectorX = (index == 0) ? -plane.XAxis : plane.XAxis;
-            var vectorY = plane.YAxis;
+            var vectorX = Vector3d.ZAxis;
+            var vectorY = (index == 0) ? -plane.YAxis : plane.YAxis;
             var profilePlane = new Plane(pt, vectorX, vectorY);
             return profilePlane;
         }

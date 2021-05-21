@@ -54,7 +54,7 @@ namespace ArqueStructuresTools
             if (!DA.GetData(0, ref typology)) return;
             if (!DA.GetData(1, ref plane)) return;
             if (!DA.GetData(2, ref trussInputs)) return;
-
+            var porticoIndex = 0;
             Truss truss = null;
             try
             {
@@ -77,7 +77,7 @@ namespace ArqueStructuresTools
 
                 if (trussInputs.PorticoType == PorticoType.Portico.ToString())
                     if (truss != null)
-                        truss.ConstructPorticoFromTruss(truss);
+                        truss.ConstructPorticoFromTruss(truss, porticoIndex);
             }
             catch (Exception e)
             {

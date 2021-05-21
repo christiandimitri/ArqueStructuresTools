@@ -281,7 +281,7 @@ namespace WarehouseLib.Trusses
             BoundaryTopNodes.AddRange(nodes);
         }
 
-        public void ConstructPorticoFromTruss(Truss truss)
+        public void ConstructPorticoFromTruss(Truss truss, int index)
         {
             TopBars = new List<Curve>(TopBars);
             TopNodes = new List<Point3d>(TopNodes);
@@ -291,7 +291,8 @@ namespace WarehouseLib.Trusses
 
 
             truss.GenerateBoundaryColumnsNodes(truss.TopBars, _columnsCount);
-            BoundaryColumns = new List<Column>(new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, _plane));
+            BoundaryColumns =
+                new List<Column>(new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, _plane, index));
         }
     }
 }
