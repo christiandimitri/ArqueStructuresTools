@@ -45,7 +45,7 @@ namespace WarehouseLib.Crosses
             }
 
             var tempCloud = new PointCloud(tempList);
-            var topBeam = Curve.JoinCurves(truss.TopBars)[0];
+            var topBeam = Curve.JoinCurves(truss.TopBeamAxisCurves)[0];
             var parameters = topBeam.DivideByCount(count, true);
             foreach (var t in parameters)
             {

@@ -24,15 +24,16 @@ namespace WarehouseLib
             ChangeBaseByType(_options.BaseType);
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options._articulationType);
+            ConstructBeams();
         }
 
         protected override void IsArticulatedToColumns()
         {
             var ptA = new Point3d();
             List<Curve> splitCurves = new List<Curve>();
-            for (int i = 0; i < BottomBars.Count; i++)
+            for (int i = 0; i < BottomBeamAxisCurves.Count; i++)
             {
-                var bar = BottomBars[i];
+                var bar = BottomBeamAxisCurves[i];
                 ptA = BottomNodes[i == 0 ? 1 : BottomNodes.Count - 2];
                 double t;
                 bar.ClosestPoint(ptA, out t);
@@ -41,7 +42,7 @@ namespace WarehouseLib
 
             BottomNodes.RemoveAt(0);
             BottomNodes.RemoveAt(BottomNodes.Count - 1);
-            BottomBars = splitCurves;
+            BottomBeamAxisCurves = splitCurves;
         }
 
         protected override void GenerateThickBottomBars()
@@ -52,7 +53,7 @@ namespace WarehouseLib
                     StartingNodes[1] - Vector3d.ZAxis * ComputeDifference());
                 var lineB = new Line(StartingNodes[1] - Vector3d.ZAxis * ComputeDifference(),
                     StartingNodes[2] - Vector3d.ZAxis * ComputeDifference());
-                BottomBars = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
+                BottomBeamAxisCurves = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
             }
             else
             {
@@ -67,7 +68,7 @@ namespace WarehouseLib
                     finalList = ComputeRigidBottomBarsToColumns();
                 }
 
-                BottomBars = finalList;
+                BottomBeamAxisCurves = finalList;
             }
         }
 
@@ -96,17 +97,17 @@ namespace WarehouseLib
 
         protected override List<Curve> ComputeBottomBarsArticulatedToColumns(List<Curve> bars)
         {
-            var tempParamsA = TopBars[0].DivideByCount(_divisions, true);
-            var tempParamsB = TopBars[1].DivideByCount(_divisions, true);
+            var tempParamsA = TopBeamAxisCurves[0].DivideByCount(_divisions, true);
+            var tempParamsB = TopBeamAxisCurves[1].DivideByCount(_divisions, true);
             var t1 = tempParamsA[1];
             var t2 = tempParamsB[0];
             var t3 = tempParamsB[tempParamsB.Length - 2];
-            var startPoint = TopBars[0].PointAt(t1) -
-                             Vector3d.ZAxis * (ComputeDifference() + (TopBars[0].PointAt(t1).Z - StartingNodes[0].Z));
-            var centerPoint = TopBars[1].PointAt(t2) -
+            var startPoint = TopBeamAxisCurves[0].PointAt(t1) -
+                             Vector3d.ZAxis * (ComputeDifference() + (TopBeamAxisCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
+            var centerPoint = TopBeamAxisCurves[1].PointAt(t2) -
                               Vector3d.ZAxis * startPoint.DistanceTo(StartingNodes[0]);
-            var endPoint = TopBars[1].PointAt(t3) -
-                           Vector3d.ZAxis * (ComputeDifference() + (TopBars[0].PointAt(t1).Z - StartingNodes[0].Z));
+            var endPoint = TopBeamAxisCurves[1].PointAt(t3) -
+                           Vector3d.ZAxis * (ComputeDifference() + (TopBeamAxisCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
             var arch = new Arc(startPoint, centerPoint, endPoint);
             arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
             Curve[] tempCurves = arch.ToNurbsCurve().Split(t);
@@ -130,7 +131,7 @@ namespace WarehouseLib
             {
                 Line lineA = new Line(StartingNodes[0], StartingNodes[1]);
                 Line lineB = new Line(StartingNodes[1], StartingNodes[2]);
-                TopBars = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
+                TopBeamAxisCurves = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
             }
             else
             {
@@ -138,7 +139,7 @@ namespace WarehouseLib
                 arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
                 Curve[] tempCrvs = arch.ToNurbsCurve().Split(t);
                 // tempCrvs[1].Reverse();
-                TopBars = tempCrvs.ToList();
+                TopBeamAxisCurves = tempCrvs.ToList();
             }
         }
 
@@ -157,11 +158,11 @@ namespace WarehouseLib
             divisions = _divisions;
             TopNodes = new List<Point3d>();
             BottomNodes = new List<Point3d>();
-            IntermediateBars = new List<Curve>();
-            for (int i = 0; i < TopBars.Count; i++)
+            IntermediateBeamsAxisCurves = new List<Curve>();
+            for (int i = 0; i < TopBeamAxisCurves.Count; i++)
             {
-                GenerateTopNodes(TopBars[i], divisions, i);
-                GenerateBottomNodes(BottomBars[i]);
+                GenerateTopNodes(TopBeamAxisCurves[i], divisions, i);
+                GenerateBottomNodes(BottomBeamAxisCurves[i]);
             }
 
             PointCloud cloud = new PointCloud(TopNodes);

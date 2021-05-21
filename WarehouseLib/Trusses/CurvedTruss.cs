@@ -38,7 +38,7 @@ namespace WarehouseLib.Trusses
 
         public Vector3d ComputeNormalAtStartEnd(int index)
         {
-            var crv = TopBars[index == 0 ? 0 : 1];
+            var crv = TopBeamAxisCurves[index == 0 ? 0 : 1];
             var vectorA = index == 0 ? crv.TangentAtStart : crv.TangentAtEnd;
             var perp = Vector3d.CrossProduct(vectorA, _plane.ZAxis);
             perp.Unitize();

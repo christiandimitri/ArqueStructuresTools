@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
 using WarehouseLib.Articulations;
+using WarehouseLib.Beams;
 using WarehouseLib.Columns;
 using WarehouseLib.Connections;
 using WarehouseLib.Options;
@@ -11,7 +12,7 @@ namespace WarehouseLib.Trusses
 {
     public abstract class Truss
     {
-        public List<Curve> BottomBars;
+        public List<Curve> BottomBeamAxisCurves;
         public List<Point3d> BottomNodes;
         private double _clearHeight;
         public List<Column> StaticColumns;
@@ -19,16 +20,20 @@ namespace WarehouseLib.Trusses
         public int _divisions;
         public int _columnsCount;
         public double _height;
-        public List<Curve> IntermediateBars;
         public double _length;
         public double _maxHeight;
         public Plane _plane;
         public List<Point3d> StartingNodes;
-        public List<Curve> TopBars;
+        public Beam TopBeam;
+        public List<Curve> TopBeamAxisCurves;
+        public Beam BottomBeam;
+        public List<Curve> IntermediateBeamsAxisCurves;
+        public Beam IntermediateBeams;
         public List<Point3d> TopNodes;
         public List<Point3d> BoundaryTopNodes;
         public string _trussType;
         public string _articulationType;
+
 
         protected Truss(Plane plane, TrussOptions options)
         {
@@ -44,7 +49,25 @@ namespace WarehouseLib.Trusses
             _divisions = RecomputeDivisions(_divisions);
         }
 
-        protected int RecomputeDivisions(int divisions)
+        protected void ConstructBeams()
+        {
+            var topBeam = new TopBeam();
+            topBeam.Axis = TopBeamAxisCurves;
+            topBeam.ProfileOrientationPlane = Plane.WorldXY;
+            TopBeam = topBeam;
+
+            var bottomBeam = new BottomBeam();
+            bottomBeam.Axis = BottomBeamAxisCurves;
+            bottomBeam.ProfileOrientationPlane = Plane.WorldXY;
+            BottomBeam = bottomBeam;
+
+            var interBeams = new IntermediateBeams();
+            interBeams.Axis = IntermediateBeamsAxisCurves;
+            interBeams.ProfileOrientationPlane = Plane.WorldZX;
+            IntermediateBeams = interBeams;
+        }
+
+        public int RecomputeDivisions(int divisions)
         {
             if (divisions <= 1) throw new Exception("truss division has to be >=2");
             var recomputedDivisions = divisions;
@@ -122,7 +145,7 @@ namespace WarehouseLib.Trusses
             Line lineA = new Line(ptA, ptB);
             Line lineB = new Line(ptB, ptC);
             var bars = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
-            BottomBars = bars;
+            BottomBeamAxisCurves = bars;
         }
 
         protected abstract void GenerateBottomNodes(Curve crv);
@@ -186,7 +209,7 @@ namespace WarehouseLib.Trusses
                 bars = connections.ConstructConnections();
             }
 
-            IntermediateBars = bars;
+            IntermediateBeamsAxisCurves = bars;
             RecomputeNodes();
         }
 
@@ -248,7 +271,7 @@ namespace WarehouseLib.Trusses
 
         private void IsRigidToColumns()
         {
-            BottomBars = new List<Curve>(BottomBars);
+            BottomBeamAxisCurves = new List<Curve>(BottomBeamAxisCurves);
         }
 
         protected abstract void IsArticulatedToColumns();
@@ -283,14 +306,14 @@ namespace WarehouseLib.Trusses
 
         public void ConstructPorticoFromTruss(Truss truss, int index)
         {
-            TopBars = new List<Curve>(TopBars);
+            TopBeamAxisCurves = new List<Curve>(TopBeamAxisCurves);
             TopNodes = new List<Point3d>(TopNodes);
-            BottomBars = null;
+            BottomBeamAxisCurves = null;
             BottomNodes = null;
-            IntermediateBars = null;
+            IntermediateBeamsAxisCurves = null;
 
 
-            truss.GenerateBoundaryColumnsNodes(truss.TopBars, _columnsCount);
+            truss.GenerateBoundaryColumnsNodes(truss.TopBeamAxisCurves, _columnsCount);
             BoundaryColumns =
                 new List<Column>(new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, _plane, index));
         }

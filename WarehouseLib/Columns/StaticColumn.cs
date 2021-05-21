@@ -17,17 +17,17 @@ namespace WarehouseLib.Columns
             var axisB = ConstructAxis(nodes[2], plane);
             var columnA = new StaticColumn();
             columnA.Axis = axisA;
-            var planeA = GetColumnsOrientationPlane(nodes[0], plane, 0);
-            columnA.ProfileOrientitionPlane = planeA;
+            var planeA = GetTeklaProfileOrientationPlane(nodes[0], plane, 0);
+            columnA.ProfileOrientationPlane = planeA;
             var columnB = new StaticColumn();
             columnB.Axis = axisB;
-            var planeB = GetColumnsOrientationPlane(nodes[2], plane, 2);
-            columnB.ProfileOrientitionPlane = planeB;
+            var planeB = GetTeklaProfileOrientationPlane(nodes[2], plane, 2);
+            columnB.ProfileOrientationPlane = planeB;
             var columns = new List<Column> {columnA, columnB};
             return columns;
         }
 
-        public override Plane GetColumnsOrientationPlane(Point3d node, Plane plane, int index)
+        public override Plane GetTeklaProfileOrientationPlane(Point3d node, Plane plane, int index)
         {
             var pt = plane.ClosestPoint(node);
             var vectorX = Vector3d.ZAxis;

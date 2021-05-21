@@ -8,7 +8,7 @@ namespace WarehouseLib.Columns
     public abstract class Column
     {
         public Line Axis;
-        public Plane ProfileOrientitionPlane { get; set; }
+        public Plane ProfileOrientationPlane { get; set; }
 
         protected Column()
         {
@@ -35,6 +35,6 @@ namespace WarehouseLib.Columns
             return columns;
         }
 
-        public abstract Plane GetColumnsOrientationPlane(Point3d node, Plane plane, int index);
+        public abstract Plane GetTeklaProfileOrientationPlane(Point3d node, Plane plane, int index);
     }
 }

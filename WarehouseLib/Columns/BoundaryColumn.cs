@@ -19,14 +19,14 @@ namespace WarehouseLib.Columns
             {
                 var axis = ConstructAxis(t, plane);
                 var column = new BoundaryColumn {Axis = axis};
-                column.ProfileOrientitionPlane = GetColumnsOrientationPlane(t, plane, index);
+                column.ProfileOrientationPlane = GetTeklaProfileOrientationPlane(t, plane, index);
                 columns.Add(column);
             }
             
             return columns;
         }
 
-        public override Plane GetColumnsOrientationPlane(Point3d node, Plane plane, int index)
+        public override Plane GetTeklaProfileOrientationPlane(Point3d node, Plane plane, int index)
         {
             var pt = plane.ClosestPoint(node);
             var vectorX = Vector3d.ZAxis;

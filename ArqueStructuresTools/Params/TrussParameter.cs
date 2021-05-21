@@ -40,27 +40,27 @@ namespace ArqueStructuresTools
                     foreach (var trussGoo in branch)
                     {
                         var truss = trussGoo.Value;
-                        if (truss.TopBars != null)
+                        if (truss.TopBeamAxisCurves != null)
                         {
-                            foreach (var line in truss.TopBars)
+                            foreach (var line in truss.TopBeamAxisCurves)
                             {
                                 _box.Union(line.GetBoundingBox(false));
                                 args.Display.DrawCurve(line, System.Drawing.Color.Blue);
                             }
                         }
 
-                        if (truss.BottomBars != null)
+                        if (truss.BottomBeamAxisCurves != null)
                         {
-                            foreach (var line in truss.BottomBars)
+                            foreach (var line in truss.BottomBeamAxisCurves)
                             {
                                 _box.Union(line.GetBoundingBox(false));
                                 args.Display.DrawCurve(line, System.Drawing.Color.Red);
                             }
                         }
 
-                        if (truss.IntermediateBars != null)
+                        if (truss.IntermediateBeamsAxisCurves != null)
                         {
-                            foreach (var line in truss.IntermediateBars)
+                            foreach (var line in truss.IntermediateBeamsAxisCurves)
                             {
                                 _box.Union(line.GetBoundingBox(false));
                                 args.Display.DrawCurve(line, System.Drawing.Color.Green);

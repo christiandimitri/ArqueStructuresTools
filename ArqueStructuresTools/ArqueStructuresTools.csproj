@@ -68,6 +68,7 @@
     <Compile Include="Bracings\RoofBracing.cs" />
     <Compile Include="Options\TrussInputsComponent.cs" />
     <Compile Include="Options\WarehouseOptionsComponent.cs" />
+    <Compile Include="Params\BeamParameter.cs" />
     <Compile Include="Params\BracingParameter.cs" />
     <Compile Include="Params\CableParameter.cs" />
     <Compile Include="Params\ColumnParameter.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Trusses\FlatTrussComponent.cs" />
     <Compile Include="Trusses\MonopichTrussComponent.cs" />
     <Compile Include="Trusses\TrussComponent.cs" />
+    <Compile Include="Utilities\DeconstructBeam.cs" />
     <Compile Include="Utilities\DeconstructBracing.cs" />
     <Compile Include="Utilities\DeconstructCable.cs" />
     <Compile Include="Utilities\DeconstructColumn.cs" />

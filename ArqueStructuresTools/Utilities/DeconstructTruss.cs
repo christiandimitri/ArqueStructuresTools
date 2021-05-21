@@ -30,9 +30,9 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("Top bars", "tb", "tb", GH_ParamAccess.list);
-            pManager.AddCurveParameter("Bottom bars", "bb", "bb", GH_ParamAccess.list);
-            pManager.AddCurveParameter("Intermediate bars", "ib", "ib", GH_ParamAccess.list);
+            pManager.AddParameter(new BeamParameter(), "Top bars", "tb", "tb", GH_ParamAccess.item);
+            pManager.AddParameter(new BeamParameter(), "Bottom bars", "bb", "bb", GH_ParamAccess.list);
+            pManager.AddParameter(new BeamParameter(), "Intermediate bars", "ib", "ib", GH_ParamAccess.list);
             pManager.AddPointParameter("Top nodes", "tn", "tn", GH_ParamAccess.list);
             pManager.AddPointParameter("Bottom nodes", "bn", "bn", GH_ParamAccess.list);
             pManager.AddParameter(new ColumnParameter(), "Static columns", "cb", "cb", GH_ParamAccess.list);
@@ -51,16 +51,15 @@ namespace ArqueStructuresTools
             if (!DA.GetData(0, ref trussGoo)) return;
 
             var truss = trussGoo.Value;
-            var topBars = truss.TopBars;
-            var bottomBars = truss.BottomBars;
-            var intermediateBars = truss.IntermediateBars;
-            var staticColumns = new List<Curve>();
+            var topBars = truss.TopBeamAxisCurves;
+            var bottomBars = truss.BottomBeamAxisCurves;
+            var intermediateBars = truss.IntermediateBeamsAxisCurves;
             var topNodes = truss.TopNodes;
             var bottomNodes = truss.BottomNodes;
             var boundaryNodes = truss.BoundaryTopNodes;
-            var boundaryColumns = new List<Curve>();
             var staticColumnsGoo = new List<ColumnGoo>();
             var boundaryColumnsGoo = new List<ColumnGoo>();
+            BeamGoo topBeamGoo = (truss.TopBeam != null) ? new BeamGoo(truss.TopBeam) : new BeamGoo();
 
             if (truss.StaticColumns != null)
             {
@@ -78,7 +77,7 @@ namespace ArqueStructuresTools
                 }
             }
 
-            DA.SetDataList(0, topBars);
+            DA.SetData(0, topBeamGoo);
             DA.SetDataList(1, bottomBars);
             DA.SetDataList(2, intermediateBars);
             DA.SetDataList(3, topNodes);

@@ -44,9 +44,9 @@ namespace ArqueStructuresTools
 
                         foreach (var truss in warehouse.Trusses)
                         {
-                            if (truss.TopBars != null)
+                            if (truss.TopBeamAxisCurves != null)
                             {
-                                foreach (var bar in truss.TopBars)
+                                foreach (var bar in truss.TopBeamAxisCurves)
                                 {
                                     _box.Union(bar.GetBoundingBox(false));
                                     args.Display.DrawCurve(bar, System.Drawing.Color.Blue);
@@ -54,18 +54,18 @@ namespace ArqueStructuresTools
                             }
 
 
-                            if (truss.BottomBars != null)
+                            if (truss.BottomBeamAxisCurves != null)
                             {
-                                foreach (var bar in truss.BottomBars)
+                                foreach (var bar in truss.BottomBeamAxisCurves)
                                 {
                                     _box.Union(bar.GetBoundingBox(false));
                                     args.Display.DrawCurve(bar, System.Drawing.Color.Red);
                                 }
                             }
 
-                            if (truss.IntermediateBars != null)
+                            if (truss.IntermediateBeamsAxisCurves != null)
                             {
-                                foreach (var bar in truss.IntermediateBars)
+                                foreach (var bar in truss.IntermediateBeamsAxisCurves)
                                 {
                                     _box.Union(bar.GetBoundingBox(false));
                                     args.Display.DrawCurve(bar, System.Drawing.Color.Green);

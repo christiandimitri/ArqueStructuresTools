@@ -4,34 +4,34 @@ using Grasshopper.Kernel;
 
 namespace ArqueStructuresTools
 {
-    public class DeconstructColumn : GH_Component
+    public class DeconstructBeam : GH_Component
     {
-        public DeconstructColumn() : base("Deconstruct Column", "Nickname", "Description", "Arque Structures",
+        public DeconstructBeam() : base("Deconstruct Beam", "Nickname", "Description", "Arque Structures",
             "Utilities")
         {
         }
 
-        public override Guid ComponentGuid => new Guid("ACD0033D-26F3-4018-A8A9-8027EBDD6CEF");
+        public override Guid ComponentGuid => new Guid("1D7C237D-8CEE-4D93-A57D-CD1216FACCBF");
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new ColumnParameter(), "Column", "c", "column to deconstruct", GH_ParamAccess.item);
+            pManager.AddParameter(new BeamParameter(), "Beam", "b", "column to deconstruct", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddLineParameter("Axis", "a", "Axis of the column", GH_ParamAccess.item);
+            pManager.AddLineParameter("Axis", "a", "Axis of the column", GH_ParamAccess.list);
             pManager.AddPlaneParameter("Plane", "p", "The columns' profile orientation's plane", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var columnGoo = new ColumnGoo();
+            var beamGoo = new BeamGoo();
 
-            if (!DA.GetData(0, ref columnGoo)) return;
+            if (!DA.GetData(0, ref beamGoo)) return;
 
-            DA.SetData(0, columnGoo.Value.Axis);
-            DA.SetData(1, columnGoo.Value.ProfileOrientationPlane);
+            DA.SetDataList(0, beamGoo.Value.Axis);
+            DA.SetData(1, beamGoo.Value.ProfileOrientationPlane);
         }
 
         /// <summary>

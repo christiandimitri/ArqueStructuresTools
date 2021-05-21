@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Beams;
 using WarehouseLib.Columns;
 using WarehouseLib.Options;
 
@@ -14,6 +15,7 @@ namespace WarehouseLib.Trusses
             GenerateThickBottomBars();
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options._articulationType);
+            ConstructBeams();
         }
 
         public override void GenerateTopBars()
@@ -21,7 +23,7 @@ namespace WarehouseLib.Trusses
             StartingNodes = GetStartingPoints(_plane, _length / 2, _length / 2, _height, _height, _height);
             var barA = new Line(StartingNodes[0], StartingNodes[1]);
             var barB = new Line(StartingNodes[1], StartingNodes[2]);
-            TopBars = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};
+            TopBeamAxisCurves = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};
         }
 
         protected override void GenerateBottomNodes(Curve crv)

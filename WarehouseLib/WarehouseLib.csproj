@@ -65,6 +65,10 @@
     <Compile Include="Articulations\Articulation.cs" />
     <Compile Include="Articulations\ArticulationType.cs" />
     <Compile Include="Articulations\Rigid.cs" />
+    <Compile Include="Beams\Beam.cs" />
+    <Compile Include="Beams\BottomBeam.cs" />
+    <Compile Include="Beams\IntermediateBeams.cs" />
+    <Compile Include="Beams\TopBeam.cs" />
     <Compile Include="Bracings\Bracing.cs" />
     <Compile Include="Bracings\BracingType.cs" />
     <Compile Include="Bracings\ColumnsBracing.cs" />
