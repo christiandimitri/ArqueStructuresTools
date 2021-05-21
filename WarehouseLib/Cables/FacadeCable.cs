@@ -17,18 +17,6 @@ namespace WarehouseLib.Cables
         public override List<Cable> ConstructCables(List<Point3d> nodes, Curve beam)
         {
             var cables = new List<Cable>();
-            // var ptA = nodes[0];
-            // var ptB = beam.PointAtEnd;
-            // var axis = new Line(ptA, ptB);
-            // var cable = new FacadeCable {Axis = axis};
-            // cables.Add(cable);
-            //
-            // ptA = nodes[1];
-            // ptB = beam.PointAtStart;
-            // axis = new Line(ptA, ptB);
-            // cable = new FacadeCable {Axis = axis};
-            // cables.Add(cable);
-
             var width = Convert.ToInt32(nodes[0].DistanceTo(beam.PointAtStart));
             var height = Convert.ToInt32(beam.GetLength());
             var ratio = Convert.ToInt32(height / width * Threshold);
