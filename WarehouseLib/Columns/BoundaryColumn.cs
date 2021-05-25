@@ -8,7 +8,6 @@ namespace WarehouseLib.Columns
     {
         public BoundaryColumn()
         {
-            
         }
 
 
@@ -18,22 +17,23 @@ namespace WarehouseLib.Columns
             foreach (var t in nodes)
             {
                 var axis = ConstructAxis(t, plane);
-                var column = new BoundaryColumn {Axis = axis};
-                column.ProfileOrientationPlane = GetTeklaProfileOrientationPlane(t, plane, index);
+                var column = new BoundaryColumn
+                {
+                    Axis = axis,
+                    ProfileOrientationPlane = GetTeklaProfileOrientationPlane(t, plane, index)
+                };
                 columns.Add(column);
             }
-            
+
             return columns;
         }
 
         public override Plane GetTeklaProfileOrientationPlane(Point3d node, Plane plane, int index)
         {
             var pt = plane.ClosestPoint(node);
-            var vectorX = Vector3d.ZAxis;
-            var vectorY = (index == 0) ? -plane.YAxis : plane.YAxis;
-            var profilePlane = new Plane(pt, vectorX, vectorY);
+            var normal = (index > 0) ? plane.YAxis : -plane.YAxis;
+            var profilePlane = new Plane(pt, normal);
             return profilePlane;
         }
-
     }
 }
