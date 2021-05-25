@@ -14,13 +14,14 @@ namespace WarehouseLib
         {
             var roofStraps = new List<Strap>();
 
-            for (var i = 0; i < trusses.Count; i++)
+            for (var i = 0; i < trusses.Count-1; i++)
             {
+                var trussA = trusses[i];
+                var trussB = trusses[i + 1];
                 for (var j = 0; j < trusses[i].TopNodes.Count; j++)
                 {
-                    if (i >= trusses.Count - 1) continue;
-                    var ptA = trusses[i].TopNodes[j];
-                    var ptB = trusses[i + 1].TopNodes[j];
+                    var ptA = trussA.TopNodes[j];
+                    var ptB = trussB.TopNodes[j];
                     var axis = new Line(ptA, ptB);
                     var strap = new RoofStrap {Axis = axis};
                     roofStraps.Add(strap);
@@ -29,9 +30,9 @@ namespace WarehouseLib
             return roofStraps;
         }
 
-        public override List<Strap> ConstructStraps(List<Strap> strapMethod)
+        protected override Plane GetTeklaProfileOrientationPlane(Truss truss, Point3d strapPosition, int index, bool isBoundary)
         {
-            return strapMethod;
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -64,7 +64,7 @@ namespace WarehouseLib.Trusses
             IntermediateBeams = interBeams;
         }
 
-        public int RecomputeDivisions(int divisions)
+        private int RecomputeDivisions(int divisions)
         {
             if (divisions <= 1) throw new Exception("truss division has to be >=2");
             var recomputedDivisions = divisions;

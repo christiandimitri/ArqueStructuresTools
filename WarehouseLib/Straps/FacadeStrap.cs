@@ -7,7 +7,7 @@ namespace WarehouseLib.Straps
 {
     public class FacadeStrap : Strap
     {
-        public List<Strap> ConstructStrapsAxisOnStaticColumns(List<Truss> trusses, double distance)
+        public List<Strap> ConstructStrapsOnStaticColumns(List<Truss> trusses, double distance)
         {
             var facadeStraps = new List<Strap>();
             for (int i = 0; i < trusses.Count - 1; i++)
@@ -25,8 +25,9 @@ namespace WarehouseLib.Straps
                     {
                         var ptA = columnA.Axis.ToNurbsCurve().PointAt(parametersA[k]);
                         var ptB = columnB.Axis.ToNurbsCurve().PointAt(parametersB[k]);
-                        Line axis = new Line(ptA, ptB);
-                        var strap = new FacadeStrap {Axis = axis};
+                        Line axis = (j==0)?new Line(ptA, ptB):new Line(ptB, ptA);
+                        var orientationPlane = GetTeklaProfileOrientationPlane(trussA, ptA, j, false);
+                        var strap = new FacadeStrap {Axis = axis, ProfileOrientationPlane = orientationPlane};
                         facadeStraps.Add(strap);
                     }
                 }
@@ -35,7 +36,7 @@ namespace WarehouseLib.Straps
             return facadeStraps;
         }
 
-        public List<Strap> ConstructStrapsAxisOnBoundaryColumns(List<Truss> trusses, double distance, bool hasBoundary)
+        public List<Strap> ConstructStrapsOnBoundaryColumns(List<Truss> trusses, double distance, bool hasBoundary)
         {
             var facadeStraps = new List<Strap>();
             foreach (var truss in trusses)
@@ -64,9 +65,12 @@ namespace WarehouseLib.Straps
             return facadeStraps;
         }
 
-        public override List<Strap> ConstructStraps(List<Strap> strapList)
+        protected override Plane GetTeklaProfileOrientationPlane(Truss truss, Point3d strapPosition, int index,
+            bool isBoundary)
         {
-            return strapList;
+            var trussPlane = truss._plane;
+            var orientationPlane = new Plane(strapPosition, (index==0)?trussPlane.XAxis:-trussPlane.XAxis);
+            return orientationPlane;
         }
     }
 }

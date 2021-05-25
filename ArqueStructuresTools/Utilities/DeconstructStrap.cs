@@ -34,10 +34,9 @@ namespace ArqueStructuresTools
             var strapGoo = new StrapGoo();
 
             if (!DA.GetData(0, ref strapGoo)) return;
-            var strap = strapGoo.Value;
-
-            DA.SetData(0, strap.Axis);
-            DA.SetData(1, Plane.WorldXY);
+            
+            DA.SetData(0, strapGoo.Value.Axis);
+            DA.SetData(1, strapGoo.Value.ProfileOrientationPlane);
         }
     }
 }

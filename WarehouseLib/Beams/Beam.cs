@@ -12,7 +12,6 @@ namespace WarehouseLib.Beams
         protected Beam()
         {
         }
-
         public abstract Plane GetTeklaProfileOrientationPlane();
     }
 }

@@ -14,7 +14,9 @@ namespace WarehouseLib.Crosses
 
         public abstract List<Cross> ConstructCrosses(List<Point3d> outerTopNodes, List<Point3d> innerBottomNodes,
             List<Point3d> outerBottomNodes, List<Point3d> innerTopNodes);
+
         public abstract List<Point3d> ComputeCrossTopNodes(Truss truss, int count);
         public abstract List<Point3d> ComputeCrossBottomNodes(Truss truss, List<Point3d> topNodes);
+        public abstract Plane GetTeklaProfileOrientationPlane();
     }
 }

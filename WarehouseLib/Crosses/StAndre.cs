@@ -83,5 +83,9 @@ namespace WarehouseLib.Crosses
 
             return cross;
         }
+        public override Plane GetTeklaProfileOrientationPlane()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

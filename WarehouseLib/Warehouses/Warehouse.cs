@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rhino.Geometry;
-using WarehouseLib.Articulations;
 using WarehouseLib.Bracings;
 using WarehouseLib.Cables;
 using WarehouseLib.Columns;
@@ -15,21 +14,21 @@ namespace WarehouseLib.Warehouses
 {
     public class Warehouse
     {
-        private Plane _plane;
         private readonly TrussOptions _trussOptions;
-        public List<Truss> Trusses;
-        public List<Point3d> Nodes;
-        private List<Column> _staticColumns;
+        private readonly WarehouseOptions _warehouseOptions;
         private List<Column> _boundaryColumns;
-        public List<Strap> RoofStraps;
+        private Plane _plane;
+        private List<Column> _staticColumns;
+        public List<Bracing> ColumnsBracings;
+        public List<Cross> Crosses;
+        public List<Cable> FacadeCables;
         public List<Strap> FacadeStrapsX;
         public List<Strap> FacadeStrapsY;
+        public List<Point3d> Nodes;
         public List<Bracing> RoofBracings;
-        public List<Bracing> ColumnsBracings;
         public List<Cable> RoofCables;
-        public List<Cable> FacadeCables;
-        public List<Cross> Crosses;
-        private readonly WarehouseOptions _warehouseOptions;
+        public List<Strap> RoofStraps;
+        public List<Truss> Trusses;
 
         public Warehouse(Plane plane, TrussOptions trussOptions, WarehouseOptions warehouseOptions)
         {
@@ -55,9 +54,9 @@ namespace WarehouseLib.Warehouses
         private void ConstructTrusses(TrussOptions trussOptions)
         {
             var trusses = new List<Truss>();
-            for (int i = 0; i < _warehouseOptions.PorticoCount + 1; i++)
+            for (var i = 0; i < _warehouseOptions.PorticoCount + 1; i++)
             {
-                var span = (_warehouseOptions.Length / _warehouseOptions.PorticoCount * i);
+                var span = _warehouseOptions.Length / _warehouseOptions.PorticoCount * i;
                 var tempPlane = new Plane(_plane.PointAt(0, span, 0), _plane.ZAxis);
                 if (_warehouseOptions.Typology == GeometricalTypology.Flat.ToString())
                 {
@@ -81,10 +80,7 @@ namespace WarehouseLib.Warehouses
                 }
             }
 
-            if (_warehouseOptions.HasBoundary == true)
-            {
-                trusses = new List<Truss>(WarehouseHasPorticoAtBoundaries(trusses));
-            }
+            if (_warehouseOptions.HasBoundary) trusses = new List<Truss>(WarehouseHasPorticoAtBoundaries(trusses));
 
             Trusses = trusses;
         }
@@ -108,13 +104,8 @@ namespace WarehouseLib.Warehouses
         {
             RoofStraps = new List<Strap>();
             var tempStraps = new List<Strap>();
-            var straps =
-                new RoofStrap().ConstructStraps(new RoofStrap().ConstructRoofStraps(Trusses, 0));
-            foreach (var strap in straps)
-            {
-                tempStraps.Add(strap);
-            }
-
+            var straps = new RoofStrap().ConstructRoofStraps(Trusses, 0);
+            foreach (var strap in straps) tempStraps.Add(strap);
             RoofStraps = tempStraps;
         }
 
@@ -122,37 +113,18 @@ namespace WarehouseLib.Warehouses
         {
             FacadeStrapsX = new List<Strap>();
             FacadeStrapsY = new List<Strap>();
-            var tempStraps = new List<Strap>();
-            var strapsX =
-                new FacadeStrap().ConstructStraps(
-                    new FacadeStrap().ConstructStrapsAxisOnStaticColumns(Trusses,
-                        _warehouseOptions.FacadeStrapsDistance));
-            foreach (var strap in strapsX)
-            {
-                tempStraps.Add(strap);
-            }
+            FacadeStrapsX = new FacadeStrap().ConstructStrapsOnStaticColumns(
+                Trusses, _warehouseOptions.FacadeStrapsDistance);
 
-            FacadeStrapsX = tempStraps;
-            tempStraps = new List<Strap>();
             var boundary = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
-            var strapsY =
-                new FacadeStrap().ConstructStraps(
-                    new FacadeStrap().ConstructStrapsAxisOnBoundaryColumns(boundary,
-                        _warehouseOptions.FacadeStrapsDistance,
-                        _warehouseOptions.HasBoundary));
-
-            foreach (var strap in strapsY)
-            {
-                tempStraps.Add(strap);
-            }
-
-            FacadeStrapsY = tempStraps;
+            FacadeStrapsY = new FacadeStrap().ConstructStrapsOnBoundaryColumns(boundary,
+                _warehouseOptions.FacadeStrapsDistance, _warehouseOptions.HasBoundary);
         }
 
         private void GenerateFacadeBracing()
         {
             var cables = new List<Cable>();
-            for (int i = 0; i < Trusses[0].StaticColumns.Count; i++)
+            for (var i = 0; i < Trusses[0].StaticColumns.Count; i++)
             {
                 var trussA = Trusses[0];
                 var trussB = Trusses[1];
@@ -202,45 +174,40 @@ namespace WarehouseLib.Warehouses
             }
             else if (_warehouseOptions.RoofBracingType == RoofBracingType.Cable.ToString())
             {
-                var roofBracingsStart =
+                var roofBracingStart =
                     new RoofBracing().ConstructBracings(startBracingPoints, startTopBeam);
 
                 var roofCablesStart =
                     new RoofCable().ConstructCables(startBracingPoints, startTopBeam);
-                RoofBracings.AddRange(roofBracingsStart);
+                RoofBracings.AddRange(roofBracingStart);
                 RoofCables.AddRange(roofCablesStart);
 
-                var roofBracingsEnd =
+                var roofBracingEnd =
                     new RoofBracing().ConstructBracings(endBracingPoints, endTopBeam);
                 var roofCablesEnd =
                     new RoofCable().ConstructCables(endBracingPoints, endTopBeam);
-                RoofBracings.AddRange(roofBracingsEnd);
+                RoofBracings.AddRange(roofBracingEnd);
                 RoofCables.AddRange(roofCablesEnd);
             }
 
             foreach (var truss in Trusses)
-            {
                 if (truss.BoundaryColumns != null)
                 {
                     truss.BoundaryColumns.RemoveAt(0);
                     truss.BoundaryColumns.RemoveAt(truss.BoundaryColumns.Count - 1);
                 }
-            }
         }
 
         private void GenerateColumnsBracing()
         {
             var tempBracings = new List<Bracing>();
 
-            for (int i = 0; i < Trusses.Count - 1; i++)
+            for (var i = 0; i < Trusses.Count - 1; i++)
             {
                 var trussA = Trusses[i];
                 var trussB = Trusses[i + 1];
                 var tempList = trussA.StartingNodes;
-                if (i == 0 || i == Trusses.Count - 2)
-                {
-                    tempList.RemoveAt(1);
-                }
+                if (i == 0 || i == Trusses.Count - 2) tempList.RemoveAt(1);
 
                 var nodes = tempList;
                 var beam = Curve.JoinCurves(trussB.TopBeamAxisCurves)[0];
@@ -254,8 +221,7 @@ namespace WarehouseLib.Warehouses
         {
             Crosses = new List<Cross>();
             if (_trussOptions.TrussType != ConnectionType.Warren.ToString())
-            {
-                for (int i = 1; i < Trusses.Count - 2; i++)
+                for (var i = 1; i < Trusses.Count - 2; i++)
                 {
                     var outerTopNodes =
                         new StAndre().ComputeCrossTopNodes(Trusses[i], _warehouseOptions.StAndreCrossCount);
@@ -267,25 +233,19 @@ namespace WarehouseLib.Warehouses
                         innerTopNodes);
                     Crosses.AddRange(cross);
                 }
-            }
         }
 
         private List<Point3d> ExtractRoofBracingPoints(Truss truss)
         {
             var trussA = truss;
-            var columns = (_trussOptions.ColumnsCount <= 2 || _warehouseOptions.HasBoundary == false)
+            var columns = _trussOptions.ColumnsCount <= 2 || _warehouseOptions.HasBoundary == false
                 ? trussA.StaticColumns
                 : trussA.BoundaryColumns;
             var tempPointList = new List<Point3d>();
-            foreach (var column in columns)
-            {
-                tempPointList.Add(column.Axis.ToNurbsCurve().PointAtEnd);
-            }
+            foreach (var column in columns) tempPointList.Add(column.Axis.ToNurbsCurve().PointAtEnd);
 
             if (_warehouseOptions.HasBoundary == false || _trussOptions.ColumnsCount % 2 == 0)
-            {
                 tempPointList.Insert(tempPointList.Count / 2, trussA.TopBeamAxisCurves[0].PointAtEnd);
-            }
 
             return tempPointList;
         }
@@ -295,22 +255,12 @@ namespace WarehouseLib.Warehouses
             var boundaryList = new List<Column>();
             var staticList = new List<Column>();
             foreach (var truss in Trusses)
-            {
                 if (truss.BoundaryColumns != null && _trussOptions.ColumnsCount >= 1)
-                {
                     foreach (var bc in truss.BoundaryColumns)
-                    {
                         boundaryList.Add(bc);
-                    }
-                }
                 else if (truss.StaticColumns != null)
-                {
                     foreach (var sc in truss.StaticColumns)
-                    {
                         staticList.Add(sc);
-                    }
-                }
-            }
 
             _staticColumns = staticList;
             _boundaryColumns = boundaryList;

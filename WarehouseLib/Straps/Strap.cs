@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Trusses;
 
 namespace WarehouseLib
 {
@@ -7,11 +8,11 @@ namespace WarehouseLib
     {
         public Line Axis;
 
+        public Plane ProfileOrientationPlane;
         protected Strap()
         {
-            
         }
 
-        public abstract List<Strap> ConstructStraps(List<Strap> strapMethod);
+        protected abstract Plane GetTeklaProfileOrientationPlane(Truss truss, Point3d strapPosition, int index,bool isBoundary);
     }
 }
