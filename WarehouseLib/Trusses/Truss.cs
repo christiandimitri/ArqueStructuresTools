@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
 using WarehouseLib.Articulations;
@@ -49,9 +50,19 @@ namespace WarehouseLib.Trusses
             _divisions = RecomputeDivisions(_divisions);
         }
 
-        protected void ConstructBeams()
+        protected void ConstructBeams(bool joinTopBeamsAxis, bool joinBottomBeamsAxis)
         {
-            var topBeam = new TopBeam {Axis = TopBeamAxisCurves, ProfileOrientationPlane = Plane.WorldXY};
+            if (joinTopBeamsAxis)
+            {
+                TopBeamAxisCurves = Curve.JoinCurves(TopBeamAxisCurves, 0.1).ToList();
+            }
+
+            if (joinBottomBeamsAxis)
+            {
+                BottomBeamAxisCurves= Curve.JoinCurves(BottomBeamAxisCurves, 0.1).ToList();
+            }
+            
+            var topBeam = new TopBeam { Axis = TopBeamAxisCurves, ProfileOrientationPlane = Plane.WorldXY};
             TopBeam = topBeam;
 
             var bottomBeam = new BottomBeam {Axis = BottomBeamAxisCurves, ProfileOrientationPlane = Plane.WorldXY};
@@ -305,9 +316,11 @@ namespace WarehouseLib.Trusses
         {
             TopBeamAxisCurves = new List<Curve>(TopBeamAxisCurves);
             TopNodes = new List<Point3d>(TopNodes);
-            BottomBeamAxisCurves = null;
-            BottomNodes = null;
-            IntermediateBeamsAxisCurves = null;
+            BottomBeam = new BottomBeam();
+            IntermediateBeams = new IntermediateBeams();
+            BottomBeamAxisCurves = new List<Curve>();
+            BottomNodes = new List<Point3d>();
+            IntermediateBeamsAxisCurves = new List<Curve>();
 
 
             truss.GenerateBoundaryColumnsNodes(truss.TopBeamAxisCurves, _columnsCount);

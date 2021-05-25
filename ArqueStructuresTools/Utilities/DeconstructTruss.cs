@@ -51,14 +51,15 @@ namespace ArqueStructuresTools
             if (!DA.GetData(0, ref trussGoo)) return;
 
             var truss = trussGoo.Value;
-            var topNodes = truss.TopNodes;
-            var bottomNodes = truss.BottomNodes;
-            var boundaryNodes = truss.BoundaryTopNodes;
+            var topNodes = truss.TopNodes != null ? truss.TopNodes : new List<Point3d>();
+            var bottomNodes = truss.BottomNodes != null ? truss.BottomNodes : new List<Point3d>();
+            var boundaryNodes = truss.BoundaryTopNodes != null ? truss.BoundaryTopNodes : new List<Point3d>();
             var staticColumnsGoo = new List<ColumnGoo>();
             var boundaryColumnsGoo = new List<ColumnGoo>();
             var topBeamGoo = (truss.TopBeam != null) ? new BeamGoo(truss.TopBeam) : new BeamGoo();
-            var bottomBeamGoo = (truss.BottomBeam != null) ? new BeamGoo(truss.BottomBeam) : new BeamGoo();
-            var intermediateBeamsGoo = (truss.IntermediateBeams != null) ? new BeamGoo(truss.IntermediateBeams) : new BeamGoo();
+            var bottomBeamGoo = new BeamGoo(truss.BottomBeam);
+            var intermediateBeamsGoo =
+                (truss.IntermediateBeams != null) ? new BeamGoo(truss.IntermediateBeams) : new BeamGoo();
 
             if (truss.StaticColumns != null)
             {

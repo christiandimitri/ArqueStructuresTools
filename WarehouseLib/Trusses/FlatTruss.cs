@@ -15,7 +15,7 @@ namespace WarehouseLib.Trusses
             GenerateThickBottomBars();
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options._articulationType);
-            ConstructBeams();
+            ConstructBeams(true, true);
         }
 
         public override void GenerateTopBars()

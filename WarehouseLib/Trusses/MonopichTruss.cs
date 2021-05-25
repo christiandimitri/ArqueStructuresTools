@@ -19,7 +19,7 @@ namespace WarehouseLib.Trusses
             ChangeBaseByType(options.BaseType);
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options._articulationType);
-            ConstructBeams();
+            ConstructBeams(true, true);
 
         }
 

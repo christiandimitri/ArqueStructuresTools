@@ -15,15 +15,14 @@ namespace WarehouseLib.Trusses
         {
             _options = options;
             GenerateTopBars();
-            StaticColumns=
+            StaticColumns =
                 new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
             ChangeBaseByType(options.BaseType);
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options._articulationType);
-            ConstructBeams();
-
+            ConstructBeams(false, (options.BaseType == 1) ? true : false);
         }
-        
+
         public override void GenerateTopBars()
         {
             StartingNodes = GetStartingPoints(_plane, _options.Width, _options.Width, _height, _maxHeight, _height);

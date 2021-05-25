@@ -24,7 +24,7 @@ namespace WarehouseLib
             ChangeBaseByType(_options.BaseType);
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options._articulationType);
-            ConstructBeams();
+            ConstructBeams(true, true);
         }
 
         protected override void IsArticulatedToColumns()
