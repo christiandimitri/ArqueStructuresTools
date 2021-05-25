@@ -31,8 +31,8 @@ namespace ArqueStructuresTools
                         {
                             foreach (var axis in beam.Axis)
                             {
-                                _box.Union(axis.GetBoundingBox(false));
-                                args.Display.DrawCurve(axis, System.Drawing.Color.Red);
+                                _box.Union(axis.ToNurbsCurve().GetBoundingBox(false));
+                                args.Display.DrawCurve(axis.ToNurbsCurve(), System.Drawing.Color.Red);
                             }
                         }
                     }

@@ -20,13 +20,13 @@ namespace ArqueStructuresTools
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddLineParameter("Axis", "a", "Axis of the column", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Axis", "a", "Axis of the column", GH_ParamAccess.list);
             pManager.AddPlaneParameter("Plane", "p", "The columns' profile orientation's plane", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var beamGoo = new BeamGoo();
+            BeamGoo beamGoo = new BeamGoo();
 
             if (!DA.GetData(0, ref beamGoo)) return;
 
