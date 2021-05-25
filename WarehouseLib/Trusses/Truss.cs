@@ -51,19 +51,16 @@ namespace WarehouseLib.Trusses
 
         protected void ConstructBeams()
         {
-            var topBeam = new TopBeam();
-            topBeam.Axis = TopBeamAxisCurves;
-            topBeam.ProfileOrientationPlane = Plane.WorldXY;
+            var topBeam = new TopBeam {Axis = TopBeamAxisCurves, ProfileOrientationPlane = Plane.WorldXY};
             TopBeam = topBeam;
 
-            var bottomBeam = new BottomBeam();
-            bottomBeam.Axis = BottomBeamAxisCurves;
-            bottomBeam.ProfileOrientationPlane = Plane.WorldXY;
+            var bottomBeam = new BottomBeam {Axis = BottomBeamAxisCurves, ProfileOrientationPlane = Plane.WorldXY};
             BottomBeam = bottomBeam;
 
-            var interBeams = new IntermediateBeams();
-            interBeams.Axis = IntermediateBeamsAxisCurves;
-            interBeams.ProfileOrientationPlane = Plane.WorldZX;
+            var interBeams = new IntermediateBeams
+            {
+                Axis = IntermediateBeamsAxisCurves, ProfileOrientationPlane = Plane.WorldZX
+            };
             IntermediateBeams = interBeams;
         }
 
