@@ -42,6 +42,14 @@ namespace WarehouseLib
 
             BottomNodes.RemoveAt(0);
             BottomNodes.RemoveAt(BottomNodes.Count - 1);
+            var tempList = new List<Curve> {IntermediateBeamsAxisCurves[0], splitCurves[0]};
+            var axisA = Curve.JoinCurves(tempList)[0];
+            tempList = new List<Curve>
+                {IntermediateBeamsAxisCurves[IntermediateBeamsAxisCurves.Count - 1], splitCurves[1]};
+            var axisB = Curve.JoinCurves(tempList)[0];
+            splitCurves = new List<Curve> {axisA, axisB};
+            IntermediateBeamsAxisCurves.RemoveAt(0);
+            IntermediateBeamsAxisCurves.RemoveAt(IntermediateBeamsAxisCurves.Count - 1);
             BottomBeamAxisCurves = splitCurves;
         }
 
@@ -103,11 +111,13 @@ namespace WarehouseLib
             var t2 = tempParamsB[0];
             var t3 = tempParamsB[tempParamsB.Length - 2];
             var startPoint = TopBeamAxisCurves[0].PointAt(t1) -
-                             Vector3d.ZAxis * (ComputeDifference() + (TopBeamAxisCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
+                             Vector3d.ZAxis * (ComputeDifference() +
+                                               (TopBeamAxisCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
             var centerPoint = TopBeamAxisCurves[1].PointAt(t2) -
                               Vector3d.ZAxis * startPoint.DistanceTo(StartingNodes[0]);
             var endPoint = TopBeamAxisCurves[1].PointAt(t3) -
-                           Vector3d.ZAxis * (ComputeDifference() + (TopBeamAxisCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
+                           Vector3d.ZAxis * (ComputeDifference() +
+                                             (TopBeamAxisCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
             var arch = new Arc(startPoint, centerPoint, endPoint);
             arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
             Curve[] tempCurves = arch.ToNurbsCurve().Split(t);

@@ -30,7 +30,7 @@ namespace WarehouseLib.Trusses
             }
 
 
-            if (_options._articulationType == "Articulated" && _options.BaseType == 0 )
+            if (_options._articulationType == "Articulated" && _options.BaseType == 0)
             {
                 bars = ComputeBottomBarsArticulatedToColumns(bars);
             }
@@ -62,9 +62,9 @@ namespace WarehouseLib.Trusses
             {
                 if (i >= StartingNodes.Count - 1) continue;
                 var ptA = new Point3d(StartingNodes[i] -
-                                  (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
+                                      (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
                 var ptB = new Point3d(StartingNodes[i + 1] -
-                                  (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
+                                      (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
                 var tempLine = new Line(ptA, ptB);
                 bars.Add(tempLine.ToNurbsCurve());
             }
@@ -127,6 +127,14 @@ namespace WarehouseLib.Trusses
 
             BottomNodes.RemoveAt(0);
             BottomNodes.RemoveAt(BottomNodes.Count - 1);
+            var tempList = new List<Curve> {IntermediateBeamsAxisCurves[0], splitCurves[0]};
+            var axisA = Curve.JoinCurves(tempList)[0];
+            tempList = new List<Curve>
+                {IntermediateBeamsAxisCurves[IntermediateBeamsAxisCurves.Count - 1], splitCurves[1]};
+            var axisB = Curve.JoinCurves(tempList)[0];
+            splitCurves = new List<Curve> {axisA, axisB};
+            IntermediateBeamsAxisCurves.RemoveAt(0);
+            IntermediateBeamsAxisCurves.RemoveAt(IntermediateBeamsAxisCurves.Count - 1);
             BottomBeamAxisCurves = splitCurves;
         }
 

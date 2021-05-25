@@ -321,8 +321,6 @@ namespace WarehouseLib.Trusses
             BottomBeamAxisCurves = new List<Curve>();
             BottomNodes = new List<Point3d>();
             IntermediateBeamsAxisCurves = new List<Curve>();
-
-
             truss.GenerateBoundaryColumnsNodes(truss.TopBeamAxisCurves, _columnsCount);
             BoundaryColumns =
                 new List<Column>(new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, _plane, index));
