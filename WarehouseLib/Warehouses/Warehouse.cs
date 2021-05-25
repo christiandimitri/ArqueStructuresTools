@@ -104,7 +104,7 @@ namespace WarehouseLib.Warehouses
         {
             RoofStraps = new List<Strap>();
             var tempStraps = new List<Strap>();
-            var straps = new RoofStrap().ConstructRoofStraps(Trusses, 0);
+            var straps = new RoofStrap().ConstructRoofStraps(Trusses);
             foreach (var strap in straps) tempStraps.Add(strap);
             RoofStraps = tempStraps;
         }
