@@ -7,7 +7,6 @@ namespace WarehouseLib.Beams
         public TopBeam()
         {
         }
-
         public override Plane GetTeklaProfileOrientationPlane()
         {
             throw new System.NotImplementedException();
