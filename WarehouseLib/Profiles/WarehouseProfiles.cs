@@ -1,14 +1,16 @@
-﻿namespace WarehouseLib.Profiles
+﻿
+namespace WarehouseLib.Profiles
 {
     public class WarehouseProfiles
     {
-        public Profile StaticColumnProfile;
-        public Profile BoundaryColumnProfile;
+        public string StaticColumnProfileName;
+        public string BoundaryColumnProfileName;
 
-        public WarehouseProfiles(Profile staticColumnsProfile, Profile boundaryColumnProfile)
+        public WarehouseProfiles(string staticColumnsProfileName, string boundaryColumnProfileName)
         {
-            StaticColumnProfile = staticColumnsProfile;
-            BoundaryColumnProfile = boundaryColumnProfile;
+            StaticColumnProfileName = staticColumnsProfileName;
+            BoundaryColumnProfileName = boundaryColumnProfileName;
+            var profilesCatalog = new Catalog();
         }
     }
 }

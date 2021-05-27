@@ -1,5 +1,6 @@
 ﻿using System;
 using Grasshopper.Kernel;
+using WarehouseLib.Profiles;
 
 namespace ArqueStructuresTools.TeklaStructures
 {
@@ -16,8 +17,8 @@ namespace ArqueStructuresTools.TeklaStructures
         {
             pManager.AddParameter(new WarehouseParameter(), "Warehouse", "warehouse",
                 "warehouse tekla structures manipulator", GH_ParamAccess.item);
-            pManager.AddTextParameter("Static columns profile", "scp",
-                "The static columns profile name, for example IPE100", GH_ParamAccess.item, "HEA320");
+            pManager.AddGenericParameter("Static columns profile", "scp",
+                "The static columns profile name, for example IPE100", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -29,10 +30,11 @@ namespace ArqueStructuresTools.TeklaStructures
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var warehouseGoo = new WarehouseGoo();
-            var staticColumnsProfileName = "";
+            WarehouseProfiles staticColumnsProfileName = null;
 
             if (!DA.GetData(0, ref warehouseGoo)) return;
             if (!DA.GetData(1, ref staticColumnsProfileName)) return;
+
 
             DA.SetData(0, warehouseGoo);
         }

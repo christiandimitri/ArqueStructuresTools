@@ -2,6 +2,7 @@
 using Grasshopper.Kernel;
 using WarehouseLib.Articulations;
 using WarehouseLib.Options;
+using WarehouseLib.Profiles;
 
 
 namespace ArqueStructuresTools.Options
@@ -22,9 +23,9 @@ namespace ArqueStructuresTools.Options
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Static columns profile", "scp", "Static columns Tekla profile name",
-                GH_ParamAccess.item, "HEA300");
+                GH_ParamAccess.item, "IPE300");
             pManager.AddTextParameter("Boundary columns profile", "bcp", "Boundary columns Tekla profile name",
-                GH_ParamAccess.item, "IPN320");
+                GH_ParamAccess.item, "IPE320");
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -38,9 +39,20 @@ namespace ArqueStructuresTools.Options
             var boundaryColumns = "";
             if (!DA.GetData(0, ref staticColumns)) return;
             if (!DA.GetData(1, ref boundaryColumns)) return;
-            
 
-            DA.SetData(0, boundaryColumns);
+            WarehouseProfiles profiles = null;
+
+            try
+            {
+                profiles = new WarehouseProfiles(staticColumns, boundaryColumns);
+            }
+            catch (Exception e)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, e.Message);
+                return;
+            }
+
+            DA.SetData(0, profiles);
         }
     }
 }
