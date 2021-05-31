@@ -98,7 +98,7 @@
     <Compile Include="Profiles\ProfileTypes.cs" />
     <Compile Include="Profiles\WarehouseProfiles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Profiles\Profile.cs" />
+    <Compile Include="Profiles\ProfileDescription.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -116,11 +116,14 @@
     <Compile Include="Trusses\PichedTruss.cs" />
     <Compile Include="Trusses\Truss.cs" />
     <Compile Include="Trusses\Typology.cs" />
+    <Compile Include="Utilities\TrimWhiteSpaceFromString.cs" />
+    <Compile Include="Warehouses\TeklaWarehouse.cs" />
     <Compile Include="Warehouses\Warehouse.cs" />
     <Compile Include="Warehouses\WarehouseType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\steel_profile_calatog.csv" />
     <None Include="Resources\steel_profile_calatog_HEA.csv" />
     <None Include="Resources\steel_profile_calatog_HEAA.csv" />
     <None Include="Resources\steel_profile_calatog_HEB.csv" />

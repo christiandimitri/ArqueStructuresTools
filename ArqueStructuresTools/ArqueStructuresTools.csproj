@@ -81,7 +81,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Straps\FacadeStrapsComponent.cs" />
     <Compile Include="Straps\RoofStrapsComponent.cs" />
-    <Compile Include="TeklaStructures\RecomputeForTeklaStructures.cs" />
+    <Compile Include="TeklaStructures\ComputeTeklaWarehouse.cs" />
     <Compile Include="Trusses\ArchTrussComponent.cs" />
     <Compile Include="Trusses\DoublepichTrussComponent.cs" />
     <Compile Include="Trusses\FlatTrussComponent.cs" />

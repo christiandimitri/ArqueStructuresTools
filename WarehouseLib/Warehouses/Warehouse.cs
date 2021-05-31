@@ -14,10 +14,10 @@ namespace WarehouseLib.Warehouses
 {
     public class Warehouse
     {
-        private readonly TrussOptions _trussOptions;
-        private readonly WarehouseOptions _warehouseOptions;
+        public TrussOptions _trussOptions;
+        public WarehouseOptions _warehouseOptions;
         private List<Column> _boundaryColumns;
-        private Plane _plane;
+        public Plane _plane;
         private List<Column> _staticColumns;
         public List<Bracing> ColumnsBracings;
         public List<Cross> Crosses;
@@ -266,4 +266,5 @@ namespace WarehouseLib.Warehouses
             _boundaryColumns = boundaryList;
         }
     }
+    
 }

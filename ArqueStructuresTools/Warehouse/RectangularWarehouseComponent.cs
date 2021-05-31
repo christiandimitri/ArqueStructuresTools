@@ -36,7 +36,7 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new WarehouseParameter(), "Warehouse", "", "", GH_ParamAccess.list);
+            pManager.AddParameter(new WarehouseParameter(), "Warehouse", "", "", GH_ParamAccess.item);
         }
 
         /// <summary>

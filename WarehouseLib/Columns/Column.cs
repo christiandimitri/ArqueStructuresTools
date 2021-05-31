@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Rhino.Geometry;
+using WarehouseLib.Profiles;
 using WarehouseLib.Trusses;
 
 namespace WarehouseLib.Columns
 {
     public abstract class Column
     {
-        public Line Axis;
+        public Line Axis { get; set; }
         public Plane ProfileOrientationPlane { get; set; }
+
+        public ProfileDescription Profile { get; set; }
 
         protected Column()
         {
