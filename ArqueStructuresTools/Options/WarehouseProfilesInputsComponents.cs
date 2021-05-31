@@ -24,15 +24,15 @@ namespace ArqueStructuresTools.Options
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Static columns profile", "scp", "Static columns Tekla profile name",
-                GH_ParamAccess.item, "IPE300");
+                GH_ParamAccess.item,"HEA300");
             pManager.AddTextParameter("Boundary columns profile", "bcp", "Boundary columns Tekla profile name",
-                GH_ParamAccess.item, "IPE300");
+                GH_ParamAccess.item,"HEA260");
             pManager.AddTextParameter("Top beams profile", "tbp", "Top beams Tekla profile name",
-                GH_ParamAccess.item, "IPE300");
+                GH_ParamAccess.item,"IPE300");
             pManager.AddTextParameter("Bottom beams profile", "bcp", "Bottom beams Tekla profile name",
-                GH_ParamAccess.item, "IPE300");
+                GH_ParamAccess.item,"IPE300");
             pManager.AddTextParameter("Intermediate beams profile", "bcp", "Intermediate beams Tekla profile name",
-                GH_ParamAccess.item, "IPE300");
+                GH_ParamAccess.item,"IPE80");
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -59,9 +59,9 @@ namespace ArqueStructuresTools.Options
             {
                 profiles = new WarehouseProfiles(new TrimWhiteSpaceFromString(staticColumns).TrimmedString,
                     new TrimWhiteSpaceFromString(boundaryColumns).TrimmedString,
-                    new TrimWhiteSpaceFromString(staticColumns).TrimmedString,
-                    new TrimWhiteSpaceFromString(staticColumns).TrimmedString,
-                    new TrimWhiteSpaceFromString(staticColumns).TrimmedString);
+                    new TrimWhiteSpaceFromString(topBeams).TrimmedString,
+                    new TrimWhiteSpaceFromString(bottomBeams).TrimmedString,
+                    new TrimWhiteSpaceFromString(intermediateBeams).TrimmedString);
             }
             catch (Exception e)
             {

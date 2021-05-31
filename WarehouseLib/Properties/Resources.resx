@@ -121,43 +121,4 @@
   <data name="steel_profile_calatog" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\steel_profile_calatog.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="steel_profile_calatog_HEA" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_HEA.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_HEAA" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_HEAA.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_HEB" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_HEB.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_HEM" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_HEM.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_IPE" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_IPE.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_IPN" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_IPN.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_L_equal" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_L_equal.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_L_unequal" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_L_unequal.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_T" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_T.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_TB" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_TB.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_UPA" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_UPA.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_UPE" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_UPE.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="steel_profile_calatog_UPN" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\steel_profile_calatog_UPN.csv;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
 </root>

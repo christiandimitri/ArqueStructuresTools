@@ -32,9 +32,7 @@ namespace ArqueStructuresTools.TeklaStructures
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var warehouseGoo = new WarehouseGoo();
-            var profileNames =
-                new WarehouseProfiles("HEA320", "HEA300", "IPE300", "IPE330", "IPE80");
-
+            WarehouseProfiles profileNames = null;
             if (!DA.GetData(0, ref warehouseGoo)) return;
             if (!DA.GetData(1, ref profileNames)) return;
             var warehouse = warehouseGoo.Value;
@@ -47,10 +45,9 @@ namespace ArqueStructuresTools.TeklaStructures
 
             var teklaWarehouse = new TeklaWarehouse(warehouse, profileNames);
             var newTrussInputs = teklaWarehouse.ComputeTeklaTrussInputs(trussInputs, profileNames);
+            var getTeklaWarehouse = teklaWarehouse.GetTeklaWarehouse(newTrussInputs, profileNames);
 
-            warehouse = teklaWarehouse.GetTeklaWarehouse(newTrussInputs, profileNames);
-
-            DA.SetData(0, new WarehouseGoo(warehouse));
+            DA.SetData(0, new WarehouseGoo(getTeklaWarehouse));
         }
     }
 }

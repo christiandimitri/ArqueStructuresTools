@@ -55,6 +55,7 @@ namespace WarehouseLib.Trusses
             if (joinTopBeamsAxis)
             {
                 TopBeamAxisCurves = Curve.JoinCurves(TopBeamAxisCurves, 0.1).ToList();
+                
             }
 
             if (joinBottomBeamsAxis)
@@ -70,7 +71,7 @@ namespace WarehouseLib.Trusses
 
             var interBeams = new IntermediateBeams
             {
-                Axis = IntermediateBeamsAxisCurves, ProfileOrientationPlane = Plane.WorldZX
+                Axis = IntermediateBeamsAxisCurves, ProfileOrientationPlane = Plane.WorldYZ
             };
             IntermediateBeams = interBeams;
         }

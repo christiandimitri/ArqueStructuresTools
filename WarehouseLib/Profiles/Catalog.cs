@@ -22,7 +22,7 @@ namespace WarehouseLib.Profiles
                 var profile = profilesCsv[i];
 
                 var properties = profile.Split(',');
-                // Debug.WriteLine(properties[0]);
+                Debug.WriteLine(properties[0]);
                 profiles.Add(properties[0],
                     ExtractProfileDescription(properties[0], double.Parse(properties[1]), double.Parse(properties[2])));
             }
@@ -32,6 +32,20 @@ namespace WarehouseLib.Profiles
 
         private ProfileDescription ExtractProfileDescription(string name, double height, double width)
         {
+            if (name == String.Empty)
+            {
+                name = "";
+            }
+
+            if (height == Double.NaN)
+            {
+                height= 0;
+            }
+
+            if (width == Double.NaN)
+            {
+                width = 0;
+            }
             var description = new ProfileDescription(name, height, width);
             return description;
         }

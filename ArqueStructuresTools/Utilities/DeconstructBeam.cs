@@ -22,6 +22,7 @@ namespace ArqueStructuresTools
         {
             pManager.AddCurveParameter("Axis", "a", "Axis of the column", GH_ParamAccess.list);
             pManager.AddPlaneParameter("Plane", "p", "The columns' profile orientation's plane", GH_ParamAccess.item);
+            pManager.AddTextParameter("Profile", "p", "The columns' profile reference name", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -32,6 +33,7 @@ namespace ArqueStructuresTools
 
             DA.SetDataList(0, beamGoo.Value.Axis);
             DA.SetData(1, beamGoo.Value.ProfileOrientationPlane);
+            DA.SetData(2, beamGoo.Value.Profile.Name);
         }
 
         /// <summary>

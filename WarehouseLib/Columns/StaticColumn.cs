@@ -30,9 +30,7 @@ namespace WarehouseLib.Columns
         public override Plane GetTeklaProfileOrientationPlane(Point3d node, Plane plane, int index)
         {
             var pt = plane.ClosestPoint(node);
-            var vectorX = Vector3d.ZAxis;
-            var vectorY = (index == 0) ? -plane.YAxis : plane.YAxis;
-            var profilePlane = new Plane(pt, vectorX, vectorY);
+            var profilePlane = new Plane(pt, (index == 0) ? -plane.XAxis : plane.XAxis);
             return profilePlane;
         }
     }

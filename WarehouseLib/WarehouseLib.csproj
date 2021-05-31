@@ -124,19 +124,6 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\steel_profile_calatog.csv" />
-    <None Include="Resources\steel_profile_calatog_HEA.csv" />
-    <None Include="Resources\steel_profile_calatog_HEAA.csv" />
-    <None Include="Resources\steel_profile_calatog_HEB.csv" />
-    <None Include="Resources\steel_profile_calatog_HEM.csv" />
-    <None Include="Resources\steel_profile_calatog_IPE.csv" />
-    <None Include="Resources\steel_profile_calatog_IPN.csv" />
-    <None Include="Resources\steel_profile_calatog_L_equal.csv" />
-    <None Include="Resources\steel_profile_calatog_L_unequal.csv" />
-    <None Include="Resources\steel_profile_calatog_T.csv" />
-    <None Include="Resources\steel_profile_calatog_TB.csv" />
-    <None Include="Resources\steel_profile_calatog_UPA.csv" />
-    <None Include="Resources\steel_profile_calatog_UPE.csv" />
-    <None Include="Resources\steel_profile_calatog_UPN.csv" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
