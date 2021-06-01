@@ -52,21 +52,33 @@ namespace WarehouseLib.Trusses
 
         protected void ConstructBeams(bool joinTopBeamsAxis, bool joinBottomBeamsAxis)
         {
-            if (joinTopBeamsAxis)
-            {
-                TopBeamAxisCurves = Curve.JoinCurves(TopBeamAxisCurves, 0.1).ToList();
-                
-            }
+            // if (joinTopBeamsAxis)
+            // {
+            //     TopBeamAxisCurves = Curve.JoinCurves(TopBeamAxisCurves, 0.1).ToList();
+            //     
+            // }
+            //
+            // if (joinBottomBeamsAxis)
+            // {
+            //     BottomBeamAxisCurves= Curve.JoinCurves(BottomBeamAxisCurves, 0.1).ToList();
+            // }
 
-            if (joinBottomBeamsAxis)
+            var topBeam = new TopBeam
             {
-                BottomBeamAxisCurves= Curve.JoinCurves(BottomBeamAxisCurves, 0.1).ToList();
-            }
-            
-            var topBeam = new TopBeam { Axis = TopBeamAxisCurves, ProfileOrientationPlane = Plane.WorldXY};
+                Axis = (joinTopBeamsAxis == true)
+                    ? Curve.JoinCurves(TopBeamAxisCurves, 0.1).ToList()
+                    : TopBeamAxisCurves,
+                ProfileOrientationPlane = Plane.WorldXY
+            };
             TopBeam = topBeam;
 
-            var bottomBeam = new BottomBeam {Axis = BottomBeamAxisCurves, ProfileOrientationPlane = Plane.WorldXY};
+            var bottomBeam = new BottomBeam
+            {
+                Axis = (joinBottomBeamsAxis == true)
+                    ? Curve.JoinCurves(BottomBeamAxisCurves, 0.1).ToList()
+                    : BottomBeamAxisCurves,
+                ProfileOrientationPlane = Plane.WorldXY
+            };
             BottomBeam = bottomBeam;
 
             var interBeams = new IntermediateBeams

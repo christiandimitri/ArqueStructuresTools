@@ -157,10 +157,13 @@ namespace WarehouseLib.Warehouses
         {
             var startBracingPoints = ExtractRoofBracingPoints(Trusses[0]);
             var startTopBeam = Curve.JoinCurves(Trusses[1].TopBeamAxisCurves)[0];
+            // var startTopBeam = Trusses[1].TopBeamAxisCurves[0];
             var endBracingPoints = ExtractRoofBracingPoints(Trusses[Trusses.Count - 1]);
             var endTopBeam = Curve.JoinCurves(Trusses[Trusses.Count - 2].TopBeamAxisCurves)[0];
-
+            // var endTopBeam = Trusses[Trusses.Count - 2].TopBeamAxisCurves[0];
+            
             if (_warehouseOptions.PorticoCount <= 2) throw new Exception("Portico count has to be >2");
+            
             RoofBracings = new List<Bracing>();
             RoofCables = new List<Cable>();
             if (_warehouseOptions.RoofBracingType == RoofBracingType.Bracing.ToString())
@@ -266,5 +269,4 @@ namespace WarehouseLib.Warehouses
             _boundaryColumns = boundaryList;
         }
     }
-    
 }
