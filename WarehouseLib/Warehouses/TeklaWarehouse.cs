@@ -76,12 +76,14 @@ namespace WarehouseLib.Warehouses
 
         private static void AssignProfiles(WarehouseProfiles profiles, Warehouse warehouse)
         {
-            var staticColumnsProfile = new Catalog().GetCatalog()[profiles.StaticColumnsProfileName];
-            var boundaryColumnsProfile = new Catalog().GetCatalog()[profiles.BoundaryColumnProfileName];
-            var topBeamsProfile = new Catalog().GetCatalog()[profiles.TopBeamsProfileName];
-            var bottomBeamsProfile = new Catalog().GetCatalog()[profiles.BottomBeamsProfileName];
-            var intermediateBeamsProfile = new Catalog().GetCatalog()[profiles.IntermediateBeamsProfileName];
-            var roofStrapProfile = new Catalog().GetCatalog()[profiles.RoofStrapsProfileName];
+            var catalog = new Catalog().GetCatalog();
+            var staticColumnsProfile = catalog[profiles.StaticColumnsProfileName];
+            var boundaryColumnsProfile = catalog[profiles.BoundaryColumnProfileName];
+            var topBeamsProfile = catalog[profiles.TopBeamsProfileName];
+            var bottomBeamsProfile = catalog[profiles.BottomBeamsProfileName];
+            var intermediateBeamsProfile = catalog[profiles.IntermediateBeamsProfileName];
+            var roofStrapProfile = catalog[profiles.RoofStrapsProfileName];
+            var facadeStrapProfile = catalog[profiles.FacadeStrapsProfileName];
             foreach (var truss in warehouse.Trusses)
             {
                 if (truss.StaticColumns != null)
@@ -115,9 +117,26 @@ namespace WarehouseLib.Warehouses
                     truss.IntermediateBeams.Profile = intermediateBeamsProfile;
                 }
             }
+
             foreach (var strap in warehouse.RoofStraps)
             {
                 strap.Profile = roofStrapProfile;
+            }
+
+            if (warehouse.FacadeStrapsX != null)
+            {
+                foreach (var strap in warehouse.FacadeStrapsX)
+                {
+                    strap.Profile = facadeStrapProfile;
+                }
+            }
+
+            if (warehouse.FacadeStrapsY != null)
+            {
+                foreach (var strap in warehouse.FacadeStrapsY)
+                {
+                    strap.Profile = facadeStrapProfile;
+                }
             }
         }
     }
