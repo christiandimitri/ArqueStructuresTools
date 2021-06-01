@@ -1,6 +1,6 @@
 ﻿namespace WarehouseLib.Cables
 {
-    public enum CableType
+    public enum CablePosition
     {
         Facade,
         Roof

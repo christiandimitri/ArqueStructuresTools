@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Profiles;
 using WarehouseLib.Trusses;
 
 namespace WarehouseLib.Bracings
@@ -7,6 +8,8 @@ namespace WarehouseLib.Bracings
     public abstract class Bracing
     {
         public Line Axis;
+        public ProfileDescription Profile;
+        public Plane ProfileOrientationPlane;
 
         protected Bracing()
         {

@@ -1,6 +1,6 @@
 ﻿namespace WarehouseLib.Bracings
 {
-    public enum BracingType
+    public enum BracingPosition
     {
         Roof,
         Columns
