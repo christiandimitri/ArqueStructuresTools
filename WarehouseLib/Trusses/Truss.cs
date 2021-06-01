@@ -52,17 +52,6 @@ namespace WarehouseLib.Trusses
 
         protected void ConstructBeams(bool joinTopBeamsAxis, bool joinBottomBeamsAxis)
         {
-            // if (joinTopBeamsAxis)
-            // {
-            //     TopBeamAxisCurves = Curve.JoinCurves(TopBeamAxisCurves, 0.1).ToList();
-            //     
-            // }
-            //
-            // if (joinBottomBeamsAxis)
-            // {
-            //     BottomBeamAxisCurves= Curve.JoinCurves(BottomBeamAxisCurves, 0.1).ToList();
-            // }
-
             var topBeam = new TopBeam
             {
                 Axis = (joinTopBeamsAxis == true)
