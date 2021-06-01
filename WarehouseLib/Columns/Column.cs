@@ -8,10 +8,10 @@ namespace WarehouseLib.Columns
 {
     public abstract class Column
     {
-        public Line Axis { get; set; }
-        public Plane ProfileOrientationPlane { get; set; }
+        public Line Axis;
+        public Plane ProfileOrientationPlane;
 
-        public ProfileDescription Profile { get; set; }
+        public ProfileDescription Profile;
 
         protected Column()
         {

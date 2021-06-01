@@ -11,11 +11,12 @@ namespace WarehouseLib.Profiles
         public string TopBeamsProfileName;
         public string BottomBeamsProfileName;
         public string IntermediateBeamsProfileName;
+        public string RoofStrapsProfileName;
 
         public WarehouseProfiles(string staticColumnsProfileName, string boundaryColumnProfileName,
             string topBeamsProfileName,
             string bottomBeamsProfileName,
-            string intermediateBeamsProfileName)
+            string intermediateBeamsProfileName, string roofStrapsProfileName)
         {
             var catalog = new Catalog().GetCatalog();
             StaticColumnsProfileName = catalog[staticColumnsProfileName].Name;
@@ -23,6 +24,7 @@ namespace WarehouseLib.Profiles
             TopBeamsProfileName = catalog[topBeamsProfileName].Name;
             BottomBeamsProfileName = catalog[bottomBeamsProfileName].Name;
             IntermediateBeamsProfileName = catalog[intermediateBeamsProfileName].Name;
+            RoofStrapsProfileName = catalog[roofStrapsProfileName].Name;
         }
     }
 }

@@ -27,6 +27,7 @@ namespace ArqueStructuresTools
         {
             pManager.AddLineParameter("Strap axis", "s", "s", GH_ParamAccess.item);
             pManager.AddPlaneParameter("Strap plane", "p", "p", GH_ParamAccess.item);
+            pManager.AddTextParameter("Profile", "p", "The strap profile name", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -34,9 +35,10 @@ namespace ArqueStructuresTools
             var strapGoo = new StrapGoo();
 
             if (!DA.GetData(0, ref strapGoo)) return;
-            
+
             DA.SetData(0, strapGoo.Value.Axis);
             DA.SetData(1, strapGoo.Value.ProfileOrientationPlane);
+            DA.SetData(2, strapGoo.Value.Profile.Name);
         }
     }
 }

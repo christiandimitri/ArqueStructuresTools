@@ -81,6 +81,7 @@ namespace WarehouseLib.Warehouses
             var topBeamsProfile = new Catalog().GetCatalog()[profiles.TopBeamsProfileName];
             var bottomBeamsProfile = new Catalog().GetCatalog()[profiles.BottomBeamsProfileName];
             var intermediateBeamsProfile = new Catalog().GetCatalog()[profiles.IntermediateBeamsProfileName];
+            var roofStrapProfile = new Catalog().GetCatalog()[profiles.RoofStrapsProfileName];
             foreach (var truss in warehouse.Trusses)
             {
                 if (truss.StaticColumns != null)
@@ -113,6 +114,10 @@ namespace WarehouseLib.Warehouses
                 {
                     truss.IntermediateBeams.Profile = intermediateBeamsProfile;
                 }
+            }
+            foreach (var strap in warehouse.RoofStraps)
+            {
+                strap.Profile = roofStrapProfile;
             }
         }
     }

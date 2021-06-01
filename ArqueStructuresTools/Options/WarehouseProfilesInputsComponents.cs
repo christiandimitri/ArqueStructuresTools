@@ -33,6 +33,7 @@ namespace ArqueStructuresTools.Options
                 GH_ParamAccess.item,"IPE300");
             pManager.AddTextParameter("Intermediate beams profile", "bcp", "Intermediate beams Tekla profile name",
                 GH_ParamAccess.item,"IPE80");
+            pManager.AddTextParameter("Roof straps", "rs", "rs", GH_ParamAccess.item,"CEBRAU-100X3");
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -47,11 +48,13 @@ namespace ArqueStructuresTools.Options
             var topBeams = "";
             var bottomBeams = "";
             var intermediateBeams = "";
+            var roofStraps = "";
             if (!DA.GetData(0, ref staticColumns)) return;
             if (!DA.GetData(1, ref boundaryColumns)) return;
             if (!DA.GetData(2, ref topBeams)) return;
             if (!DA.GetData(3, ref bottomBeams)) return;
             if (!DA.GetData(4, ref intermediateBeams)) return;
+            if (!DA.GetData(5, ref roofStraps)) return;
 
             WarehouseProfiles profiles = null;
 
@@ -61,7 +64,7 @@ namespace ArqueStructuresTools.Options
                     new TrimWhiteSpaceFromString(boundaryColumns).TrimmedString,
                     new TrimWhiteSpaceFromString(topBeams).TrimmedString,
                     new TrimWhiteSpaceFromString(bottomBeams).TrimmedString,
-                    new TrimWhiteSpaceFromString(intermediateBeams).TrimmedString);
+                    new TrimWhiteSpaceFromString(intermediateBeams).TrimmedString,new TrimWhiteSpaceFromString(roofStraps).TrimmedString);
             }
             catch (Exception e)
             {

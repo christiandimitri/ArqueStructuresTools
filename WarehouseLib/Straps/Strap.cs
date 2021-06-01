@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Profiles;
 using WarehouseLib.Trusses;
 
 namespace WarehouseLib
@@ -9,6 +10,7 @@ namespace WarehouseLib
         public Line Axis;
 
         public Plane ProfileOrientationPlane;
+        public ProfileDescription Profile;
         protected Strap()
         {
         }

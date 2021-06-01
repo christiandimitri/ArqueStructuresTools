@@ -7,9 +7,9 @@ namespace WarehouseLib.Beams
 {
     public abstract class Beam
     {
-        public List<Curve> Axis { get; set; }
+        public List<Curve> Axis;
 
-        public Plane ProfileOrientationPlane { get; set; }
+        public Plane ProfileOrientationPlane;
 
         public ProfileDescription Profile;
         protected Beam()
