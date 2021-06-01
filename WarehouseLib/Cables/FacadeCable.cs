@@ -14,7 +14,7 @@ namespace WarehouseLib.Cables
         {
         }
 
-        public override List<Cable> ConstructCables(List<Point3d> nodes, Curve beam)
+        public override List<Cable> ConstructCables(List<Point3d> nodes, Curve beam, Plane plane, int index)
         {
             var cables = new List<Cable>();
             var width = Convert.ToInt32(nodes[0].DistanceTo(beam.PointAtStart));
@@ -46,6 +46,7 @@ namespace WarehouseLib.Cables
                 Line axis = new Line(ptA, ptB);
                 var cable = new FacadeCable();
                 cable.Axis = axis;
+                cable.ProfileOrientationPlane = GetTeklaProfileOrientationPlane(beam, ptA, plane, index);
                 if (axis.IsValid) cables.Add(cable);
                 if (i > 0 || i < outsideNodes.Count - 1)
                 {
@@ -61,12 +62,20 @@ namespace WarehouseLib.Cables
                 axis = new Line(ptA, ptB);
                 cable = new FacadeCable();
                 cable.Axis = axis;
+                cable.ProfileOrientationPlane = GetTeklaProfileOrientationPlane(beam, ptA, plane, index);
                 if (axis.IsValid) cables.Add(cable);
             }
 
             cables.RemoveAt(0);
             cables.RemoveAt(cables.Count - 1);
             return cables;
+        }
+
+        protected override Plane GetTeklaProfileOrientationPlane(Curve beam, Point3d position, Plane plane, int index)
+        {
+            var normal = (index == 0) ? plane.XAxis : -plane.XAxis;
+            var orientationPlane = new Plane(position, normal);
+            return orientationPlane;
         }
     }
 }

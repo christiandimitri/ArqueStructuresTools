@@ -22,17 +22,19 @@ namespace ArqueStructuresTools.Options
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddTextParameter("Static columns profile", "scp", "Static columns Tekla profile name",
-                GH_ParamAccess.item,"HEA300");
+                GH_ParamAccess.item, "HEA300");
             pManager.AddTextParameter("Boundary columns profile", "bcp", "Boundary columns Tekla profile name",
-                GH_ParamAccess.item,"HEA260");
+                GH_ParamAccess.item, "HEA260");
             pManager.AddTextParameter("Top beams profile", "tbp", "Top beams Tekla profile name",
-                GH_ParamAccess.item,"IPE300");
+                GH_ParamAccess.item, "IPE300");
             pManager.AddTextParameter("Bottom beams profile", "bcp", "Bottom beams Tekla profile name",
-                GH_ParamAccess.item,"IPE300");
+                GH_ParamAccess.item, "IPE300");
             pManager.AddTextParameter("Intermediate beams profile", "bcp", "Intermediate beams Tekla profile name",
-                GH_ParamAccess.item,"IPE80");
-            pManager.AddTextParameter("Roof straps", "rs", "rs", GH_ParamAccess.item,"CEBRAU-100X3");
-            pManager.AddTextParameter("Facade straps", "fs", "fs", GH_ParamAccess.item,"CEBRAU-100X3");
+                GH_ParamAccess.item, "IPE80");
+            pManager.AddTextParameter("Roof straps", "rs", "rs", GH_ParamAccess.item, "CEBRAU-100X3");
+            pManager.AddTextParameter("Facade straps", "fs", "fs", GH_ParamAccess.item, "CEBRAU-100X3");
+            pManager.AddTextParameter("Roof Cables", "fs", "fs", GH_ParamAccess.item, "CHS21.3/2.3");
+            pManager.AddTextParameter("Facade Cables", "fs", "fs", GH_ParamAccess.item, "CHS21.3/2.3");
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -49,6 +51,8 @@ namespace ArqueStructuresTools.Options
             var intermediateBeams = "";
             var roofStraps = "";
             var facadeStraps = "";
+            var roofCables = "";
+            var facadeCables = "";
             if (!DA.GetData(0, ref staticColumns)) return;
             if (!DA.GetData(1, ref boundaryColumns)) return;
             if (!DA.GetData(2, ref topBeams)) return;
@@ -56,6 +60,8 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(4, ref intermediateBeams)) return;
             if (!DA.GetData(5, ref roofStraps)) return;
             if (!DA.GetData(6, ref facadeStraps)) return;
+            if (!DA.GetData(7, ref roofCables)) return;
+            if (!DA.GetData(8, ref facadeCables)) return;
 
             WarehouseProfiles profiles = null;
 
@@ -65,7 +71,11 @@ namespace ArqueStructuresTools.Options
                     new TrimWhiteSpaceFromString(boundaryColumns).TrimmedString,
                     new TrimWhiteSpaceFromString(topBeams).TrimmedString,
                     new TrimWhiteSpaceFromString(bottomBeams).TrimmedString,
-                    new TrimWhiteSpaceFromString(intermediateBeams).TrimmedString,new TrimWhiteSpaceFromString(roofStraps).TrimmedString, new TrimWhiteSpaceFromString(facadeStraps).TrimmedString);
+                    new TrimWhiteSpaceFromString(intermediateBeams).TrimmedString,
+                    new TrimWhiteSpaceFromString(roofStraps).TrimmedString,
+                    new TrimWhiteSpaceFromString(facadeStraps).TrimmedString,
+                    new TrimWhiteSpaceFromString(roofCables).TrimmedString,
+                    new TrimWhiteSpaceFromString(facadeCables).TrimmedString);
             }
             catch (Exception e)
             {

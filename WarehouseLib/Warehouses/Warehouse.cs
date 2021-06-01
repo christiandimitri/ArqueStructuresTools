@@ -135,7 +135,7 @@ namespace WarehouseLib.Warehouses
                 };
                 var beamB = trussB.StaticColumns[i].Axis.ToNurbsCurve();
                 var cable = new FacadeCable {Threshold = _warehouseOptions.FacadeCablesThreshold};
-                cables.AddRange(cable.ConstructCables(nodes, beamB));
+                cables.AddRange(cable.ConstructCables(nodes, beamB, _plane, i));
 
                 trussA = Trusses[Trusses.Count - 2];
                 trussB = Trusses[Trusses.Count - 1];
@@ -147,7 +147,7 @@ namespace WarehouseLib.Warehouses
                 beamB = trussB.StaticColumns[i].Axis.ToNurbsCurve();
                 cable = new FacadeCable();
                 cable.Threshold = _warehouseOptions.FacadeCablesThreshold;
-                cables.AddRange(cable.ConstructCables(nodes, beamB));
+                cables.AddRange(cable.ConstructCables(nodes, beamB, _plane, i));
             }
 
             FacadeCables = cables;
@@ -161,9 +161,9 @@ namespace WarehouseLib.Warehouses
             var endBracingPoints = ExtractRoofBracingPoints(Trusses[Trusses.Count - 1]);
             var endTopBeam = Curve.JoinCurves(Trusses[Trusses.Count - 2].TopBeamAxisCurves)[0];
             // var endTopBeam = Trusses[Trusses.Count - 2].TopBeamAxisCurves[0];
-            
+
             if (_warehouseOptions.PorticoCount <= 2) throw new Exception("Portico count has to be >2");
-            
+
             RoofBracings = new List<Bracing>();
             RoofCables = new List<Cable>();
             if (_warehouseOptions.RoofBracingType == RoofBracingType.Bracing.ToString())
@@ -181,14 +181,14 @@ namespace WarehouseLib.Warehouses
                     new RoofBracing().ConstructBracings(startBracingPoints, startTopBeam);
 
                 var roofCablesStart =
-                    new RoofCable().ConstructCables(startBracingPoints, startTopBeam);
+                    new RoofCable().ConstructCables(startBracingPoints, startTopBeam, _plane, 0);
                 RoofBracings.AddRange(roofBracingStart);
                 RoofCables.AddRange(roofCablesStart);
 
                 var roofBracingEnd =
                     new RoofBracing().ConstructBracings(endBracingPoints, endTopBeam);
                 var roofCablesEnd =
-                    new RoofCable().ConstructCables(endBracingPoints, endTopBeam);
+                    new RoofCable().ConstructCables(endBracingPoints, endTopBeam, _plane, Trusses.Count - 1);
                 RoofBracings.AddRange(roofBracingEnd);
                 RoofCables.AddRange(roofCablesEnd);
             }

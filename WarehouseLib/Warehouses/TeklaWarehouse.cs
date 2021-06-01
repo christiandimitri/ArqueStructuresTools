@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Rhino.Geometry;
 using WarehouseLib.Beams;
+using WarehouseLib.Cables;
 using WarehouseLib.Options;
 using WarehouseLib.Profiles;
 using WarehouseLib.Trusses;
@@ -13,18 +14,19 @@ namespace WarehouseLib.Warehouses
         private WarehouseProfiles _profiles;
         private Warehouse _warehouse;
 
-        public TrussOptions _teklaTrussInputs;
+        private TrussOptions _teklaTrussInputs;
         // public WarehouseOptions _teklaWarehouseInputs;
 
         public TeklaWarehouse(Warehouse warehouse, WarehouseProfiles profiles)
         {
             _warehouse = warehouse;
             _profiles = profiles;
+            _teklaTrussInputs = ComputeTeklaTrussInputs(_warehouse._trussOptions, profiles);
         }
 
-        public Warehouse GetTeklaWarehouse(TrussOptions trussOptions, WarehouseProfiles profiles)
+        public Warehouse GetTeklaWarehouse()
         {
-            var warehouse = new Warehouse(_warehouse._plane, trussOptions, _warehouse._warehouseOptions);
+            var warehouse = new Warehouse(_warehouse._plane, _teklaTrussInputs, _warehouse._warehouseOptions);
 
             for (int i = 0; i < _warehouse.Trusses.Count; i++)
             {
@@ -46,21 +48,15 @@ namespace WarehouseLib.Warehouses
                 }
             }
 
+            _warehouse.RoofCables = warehouse.RoofCables;
+
             warehouse = _warehouse;
 
-            AssignProfiles(profiles, warehouse);
+            AssignProfiles(_profiles, warehouse);
             return warehouse;
         }
-
-        // private WarehouseOptions ComputeTeklaWarehouseInputs(WarehouseOptions warehouseOptions,
-        //     WarehouseProfiles profiles)
-        // {
-        //     var newOptions = warehouseOptions;
-        //
-        //     return newOptions;
-        // }
-
-        public TrussOptions ComputeTeklaTrussInputs(TrussOptions trussInputs, WarehouseProfiles profiles)
+        
+        private TrussOptions ComputeTeklaTrussInputs(TrussOptions trussInputs, WarehouseProfiles profiles)
         {
             var bottomBeamsProfileHeight = new Catalog().GetCatalog()[profiles.BottomBeamsProfileName].Height;
             var newClearHeight = trussInputs.ClearHeight + bottomBeamsProfileHeight / 2;
@@ -84,6 +80,8 @@ namespace WarehouseLib.Warehouses
             var intermediateBeamsProfile = catalog[profiles.IntermediateBeamsProfileName];
             var roofStrapProfile = catalog[profiles.RoofStrapsProfileName];
             var facadeStrapProfile = catalog[profiles.FacadeStrapsProfileName];
+            var facadeCableProfile = catalog[profiles.FacadeCablesProfileName];
+            var roofCableProfile = catalog[profiles.RoofCablesProfileName];
             foreach (var truss in warehouse.Trusses)
             {
                 if (truss.StaticColumns != null)
@@ -136,6 +134,22 @@ namespace WarehouseLib.Warehouses
                 foreach (var strap in warehouse.FacadeStrapsY)
                 {
                     strap.Profile = facadeStrapProfile;
+                }
+            }
+
+            if (warehouse.FacadeCables != null)
+            {
+                foreach (var cable in warehouse.FacadeCables)
+                {
+                    cable.Profile = facadeCableProfile;
+                }
+            }
+
+            if (warehouse.RoofCables != null)
+            {
+                foreach (var cable in warehouse.RoofCables)
+                {
+                    cable.Profile = roofCableProfile;
                 }
             }
         }

@@ -44,8 +44,7 @@ namespace ArqueStructuresTools.TeklaStructures
                 warehouseOptions);
 
             var teklaWarehouse = new TeklaWarehouse(warehouse, profileNames);
-            var newTrussInputs = teklaWarehouse.ComputeTeklaTrussInputs(trussInputs, profileNames);
-            var getTeklaWarehouse = teklaWarehouse.GetTeklaWarehouse(newTrussInputs, profileNames);
+            var getTeklaWarehouse = teklaWarehouse.GetTeklaWarehouse();
 
             DA.SetData(0, new WarehouseGoo(getTeklaWarehouse));
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Grasshopper.Kernel.Geometry.Delaunay;
 using WarehouseLib.Utilities;
 
 namespace WarehouseLib.Profiles
@@ -13,10 +14,14 @@ namespace WarehouseLib.Profiles
         public string IntermediateBeamsProfileName;
         public string RoofStrapsProfileName;
         public string FacadeStrapsProfileName;
+        public string RoofCablesProfileName;
+        public string FacadeCablesProfileName;
+
         public WarehouseProfiles(string staticColumnsProfileName, string boundaryColumnProfileName,
             string topBeamsProfileName,
             string bottomBeamsProfileName,
-            string intermediateBeamsProfileName, string roofStrapsProfileName, string facadeStrapsProfileName)
+            string intermediateBeamsProfileName, string roofStrapsProfileName, string facadeStrapsProfileName,
+            string roofCablesProfileName, string facadeCablesProfileName)
         {
             var catalog = new Catalog().GetCatalog();
             StaticColumnsProfileName = catalog[staticColumnsProfileName].Name;
@@ -25,7 +30,9 @@ namespace WarehouseLib.Profiles
             BottomBeamsProfileName = catalog[bottomBeamsProfileName].Name;
             IntermediateBeamsProfileName = catalog[intermediateBeamsProfileName].Name;
             RoofStrapsProfileName = catalog[roofStrapsProfileName].Name;
-            FacadeStrapsProfileName=catalog[facadeStrapsProfileName].Name;
+            FacadeStrapsProfileName = catalog[facadeStrapsProfileName].Name;
+            RoofCablesProfileName = catalog[roofCablesProfileName].Name;
+            FacadeCablesProfileName = catalog[facadeCablesProfileName].Name;
         }
     }
 }

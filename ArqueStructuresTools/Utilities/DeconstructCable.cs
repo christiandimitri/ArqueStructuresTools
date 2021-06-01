@@ -27,6 +27,7 @@ namespace ArqueStructuresTools
         {
             pManager.AddLineParameter("Cable axis", "ca", "ca", GH_ParamAccess.item);
             pManager.AddPlaneParameter("Cable plane", "p", "p", GH_ParamAccess.item);
+            pManager.AddTextParameter("Profile", "p", "The columns' profile reference name", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -37,7 +38,8 @@ namespace ArqueStructuresTools
             var cable = cableGoo.Value;
 
             DA.SetData(0, cable.Axis);
-            DA.SetData(1, Plane.WorldXY);
+            DA.SetData(1, cable.ProfileOrientationPlane);
+            DA.SetData(2, cable.Profile.Name);
         }
     }
 }
