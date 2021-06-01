@@ -35,6 +35,7 @@ namespace ArqueStructuresTools.Options
             pManager.AddTextParameter("Facade straps", "fs", "fs", GH_ParamAccess.item, "CEBRAU-100X3");
             pManager.AddTextParameter("Roof Cables", "fs", "fs", GH_ParamAccess.item, "CHS21.3/2.3");
             pManager.AddTextParameter("Facade Cables", "fs", "fs", GH_ParamAccess.item, "CHS21.3/2.3");
+            pManager.AddTextParameter("Roof bracing", "rb", "rb", GH_ParamAccess.item, "SHS 70 / 5");
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -53,6 +54,7 @@ namespace ArqueStructuresTools.Options
             var facadeStraps = "";
             var roofCables = "";
             var facadeCables = "";
+            var roofBracing = "";
             if (!DA.GetData(0, ref staticColumns)) return;
             if (!DA.GetData(1, ref boundaryColumns)) return;
             if (!DA.GetData(2, ref topBeams)) return;
@@ -62,6 +64,7 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(6, ref facadeStraps)) return;
             if (!DA.GetData(7, ref roofCables)) return;
             if (!DA.GetData(8, ref facadeCables)) return;
+            if (!DA.GetData(8, ref roofBracing)) return;
 
             WarehouseProfiles profiles = null;
 
@@ -75,7 +78,8 @@ namespace ArqueStructuresTools.Options
                     new TrimWhiteSpaceFromString(roofStraps).TrimmedString,
                     new TrimWhiteSpaceFromString(facadeStraps).TrimmedString,
                     new TrimWhiteSpaceFromString(roofCables).TrimmedString,
-                    new TrimWhiteSpaceFromString(facadeCables).TrimmedString);
+                    new TrimWhiteSpaceFromString(facadeCables).TrimmedString,
+                    new TrimWhiteSpaceFromString(roofBracing).TrimmedString);
             }
             catch (Exception e)
             {

@@ -27,6 +27,7 @@ namespace ArqueStructuresTools
         {
             pManager.AddLineParameter("Bracing axis", "ca", "ca", GH_ParamAccess.item);
             pManager.AddPlaneParameter("Bracing plane", "p", "p", GH_ParamAccess.item);
+            pManager.AddTextParameter("Profile", "p", "The bracing' profile reference name", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -37,7 +38,8 @@ namespace ArqueStructuresTools
             var bracing = bracingGoo.Value;
 
             DA.SetData(0, bracing.Axis);
-            DA.SetData(1, Plane.WorldXY);
+            DA.SetData(1, bracing.ProfileOrientationPlane);
+            DA.SetData(2, bracing.Profile.Name);
         }
     }
 }
