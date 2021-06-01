@@ -1,7 +1,5 @@
 ﻿using System;
 using Grasshopper.Kernel;
-using WarehouseLib.Articulations;
-using WarehouseLib.Options;
 using WarehouseLib.Profiles;
 using WarehouseLib.Utilities;
 

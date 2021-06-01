@@ -165,12 +165,12 @@ namespace WarehouseLib.Warehouses
             RoofCables = new List<Cable>();
             if (_warehouseOptions.RoofBracingType == RoofBracingType.Bracing.ToString())
             {
-                var roofBracingsStart =
+                var roofBracingStart =
                     new RoofBracing().ConstructWarrenStudsBracings(startBracingPoints, startTopBeam);
-                RoofBracings.AddRange(roofBracingsStart);
-                var roofBracingsEnd =
+                RoofBracings.AddRange(roofBracingStart);
+                var roofBracingEnd =
                     new RoofBracing().ConstructWarrenStudsBracings(endBracingPoints, endTopBeam);
-                RoofBracings.AddRange(roofBracingsEnd);
+                RoofBracings.AddRange(roofBracingEnd);
             }
             else if (_warehouseOptions.RoofBracingType == RoofBracingType.Cable.ToString())
             {

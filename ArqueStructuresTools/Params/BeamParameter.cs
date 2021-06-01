@@ -5,13 +5,14 @@ using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using WarehouseLib.Beams;
 
-namespace ArqueStructuresTools
+namespace ArqueStructuresTools.Params
 {
     public class BeamParameter : GH_Param<BeamGoo>, IGH_PreviewObject
     {
         public BeamParameter() : base("Beam Parameter", "Nickname", "Description", "Arque Structures", "Params",
             GH_ParamAccess.item)
         {
+            _box = new BoundingBox();
         }
 
         public override Guid ComponentGuid => new Guid("690012B0-B731-4D92-A7CF-9B89FC517333");
@@ -48,7 +49,7 @@ namespace ArqueStructuresTools
         public bool Hidden { get; set; }
         public bool IsPreviewCapable => true;
         public BoundingBox ClippingBox => _box;
-        private BoundingBox _box = new BoundingBox();
+        private BoundingBox _box;
     }
 
     public class BeamGoo : GH_Goo<Beam>
