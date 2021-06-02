@@ -15,6 +15,9 @@ namespace WarehouseLib.Bracings
         {
         }
 
-        public abstract List<Bracing> ConstructBracings(List<Point3d> nodes, Curve beam);
+        protected abstract Plane GetTeklaProfileOrientationPlane(Curve beam, Point3d position, Plane plane,
+            int index);
+
+        public abstract List<Bracing> ConstructBracings(List<Point3d> nodes, Curve beam, Plane plane, int index);
     }
 }

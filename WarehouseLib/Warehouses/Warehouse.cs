@@ -169,16 +169,17 @@ namespace WarehouseLib.Warehouses
             if (_warehouseOptions.RoofBracingType == RoofBracingType.Bracing.ToString())
             {
                 var roofBracingStart =
-                    new RoofBracing().ConstructWarrenStudsBracings(startBracingPoints, startTopBeam);
+                    new RoofBracing().ConstructWarrenStudsBracings(startBracingPoints, startTopBeam, _plane, 0);
                 RoofBracings.AddRange(roofBracingStart);
                 var roofBracingEnd =
-                    new RoofBracing().ConstructWarrenStudsBracings(endBracingPoints, endTopBeam);
+                    new RoofBracing().ConstructWarrenStudsBracings(endBracingPoints, endTopBeam, _plane,
+                        Trusses.Count - 1);
                 RoofBracings.AddRange(roofBracingEnd);
             }
             else if (_warehouseOptions.RoofBracingType == RoofBracingType.Cable.ToString())
             {
                 var roofBracingStart =
-                    new RoofBracing().ConstructBracings(startBracingPoints, startTopBeam);
+                    new RoofBracing().ConstructBracings(startBracingPoints, startTopBeam, _plane, 0);
 
                 var roofCablesStart =
                     new RoofCable().ConstructCables(startBracingPoints, startTopBeam, _plane, 0);
@@ -186,7 +187,7 @@ namespace WarehouseLib.Warehouses
                 RoofCables.AddRange(roofCablesStart);
 
                 var roofBracingEnd =
-                    new RoofBracing().ConstructBracings(endBracingPoints, endTopBeam);
+                    new RoofBracing().ConstructBracings(endBracingPoints, endTopBeam, _plane, Trusses.Count - 1);
                 var roofCablesEnd =
                     new RoofCable().ConstructCables(endBracingPoints, endTopBeam, _plane, Trusses.Count - 1);
                 RoofBracings.AddRange(roofBracingEnd);
@@ -214,7 +215,7 @@ namespace WarehouseLib.Warehouses
 
                 var nodes = tempList;
                 var beam = Curve.JoinCurves(trussB.TopBeamAxisCurves)[0];
-                tempBracings.AddRange(new ColumnsBracing().ConstructBracings(nodes, beam));
+                tempBracings.AddRange(new ColumnsBracing().ConstructBracings(nodes, beam, _plane, 0));
             }
 
             ColumnsBracings = tempBracings;

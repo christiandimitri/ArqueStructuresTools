@@ -49,7 +49,10 @@ namespace WarehouseLib.Warehouses
             }
 
             _warehouse.RoofCables = warehouse.RoofCables;
-
+            _warehouse.RoofBracings = warehouse.RoofBracings;
+            _warehouse.Crosses = warehouse.Crosses;
+            _warehouse.ColumnsBracings = warehouse.ColumnsBracings;
+            _warehouse.FacadeCables = warehouse.FacadeCables;
             warehouse = _warehouse;
 
             AssignProfiles(_profiles, warehouse);
@@ -83,6 +86,7 @@ namespace WarehouseLib.Warehouses
             var facadeCableProfile = catalog[profiles.FacadeCablesProfileName];
             var roofCableProfile = catalog[profiles.RoofCablesProfileName];
             var roofBracingProfile = catalog[profiles.RoofBracingProfileName];
+            var columnsBracingProfile = catalog[profiles.ColumnsBracingProfileName];
             foreach (var truss in warehouse.Trusses)
             {
                 if (truss.StaticColumns != null)
@@ -117,9 +121,12 @@ namespace WarehouseLib.Warehouses
                 }
             }
 
-            foreach (var strap in warehouse.RoofStraps)
+            if (warehouse.RoofStraps != null)
             {
-                strap.Profile = roofStrapProfile;
+                foreach (var strap in warehouse.RoofStraps)
+                {
+                    strap.Profile = roofStrapProfile;
+                }
             }
 
             if (warehouse.FacadeStrapsX != null)
@@ -159,6 +166,14 @@ namespace WarehouseLib.Warehouses
                 foreach (var roofBracing in warehouse.RoofBracings)
                 {
                     roofBracing.Profile = roofBracingProfile;
+                }
+            }
+
+            if (warehouse.ColumnsBracings != null)
+            {
+                foreach (var bracing in warehouse.ColumnsBracings)
+                {
+                    bracing.Profile = columnsBracingProfile;
                 }
             }
         }

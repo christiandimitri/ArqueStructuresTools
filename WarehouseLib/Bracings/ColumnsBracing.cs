@@ -11,7 +11,12 @@ namespace WarehouseLib.Bracings
         {
         }
 
-        public override List<Bracing> ConstructBracings(List<Point3d> nodes, Curve beam)
+        protected override Plane GetTeklaProfileOrientationPlane(Curve beam, Point3d position, Plane plane, int index)
+        {
+            return plane;
+        }
+
+        public override List<Bracing> ConstructBracings(List<Point3d> nodes, Curve beam, Plane plane, int index)
         {
             var bracings = new List<Bracing>();
             foreach (var node in nodes)
@@ -22,6 +27,7 @@ namespace WarehouseLib.Bracings
                 var axis = new Line(ptA, ptB);
                 var bracing = new ColumnsBracing();
                 bracing.Axis = axis;
+                bracing.ProfileOrientationPlane = GetTeklaProfileOrientationPlane(beam, node, plane, index);
                 bracings.Add(bracing);
             }
 

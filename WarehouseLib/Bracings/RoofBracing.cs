@@ -11,7 +11,18 @@ namespace WarehouseLib.Bracings
         {
         }
 
-        public override List<Bracing> ConstructBracings(List<Point3d> nodes, Curve beam)
+        protected override Plane GetTeklaProfileOrientationPlane(Curve beam, Point3d position, Plane plane, int index)
+        {
+            double t;
+            beam.ClosestPoint(position, out t);
+            var tangent = beam.TangentAt(t);
+            var vector = plane.YAxis;
+            var normal = Vector3d.CrossProduct(tangent, vector);
+            var profilePlane = new Plane(position, normal);
+            return profilePlane;
+        }
+
+        public override List<Bracing> ConstructBracings(List<Point3d> nodes, Curve beam, Plane plane, int index)
         {
             var bracings = new List<Bracing>();
 
@@ -21,6 +32,7 @@ namespace WarehouseLib.Bracings
                 var axis = new Line(node, beam.PointAt(t));
                 var bracing = new RoofBracing();
                 bracing.Axis = axis;
+                bracing.ProfileOrientationPlane = GetTeklaProfileOrientationPlane(beam, node, plane, index);
                 bracings.Add(bracing);
             }
 
@@ -29,7 +41,7 @@ namespace WarehouseLib.Bracings
             return bracings;
         }
 
-        public List<Bracing> ConstructWarrenStudsBracings(List<Point3d> nodes, Curve beam)
+        public List<Bracing> ConstructWarrenStudsBracings(List<Point3d> nodes, Curve beam, Plane plane, int index)
         {
             var bracings = new List<Bracing>();
             var outerPoints = nodes;
@@ -40,9 +52,6 @@ namespace WarehouseLib.Bracings
                 innerPoints.Add(beam.PointAt(t));
             }
 
-            var straightBracings = ConstructBracings(nodes, beam);
-            // bracings.AddRange(straightBracings);
-            var diagonalBracings = new List<Bracing>();
             for (int i = 0; i < innerPoints.Count; i++)
             {
                 var ptA = new Point3d(outerPoints[i]);
@@ -50,16 +59,19 @@ namespace WarehouseLib.Bracings
                 var axis = new Line(ptA, ptB);
                 var bracing = new RoofBracing();
                 bracing.Axis = axis;
+                bracing.ProfileOrientationPlane = GetTeklaProfileOrientationPlane(beam, innerPoints[i], plane, index);
                 if (bracing.Axis.IsValid) bracings.Add(bracing);
                 ptB = new Point3d(innerPoints[i]);
                 axis = new Line(ptA, ptB);
                 bracing = new RoofBracing();
                 bracing.Axis = axis;
+                bracing.ProfileOrientationPlane = GetTeklaProfileOrientationPlane(beam, innerPoints[i], plane, index);
                 if (bracing.Axis.IsValid) bracings.Add(bracing);
                 ptB = new Point3d(i < outerPoints.Count - 1 && i % 2 == 0 ? innerPoints[i + 1] : outerPoints[i]);
                 axis = new Line(ptA, ptB);
                 bracing = new RoofBracing();
                 bracing.Axis = axis;
+                bracing.ProfileOrientationPlane = GetTeklaProfileOrientationPlane(beam, innerPoints[i], plane, index);
                 if (bracing.Axis.IsValid) bracings.Add(bracing);
             }
 

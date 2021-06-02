@@ -17,12 +17,13 @@ namespace WarehouseLib.Profiles
         public string RoofCablesProfileName;
         public string FacadeCablesProfileName;
         public string RoofBracingProfileName;
+        public string ColumnsBracingProfileName;
 
         public WarehouseProfiles(string staticColumnsProfileName, string boundaryColumnProfileName,
             string topBeamsProfileName,
             string bottomBeamsProfileName,
             string intermediateBeamsProfileName, string roofStrapsProfileName, string facadeStrapsProfileName,
-            string roofCablesProfileName, string facadeCablesProfileName, string roofBracingProfileName)
+            string roofCablesProfileName, string facadeCablesProfileName, string roofBracingProfileName, string columnsBracingProfileName)
         {
             var catalog = new Catalog().GetCatalog();
             StaticColumnsProfileName = catalog[staticColumnsProfileName].Name;
@@ -35,6 +36,7 @@ namespace WarehouseLib.Profiles
             RoofCablesProfileName = catalog[roofCablesProfileName].Name;
             FacadeCablesProfileName = catalog[facadeCablesProfileName].Name;
             RoofBracingProfileName = catalog[roofBracingProfileName].Name;
+            ColumnsBracingProfileName = catalog[columnsBracingProfileName].Name;
         }
     }
 }
