@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
@@ -16,6 +17,13 @@ namespace ArqueStructuresTools
         {
         }
 
+        protected override System.Drawing.Bitmap Icon
+        {
+            get
+            {
+                return Properties.Resources.ParamWarehouse;
+            }
+        }
 
         public override Guid ComponentGuid => new Guid("F70844D7-D165-4AD2-B854-E3A925342F0B");
 

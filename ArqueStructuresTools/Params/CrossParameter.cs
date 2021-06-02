@@ -10,11 +10,22 @@ namespace ArqueStructuresTools
 {
     public class CrossParameter : GH_Param<CrossGoo>, IGH_PreviewObject
     {
-        public CrossParameter() : base("Cross", "Cross", "Contains a collection of Crosses", "Arque Structures", "Params", GH_ParamAccess.item)
+        public CrossParameter() : base("Cross", "Cross", "Contains a collection of Crosses", "Arque Structures",
+            "Params", GH_ParamAccess.item)
         {
         }
 
         public override Guid ComponentGuid => new Guid("D87BBB14-7F90-4E21-B7E6-EFE8BC66F0ED");
+
+        protected override System.Drawing.Bitmap Icon
+        {
+            get
+            {
+                // You can add image files to your project resources and access them like this:
+                //return Resources.IconForThisComponent;
+                return Properties.Resources.ParamCross;
+            }
+        }
 
         public void DrawViewportWires(IGH_PreviewArgs args)
         {

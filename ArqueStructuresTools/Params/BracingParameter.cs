@@ -9,9 +9,19 @@ namespace ArqueStructuresTools
 {
     public class BracingParameter : GH_Param<BracingGoo>, IGH_PreviewObject
     {
-        public BracingParameter() : base("Bracing", "Bracing", "Contains a collection of Bracing", "Arque Structures", "Params", GH_ParamAccess.item)
+        public BracingParameter() : base("Bracing", "Bracing", "Contains a collection of Bracing", "Arque Structures",
+            "Params", GH_ParamAccess.item)
         {
-            
+        }
+
+        protected override System.Drawing.Bitmap Icon
+        {
+            get
+            {
+                // You can add image files to your project resources and access them like this:
+                //return Resources.IconForThisComponent;
+                return Properties.Resources.ParamBracing;
+            }
         }
 
         public override Guid ComponentGuid => new Guid("446BCC6A-E9A9-4B0C-AD9F-E432AC83B0A9");
@@ -74,5 +84,4 @@ namespace ArqueStructuresTools
         public override string TypeName => "Bracing";
         public override string TypeDescription => "This is the desc for the bracing";
     }
-
 }

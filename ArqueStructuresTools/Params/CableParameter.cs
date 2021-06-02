@@ -10,8 +10,19 @@ namespace ArqueStructuresTools
 {
     public class CableParameter : GH_Param<CableGoo>, IGH_PreviewObject
     {
-        public CableParameter() : base("Cable", "Cable", "Contains a collection of Cables", "Arque Structures", "Params", GH_ParamAccess.item)
+        public CableParameter() : base("Cable", "Cable", "Contains a collection of Cables", "Arque Structures",
+            "Params", GH_ParamAccess.item)
         {
+        }
+
+        protected override System.Drawing.Bitmap Icon
+        {
+            get
+            {
+                // You can add image files to your project resources and access them like this:
+                //return Resources.IconForThisComponent;
+                return Properties.Resources.ParamCable;
+            }
         }
 
         public override Guid ComponentGuid => new Guid("87C72D51-89C7-4464-9914-D180C9636EBE");

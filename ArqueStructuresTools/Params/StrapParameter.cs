@@ -15,7 +15,15 @@ namespace ArqueStructuresTools
         }
 
         public override Guid ComponentGuid => new Guid("3C3D0887-4CB2-4292-BF85-AA39DCBC0B0E");
-
+        protected override System.Drawing.Bitmap Icon
+        {
+            get
+            {
+                // You can add image files to your project resources and access them like this:
+                //return Resources.IconForThisComponent;
+                return Properties.Resources.ParamStrap;
+            }
+        }
         public void DrawViewportWires(IGH_PreviewArgs args)
         {
             _box = new BoundingBox();

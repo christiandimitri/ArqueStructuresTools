@@ -79,6 +79,11 @@
     <Compile Include="Params\WarehouseParameter.cs" />
     <Compile Include="ArqueStructuresToolsInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Straps\FacadeStrapsComponent.cs" />
     <Compile Include="Straps\RoofStrapsComponent.cs" />
     <Compile Include="TeklaStructures\ComputeTeklaWarehouse.cs" />
@@ -107,7 +112,37 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Karamba" />
+    <Folder Include="Karamba\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ParamBeam.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ParamColumn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ParamBracing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ParamCable.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ParamCross.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ParamStrap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ParamTruss.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ParamWarehouse.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

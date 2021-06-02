@@ -14,7 +14,15 @@ namespace ArqueStructuresTools
             GH_ParamAccess.item)
         {
         }
-
+        protected override System.Drawing.Bitmap Icon
+        {
+            get
+            {
+                // You can add image files to your project resources and access them like this:
+                //return Resources.IconForThisComponent;
+                return Properties.Resources.ParamTruss;
+            }
+        }
 
         public override Guid ComponentGuid => new Guid("23DE33C1-E75A-47E4-8280-5D2A62883BF2");
 

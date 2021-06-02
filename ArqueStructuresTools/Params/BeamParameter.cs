@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
@@ -13,6 +14,16 @@ namespace ArqueStructuresTools.Params
             GH_ParamAccess.item)
         {
             _box = new BoundingBox();
+        }
+
+        protected override System.Drawing.Bitmap Icon
+        {
+            get
+            {
+                // You can add image files to your project resources and access them like this:
+                //return Resources.IconForThisComponent;
+                return Properties.Resources.ParamBeam;
+            }
         }
 
         public override Guid ComponentGuid => new Guid("690012B0-B731-4D92-A7CF-9B89FC517333");
