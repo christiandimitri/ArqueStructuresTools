@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Profiles;
 using WarehouseLib.Trusses;
 
 namespace WarehouseLib.Crosses
@@ -7,6 +8,8 @@ namespace WarehouseLib.Crosses
     public abstract class Cross
     {
         public List<Line> Axis;
+        public ProfileDescription Profile;
+        public List<Plane> ProfileOrientationPlanes;
 
         protected Cross()
         {
@@ -17,6 +20,6 @@ namespace WarehouseLib.Crosses
 
         public abstract List<Point3d> ComputeCrossTopNodes(Truss truss, int count);
         public abstract List<Point3d> ComputeCrossBottomNodes(Truss truss, List<Point3d> topNodes);
-        public abstract Plane GetTeklaProfileOrientationPlane();
+        public abstract void AddTeklaProfileOrientationPlane(StAndre cross);
     }
 }

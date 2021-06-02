@@ -13,9 +13,7 @@ namespace WarehouseLib.Warehouses
     {
         private WarehouseProfiles _profiles;
         private Warehouse _warehouse;
-
         private TrussOptions _teklaTrussInputs;
-        // public WarehouseOptions _teklaWarehouseInputs;
 
         public TeklaWarehouse(Warehouse warehouse, WarehouseProfiles profiles)
         {
@@ -87,6 +85,7 @@ namespace WarehouseLib.Warehouses
             var roofCableProfile = catalog[profiles.RoofCablesProfileName];
             var roofBracingProfile = catalog[profiles.RoofBracingProfileName];
             var columnsBracingProfile = catalog[profiles.ColumnsBracingProfileName];
+            var stAndreProfile = catalog[profiles.StAndreProfileName];
             foreach (var truss in warehouse.Trusses)
             {
                 if (truss.StaticColumns != null)
@@ -174,6 +173,14 @@ namespace WarehouseLib.Warehouses
                 foreach (var bracing in warehouse.ColumnsBracings)
                 {
                     bracing.Profile = columnsBracingProfile;
+                }
+            }
+
+            if (warehouse.Crosses != null)
+            {
+                foreach (var cross in warehouse.Crosses)
+                {
+                    cross.Profile = stAndreProfile;
                 }
             }
         }

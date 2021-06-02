@@ -44,6 +44,8 @@ namespace ArqueStructuresTools.Options
                 "SHS 70 / 5");
             pManager.AddTextParameter("Columns bracing", "CB", "Columns bracing profile name", GH_ParamAccess.item,
                 "SHS 70 / 5");
+            pManager.AddTextParameter("St Andre", "SA", "St andres cross profile name", GH_ParamAccess.item,
+                "L 140x140x15");
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -64,6 +66,7 @@ namespace ArqueStructuresTools.Options
             var facadeCables = "";
             var roofBracing = "";
             var columnsBracing = "";
+            var stAndres = "";
             if (!DA.GetData(0, ref staticColumn)) return;
             if (!DA.GetData(1, ref boundaryColumn)) return;
             if (!DA.GetData(2, ref topBeam)) return;
@@ -75,6 +78,7 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(8, ref facadeCables)) return;
             if (!DA.GetData(9, ref roofBracing)) return;
             if (!DA.GetData(10, ref columnsBracing)) return;
+            if (!DA.GetData(11, ref stAndres)) return;
 
             WarehouseProfiles profiles = null;
 
@@ -90,7 +94,8 @@ namespace ArqueStructuresTools.Options
                     new TrimWhiteSpaceFromString(roofCables).TrimmedString,
                     new TrimWhiteSpaceFromString(facadeCables).TrimmedString,
                     new TrimWhiteSpaceFromString(roofBracing).TrimmedString,
-                    new TrimWhiteSpaceFromString(columnsBracing).TrimmedString);
+                    new TrimWhiteSpaceFromString(columnsBracing).TrimmedString,
+                    new TrimWhiteSpaceFromString(stAndres).TrimmedString);
             }
             catch (Exception e)
             {

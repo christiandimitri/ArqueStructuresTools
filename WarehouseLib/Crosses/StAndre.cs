@@ -21,6 +21,7 @@ namespace WarehouseLib.Crosses
                 {
                     Axis = ConstructAxis(outerTopNodes[i], innerBottomNodes[i], outerBottomNodes[i], innerTopNodes[i])
                 };
+                cross.AddTeklaProfileOrientationPlane(cross);
                 crosses.Add(cross);
             }
 
@@ -83,9 +84,16 @@ namespace WarehouseLib.Crosses
 
             return cross;
         }
-        public override Plane GetTeklaProfileOrientationPlane()
+
+        public override void AddTeklaProfileOrientationPlane(StAndre cross)
         {
-            throw new System.NotImplementedException();
+            cross.ProfileOrientationPlanes = new List<Plane>();
+            for (int i = 0; i < cross.Axis.Count; i++)
+            {
+                var normal = Vector3d.CrossProduct(Axis[i].Direction, Vector3d.ZAxis);
+                var plane = new Plane(cross.Axis[i].PointAt(0), (i == 0) ? -Vector3d.ZAxis : Vector3d.ZAxis);
+                cross.ProfileOrientationPlanes.Add(plane);
+            }
         }
     }
 }

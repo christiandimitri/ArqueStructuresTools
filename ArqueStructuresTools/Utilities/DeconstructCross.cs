@@ -8,7 +8,8 @@ namespace ArqueStructuresTools
 {
     public class DeconstructCross : GH_Component
     {
-        public DeconstructCross() : base("Deconstruct Cross", "DeCross", "Deconstruct a Cross into its component parts", "Arque Structures",
+        public DeconstructCross() : base("Deconstruct Cross", "DeCross", "Deconstruct a Cross into its component parts",
+            "Arque Structures",
             "Utilities")
         {
         }
@@ -26,7 +27,8 @@ namespace ArqueStructuresTools
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddLineParameter("Axis", "A", "Cross axis", GH_ParamAccess.list);
-            pManager.AddPlaneParameter("Plane", "Pl", "Cross orientation plane", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Plane", "Pl", "Cross orientation plane", GH_ParamAccess.list);
+            pManager.AddTextParameter("Profile", "Pr", "Cross profile name", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -34,10 +36,11 @@ namespace ArqueStructuresTools
             var crossGoo = new CrossGoo();
 
             if (!DA.GetData(0, ref crossGoo)) return;
-            var axis = crossGoo.Value;
 
-            DA.SetDataList(0, axis.Axis);
-            DA.SetData(1, Plane.WorldXY);
+
+            DA.SetDataList(0, crossGoo.Value.Axis);
+            DA.SetDataList(1, crossGoo.Value.ProfileOrientationPlanes);
+            DA.SetData(2, crossGoo.Value.Profile.Name);
         }
     }
 }
