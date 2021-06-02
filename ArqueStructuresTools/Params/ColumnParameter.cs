@@ -10,7 +10,7 @@ namespace ArqueStructuresTools
 {
     public class ColumnParameter : GH_Param<ColumnGoo>, IGH_PreviewObject
     {
-        public ColumnParameter() : base("Column parameter", "Column", "This is the columns parameter component",
+        public ColumnParameter() : base("Column", "Column", "Contains a collection of Columns",
             "Arque Structures", "Params", GH_ParamAccess.item)
         {
         }

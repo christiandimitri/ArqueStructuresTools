@@ -11,7 +11,7 @@ namespace ArqueStructuresTools
 {
     public class WarehouseParameter : Grasshopper.Kernel.GH_Param<WarehouseGoo>, IGH_PreviewObject
     {
-        public WarehouseParameter() : base("Warehouse Parameter", "W", "Warehouse...", "Arque Structures", "Params",
+        public WarehouseParameter() : base("Warehouse", "Warehouse", "Contains a collection of Warehouses", "Arque Structures", "Params",
             GH_ParamAccess.item)
         {
         }

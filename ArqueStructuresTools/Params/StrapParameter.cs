@@ -9,7 +9,7 @@ namespace ArqueStructuresTools
 {
     public class StrapParameter : GH_Param<StrapGoo>, IGH_PreviewObject
     {
-        public StrapParameter() : base("Strap Parameter", "S", "Description", "Arque Structures", "Params",
+        public StrapParameter() : base("Strap", "Strap", "Contains a collection of Straps", "Arque Structures", "Params",
             GH_ParamAccess.item)
         {
         }

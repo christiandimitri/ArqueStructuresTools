@@ -9,7 +9,7 @@ namespace ArqueStructuresTools
 {
     public class BracingParameter : GH_Param<BracingGoo>, IGH_PreviewObject
     {
-        public BracingParameter() : base("Bracing parameter", "bp", "bp", "Arque Structures", "Params", GH_ParamAccess.item)
+        public BracingParameter() : base("Bracing", "Bracing", "Contains a collection of Bracing", "Arque Structures", "Params", GH_ParamAccess.item)
         {
             
         }

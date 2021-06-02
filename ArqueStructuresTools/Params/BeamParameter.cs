@@ -9,7 +9,7 @@ namespace ArqueStructuresTools.Params
 {
     public class BeamParameter : GH_Param<BeamGoo>, IGH_PreviewObject
     {
-        public BeamParameter() : base("Beam Parameter", "Nickname", "Description", "Arque Structures", "Params",
+        public BeamParameter() : base("Beam", "Beam", "Contains a collection of Beams", "Arque Structures", "Params",
             GH_ParamAccess.item)
         {
             _box = new BoundingBox();

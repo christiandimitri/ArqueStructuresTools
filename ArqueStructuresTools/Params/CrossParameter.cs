@@ -10,7 +10,7 @@ namespace ArqueStructuresTools
 {
     public class CrossParameter : GH_Param<CrossGoo>, IGH_PreviewObject
     {
-        public CrossParameter() : base("Cross parameter", "cp", "cp", "Arque Structures", "Params", GH_ParamAccess.item)
+        public CrossParameter() : base("Cross", "Cross", "Contains a collection of Crosses", "Arque Structures", "Params", GH_ParamAccess.item)
         {
         }
 

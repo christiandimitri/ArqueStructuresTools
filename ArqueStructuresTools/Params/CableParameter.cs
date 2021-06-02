@@ -10,7 +10,7 @@ namespace ArqueStructuresTools
 {
     public class CableParameter : GH_Param<CableGoo>, IGH_PreviewObject
     {
-        public CableParameter() : base("Cable parameter", "cp", "cp", "Arque Structures", "Params", GH_ParamAccess.item)
+        public CableParameter() : base("Cable", "Cable", "Contains a collection of Cables", "Arque Structures", "Params", GH_ParamAccess.item)
         {
         }
 
