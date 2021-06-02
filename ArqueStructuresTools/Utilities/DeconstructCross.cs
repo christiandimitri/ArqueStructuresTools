@@ -8,7 +8,7 @@ namespace ArqueStructuresTools
 {
     public class DeconstructCross : GH_Component
     {
-        public DeconstructCross() : base("Deconstruct Cross", "Nickname", "Description", "Arque Structures",
+        public DeconstructCross() : base("Deconstruct Cross", "DeCross", "Deconstruct a Cross into its component parts", "Arque Structures",
             "Utilities")
         {
         }
@@ -20,13 +20,13 @@ namespace ArqueStructuresTools
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new CrossParameter(), "Cross", "", "", GH_ParamAccess.item);
+            pManager.AddParameter(new CrossParameter(), "Cross", "C", "Cross to deconstruct", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddLineParameter("Cross axis", "ca", "ca", GH_ParamAccess.list);
-            pManager.AddPlaneParameter("Cross plane", "p", "p", GH_ParamAccess.item);
+            pManager.AddLineParameter("Axis", "A", "Cross axis", GH_ParamAccess.list);
+            pManager.AddPlaneParameter("Plane", "Pl", "Cross orientation plane", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)

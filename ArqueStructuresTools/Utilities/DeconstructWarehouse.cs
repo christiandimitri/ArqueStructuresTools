@@ -8,7 +8,7 @@ namespace ArqueStructuresTools
 {
     public class DeconstructWarehouse : GH_Component
     {
-        public DeconstructWarehouse() : base("Deconstruct Warehouse", "Nickname", "Description", "Arque Structures",
+        public DeconstructWarehouse() : base("Deconstruct Warehouse", "DeWarehouse", "Deconstruct a Warehouse into its component parts", "Arque Structures",
             "Utilities")
         {
         }
@@ -20,20 +20,20 @@ namespace ArqueStructuresTools
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new WarehouseParameter(), "Warehouse", "w", "w", GH_ParamAccess.item);
+            pManager.AddParameter(new WarehouseParameter(), "Warehouse", "W", "Warehouse to deconstruct", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter(), "Trusses", "t", "t", GH_ParamAccess.list);
-            pManager.AddParameter(new StrapParameter(), "Roof straps", "rs", "rs", GH_ParamAccess.list);
-            pManager.AddParameter(new StrapParameter(), "X Facade straps", "yfs", "xfs", GH_ParamAccess.list);
-            pManager.AddParameter(new StrapParameter(), "Y Facade straps", "xfs", "yfs", GH_ParamAccess.list);
-            pManager.AddParameter(new BracingParameter(), "Roof bracings", "rb", "rb", GH_ParamAccess.list);
-            pManager.AddParameter(new BracingParameter(), "Columns bracings", "cb", "cb", GH_ParamAccess.list);
-            pManager.AddParameter(new CableParameter(), "Roof cables", "rc", "rc", GH_ParamAccess.list);
-            pManager.AddParameter(new CableParameter(), "Facade cables", "fc", "fc", GH_ParamAccess.list);
-            pManager.AddParameter(new CrossParameter(), "St andre cross", "csa", "csa", GH_ParamAccess.list);
+            pManager.AddParameter(new TrussParameter(), "Trusses", "T", "Warehouse trusses", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "Roof straps", "RS", "Warehouse roof straps", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "X Facade straps", "X-FS", "Warehouse facade straps X-direction", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "Y Facade straps", "Y-FS", "Warehouse facade straps Y-direction", GH_ParamAccess.list);
+            pManager.AddParameter(new BracingParameter(), "Roof bracing", "RB", "Warehouse roof bracing", GH_ParamAccess.list);
+            pManager.AddParameter(new BracingParameter(), "Columns bracing", "CB", "Warehouse columns bracing", GH_ParamAccess.list);
+            pManager.AddParameter(new CableParameter(), "Roof cables", "RC", "Warehouse roof cables", GH_ParamAccess.list);
+            pManager.AddParameter(new CableParameter(), "Facade cables", "FC", "Warehouse facade cables", GH_ParamAccess.list);
+            pManager.AddParameter(new CrossParameter(), "St-And cross", "SAC", "Warehouse st andre cross", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)

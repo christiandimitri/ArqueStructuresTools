@@ -8,7 +8,7 @@ namespace ArqueStructuresTools
 {
     public class DeconstructBracing : GH_Component
     {
-        public DeconstructBracing() : base("Deconstruct Bracing", "Nickname", "Description", "Arque Structures",
+        public DeconstructBracing() : base("Deconstruct Bracing", "DeBracing", "Deconstruct a Bracing into its component parts", "Arque Structures",
             "Utilities")
         {
         }
@@ -20,14 +20,14 @@ namespace ArqueStructuresTools
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new BracingParameter(), "Bracing", "", "", GH_ParamAccess.item);
+            pManager.AddParameter(new BracingParameter(), "Bracing", "B", "Bracing to deconstruct", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddLineParameter("Bracing axis", "ca", "ca", GH_ParamAccess.item);
-            pManager.AddPlaneParameter("Bracing plane", "p", "p", GH_ParamAccess.item);
-            pManager.AddTextParameter("Profile", "p", "The bracing' profile reference name", GH_ParamAccess.item);
+            pManager.AddLineParameter("Axis", "A", "Bracing axis", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Plane", "Pl", "Bracing orientation plane", GH_ParamAccess.item);
+            pManager.AddTextParameter("Profile", "Pr", "Bracing profile name", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)

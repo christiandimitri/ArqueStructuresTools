@@ -12,8 +12,8 @@ namespace ArqueStructuresTools
         /// Initializes a new instance of the DeconstructTruss class.
         /// </summary>
         public DeconstructTruss()
-            : base("Deconstruct Truss", "Nickname",
-                "Description",
+            : base("Deconstruct Truss", "DeTruss",
+                "Deconstruct a Truss into its component parts",
                 "Arque Structures", "Utilities")
         {
         }
@@ -23,7 +23,7 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter(), "Truss", "t", "t", GH_ParamAccess.item);
+            pManager.AddParameter(new TrussParameter(), "Truss", "T", "Truss to deconstruct", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -31,14 +31,14 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new BeamParameter(), "Top bars", "tb", "tb", GH_ParamAccess.item);
-            pManager.AddParameter(new BeamParameter(), "Bottom bars", "bb", "bb", GH_ParamAccess.item);
-            pManager.AddParameter(new BeamParameter(), "Intermediate bars", "ib", "ib", GH_ParamAccess.item);
-            pManager.AddPointParameter("Top nodes", "tn", "tn", GH_ParamAccess.list);
-            pManager.AddPointParameter("Bottom nodes", "bn", "bn", GH_ParamAccess.list);
-            pManager.AddParameter(new ColumnParameter(), "Static columns", "cb", "cb", GH_ParamAccess.list);
-            pManager.AddParameter(new ColumnParameter(), "Boundary columns", "bc", "bc", GH_ParamAccess.list);
-            pManager.AddPointParameter("Boundary nodes", "bn", "bn", GH_ParamAccess.list);
+            pManager.AddParameter(new BeamParameter(), "Top beam", "TB", "Truss top beam", GH_ParamAccess.item);
+            pManager.AddParameter(new BeamParameter(), "Bottom beam", "BB", "Truss bottom beam", GH_ParamAccess.item);
+            pManager.AddParameter(new BeamParameter(), "Intermediate beams", "IB", "Truss intermediate beams", GH_ParamAccess.item);
+            pManager.AddPointParameter("Top nodes", "TN", "Truss top nodes", GH_ParamAccess.list);
+            pManager.AddPointParameter("Bottom nodes", "BN", "Truss bottom nodes", GH_ParamAccess.list);
+            pManager.AddParameter(new ColumnParameter(), "Static columns", "SC", "Truss static columns", GH_ParamAccess.list);
+            pManager.AddParameter(new ColumnParameter(), "Boundary columns", "BC", "Truss boundary columns", GH_ParamAccess.list);
+            pManager.AddPointParameter("Boundary nodes", "BN", "Truss boundary nodes", GH_ParamAccess.list);
         }
 
         /// <summary>

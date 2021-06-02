@@ -6,7 +6,7 @@ namespace ArqueStructuresTools
 {
     public class DeconstructColumn : GH_Component
     {
-        public DeconstructColumn() : base("Deconstruct Column", "Nickname", "Description", "Arque Structures",
+        public DeconstructColumn() : base("Deconstruct Column", "DeColumn", "Deconstruct a Column into its component parts", "Arque Structures",
             "Utilities")
         {
         }
@@ -15,14 +15,14 @@ namespace ArqueStructuresTools
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new ColumnParameter(), "Column", "c", "column to deconstruct", GH_ParamAccess.item);
+            pManager.AddParameter(new ColumnParameter(), "Column", "C", "Column to deconstruct", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddLineParameter("Axis", "a", "Axis of the column", GH_ParamAccess.item);
-            pManager.AddPlaneParameter("Plane", "p", "The columns' profile orientation's plane", GH_ParamAccess.item);
-            pManager.AddTextParameter("Profile", "p", "The columns' profile reference name", GH_ParamAccess.item);
+            pManager.AddLineParameter("Axis", "A", "Column axis", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Plane", "Pl", "Column orientation plane", GH_ParamAccess.item);
+            pManager.AddTextParameter("Profile", "Pr", "Column profile name", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)

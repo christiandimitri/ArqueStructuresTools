@@ -8,7 +8,7 @@ namespace ArqueStructuresTools
 {
     public class DeconstructCable : GH_Component
     {
-        public DeconstructCable() : base("Deconstruct Cable", "Nickname", "Description", "Arque Structures",
+        public DeconstructCable() : base("Deconstruct Cable", "DeCable", "Deconstruct a Cable into its component parts", "Arque Structures",
             "Utilities")
         {
         }
@@ -20,14 +20,14 @@ namespace ArqueStructuresTools
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new CableParameter(), "Cable", "", "", GH_ParamAccess.item);
+            pManager.AddParameter(new CableParameter(), "Cable", "C", "Cable to deconstruct", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddLineParameter("Cable axis", "ca", "ca", GH_ParamAccess.item);
-            pManager.AddPlaneParameter("Cable plane", "p", "p", GH_ParamAccess.item);
-            pManager.AddTextParameter("Profile", "p", "The columns' profile reference name", GH_ParamAccess.item);
+            pManager.AddLineParameter("Axis", "A", "Cable axis", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Plane", "Pl", "Cable orientation plane", GH_ParamAccess.item);
+            pManager.AddTextParameter("Profile", "Pr", "Cable profile name", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)

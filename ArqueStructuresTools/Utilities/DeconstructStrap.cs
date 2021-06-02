@@ -8,7 +8,7 @@ namespace ArqueStructuresTools
 {
     public class DeconstructStrap : GH_Component
     {
-        public DeconstructStrap() : base("Deconstruct Strap", "Nickname", "Description", "Arque Structures",
+        public DeconstructStrap() : base("Deconstruct Strap", "DeStrap", "Deconstruct a Strap into its component parts", "Arque Structures",
             "Utilities")
         {
         }
@@ -20,14 +20,14 @@ namespace ArqueStructuresTools
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new StrapParameter(), "Strap", "", "", GH_ParamAccess.item);
+            pManager.AddParameter(new StrapParameter(), "Strap", "S", "Strap to deconstruct", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddLineParameter("Strap axis", "s", "s", GH_ParamAccess.item);
-            pManager.AddPlaneParameter("Strap plane", "p", "p", GH_ParamAccess.item);
-            pManager.AddTextParameter("Profile", "p", "The strap profile name", GH_ParamAccess.item);
+            pManager.AddLineParameter("Axis", "A", "Strap axis", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Plane", "Pl", "Strap orientation plane", GH_ParamAccess.item);
+            pManager.AddTextParameter("Profile", "Pr", "Strap profile name", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
