@@ -112,7 +112,7 @@
     <Compile Include="Trusses\MonopichTruss.cs" />
     <Compile Include="Trusses\PichedTruss.cs" />
     <Compile Include="Trusses\Truss.cs" />
-    <Compile Include="Trusses\Typology.cs" />
+    <Compile Include="Trusses\GeometricalTypology.cs" />
     <Compile Include="Utilities\TrimWhiteSpaceFromString.cs" />
     <Compile Include="Warehouses\TeklaWarehouse.cs" />
     <Compile Include="Warehouses\Warehouse.cs" />

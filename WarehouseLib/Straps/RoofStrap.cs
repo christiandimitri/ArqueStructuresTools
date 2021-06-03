@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Rhino.Geometry;
 using WarehouseLib.Trusses;
 
@@ -13,23 +14,84 @@ namespace WarehouseLib
         public List<Strap> ConstructRoofStraps(List<Truss> trusses)
         {
             var roofStraps = new List<Strap>();
-
-            for (var i = 0; i < trusses.Count - 1; i++)
+            var truss = trusses[1];
+            if (truss is FlatTruss || truss is MonopichTruss || truss is ArchTruss)
             {
-                var trussA = trusses[i];
-                var trussB = trusses[i + 1];
-                for (var j = 0; j < trusses[i].TopNodes.Count; j++)
+                for (var i = 0; i < trusses.Count - 1; i++)
                 {
-                    var ptA = trussA.TopNodes[j];
-                    var ptB = trussB.TopNodes[j];
-                    var axis = new Line(ptA, ptB);
-                    var strap = new RoofStrap
-                        {Axis = axis, ProfileOrientationPlane = GetTeklaProfileOrientationPlane(trussA, ptA, 0, false)};
-                    roofStraps.Add(strap);
+                    var trussA = trusses[i];
+                    var trussB = trusses[i + 1];
+                    for (var j = 0; j < trussA.TopNodes.Count; j++)
+                    {
+                        var nodeA = trussA.TopNodes[j];
+                        var nodeB = trussB.TopNodes[j];
+                        var strap = ConstructStrap(trussA, nodeA, nodeB);
+                        roofStraps.Add(strap);
+                    }
+                }
+            }
+            else
+            {
+                roofStraps = new List<Strap>();
+                var referencePoint = truss.TopBeamAxisCurves[0].PointAtEnd;
+                var tempCloud = new PointCloud(truss.TopNodes);
+                var index = tempCloud.ClosestPoint(referencePoint);
+                for (var i = 0; i < trusses.Count - 1; i++)
+                {
+                    var trussA = trusses[i];
+                    var trussB = trusses[i + 1];
+                    var newNodesA = new List<Point3d>(new RoofStrap().ModifyNodesAtIndex(trussA, index));
+                    var newNodesB = new List<Point3d>(new RoofStrap().ModifyNodesAtIndex(trussB, index));
+                    for (var j = 0; j <= index; j++)
+                    {
+                        var nodeA = newNodesA[j];
+                        var nodeB = newNodesB[j];
+                        var strap = ConstructStrap(trussA, nodeA, nodeB);
+                        roofStraps.Add(strap);
+                    }
+
+                    // for (var j = index; j < newNodesA.Count; j++)
+                    // {
+                    //     var nodeA = newNodesA[j];
+                    //     var nodeB = newNodesB[j];
+                    //     var strap = ConstructStrap(trussB, nodeB, nodeA);
+                    //     roofStraps.Add(strap);
+                    // }
                 }
             }
 
             return roofStraps;
+        }
+
+        private List<Point3d> ModifyNodesAtIndex(Truss truss, int index)
+        {
+            var outNodes = truss.TopNodes;
+            var beam = Curve.JoinCurves(truss.TopBeamAxisCurves)[0];
+            double t;
+            beam.ClosestPoint(outNodes[index], out t);
+            var newParamA = truss.TopBeamAxisCurves[0].GetLength() - 0.1;
+            var ptA = beam.PointAt(newParamA);
+            // // var newParamB = t + 0.1;
+            // // var ptB = beam.PointAt(newParamB);
+            // nodes.Insert(index, ptA);
+            // nodes.RemoveAt(index + 1);
+            // nodes.Insert(index + 1, ptB);
+
+            outNodes.Insert(index, ptA);
+            return outNodes;
+        }
+
+        private RoofStrap ConstructStrap(Truss truss, Point3d nodeA, Point3d nodeB)
+        {
+            var ptA = nodeA;
+            var ptB = nodeB;
+            var axis = new Line(ptA, ptB);
+            var strap = new RoofStrap
+            {
+                Axis = axis,
+                ProfileOrientationPlane = GetTeklaProfileOrientationPlane(truss, ptA, 0, false)
+            };
+            return strap;
         }
 
         protected override Plane GetTeklaProfileOrientationPlane(Truss truss, Point3d strapPosition, int index,
@@ -38,7 +100,7 @@ namespace WarehouseLib
             var beam = Curve.JoinCurves(truss.TopBeam.Axis)[0];
             double t;
             beam.ClosestPoint(strapPosition, out t);
-            var tangent=beam.TangentAt(t);
+            var tangent = beam.TangentAt(t);
             var strapVector = truss._plane.YAxis;
             var normal = Vector3d.CrossProduct(tangent, strapVector);
             var profilePlane = new Plane(strapPosition, normal);
