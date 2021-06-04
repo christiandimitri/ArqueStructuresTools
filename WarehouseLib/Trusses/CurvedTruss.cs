@@ -10,7 +10,10 @@ namespace WarehouseLib.Trusses
         public CurvedTruss(Plane plane, TrussOptions options) : base(plane, options)
         {
         }
-
+        protected override void RecomputeNodes(int index)
+        {
+            throw new NotImplementedException();
+        }
         protected override void GenerateThickBottomBars()
         {
             throw new NotImplementedException();

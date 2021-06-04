@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
 using WarehouseLib.Columns;
+using WarehouseLib.Connections;
 using WarehouseLib.Options;
 
 // ReSharper disable VirtualMemberCallInConstructor
@@ -22,7 +23,50 @@ namespace WarehouseLib.Trusses
             ChangeArticulationAtColumnsByType(options._articulationType);
             ConstructBeams(false, (options.BaseType == 1) ? true : false);
         }
+        protected override void RecomputeNodes(int index)
+        {
+            List<Point3d> tempTopList = new List<Point3d>();
+            List<Point3d> tempBottomList = new List<Point3d>();
+            for (int i = 0; i < TopNodes.Count; i++)
+            {
+                if (_trussType == ConnectionType.Warren.ToString())
+                {
+                    if (i % 2 == 0)
+                    {
+                        tempTopList.Add(TopNodes[i]);
+                    }
+                    else if (i % 2 == 1)
+                    {
+                        tempBottomList.Add(BottomNodes[i]);
+                    }
+                }
+                else if (_trussType == ConnectionType.WarrenStuds.ToString())
+                {
+                    tempTopList.Add(TopNodes[i]);
+                    if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
+                    {
+                        tempBottomList.Add(BottomNodes[i]);
+                    }
+                }
+                else if (_trussType == ConnectionType.Howe.ToString() || _trussType == ConnectionType.Pratt.ToString())
+                {
+                    tempTopList.Add(TopNodes[i]);
+                    tempBottomList.Add(BottomNodes[i]);
+                }
+            }
 
+            if (_trussType == ConnectionType.Warren.ToString())
+            {
+                tempBottomList.Insert(0, BottomNodes[0]);
+                tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
+                tempTopList.Insert(index, TopNodes[index]);
+                tempBottomList.Insert(index, BottomNodes[index]);
+            }
+
+            TopNodes = new List<Point3d>(tempTopList);
+            BottomNodes = new List<Point3d>(tempBottomList);
+
+        }
         public override void GenerateTopBars()
         {
             StartingNodes = GetStartingPoints(_plane, _options.Width, _options.Width, _height, _maxHeight, _height);

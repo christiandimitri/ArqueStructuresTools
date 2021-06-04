@@ -199,7 +199,7 @@ namespace WarehouseLib.Trusses
             var bars = new List<Curve>();
             if (trussType == ConnectionType.Warren.ToString())
             {
-                connections = new WarrenConnection(TopNodes, BottomNodes);
+                connections = new WarrenConnection(TopNodes, BottomNodes, index);
                 bars = connections.ConstructConnections();
             }
 
@@ -220,52 +220,12 @@ namespace WarehouseLib.Trusses
             }
 
             IntermediateBeamsAxisCurves = bars;
-            RecomputeNodes();
+            RecomputeNodes(index);
         }
 
         public abstract List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index);
 
-        private void RecomputeNodes()
-        {
-            List<Point3d> tempTopList = new List<Point3d>();
-            List<Point3d> tempBottomList = new List<Point3d>();
-            for (int i = 0; i < TopNodes.Count; i++)
-            {
-                if (_trussType == ConnectionType.Warren.ToString())
-                {
-                    if (i % 2 == 0)
-                    {
-                        tempTopList.Add(TopNodes[i]);
-                    }
-                    else if (i % 2 == 1)
-                    {
-                        tempBottomList.Add(BottomNodes[i]);
-                    }
-                }
-                else if (_trussType == ConnectionType.WarrenStuds.ToString())
-                {
-                    tempTopList.Add(TopNodes[i]);
-                    if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
-                    {
-                        tempBottomList.Add(BottomNodes[i]);
-                    }
-                }
-                else if (_trussType == ConnectionType.Howe.ToString() || _trussType == ConnectionType.Pratt.ToString())
-                {
-                    tempTopList.Add(TopNodes[i]);
-                    tempBottomList.Add(BottomNodes[i]);
-                }
-            }
-
-            if (_trussType == ConnectionType.Warren.ToString())
-            {
-                tempBottomList.Insert(0, BottomNodes[0]);
-                tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
-            }
-
-            TopNodes = new List<Point3d>(tempTopList);
-            BottomNodes = new List<Point3d>(tempBottomList);
-        }
+        protected abstract void RecomputeNodes(int index);
 
         protected void ChangeArticulationAtColumnsByType(string type)
         {

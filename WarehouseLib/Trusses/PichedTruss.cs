@@ -113,6 +113,11 @@ namespace WarehouseLib.Trusses
             return normals;
         }
 
+        protected override void RecomputeNodes(int index)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void IsArticulatedToColumns()
         {
             var splitCurves = new List<Curve>();

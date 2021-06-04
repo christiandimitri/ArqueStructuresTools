@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Trusses;
 
 namespace WarehouseLib.Connections
 {
@@ -7,7 +8,6 @@ namespace WarehouseLib.Connections
     {
         protected readonly List<Point3d> TopNodes;
         protected readonly List<Point3d> BottomNodes;
-
         protected Connections(List<Point3d> topNodes, List<Point3d> bottomNodes)
         {
             TopNodes = topNodes;
