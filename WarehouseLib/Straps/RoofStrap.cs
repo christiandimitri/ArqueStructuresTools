@@ -40,8 +40,13 @@ namespace WarehouseLib
                 {
                     var trussA = trusses[i];
                     var trussB = trusses[i + 1];
-                    var newNodesA = new List<Point3d>(new RoofStrap().ModifyNodesAtIndex(trussA, index));
-                    var newNodesB = new List<Point3d>(new RoofStrap().ModifyNodesAtIndex(trussB, index));
+
+                    var offset = 0.95;
+                    var newNodesA =
+                        new List<Point3d>(new RoofStrap().ModifyNodesAtIndex(trussA, index, offset));
+                    var newNodesB =
+                        new List<Point3d>(new RoofStrap().ModifyNodesAtIndex(trussB, index, offset));
+
                     for (var j = 0; j <= index; j++)
                     {
                         var nodeA = newNodesA[j];
@@ -50,34 +55,28 @@ namespace WarehouseLib
                         roofStraps.Add(strap);
                     }
 
-                    // for (var j = index; j < newNodesA.Count; j++)
-                    // {
-                    //     var nodeA = newNodesA[j];
-                    //     var nodeB = newNodesB[j];
-                    //     var strap = ConstructStrap(trussB, nodeB, nodeA);
-                    //     roofStraps.Add(strap);
-                    // }
+                    for (var j = index + 1; j < newNodesA.Count; j++)
+                    {
+                        var nodeA = newNodesA[j];
+                        var nodeB = newNodesB[j];
+                        var strap = ConstructStrap(trussB, nodeB, nodeA);
+                        roofStraps.Add(strap);
+                    }
                 }
             }
 
             return roofStraps;
         }
 
-        private List<Point3d> ModifyNodesAtIndex(Truss truss, int index)
+        private List<Point3d> ModifyNodesAtIndex(Truss truss, int index, double offset)
         {
             var outNodes = truss.TopNodes;
-            var beam = Curve.JoinCurves(truss.TopBeamAxisCurves)[0];
-            double t;
-            beam.ClosestPoint(outNodes[index], out t);
-            var newParamA = truss.TopBeamAxisCurves[0].GetLength() - 0.1;
-            var ptA = beam.PointAt(newParamA);
-            // // var newParamB = t + 0.1;
-            // // var ptB = beam.PointAt(newParamB);
-            // nodes.Insert(index, ptA);
-            // nodes.RemoveAt(index + 1);
-            // nodes.Insert(index + 1, ptB);
 
+            var ptA = truss.TopBeamAxisCurves[0].PointAtNormalizedLength(offset);
+            var ptB = truss.TopBeamAxisCurves[1].PointAtNormalizedLength(1 - offset);
             outNodes.Insert(index, ptA);
+            outNodes.RemoveAt(index + 1);
+            outNodes.Insert(index + 1, ptB);
             return outNodes;
         }
 
