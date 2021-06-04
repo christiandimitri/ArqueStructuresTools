@@ -21,11 +21,18 @@ namespace WarehouseLib
                 {
                     var trussA = trusses[i];
                     var trussB = trusses[i + 1];
-                    for (var j = 0; j < trussA.TopNodes.Count; j++)
+                    var offset = 0.95;
+                    var newNodesA =
+                        new List<Point3d>(
+                            new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussA, 0, offset));
+                    var newNodesB =
+                        new List<Point3d>(
+                            new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussB, 0, offset));
+                    for (var j = 0; j < newNodesA.Count; j++)
                     {
-                        var nodeA = trussA.TopNodes[j];
-                        var nodeB = trussB.TopNodes[j];
-                        var strap = ConstructStrap(trussA, nodeA, nodeB);
+                        var nodeA = newNodesA[j];
+                        var nodeB = newNodesB[j];
+                        var strap = ConstructStrap(trussA, nodeA, nodeB, 0);
                         roofStraps.Add(strap);
                     }
                 }
@@ -41,25 +48,20 @@ namespace WarehouseLib
                     var trussA = trusses[i];
                     var trussB = trusses[i + 1];
 
-                    var offset = 0.95;
+                    var offset = 0.98;
                     var newNodesA =
-                        new List<Point3d>(new RoofStrap().ModifyNodesAtIndex(trussA, index, offset));
+                        new List<Point3d>(
+                            new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussA, index, offset));
                     var newNodesB =
-                        new List<Point3d>(new RoofStrap().ModifyNodesAtIndex(trussB, index, offset));
+                        new List<Point3d>(
+                            new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussB, index, offset));
 
-                    for (var j = 0; j <= index; j++)
+                    for (var j = 0; j < newNodesA.Count; j++)
                     {
                         var nodeA = newNodesA[j];
                         var nodeB = newNodesB[j];
-                        var strap = ConstructStrap(trussA, nodeA, nodeB);
-                        roofStraps.Add(strap);
-                    }
-
-                    for (var j = index + 1; j < newNodesA.Count; j++)
-                    {
-                        var nodeA = newNodesA[j];
-                        var nodeB = newNodesB[j];
-                        var strap = ConstructStrap(trussB, nodeB, nodeA);
+                        var strap = ConstructStrap(trussA, (j <= index) ? nodeA : nodeB, (j <= index) ? nodeB : nodeA,
+                            0);
                         roofStraps.Add(strap);
                     }
                 }
@@ -68,19 +70,29 @@ namespace WarehouseLib
             return roofStraps;
         }
 
-        private List<Point3d> ModifyNodesAtIndex(Truss truss, int index, double offset)
+        private List<Point3d> ModifyNodesAtStartEndAndAtIndexByOffset(Truss truss, int index, double offset)
         {
-            var outNodes = truss.TopNodes;
+            var outNodes = new List<Point3d>(truss.TopNodes);
+            var pt = truss.TopBeamAxisCurves[0].PointAtNormalizedLength(1 - offset);
+            outNodes.Insert(0, pt);
+            outNodes.RemoveAt(1);
+            if (truss is DoublepichTruss)
+            {
+                pt = new Point3d(truss.TopBeamAxisCurves[0].PointAtNormalizedLength(offset));
+                outNodes.Insert(index, pt);
+                outNodes.RemoveAt(index + 1);
+                pt = new Point3d(truss.TopBeamAxisCurves[1].PointAtNormalizedLength(1 - offset));
+                outNodes.Insert(index + 1, pt);
+                // outNodes.RemoveAt(index + 2);
+            }
 
-            var ptA = truss.TopBeamAxisCurves[0].PointAtNormalizedLength(offset);
-            var ptB = truss.TopBeamAxisCurves[1].PointAtNormalizedLength(1 - offset);
-            outNodes.Insert(index, ptA);
-            outNodes.RemoveAt(index + 1);
-            outNodes.Insert(index + 1, ptB);
+            pt = new Point3d(truss.TopBeamAxisCurves[1].PointAtNormalizedLength(offset));
+            outNodes.Insert(outNodes.Count - 1, pt);
+            outNodes.RemoveAt(outNodes.Count - 1);
             return outNodes;
         }
 
-        private RoofStrap ConstructStrap(Truss truss, Point3d nodeA, Point3d nodeB)
+        private RoofStrap ConstructStrap(Truss truss, Point3d nodeA, Point3d nodeB, int index)
         {
             var ptA = nodeA;
             var ptB = nodeB;
@@ -88,7 +100,7 @@ namespace WarehouseLib
             var strap = new RoofStrap
             {
                 Axis = axis,
-                ProfileOrientationPlane = GetTeklaProfileOrientationPlane(truss, ptA, 0, false)
+                ProfileOrientationPlane = GetTeklaProfileOrientationPlane(truss, ptA, index, false)
             };
             return strap;
         }
@@ -100,7 +112,7 @@ namespace WarehouseLib
             double t;
             beam.ClosestPoint(strapPosition, out t);
             var tangent = beam.TangentAt(t);
-            var strapVector = truss._plane.YAxis;
+            var strapVector = index == 0 ? truss._plane.YAxis : -truss._plane.YAxis;
             var normal = Vector3d.CrossProduct(tangent, strapVector);
             var profilePlane = new Plane(strapPosition, normal);
             return profilePlane;
