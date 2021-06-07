@@ -26,6 +26,8 @@ namespace ArqueStructuresTools.Options
                 GH_ParamAccess.item, "HEA300");
             pManager.AddTextParameter("Boundary column", "BC", "Boundary column profile name",
                 GH_ParamAccess.item, "HEA260");
+            pManager.AddTextParameter("Portico beam", "PB", "Portico beam's profile name", GH_ParamAccess.item,
+                "L 140x140x15");
             pManager.AddTextParameter("Top beam", "TB", "Top beam profile name",
                 GH_ParamAccess.item, "IPE300");
             pManager.AddTextParameter("Bottom beam", "BB", "Bottom beam Tekla profile name",
@@ -44,7 +46,7 @@ namespace ArqueStructuresTools.Options
                 "SHS 70 / 5");
             pManager.AddTextParameter("Columns bracing", "CB", "Columns bracing profile name", GH_ParamAccess.item,
                 "SHS 70 / 5");
-            pManager.AddTextParameter("St Andre", "SA", "St andres cross profile name", GH_ParamAccess.item,
+            pManager.AddTextParameter("St Andre", "SA", "St andres cross's profile name", GH_ParamAccess.item,
                 "L 140x140x15");
         }
 
@@ -67,18 +69,22 @@ namespace ArqueStructuresTools.Options
             var roofBracing = "";
             var columnsBracing = "";
             var stAndres = "";
+            var porticoBeam = "";
+
             if (!DA.GetData(0, ref staticColumn)) return;
             if (!DA.GetData(1, ref boundaryColumn)) return;
-            if (!DA.GetData(2, ref topBeam)) return;
-            if (!DA.GetData(3, ref bottomBeam)) return;
-            if (!DA.GetData(4, ref intermediateBeams)) return;
-            if (!DA.GetData(5, ref roofStraps)) return;
-            if (!DA.GetData(6, ref facadeStraps)) return;
-            if (!DA.GetData(7, ref roofCables)) return;
-            if (!DA.GetData(8, ref facadeCables)) return;
-            if (!DA.GetData(9, ref roofBracing)) return;
-            if (!DA.GetData(10, ref columnsBracing)) return;
-            if (!DA.GetData(11, ref stAndres)) return;
+            if (!DA.GetData(2, ref porticoBeam)) return;
+            if (!DA.GetData(3, ref topBeam)) return;
+            if (!DA.GetData(4, ref bottomBeam)) return;
+            if (!DA.GetData(5, ref intermediateBeams)) return;
+            if (!DA.GetData(6, ref roofStraps)) return;
+            if (!DA.GetData(7, ref facadeStraps)) return;
+            if (!DA.GetData(8, ref roofCables)) return;
+            if (!DA.GetData(9, ref facadeCables)) return;
+            if (!DA.GetData(10, ref roofBracing)) return;
+            if (!DA.GetData(11, ref columnsBracing)) return;
+            if (!DA.GetData(12, ref stAndres)) return;
+
 
             WarehouseProfiles profiles = null;
 
@@ -95,7 +101,7 @@ namespace ArqueStructuresTools.Options
                     new TrimWhiteSpaceFromString(facadeCables).TrimmedString,
                     new TrimWhiteSpaceFromString(roofBracing).TrimmedString,
                     new TrimWhiteSpaceFromString(columnsBracing).TrimmedString,
-                    new TrimWhiteSpaceFromString(stAndres).TrimmedString);
+                    new TrimWhiteSpaceFromString(stAndres).TrimmedString,porticoBeam);
             }
             catch (Exception e)
             {
