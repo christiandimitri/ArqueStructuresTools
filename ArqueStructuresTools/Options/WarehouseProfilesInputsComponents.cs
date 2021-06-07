@@ -27,7 +27,7 @@ namespace ArqueStructuresTools.Options
             pManager.AddTextParameter("Boundary column", "BC", "Boundary column profile name",
                 GH_ParamAccess.item, "HEA260");
             pManager.AddTextParameter("Portico beam", "PB", "Portico beam's profile name", GH_ParamAccess.item,
-                "L 140x140x15");
+                "IPE300");
             pManager.AddTextParameter("Top beam", "TB", "Top beam profile name",
                 GH_ParamAccess.item, "IPE300");
             pManager.AddTextParameter("Bottom beam", "BB", "Bottom beam Tekla profile name",

@@ -97,6 +97,7 @@ namespace WarehouseLib.Warehouses
             var roofBracingProfile = catalog[profiles.RoofBracingProfileName];
             var columnsBracingProfile = catalog[profiles.ColumnsBracingProfileName];
             var stAndreProfile = catalog[profiles.StAndreProfileName];
+            var porticoBeamsProfile = catalog[profiles.PorticoBeamProfileName];
             foreach (var truss in warehouse.Trusses)
             {
                 if (truss.StaticColumns != null)
@@ -117,7 +118,7 @@ namespace WarehouseLib.Warehouses
 
                 if (truss.TopBeam != null)
                 {
-                    truss.TopBeam.Profile = topBeamsProfile;
+                    truss.TopBeam.Profile = truss.BottomBeam.Axis.Count is 0 ? porticoBeamsProfile : topBeamsProfile;
                 }
 
                 if (truss.BottomBeam != null)
