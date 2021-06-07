@@ -46,15 +46,6 @@ namespace WarehouseLib.Warehouses
                     trussB.BottomBeam.Axis = trussA.BottomBeamAxisCurves;
                     trussB.BottomBeam.ProfileOrientationPlane = trussA.BottomBeam.ProfileOrientationPlane;
                 }
-
-                if (trussB.TopBeam != null)
-                {
-                    trussB.IntermediateBeams = new TopBeam()
-                    {
-                        Axis = trussB.IntermediateBeamsAxisCurves,
-                        ProfileOrientationPlane = trussB.TopBeam.ProfileOrientationPlane
-                    };
-                }
             }
 
             _warehouse.RoofCables = warehouse.RoofCables;
