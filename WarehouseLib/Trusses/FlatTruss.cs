@@ -68,7 +68,17 @@ namespace WarehouseLib.Trusses
                 tempBottomList.Insert(0, BottomNodes[0]);
                 tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
             }
-
+            if (_trussType == ConnectionType.WarrenStuds.ToString())
+            {
+                if (!tempBottomList.Contains(BottomNodes[index]))
+                {
+                    tempBottomList.Insert((index / 2) + 1, BottomNodes[index]);
+                }
+                else if (!tempTopList.Contains(TopNodes[index]))
+                {
+                    tempTopList.Insert((index / 2) + 1, TopNodes[index]);
+                }
+            }
             TopNodes = new List<Point3d>(tempTopList);
             BottomNodes = new List<Point3d>(tempBottomList);
             if (ConnectionType.Warren.ToString() == _trussType)

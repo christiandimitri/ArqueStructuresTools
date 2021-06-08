@@ -5,12 +5,9 @@ namespace WarehouseLib.Connections
 {
     public class PrattConnection : Connections
     {
-        private readonly int _index;
-
-        public PrattConnection(List<Point3d> topNodes, List<Point3d> bottomNodes, int index) : base(topNodes,
+        public PrattConnection(List<Point3d> topNodes, List<Point3d> bottomNodes) : base(topNodes,
             bottomNodes)
         {
-            _index = index;
         }
 
         public override List<Curve> ConstructConnections()
@@ -18,19 +15,19 @@ namespace WarehouseLib.Connections
             var bars = new List<Curve>();
             for (var i = 0; i < TopNodes.Count; i ++)
             {
-                if (i < _index)
+                if (i < MidPointIndex)
                 {
                     var lineA = new Line(TopNodes[i], BottomNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                     lineA = new Line(TopNodes[i], BottomNodes[i + 1]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
-                else if (i == _index)
+                else if (i == MidPointIndex)
                 {
                     var lineA = new Line(TopNodes[i], BottomNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
-                else if (i > _index)
+                else if (i > MidPointIndex)
                 {
                     var lineA = new Line(TopNodes[i], BottomNodes[i - 1]);
                     bars.Add(lineA.ToNurbsCurve());

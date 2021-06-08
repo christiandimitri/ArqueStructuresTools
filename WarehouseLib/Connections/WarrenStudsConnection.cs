@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Rhino.Geometry;
 
 namespace WarehouseLib.Connections
 {
     public class WarrenStudsConnection : Connections
     {
-        private readonly int _index;
-
-        public WarrenStudsConnection(List<Point3d> topNodes, List<Point3d> bottomNodes, int index) : base(topNodes,
+        public WarrenStudsConnection(List<Point3d> topNodes, List<Point3d> bottomNodes) : base(topNodes,
             bottomNodes)
         {
-            _index = index;
         }
 
 
@@ -18,21 +16,29 @@ namespace WarehouseLib.Connections
         {
             var tempTopNodes = BottomNodes;
             var tempBottomNodes = TopNodes;
-            var bars = new List<Curve>();
+            var axis = new List<Curve>();
             for (var i = 0; i < tempTopNodes.Count; i++)
             {
                 if (i % 2 == 1)
                 {
                     var lineA = new Line(tempBottomNodes[i - 1], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
+                    axis.Add(lineA.ToNurbsCurve());
                     lineA = new Line(tempBottomNodes[i], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
+                    axis.Add(lineA.ToNurbsCurve());
                     lineA = new Line(tempBottomNodes[i + 1], tempTopNodes[i]);
-                    bars.Add(lineA.ToNurbsCurve());
+                    axis.Add(lineA.ToNurbsCurve());
                 }
             }
 
-            return bars;
+            var midStudAxis = new Line(tempBottomNodes[MidPointIndex], tempTopNodes[MidPointIndex]).ToNurbsCurve();
+
+            if ((tempTopNodes.Count / 2) % 2 == 0)
+            {
+                axis.Insert(MidPointIndex + 2, midStudAxis.ToNurbsCurve());
+            }
+
+
+            return axis;
         }
     }
 }

@@ -196,26 +196,31 @@ namespace WarehouseLib.Trusses
         protected void GenerateIntermediateBars(string trussType, int index)
         {
             Connections.Connections connections = null;
+
             var bars = new List<Curve>();
             if (trussType == ConnectionType.Warren.ToString())
             {
-                connections = new WarrenConnection(TopNodes, BottomNodes, index);
+                connections = new WarrenConnection(TopNodes, BottomNodes);
+                connections.MidPointIndex = index;
                 bars = connections.ConstructConnections();
             }
 
             else if (trussType == ConnectionType.WarrenStuds.ToString())
             {
-                connections = new WarrenStudsConnection(TopNodes, BottomNodes, index);
+                connections = new WarrenStudsConnection(TopNodes, BottomNodes);
+                connections.MidPointIndex = index;
                 bars = connections.ConstructConnections();
             }
             else if (trussType == ConnectionType.Pratt.ToString())
             {
-                connections = new PrattConnection(TopNodes, BottomNodes, index);
+                connections = new PrattConnection(TopNodes, BottomNodes);
+                connections.MidPointIndex = index;
                 bars = connections.ConstructConnections();
             }
             else if (trussType == ConnectionType.Howe.ToString())
             {
-                connections = new HoweConnection(TopNodes, BottomNodes, index, _articulationType);
+                connections = new HoweConnection(TopNodes, BottomNodes, _articulationType);
+                connections.MidPointIndex = index;
                 bars = connections.ConstructConnections();
             }
 

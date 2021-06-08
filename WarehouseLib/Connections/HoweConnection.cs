@@ -5,12 +5,11 @@ namespace WarehouseLib.Connections
 {
     public class HoweConnection : Connections
     {
-        private readonly int _index;
+        
         private readonly string _articulationType;
-        public HoweConnection(List<Point3d> topNodes, List<Point3d> bottomNodes, int index, string articulationType) :
+        public HoweConnection(List<Point3d> topNodes, List<Point3d> bottomNodes, string articulationType) :
             base(topNodes, bottomNodes)
         {
-            _index = index;
             _articulationType = articulationType;
         }
 
@@ -21,19 +20,19 @@ namespace WarehouseLib.Connections
             var bars = new List<Curve>();
             for (var i = 0; i < tempTopNodes.Count; i ++)
             {
-                if (i < _index)
+                if (i < MidPointIndex)
                 {
                     var lineA = new Line(tempBottomNodes[i], tempTopNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                     lineA = new Line(tempBottomNodes[i + 1], tempTopNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
-                else if (i == _index)
+                else if (i == MidPointIndex)
                 {
                     var lineA = new Line(TopNodes[i], BottomNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());
                 }
-                else if (i > _index)
+                else if (i > MidPointIndex)
                 {
                     var lineA = new Line(tempBottomNodes[i - 1], tempTopNodes[i]);
                     bars.Add(lineA.ToNurbsCurve());

@@ -15,19 +15,19 @@ namespace WarehouseLib
         {
             var roofStraps = new List<Strap>();
             var truss = trusses[1];
-            if (truss is FlatTruss || truss is MonopichTruss || truss is ArchTruss)
-            {
+            // if (truss is FlatTruss || truss is MonopichTruss || truss is ArchTruss)
+            // {
                 for (var i = 0; i < trusses.Count - 1; i++)
                 {
                     var trussA = trusses[i];
                     var trussB = trusses[i + 1];
-                    var offset = 0.991;
-                    var newNodesA =
-                        new List<Point3d>(
-                            new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussA, 0, offset));
-                    var newNodesB =
-                        new List<Point3d>(
-                            new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussB, 0, offset));
+                    var offset = 0.9;
+                    var newNodesA = trussA.TopNodes;
+                        // new List<Point3d>(
+                        //     new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussA, 0, offset));
+                        var newNodesB = trussB.TopNodes;
+                        // new List<Point3d>(
+                        //     new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussB, 0, offset));
                     for (var j = 0; j < newNodesA.Count; j++)
                     {
                         var nodeA = newNodesA[j];
@@ -36,36 +36,36 @@ namespace WarehouseLib
                         roofStraps.Add(strap);
                     }
                 }
-            }
-            else
-            {
-                roofStraps = new List<Strap>();
-                var referencePoint = truss.TopBeamAxisCurves[0].PointAtEnd;
-                var tempCloud = new PointCloud(truss.TopNodes);
-                var index = tempCloud.ClosestPoint(referencePoint);
-                for (var i = 0; i < trusses.Count - 1; i++)
-                {
-                    var trussA = trusses[i];
-                    var trussB = trusses[i + 1];
-
-                    var offset = 0.991;
-                    var newNodesA =
-                        new List<Point3d>(
-                            new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussA, index, offset));
-                    var newNodesB =
-                        new List<Point3d>(
-                            new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussB, index, offset));
-
-                    for (var j = 0; j < newNodesA.Count; j++)
-                    {
-                        var nodeA = newNodesA[j];
-                        var nodeB = newNodesB[j];
-                        var strap = ConstructStrap(trussA, (j <= index) ? nodeA : nodeB, (j <= index) ? nodeB : nodeA,
-                            0);
-                        roofStraps.Add(strap);
-                    }
-                }
-            }
+            // }
+            // else
+            // {
+            //     roofStraps = new List<Strap>();
+            //     var referencePoint = truss.TopBeamAxisCurves[0].PointAtEnd;
+            //     var tempCloud = new PointCloud(truss.TopNodes);
+            //     var index = tempCloud.ClosestPoint(referencePoint);
+            //     for (var i = 0; i < trusses.Count - 1; i++)
+            //     {
+            //         var trussA = trusses[i];
+            //         var trussB = trusses[i + 1];
+            //
+            //         var offset = 0.9;
+            //         var newNodesA =
+            //             new List<Point3d>(
+            //                 new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussA, index, offset));
+            //         var newNodesB =
+            //             new List<Point3d>(
+            //                 new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussB, index, offset));
+            //
+            //         for (var j = 0; j < newNodesA.Count; j++)
+            //         {
+            //             var nodeA = newNodesA[j];
+            //             var nodeB = newNodesB[j];
+            //             var strap = ConstructStrap(trussA, (j <= index) ? nodeA : nodeB, (j <= index) ? nodeB : nodeA,
+            //                 0);
+            //             roofStraps.Add(strap);
+            //         }
+            //     }
+            // }
 
             return roofStraps;
         }

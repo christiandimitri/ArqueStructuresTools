@@ -72,6 +72,7 @@
     <Compile Include="Bracings\ColumnsBracing.cs" />
     <Compile Include="Bracings\RoofBracing.cs" />
     <Compile Include="Bracings\RoofBracingType.cs" />
+    <Compile Include="BucklingLengths\BuckelingLength.cs" />
     <Compile Include="Cables\Cable.cs" />
     <Compile Include="Cables\CablePosition.cs" />
     <Compile Include="Cables\FacadeCable.cs" />

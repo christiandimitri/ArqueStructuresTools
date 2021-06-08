@@ -21,8 +21,8 @@ namespace WarehouseLib.Trusses
             ConstructTruss(options.Divisions);
             ChangeArticulationAtColumnsByType(options._articulationType);
             ConstructBeams(true, true);
-
         }
+
         protected override void RecomputeNodes(int index)
         {
             List<Point3d> tempTopList = new List<Point3d>();
@@ -55,6 +55,18 @@ namespace WarehouseLib.Trusses
                 }
             }
 
+            if (_trussType == ConnectionType.WarrenStuds.ToString())
+            {
+                if (!tempBottomList.Contains(BottomNodes[index]))
+                {
+                    tempBottomList.Insert((index / 2) + 1, BottomNodes[index]);
+                }
+                else if (!tempTopList.Contains(TopNodes[index]))
+                {
+                    tempTopList.Insert((index / 2) + 1, TopNodes[index]);
+                }
+            }
+
             if (_trussType == ConnectionType.Warren.ToString())
             {
                 tempBottomList.Insert(0, BottomNodes[0]);
@@ -68,6 +80,7 @@ namespace WarehouseLib.Trusses
                 IntermediateBeamsAxisCurves.RemoveAt(index);
             }
         }
+
         public override void GenerateTopBars()
         {
             StartingNodes = GetStartingPoints(_plane, _length / 2, _length / 2, _height,

@@ -7,12 +7,10 @@ namespace WarehouseLib.Connections
 {
     public class WarrenConnection : Connections
     {
-        private int AcuteAnglePointIndex;
 
-        public WarrenConnection(List<Point3d> topNodes, List<Point3d> bottomNodes, int index) : base(topNodes,
+        public WarrenConnection(List<Point3d> topNodes, List<Point3d> bottomNodes) : base(topNodes,
             bottomNodes)
         {
-            AcuteAnglePointIndex = index;
         }
 
         public override List<Curve> ConstructConnections()
@@ -31,9 +29,9 @@ namespace WarehouseLib.Connections
                 }
             }
 
-            var midStudAxis = new Line(tempBottomNodes[AcuteAnglePointIndex], tempTopNodes[AcuteAnglePointIndex]);
+            var midStudAxis = new Line(tempBottomNodes[MidPointIndex], tempTopNodes[MidPointIndex]);
 
-            axis.Insert(AcuteAnglePointIndex, midStudAxis.ToNurbsCurve());
+            axis.Insert(MidPointIndex, midStudAxis.ToNurbsCurve());
 
             return axis;
         }

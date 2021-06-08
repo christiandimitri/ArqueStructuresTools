@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Rhino.Geometry;
 using WarehouseLib.Columns;
 using WarehouseLib.Connections;
@@ -23,6 +25,7 @@ namespace WarehouseLib.Trusses
             ChangeArticulationAtColumnsByType(options._articulationType);
             ConstructBeams(false, (options.BaseType == 1) ? true : false);
         }
+
         protected override void RecomputeNodes(int index)
         {
             List<Point3d> tempTopList = new List<Point3d>();
@@ -59,14 +62,32 @@ namespace WarehouseLib.Trusses
             {
                 tempBottomList.Insert(0, BottomNodes[0]);
                 tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
-                tempTopList.Insert(index, TopNodes[index]);
-                tempBottomList.Insert(index, BottomNodes[index]);
+                if (!tempBottomList.Contains(BottomNodes[index]))
+                {
+                    tempBottomList.Insert((index / 2) + 1, BottomNodes[index]);
+                }
+                else if (!tempTopList.Contains(TopNodes[index]))
+                {
+                    tempTopList.Insert((index / 2) + 1, TopNodes[index]);
+                }
+            }
+
+            if (_trussType == ConnectionType.WarrenStuds.ToString())
+            {
+                if (!tempBottomList.Contains(BottomNodes[index]))
+                {
+                    tempBottomList.Insert((index / 2) + 1, BottomNodes[index]);
+                }
+                else if (!tempTopList.Contains(TopNodes[index]))
+                {
+                    tempTopList.Insert((index / 2) + 1, TopNodes[index]);
+                }
             }
 
             TopNodes = new List<Point3d>(tempTopList);
             BottomNodes = new List<Point3d>(tempBottomList);
-
         }
+
         public override void GenerateTopBars()
         {
             StartingNodes = GetStartingPoints(_plane, _options.Width, _options.Width, _height, _maxHeight, _height);
