@@ -3,7 +3,7 @@ using WarehouseLib.Articulations;
 
 namespace WarehouseLib.Options
 {
-    public struct TrussOptions
+    public struct TrussInputs
     {
         public string TrussType { get; set; }
 
@@ -25,7 +25,7 @@ namespace WarehouseLib.Options
 
         public int ColumnsCount { get; set; }
 
-        public TrussOptions(string trussType, double width, double height, double maxHeight,
+        public TrussInputs(string trussType, double width, double height, double maxHeight,
             double clearHeight, int baseType, string articulationType, int divisions, string porticoType,
             int columnsCount)
         {

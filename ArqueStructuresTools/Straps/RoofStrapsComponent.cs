@@ -10,7 +10,7 @@ namespace ArqueStructuresTools
     public class RoofStrapsComponent : GH_Component
     {
         public RoofStrapsComponent() : base("Construct Roof Straps", "Nickname", "Description", "Arque Structures",
-            "Straps")
+            "Strap")
         {
         }
 

@@ -9,7 +9,7 @@ namespace ArqueStructuresTools
     public class DeconstructWarehouse : GH_Component
     {
         public DeconstructWarehouse() : base("Deconstruct Warehouse", "DeWarehouse", "Deconstruct a Warehouse into its component parts", "Arque Structures",
-            "Utilities")
+            "Warehouse")
         {
         }
 

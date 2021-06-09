@@ -12,18 +12,18 @@ namespace WarehouseLib.Trusses
 {
     public class DoublepichTruss : PichedTruss
     {
-        public TrussOptions _options;
+        public TrussInputs Inputs;
 
-        public DoublepichTruss(Plane plane, TrussOptions options) : base(plane, options)
+        public DoublepichTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
-            _options = options;
+            Inputs = inputs;
             GenerateTopBars();
             StaticColumns =
                 new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
-            ChangeBaseByType(options.BaseType);
-            ConstructTruss(options.Divisions);
-            ChangeArticulationAtColumnsByType(options._articulationType);
-            ConstructBeams(false, (options.BaseType == 1) ? true : false);
+            ChangeBaseByType(inputs.BaseType);
+            ConstructTruss(inputs.Divisions);
+            ChangeArticulationAtColumnsByType(inputs._articulationType);
+            ConstructBeams(false, (inputs.BaseType == 1) ? true : false);
         }
 
         protected override void RecomputeNodes(int index)
@@ -90,7 +90,7 @@ namespace WarehouseLib.Trusses
 
         public override void GenerateTopBars()
         {
-            StartingNodes = GetStartingPoints(_plane, _options.Width, _options.Width, _height, _maxHeight, _height);
+            StartingNodes = GetStartingPoints(_plane, Inputs.Width, Inputs.Width, _height, _maxHeight, _height);
             var barA = new Line(StartingNodes[0], StartingNodes[1]);
             var barB = new Line(StartingNodes[1], StartingNodes[2]);
             TopBeamAxisCurves = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};

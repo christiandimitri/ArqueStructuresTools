@@ -16,7 +16,7 @@ namespace ArqueStructuresTools
         public RectangularWarehouseComponent()
             : base("Construct Rectangular Warehouse", "Nickname",
                 "Description",
-                "Arque Structures", "Warehouses")
+                "Arque Structures", "Warehouse")
         {
         }
 
@@ -46,7 +46,7 @@ namespace ArqueStructuresTools
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var plane = Plane.WorldXY;
-            var trussInputs = new TrussOptions();
+            var trussInputs = new TrussInputs();
             var warehouseOptions = new WarehouseOptions();
 
             if (!DA.GetData(0, ref plane)) return;

@@ -15,7 +15,7 @@ namespace WarehouseLib.Trusses
     {
         public List<Curve> BottomBeamAxisCurves;
         public List<Point3d> BottomNodes;
-        private double _clearHeight;
+        public readonly double _clearHeight;
         public List<Column> StaticColumns;
         public List<Column> BoundaryColumns;
         public int _divisions;
@@ -34,19 +34,19 @@ namespace WarehouseLib.Trusses
         public List<Point3d> BoundaryTopNodes;
         public string _trussType;
         public string _articulationType;
+        public double _facadeStrapsDistance;
 
-
-        protected Truss(Plane plane, TrussOptions options)
+        protected Truss(Plane plane, TrussInputs inputs)
         {
             _plane = plane;
-            _length = options.Width;
-            _height = options.Height;
-            _maxHeight = options.MaxHeight;
-            _clearHeight = options.ClearHeight;
-            _divisions = options.Divisions;
-            _trussType = options.TrussType;
-            _articulationType = options._articulationType;
-            _columnsCount = options.ColumnsCount;
+            _length = inputs.Width;
+            _height = inputs.Height;
+            _maxHeight = inputs.MaxHeight;
+            _clearHeight = inputs.ClearHeight;
+            _divisions = inputs.Divisions;
+            _trussType = inputs.TrussType;
+            _articulationType = inputs._articulationType;
+            _columnsCount = inputs.ColumnsCount;
             _divisions = RecomputeDivisions(_divisions);
         }
 

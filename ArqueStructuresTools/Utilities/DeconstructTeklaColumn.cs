@@ -4,10 +4,10 @@ using Grasshopper.Kernel;
 
 namespace ArqueStructuresTools
 {
-    public class DeconstructColumn : GH_Component
+    public class DeconstructTeklaColumn : GH_Component
     {
-        public DeconstructColumn() : base("Deconstruct Column", "DeColumn", "Deconstruct a Column into its component parts", "Arque Structures",
-            "Utilities")
+        public DeconstructTeklaColumn() : base("Deconstruct Tekla Column", "DeColumn", "Deconstruct a Column into its component parts", "Arque Structures",
+            "Column")
         {
         }
 

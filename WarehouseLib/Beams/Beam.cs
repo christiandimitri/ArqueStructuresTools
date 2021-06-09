@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Web.Configuration;
 using Rhino.Geometry;
+using WarehouseLib.BucklingLengths;
 using WarehouseLib.Profiles;
 
 namespace WarehouseLib.Beams
@@ -12,6 +12,8 @@ namespace WarehouseLib.Beams
         public Plane ProfileOrientationPlane;
 
         public ProfileDescription Profile;
+
+        public BucklingLengths.BucklingLengths BucklingLengths;
         protected Beam()
         {
         }

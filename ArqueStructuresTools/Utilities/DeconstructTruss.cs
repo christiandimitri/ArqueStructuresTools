@@ -14,7 +14,7 @@ namespace ArqueStructuresTools
         public DeconstructTruss()
             : base("Deconstruct Truss", "DeTruss",
                 "Deconstruct a Truss into its component parts",
-                "Arque Structures", "Utilities")
+                "Arque Structures", "Truss")
         {
         }
 

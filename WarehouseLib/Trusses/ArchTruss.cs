@@ -14,16 +14,16 @@ namespace WarehouseLib
 {
     public class ArchTruss : CurvedTruss
     {
-        private TrussOptions _options;
+        private TrussInputs _inputs;
 
-        public ArchTruss(Plane plane, TrussOptions options) : base(plane, options)
+        public ArchTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
-            _options = options;
+            _inputs = inputs;
             GenerateTopBars();
             StaticColumns = new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
-            ChangeBaseByType(_options.BaseType);
-            ConstructTruss(options.Divisions);
-            ChangeArticulationAtColumnsByType(options._articulationType);
+            ChangeBaseByType(_inputs.BaseType);
+            ConstructTruss(inputs.Divisions);
+            ChangeArticulationAtColumnsByType(inputs._articulationType);
             ConstructBeams(true, true);
         }
 
@@ -67,7 +67,7 @@ namespace WarehouseLib
             {
                 List<Curve> finalList;
 
-                if (_options._articulationType == "Articulated" && _options.BaseType == 0)
+                if (_inputs._articulationType == "Articulated" && _inputs.BaseType == 0)
                 {
                     finalList = ComputeBottomBarsArticulatedToColumns(null);
                 }

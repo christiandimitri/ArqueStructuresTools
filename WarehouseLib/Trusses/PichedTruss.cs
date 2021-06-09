@@ -8,11 +8,11 @@ namespace WarehouseLib.Trusses
 {
     public class PichedTruss : Truss
     {
-        private TrussOptions _options;
+        private TrussInputs _inputs;
 
-        protected PichedTruss(Plane plane, TrussOptions options) : base(plane, options)
+        protected PichedTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
-            _options = options;
+            _inputs = inputs;
         }
 
         protected override void GenerateThickBottomBars()
@@ -30,7 +30,7 @@ namespace WarehouseLib.Trusses
             }
 
 
-            if (_options._articulationType == "Articulated" && _options.BaseType == 0)
+            if (_inputs._articulationType == "Articulated" && _inputs.BaseType == 0)
             {
                 bars = ComputeBottomBarsArticulatedToColumns(bars);
             }

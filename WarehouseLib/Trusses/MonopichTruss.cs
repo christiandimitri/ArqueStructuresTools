@@ -10,16 +10,16 @@ namespace WarehouseLib.Trusses
 {
     public class MonopichTruss : PichedTruss
     {
-        private TrussOptions _options;
+        private TrussInputs _inputs;
 
-        public MonopichTruss(Plane plane, TrussOptions options) : base(plane, options)
+        public MonopichTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
-            _options = options;
+            _inputs = inputs;
             GenerateTopBars();
             StaticColumns = new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
-            ChangeBaseByType(options.BaseType);
-            ConstructTruss(options.Divisions);
-            ChangeArticulationAtColumnsByType(options._articulationType);
+            ChangeBaseByType(inputs.BaseType);
+            ConstructTruss(inputs.Divisions);
+            ChangeArticulationAtColumnsByType(inputs._articulationType);
             ConstructBeams(true, true);
         }
 

@@ -8,7 +8,7 @@ namespace ArqueStructuresTools
     public class DeconstructBeam : GH_Component
     {
         public DeconstructBeam() : base("Deconstruct Beam", "DeBeam", "Deconstruct a Beam into its component parts", "Arque Structures",
-            "Utilities")
+            "Beam")
         {
         }
 

@@ -11,7 +11,7 @@ namespace ArqueStructuresTools
     public class FacadeStrapsComponent : GH_Component
     {
         public FacadeStrapsComponent() : base("Construct Facade Straps", "Nickname", "Description", "Arque Structures",
-            "Straps")
+            "Strap")
         {
         }
 

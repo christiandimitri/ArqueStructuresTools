@@ -13,6 +13,8 @@ namespace WarehouseLib.Columns
 
         public ProfileDescription Profile;
 
+        public BucklingLengths.BucklingLengths BucklingLengths;
+
         protected Column()
         {
         }
@@ -23,21 +25,19 @@ namespace WarehouseLib.Columns
             return axis;
         }
 
-        public List<Column> SplitColumnByArticulation(Column column, Point3d articulationPoint)
-        {
-            column.Axis.ToNurbsCurve().ClosestPoint(articulationPoint, out double t);
-            var axisList = column.Axis.ToNurbsCurve().Split(t).ToList();
-            var columns = new List<Column>();
-            foreach (var axis in axisList)
-            {
-                var tempColumn = new StaticColumn();
-                tempColumn.Axis = new Line(axis.PointAtStart, axis.PointAtEnd);
-                columns.Add(tempColumn);
-            }
-
-            return columns;
-        }
-
         public abstract Plane GetTeklaProfileOrientationPlane(Point3d node, Plane plane, int index);
+        public BucklingLengths.BucklingLengths ComputeBucklingLengths(Column column, bool straps, double strapsDistance)
+        {
+            var buckling = new BucklingLengths.BucklingLengths();
+            var zBuckling = column.Axis.Length;
+            var yBuckling = 0.7 * column.Axis.Length;
+            if (straps)
+            {
+                yBuckling = strapsDistance;
+            }
+            buckling.BucklingY = yBuckling;
+            buckling.BucklingZ = zBuckling;
+            return buckling;
+        }
     }
 }

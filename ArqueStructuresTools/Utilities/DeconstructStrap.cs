@@ -9,7 +9,7 @@ namespace ArqueStructuresTools
     public class DeconstructStrap : GH_Component
     {
         public DeconstructStrap() : base("Deconstruct Strap", "DeStrap", "Deconstruct a Strap into its component parts", "Arque Structures",
-            "Utilities")
+            "Strap")
         {
         }
 

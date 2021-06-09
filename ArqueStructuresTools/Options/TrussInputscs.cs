@@ -5,10 +5,10 @@ using WarehouseLib.Options;
 
 namespace ArqueStructuresTools.Options
 {
-    public class TrussOptionsComponent : GH_Component
+    public class TrussInputs : GH_Component
     {
-        public TrussOptionsComponent() : base("Truss Options", "Nickname", "description", "Arque Structures",
-            "Utilities")
+        public TrussInputs() : base("Truss Inputs", "Nickname", "description", "Arque Structures",
+            "Inputs")
         {
         }
 
@@ -62,10 +62,10 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(9, ref columnsCount)) return;
 
 
-            TrussOptions options;
+            WarehouseLib.Options.TrussInputs inputs;
             try
             {
-                options = new TrussOptions(trussType, width, height, maxHeight, clearHeight, baseType,
+                inputs = new WarehouseLib.Options.TrussInputs(trussType, width, height, maxHeight, clearHeight, baseType,
                     articulationType, divisions, porticoType, columnsCount);
             }
             catch (Exception e)
@@ -75,7 +75,7 @@ namespace ArqueStructuresTools.Options
             }
 
 
-            DA.SetData(0, options);
+            DA.SetData(0, inputs);
         }
     }
 }

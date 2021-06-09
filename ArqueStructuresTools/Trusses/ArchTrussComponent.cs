@@ -15,7 +15,7 @@ namespace ArqueStructuresTools
         public ArchTrussComponent()
             : base("Construct Arch Truss", "Nickname",
                 "Description",
-                "Arque Structures", "Trusses")
+                "Arque Structures", "Truss")
         {
         }
 
@@ -43,7 +43,7 @@ namespace ArqueStructuresTools
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var plane = Plane.WorldXY;
-            var trussInputs = new TrussOptions();
+            var trussInputs = new TrussInputs();
             if (!DA.GetData(0, ref plane)) return;
             if (!DA.GetData(1, ref trussInputs)) return;
             var porticoIndex = 0;

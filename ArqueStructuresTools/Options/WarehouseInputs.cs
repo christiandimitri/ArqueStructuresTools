@@ -4,10 +4,10 @@ using WarehouseLib.Options;
 
 namespace ArqueStructuresTools.Options
 {
-    public class WarehouseOptionsComponent : GH_Component
+    public class WarehouseInputs : GH_Component
     {
-        public WarehouseOptionsComponent() : base("Warehouse Options", "Nickname", "Description", "Arque Structures",
-            "Utilities")
+        public WarehouseInputs() : base("Warehouse Inputs", "Nickname", "Description", "Arque Structures",
+            "Inputs")
         {
         }
 
@@ -54,10 +54,10 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(7, ref stAndreCrossCount)) return;
 
 
-            WarehouseOptions warehouseInputs;
+            WarehouseLib.Options.WarehouseOptions warehouseInputs;
             try
             {
-                warehouseInputs = new WarehouseOptions(typology, length, porticoCount, hasBoundary, roofBracingType,
+                warehouseInputs = new WarehouseLib.Options.WarehouseOptions(typology, length, porticoCount, hasBoundary, roofBracingType,
                     facadeStrapsDistance, facadeCablesThreshold, stAndreCrossCount);
             }
             catch (Exception e)
