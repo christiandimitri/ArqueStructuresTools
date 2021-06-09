@@ -48,14 +48,12 @@ namespace ArqueStructuresTools
 
                         if (truss.GetKaramba3DTopBeams != null)
                         {
-                            foreach (var beam in truss.GetKaramba3DTopBeams)
+                            foreach (var beam in truss.GetKaramba3DTopBeams.Axis)
                             {
-                                var line = beam;
-                                foreach (var axis in line.Axis)
-                                {
-                                    _box.Union(axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(axis.ToNurbsCurve(), System.Drawing.Color.Blue);
-                                }
+                                var axis = beam;
+
+                                _box.Union(axis.ToNurbsCurve().GetBoundingBox(false));
+                                args.Display.DrawCurve(axis.ToNurbsCurve(), System.Drawing.Color.Blue);
                             }
                         }
                     }

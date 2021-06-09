@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Rhino.Geometry;
 using WarehouseLib.Beams;
@@ -21,9 +22,10 @@ namespace WarehouseLib.Utilities
         private Beam _trussBottomBeam;
         private Beam _trussIntermediateBeam;
 
-        public List<Beam> GetKaramba3DTopBeams;
+        public Beam GetKaramba3DTopBeams;
         public List<Beam> Karamba3DBottomBeams;
         public List<Beam> Karamba3DIntermediateBeams;
+        public List<Point3d> _trussTopNodes;
 
         public KarambaTruss(Truss truss)
         {
@@ -31,11 +33,12 @@ namespace WarehouseLib.Utilities
             _truss = truss;
             GetTrussColumns();
             GetTrussTopBeam();
-            GetTrussBottomBeam();
-            
+            // GetTrussBottomBeam();
+
             // compute karamba properties for each component and add it
             GetKaramba3DColumns();
-            // GetKaramba3DTopBeams();
+            // TODO
+            GetKaramba3DBeams();
         }
 
         private void GetTrussColumns()
@@ -52,16 +55,22 @@ namespace WarehouseLib.Utilities
         private void GetTrussTopBeam()
         {
             _trussTopBeam = _truss.TopBeam ?? new TopBeam();
-            GetKaramba3DTopBeams = new List<Beam>();
-            GetKaramba3DTopBeams.Add(_trussTopBeam);
         }
-        
-        private void GetTrussBottomBeam()
+
+        private void GetTrussTopNodes()
         {
-            _trussBottomBeam = _truss.BottomBeam ?? new BottomBeam();
-            Karamba3DBottomBeams = new List<Beam>();
-            Karamba3DBottomBeams.Add(_trussBottomBeam);
+            _trussTopNodes = _truss.TopNodes ?? new List<Point3d>();
         }
+
+
+        // private void GetTrussBottomBeam()
+        // {
+        //     _trussBottomBeam = _truss.BottomBeam ?? new BottomBeam();
+        //     Karamba3DBottomBeams = new List<Beam>();
+        //     Karamba3DBottomBeams.Add(_trussBottomBeam);
+        // }
+
+        // Get Karamba3D all Columns types and properties
         private void GetKaramba3DColumns()
         {
             var tempStaticColumns = new List<Column>();
@@ -76,7 +85,7 @@ namespace WarehouseLib.Utilities
                     {
                         var column = new StaticColumn();
                         column.Axis = new Line(axis.PointAtStart, axis.PointAtEnd);
-                        column.BucklingLengths = GetColumnsBucklingLength(column).BucklingLengths;
+                        column.BucklingLengths = GetColumnBucklingLength(column).BucklingLengths;
                         tempColumns.Add(column);
                     }
 
@@ -87,8 +96,33 @@ namespace WarehouseLib.Utilities
             Karamba3DStaticColumns = tempStaticColumns;
         }
 
+        // Get Karamba3D all Beams types and properties
+
+        private void GetKaramba3DBeams()
+        {
+            var tempTopBeams = new List<Beam>();
+            var beam = new TopBeam();
+            foreach (var beamAxis in _trussTopBeam.Axis)
+            {
+                var tempBeams = new List<Curve>();
+                foreach (var topNode in _trussTopNodes)
+                {
+                    double t;
+                    beamAxis.ClosestPoint(topNode, out t);
+                    var axis = beamAxis.Split(t).ToList();
+                    var tempAxis = axis[0];
+                    if (tempAxis != null)
+                    {
+                        beam.Axis.Add(tempAxis);
+                    }
+                }
+
+                GetKaramba3DTopBeams = beam;
+            }
+        }
+
         // Return a column with its buckling lengths
-        private Column GetColumnsBucklingLength(Column column)
+        private Column GetColumnBucklingLength(Column column)
         {
             BucklingLengths.BucklingLengths bucklingLength;
             if (column is StaticColumn)
@@ -104,9 +138,16 @@ namespace WarehouseLib.Utilities
             return column;
         }
 
-        private List<Beam> GetBeamsBucklingLength(List<Beam> beams)
+        private Beam GetBeamsBucklingLength(Beam beam)
         {
-            return beams;
+            BucklingLengths.BucklingLengths bucklingLength;
+
+            if (GetKaramba3DTopBeams != null)
+            {
+                bucklingLength = beam.ComputeBucklingLengths(beam, false, Double.NaN);
+            }
+
+            return beam;
         }
     }
 }

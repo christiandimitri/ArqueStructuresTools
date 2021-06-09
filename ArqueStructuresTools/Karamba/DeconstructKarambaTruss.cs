@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ArqueStructuresTools.Params;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
+using WarehouseLib.Beams;
 
 namespace ArqueStructuresTools
 {
@@ -34,7 +35,7 @@ namespace ArqueStructuresTools
         {
             pManager.AddParameter(new ColumnParameter(), "Static columns", "SC", "Truss static columns",
                 GH_ParamAccess.list);
-            pManager.AddParameter(new BeamParameter(), "Top beam", "TB", "Truss top beam", GH_ParamAccess.list);
+            pManager.AddParameter(new BeamParameter(), "Top beam", "TB", "Truss top beam", GH_ParamAccess.item);
             pManager.AddParameter(new BeamParameter(), "Bottom beam", "BB", "Truss bottom beam", GH_ParamAccess.item);
             pManager.AddParameter(new BeamParameter(), "Intermediate beams", "IB", "Truss intermediate beams",
                 GH_ParamAccess.item);
@@ -61,15 +62,12 @@ namespace ArqueStructuresTools
             {
                 staticColumnsGoo.Add(new ColumnGoo(staticColumn));
             }
-            
-            var topBeamsGoo = new List<BeamGoo>();
-            foreach (var topBeam in truss.GetKaramba3DTopBeams)
-            {
-                topBeamsGoo.Add(new BeamGoo(topBeam));
-            }
+
+            var topBeamGoo = new BeamGoo(truss.GetKaramba3DTopBeams);
+
 
             DA.SetDataList(0, staticColumnsGoo);
-            DA.SetDataList(1, topBeamsGoo);
+            DA.SetData(1, topBeamGoo);
             // DA.SetData(2, intermediateBeamsGoo);
             // DA.SetDataList(3, topNodes);
             // DA.SetDataList(4, bottomNodes);
