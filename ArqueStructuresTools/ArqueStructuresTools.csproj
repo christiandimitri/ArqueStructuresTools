@@ -92,6 +92,7 @@
     <Compile Include="Straps\FacadeStrapsComponent.cs" />
     <Compile Include="Straps\RoofStrapsComponent.cs" />
     <Compile Include="TeklaStructures\ComputeTeklaWarehouse.cs" />
+    <Compile Include="TeklaStructures\DeconstructTeklaColumn.cs" />
     <Compile Include="Trusses\ArchTrussComponent.cs" />
     <Compile Include="Trusses\DoublepichTrussComponent.cs" />
     <Compile Include="Trusses\FlatTrussComponent.cs" />
@@ -100,7 +101,6 @@
     <Compile Include="Utilities\DeconstructBeam.cs" />
     <Compile Include="Utilities\DeconstructBracing.cs" />
     <Compile Include="Utilities\DeconstructCable.cs" />
-    <Compile Include="Utilities\DeconstructTeklaColumn.cs" />
     <Compile Include="Utilities\DeconstructCross.cs" />
     <Compile Include="Utilities\DeconstructStrap.cs" />
     <Compile Include="Utilities\DeconstructTruss.cs" />

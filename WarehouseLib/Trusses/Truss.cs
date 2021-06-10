@@ -48,6 +48,7 @@ namespace WarehouseLib.Trusses
             _articulationType = inputs._articulationType;
             _columnsCount = inputs.ColumnsCount;
             _divisions = RecomputeDivisions(_divisions);
+            _facadeStrapsDistance = inputs.FacadeStrapsDistance;
         }
 
         protected void ConstructBeams(bool joinTopBeamsAxis, bool joinBottomBeamsAxis)

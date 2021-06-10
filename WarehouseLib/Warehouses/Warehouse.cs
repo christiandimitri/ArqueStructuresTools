@@ -35,8 +35,6 @@ namespace WarehouseLib.Warehouses
             if (trussInputs.Width <= 0) throw new Exception("Warehouse cannot have 0 width!!");
             if (trussInputs.Height <= 0) throw new Exception("Warehouse cannot have 0 height!!");
             if (trussInputs.MaxHeight <= 0) throw new Exception("Warehouse cannot have 0 max height!!");
-            if (warehouseOptions.FacadeStrapsDistance >= trussInputs.Height)
-                throw new Exception("Warehouse facade straps distance should be < the truss height");
 
             _plane = plane;
             TrussInputs = trussInputs;
@@ -114,11 +112,11 @@ namespace WarehouseLib.Warehouses
             FacadeStrapsX = new List<Strap>();
             FacadeStrapsY = new List<Strap>();
             FacadeStrapsX = new FacadeStrap().ConstructStrapsOnStaticColumns(
-                Trusses, _warehouseOptions.FacadeStrapsDistance);
+                Trusses, TrussInputs.FacadeStrapsDistance);
 
             var boundary = new List<Truss> {Trusses[0], Trusses[Trusses.Count - 1]};
             FacadeStrapsY = new FacadeStrap().ConstructStrapsOnBoundaryColumns(boundary,
-                _warehouseOptions.FacadeStrapsDistance, _warehouseOptions.HasBoundary);
+                TrussInputs.FacadeStrapsDistance, _warehouseOptions.HasBoundary);
         }
 
         private void GenerateFacadeBracing()

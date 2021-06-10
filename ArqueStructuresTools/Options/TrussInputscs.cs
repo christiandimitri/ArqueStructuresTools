@@ -31,6 +31,8 @@ namespace ArqueStructuresTools.Options
             pManager.AddIntegerParameter("Divisions", "d", "d", GH_ParamAccess.item, 5);
             pManager.AddTextParameter("Portico type", "pt", "pt", GH_ParamAccess.item, "Truss");
             pManager.AddIntegerParameter("Columns count", "cc", "cc", GH_ParamAccess.item, 2);
+            pManager.AddNumberParameter("Facade straps distance", "fsd", "fsd", GH_ParamAccess.item, 1.2);
+
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -50,6 +52,7 @@ namespace ArqueStructuresTools.Options
             var divisions = 0;
             var porticoType = "";
             var columnsCount = 0;
+            var facadeStrapsDistance = 0.0;
             if (!DA.GetData(0, ref trussType)) return;
             if (!DA.GetData(1, ref width)) return;
             if (!DA.GetData(2, ref height)) return;
@@ -60,13 +63,14 @@ namespace ArqueStructuresTools.Options
             if (!DA.GetData(7, ref divisions)) return;
             if (!DA.GetData(8, ref porticoType)) return;
             if (!DA.GetData(9, ref columnsCount)) return;
+            if (!DA.GetData(10, ref facadeStrapsDistance)) return;
 
 
             WarehouseLib.Options.TrussInputs inputs;
             try
             {
                 inputs = new WarehouseLib.Options.TrussInputs(trussType, width, height, maxHeight, clearHeight, baseType,
-                    articulationType, divisions, porticoType, columnsCount);
+                    articulationType, divisions, porticoType, columnsCount, facadeStrapsDistance);
             }
             catch (Exception e)
             {

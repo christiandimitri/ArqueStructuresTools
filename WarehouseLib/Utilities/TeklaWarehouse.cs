@@ -65,7 +65,7 @@ namespace WarehouseLib.Utilities
 
             var trussOptions = new TrussInputs(trussInputs.TrussType, trussInputs.Width, newHeight,
                 newMaxHeight, newClearHeight, trussInputs.BaseType, trussInputs._articulationType,
-                trussInputs.Divisions, trussInputs.PorticoType, trussInputs.ColumnsCount);
+                trussInputs.Divisions, trussInputs.PorticoType, trussInputs.ColumnsCount, trussInputs.FacadeStrapsDistance);
             return trussOptions;
         }
 

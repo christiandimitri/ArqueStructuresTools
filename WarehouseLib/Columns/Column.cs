@@ -26,6 +26,7 @@ namespace WarehouseLib.Columns
         }
 
         public abstract Plane GetTeklaProfileOrientationPlane(Point3d node, Plane plane, int index);
+
         public BucklingLengths.BucklingLengths ComputeBucklingLengths(Column column, bool straps, double strapsDistance)
         {
             var buckling = new BucklingLengths.BucklingLengths();
@@ -35,6 +36,7 @@ namespace WarehouseLib.Columns
             {
                 yBuckling = strapsDistance;
             }
+
             buckling.BucklingY = yBuckling;
             buckling.BucklingZ = zBuckling;
             return buckling;
