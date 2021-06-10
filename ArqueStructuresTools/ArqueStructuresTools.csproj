@@ -68,6 +68,7 @@
     <Compile Include="Bracings\RoofBracing.cs" />
     <Compile Include="Karamba\ComputeKarambaTruss.cs" />
     <Compile Include="Karamba\ComputeKarambaWarehouse.cs" />
+    <Compile Include="Karamba\DeconstructKarambaBeam.cs" />
     <Compile Include="Karamba\DeconstructKarambaColumn.cs" />
     <Compile Include="Karamba\DeconstructKarambaTruss.cs" />
     <Compile Include="Options\TrussInputscs.cs" />

@@ -37,17 +37,16 @@ namespace WarehouseLib.Utilities
 
             // get truss nodes
             GetTrussNodes();
-
             // get truss columns
             GetTrussColumns();
-
             GetTrussTopBeam();
             // GetTrussBottomBeam();
 
             // compute karamba properties for each component and add it
             GetKaramba3DColumns();
+
             // TODO
-            GetKaramba3DBeams();
+            // GetKaramba3DBeams();
         }
 
         // truss nodes
@@ -84,17 +83,14 @@ namespace WarehouseLib.Utilities
             _trussTopBeam = _truss.TopBeam ?? new TopBeam();
         }
 
-        // private void GetTrussBottomBeam()
-        // {
-        //     _trussBottomBeam = _truss.BottomBeam ?? new BottomBeam();
-        //     Karamba3DBottomBeams = new List<Beam>();
-        //     Karamba3DBottomBeams.Add(_trussBottomBeam);
-        // }
+        private void GetTrussBottomBeam()
+        {
+            _trussBottomBeam = _truss.BottomBeam ?? new BottomBeam();
+        }
 
         // Get Karamba3D all Columns types and properties
         private void GetKaramba3DColumns()
         {
-            
             // Get Karamba3D static columns with buckling length
             var tempStaticColumns = new List<Column>();
 
@@ -107,7 +103,7 @@ namespace WarehouseLib.Utilities
                     .ClosestPoint(_trussBottomNodes[i == 0 ? 0 : _trussBottomNodes.Count - 1], out t);
                 var cl = _truss._articulationType == ArticulationType.Rigid.ToString()
                     ? staticColumn.Axis.ToNurbsCurve().Split(t).ToList()
-                    : new List<Curve>{staticColumn.Axis.ToNurbsCurve()};
+                    : new List<Curve> {staticColumn.Axis.ToNurbsCurve()};
                 var tempColumns = new List<Column>();
                 foreach (var axis in cl)
                 {
@@ -119,9 +115,9 @@ namespace WarehouseLib.Utilities
 
                 tempStaticColumns.AddRange(tempColumns);
             }
+
             Karamba3DStaticColumns = tempStaticColumns;
-            
-            
+            Karamba3DBoundaryColumns = _trussBoundaryColumns;
         }
 
         // Get Karamba3D all Beams types and properties
@@ -148,6 +144,7 @@ namespace WarehouseLib.Utilities
             return column;
         }
 
+        // Return a beam with its buckling lengths
         private Beam GetBeamsBucklingLength(Beam beam)
         {
             BucklingLengths.BucklingLengths bucklingLength;
@@ -158,6 +155,14 @@ namespace WarehouseLib.Utilities
             }
 
             return beam;
+        }
+
+        private List<Curve> DivideBeamBetweenNodes(List<Point3d> nodes, Beam beam)
+        {
+            var axis = new List<Curve>();
+
+
+            return axis;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace WarehouseLib.Profiles
                 var profile = profilesCsv[i];
 
                 var properties = profile.Split(',');
-                Debug.WriteLine(properties[0]);
+                // Debug.WriteLine(properties[0]);
                 profiles.Add(properties[0],
                     ExtractProfileDescription(properties[0], double.Parse(properties[1]), double.Parse(properties[2])));
             }

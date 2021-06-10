@@ -1,4 +1,5 @@
-﻿using WarehouseLib.Beams;
+﻿using System.Diagnostics;
+using WarehouseLib.Beams;
 using WarehouseLib.Options;
 using WarehouseLib.Profiles;
 using WarehouseLib.Warehouses;
@@ -16,6 +17,7 @@ namespace WarehouseLib.Utilities
             _warehouse = warehouse;
             _profiles = profiles;
             _teklaTrussInputs = ComputeTeklaTrussInputs(_warehouse.TrussInputs, profiles);
+            Debug.WriteLine(_teklaTrussInputs.Height);
         }
 
         public Warehouse GetTeklaWarehouse()
@@ -57,15 +59,16 @@ namespace WarehouseLib.Utilities
 
         private TrussInputs ComputeTeklaTrussInputs(TrussInputs trussInputs, WarehouseProfiles profiles)
         {
-            var bottomBeamsProfileHeight = new Catalog().GetCatalog()[profiles.BottomBeamsProfileName].Height;
-            var newClearHeight = trussInputs.ClearHeight + bottomBeamsProfileHeight / 2;
-            var topBeamsHeight = new Catalog().GetCatalog()[profiles.TopBeamsProfileName].Height / 2;
-            var newHeight = trussInputs.Height - topBeamsHeight;
-            var newMaxHeight = trussInputs.MaxHeight - topBeamsHeight;
+            var bottomBeamsProfileHeight = new Catalog().GetCatalog()[profiles.BottomBeamsProfileName].Height/2;
+            var newClearHeight = trussInputs.ClearHeight + bottomBeamsProfileHeight;
+            var topBeamsProfileHeight = new Catalog().GetCatalog()[profiles.TopBeamsProfileName].Height / 2;
+            var newHeight = trussInputs.Height - topBeamsProfileHeight;
+            var newMaxHeight = trussInputs.MaxHeight - topBeamsProfileHeight;
 
             var trussOptions = new TrussInputs(trussInputs.TrussType, trussInputs.Width, newHeight,
                 newMaxHeight, newClearHeight, trussInputs.BaseType, trussInputs._articulationType,
-                trussInputs.Divisions, trussInputs.PorticoType, trussInputs.ColumnsCount, trussInputs.FacadeStrapsDistance);
+                trussInputs.Divisions, trussInputs.PorticoType, trussInputs.ColumnsCount,
+                trussInputs.FacadeStrapsDistance);
             return trussOptions;
         }
 
