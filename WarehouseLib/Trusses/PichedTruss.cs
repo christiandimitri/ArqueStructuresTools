@@ -91,7 +91,7 @@ namespace WarehouseLib.Trusses
 
             var cloud = new PointCloud(TopNodes);
             var index = cloud.ClosestPoint(StartingNodes[1]);
-            GenerateIntermediateBars(_trussType, index);
+            GenerateIntermediateBars(_connectionType, index);
         }
 
         public override List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index)

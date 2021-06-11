@@ -169,7 +169,7 @@ namespace WarehouseLib
             List<Point3d> tempBottomList = new List<Point3d>();
             for (int i = 0; i < TopNodes.Count; i++)
             {
-                if (_trussType == ConnectionType.Warren.ToString())
+                if (_connectionType == ConnectionType.Warren.ToString())
                 {
                     if (i % 2 == 0)
                     {
@@ -180,7 +180,7 @@ namespace WarehouseLib
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (_trussType == ConnectionType.WarrenStuds.ToString())
+                else if (_connectionType == ConnectionType.WarrenStuds.ToString())
                 {
                     tempTopList.Add(TopNodes[i]);
                     if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
@@ -188,19 +188,19 @@ namespace WarehouseLib
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (_trussType == ConnectionType.Howe.ToString() || _trussType == ConnectionType.Pratt.ToString())
+                else if (_connectionType == ConnectionType.Howe.ToString() || _connectionType == ConnectionType.Pratt.ToString())
                 {
                     tempTopList.Add(TopNodes[i]);
                     tempBottomList.Add(BottomNodes[i]);
                 }
             }
 
-            if (_trussType == ConnectionType.Warren.ToString())
+            if (_connectionType == ConnectionType.Warren.ToString())
             {
                 tempBottomList.Insert(0, BottomNodes[0]);
                 tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
             }
-            if (_trussType == ConnectionType.WarrenStuds.ToString())
+            if (_connectionType == ConnectionType.WarrenStuds.ToString())
             {
                 if (!tempBottomList.Contains(BottomNodes[index]))
                 {
@@ -213,7 +213,7 @@ namespace WarehouseLib
             }
             TopNodes = new List<Point3d>(tempTopList);
             BottomNodes = new List<Point3d>(tempBottomList);
-            if (ConnectionType.Warren.ToString() == _trussType)
+            if (ConnectionType.Warren.ToString() == _connectionType)
             {
                 IntermediateBeamsAxisCurves.RemoveAt(index);
             }
@@ -233,7 +233,7 @@ namespace WarehouseLib
 
             PointCloud cloud = new PointCloud(TopNodes);
             int index = cloud.ClosestPoint(StartingNodes[1]);
-            GenerateIntermediateBars(_trussType, index);
+            GenerateIntermediateBars(_connectionType, index);
         }
     }
 }

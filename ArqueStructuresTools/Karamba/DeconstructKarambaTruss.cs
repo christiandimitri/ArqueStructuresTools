@@ -4,6 +4,8 @@ using ArqueStructuresTools.Params;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
 using WarehouseLib.Beams;
+using WarehouseLib.Columns;
+using WarehouseLib.Options;
 
 namespace ArqueStructuresTools
 {
@@ -35,15 +37,15 @@ namespace ArqueStructuresTools
         {
             pManager.AddParameter(new ColumnParameter(), "Static columns", "SC", "Truss static columns",
                 GH_ParamAccess.list);
+            pManager.AddParameter(new ColumnParameter(), "Boundary columns", "BC", "Truss boundary columns",
+                GH_ParamAccess.list);
             pManager.AddParameter(new BeamParameter(), "Top beam", "TB", "Truss top beam", GH_ParamAccess.item);
             pManager.AddParameter(new BeamParameter(), "Bottom beam", "BB", "Truss bottom beam", GH_ParamAccess.item);
             pManager.AddParameter(new BeamParameter(), "Intermediate beams", "IB", "Truss intermediate beams",
                 GH_ParamAccess.item);
-            pManager.AddPointParameter("Top nodes", "TN", "Truss top nodes", GH_ParamAccess.list);
-            pManager.AddPointParameter("Bottom nodes", "BN", "Truss bottom nodes", GH_ParamAccess.list);
-            pManager.AddParameter(new ColumnParameter(), "Boundary columns", "BC", "Truss boundary columns",
-                GH_ParamAccess.list);
-            pManager.AddPointParameter("Boundary nodes", "BN", "Truss boundary nodes", GH_ParamAccess.list);
+            // pManager.AddPointParameter("Top nodes", "TN", "Truss top nodes", GH_ParamAccess.list);
+            // pManager.AddPointParameter("Bottom nodes", "BN", "Truss bottom nodes", GH_ParamAccess.list);
+            // pManager.AddPointParameter("Boundary nodes", "BN", "Truss boundary nodes", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -63,14 +65,28 @@ namespace ArqueStructuresTools
                 staticColumnsGoo.Add(new ColumnGoo(staticColumn));
             }
 
-            var topBeamGoo = new BeamGoo(truss.GetKaramba3DTopBeams);
+            var boundaryColumnsGoo = new List<ColumnGoo>();
+            if (truss.Karamba3DBoundaryColumns != null)
+            {
+                foreach (var boundaryColumn in truss.Karamba3DBoundaryColumns)
+                {
+                    boundaryColumnsGoo.Add(new ColumnGoo(boundaryColumn));
+                }
+            }
 
+            var topBeamGoo = new BeamGoo(truss.Karamba3DTopBeams);
+            var bottomBeamGoo = truss._porticoType == PorticoType.Truss.ToString()
+                ? new BeamGoo(truss.Karamba3DBottomBeams)
+                : new BeamGoo(new BottomBeam());
+            var intermediateBeamGoo = truss._porticoType == PorticoType.Truss.ToString()
+                ? new BeamGoo(truss.Karamba3DIntermediateBeams)
+                : new BeamGoo(new IntermediateBeams());
 
             DA.SetDataList(0, staticColumnsGoo);
-            DA.SetData(1, topBeamGoo);
-            // DA.SetData(2, intermediateBeamsGoo);
-            // DA.SetDataList(3, topNodes);
-            // DA.SetDataList(4, bottomNodes);
+            DA.SetDataList(1, boundaryColumnsGoo);
+            DA.SetData(2, topBeamGoo);
+            DA.SetData(3, bottomBeamGoo);
+            DA.SetData(4, intermediateBeamGoo);
             // DA.SetDataList(5, staticColumnsGoo);
             // DA.SetDataList(6, boundaryColumnsGoo);
             // DA.SetDataList(7, boundaryNodes);

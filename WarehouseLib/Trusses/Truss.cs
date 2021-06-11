@@ -32,9 +32,10 @@ namespace WarehouseLib.Trusses
         public Beam IntermediateBeams;
         public List<Point3d> TopNodes;
         public List<Point3d> BoundaryTopNodes;
-        public string _trussType;
+        public string _connectionType;
         public string _articulationType;
         public double _facadeStrapsDistance;
+        public string _porticoType;
 
         protected Truss(Plane plane, TrussInputs inputs)
         {
@@ -44,11 +45,12 @@ namespace WarehouseLib.Trusses
             _maxHeight = inputs.MaxHeight;
             _clearHeight = inputs.ClearHeight;
             _divisions = inputs.Divisions;
-            _trussType = inputs.TrussType;
+            _connectionType = inputs.TrussType;
             _articulationType = inputs._articulationType;
             _columnsCount = inputs.ColumnsCount;
             _divisions = RecomputeDivisions(_divisions);
             _facadeStrapsDistance = inputs.FacadeStrapsDistance;
+            _porticoType = inputs.PorticoType;
         }
 
         protected void ConstructBeams(bool joinTopBeamsAxis, bool joinBottomBeamsAxis)
@@ -82,7 +84,7 @@ namespace WarehouseLib.Trusses
         {
             if (divisions <= 1) throw new Exception("truss division has to be >=2");
             var recomputedDivisions = divisions;
-            if (_trussType != ConnectionType.Warren.ToString())
+            if (_connectionType != ConnectionType.Warren.ToString())
             {
                 recomputedDivisions /= 2;
             }

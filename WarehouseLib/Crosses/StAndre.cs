@@ -33,7 +33,7 @@ namespace WarehouseLib.Crosses
             count += 1;
             var topNodes = new List<Point3d>();
             var tempList = new List<Point3d>();
-            if (truss._trussType == ConnectionType.WarrenStuds.ToString())
+            if (truss._connectionType == ConnectionType.WarrenStuds.ToString())
             {
                 for (var i = 1; i < truss.TopNodes.Count; i += 2)
                 {

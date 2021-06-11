@@ -71,6 +71,7 @@
     <Compile Include="Karamba\DeconstructKarambaBeam.cs" />
     <Compile Include="Karamba\DeconstructKarambaColumn.cs" />
     <Compile Include="Karamba\DeconstructKarambaTruss.cs" />
+    <Compile Include="Karamba\DeconstructKarambaWarehouse.cs" />
     <Compile Include="Options\TrussInputscs.cs" />
     <Compile Include="Options\WarehouseInputs.cs" />
     <Compile Include="Options\WarehouseProfilesInputs.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Params\ColumnParameter.cs" />
     <Compile Include="Params\CrossParameter.cs" />
     <Compile Include="Params\KarambaTrussParameter.cs" />
+    <Compile Include="Params\KarambaWarehouseParameter.cs" />
     <Compile Include="Params\StrapParameter.cs" />
     <Compile Include="Params\TrussParameter.cs" />
     <Compile Include="Params\WarehouseParameter.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="Straps\RoofStrapsComponent.cs" />
     <Compile Include="TeklaStructures\ComputeTeklaWarehouse.cs" />
     <Compile Include="TeklaStructures\DeconstructTeklaColumn.cs" />
+    <Compile Include="TeklaStructures\DeconstructTeklaTruss.cs" />
     <Compile Include="Trusses\ArchTrussComponent.cs" />
     <Compile Include="Trusses\DoublepichTrussComponent.cs" />
     <Compile Include="Trusses\FlatTrussComponent.cs" />

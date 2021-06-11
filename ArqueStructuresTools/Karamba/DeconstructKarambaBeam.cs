@@ -17,11 +17,13 @@ namespace ArqueStructuresTools.Karamba
         {
             pManager.AddParameter(new BeamParameter(), "Beam", "Beam", "Beam to deconstruct",
                 GH_ParamAccess.item);
+            pManager.AddNumberParameter("Y Buckling", "YB", "Y buckling length multiplier", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("Z Buckling", "ZB", "Z buckling length multiplier", GH_ParamAccess.item, 1);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddLineParameter("Axis", "A", "Beam axis", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Axis", "A", "Beam axis", GH_ParamAccess.list);
             pManager.AddNumberParameter("Y Buckling", "YB", "Y buckling length", GH_ParamAccess.item);
             pManager.AddNumberParameter("Z Buckling", "ZB", "Z buckling length", GH_ParamAccess.item);
         }
@@ -32,11 +34,20 @@ namespace ArqueStructuresTools.Karamba
 
             // get input data
             if (!DA.GetData(0, ref beamGoo)) return;
+            var bucklingY = 0.0;
+            var bucklingZ = 0.0;
+            foreach (var bucklingLength in beamGoo.Value.BucklingLengths)
+            {
+                bucklingY = bucklingLength.BucklingY;
+                bucklingZ = bucklingLength.BucklingZ;
+            }
 
             // set output data 
             DA.SetDataList(0, beamGoo.Value.Axis);
-            DA.SetData(1, beamGoo.Value.BucklingLengths.BucklingY);
-            DA.SetData(2, beamGoo.Value.BucklingLengths.BucklingZ);
+            DA.SetData(1,
+                bucklingY == 0 ? null : bucklingY);
+            DA.SetData(2,
+                bucklingZ == 0 ? null : bucklingZ);
         }
     }
 }

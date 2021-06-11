@@ -13,7 +13,7 @@ namespace WarehouseLib.Beams
 
         public ProfileDescription Profile;
 
-        public BucklingLengths.BucklingLengths BucklingLengths;
+        public List<BucklingLengths.BucklingLengths> BucklingLengths;
 
         protected Beam()
         {
@@ -22,18 +22,19 @@ namespace WarehouseLib.Beams
         public abstract Plane GetTeklaProfileOrientationPlane();
 
 
-        public BucklingLengths.BucklingLengths ComputeBucklingLengths(Beam beam, bool stAndreCross,
+        public List<BucklingLengths.BucklingLengths> ComputeBucklingLengths(Beam beam, bool stAndreCross,
             double stAndreCrossDistance)
         {
             var buckling = new BucklingLengths.BucklingLengths();
-            var variable = 1;
+            var bucklings = new List<BucklingLengths.BucklingLengths>();
             foreach (var axis in beam.Axis)
             {
-                buckling.BucklingY = axis.GetLength() * variable;
-                buckling.BucklingZ = axis.GetLength() * variable;
+                buckling.BucklingY = axis.GetLength();
+                buckling.BucklingZ = axis.GetLength();
+                bucklings.Add(buckling);
             }
 
-            return buckling;
+            return bucklings;
         }
     }
 }

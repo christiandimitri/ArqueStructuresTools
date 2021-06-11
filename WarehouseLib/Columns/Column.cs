@@ -31,7 +31,7 @@ namespace WarehouseLib.Columns
         {
             var buckling = new BucklingLengths.BucklingLengths();
             var zBuckling = column.Axis.Length;
-            var yBuckling = 0.7 * column.Axis.Length;
+            var yBuckling = 1 * column.Axis.Length;
             if (straps)
             {
                 yBuckling = strapsDistance;

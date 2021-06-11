@@ -46,14 +46,46 @@ namespace ArqueStructuresTools
                             }
                         }
 
-                        if (truss.GetKaramba3DTopBeams != null)
+                        if (truss.Karamba3DBoundaryColumns != null)
                         {
-                            foreach (var beam in truss.GetKaramba3DTopBeams.Axis)
+                            foreach (var column in truss.Karamba3DBoundaryColumns)
+                            {
+                                var line = column;
+                                _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.HotPink);
+                            }
+                        }
+
+                        if (truss.Karamba3DTopBeams != null)
+                        {
+                            foreach (var beam in truss.Karamba3DTopBeams.Axis)
                             {
                                 var axis = beam;
 
                                 _box.Union(axis.ToNurbsCurve().GetBoundingBox(false));
                                 args.Display.DrawCurve(axis.ToNurbsCurve(), System.Drawing.Color.Blue);
+                            }
+                        }
+
+                        if (truss.Karamba3DBottomBeams != null)
+                        {
+                            foreach (var beam in truss.Karamba3DBottomBeams.Axis)
+                            {
+                                var axis = beam;
+
+                                _box.Union(axis.ToNurbsCurve().GetBoundingBox(false));
+                                args.Display.DrawCurve(axis.ToNurbsCurve(), System.Drawing.Color.Red);
+                            }
+                        }
+
+                        if (truss.Karamba3DIntermediateBeams != null)
+                        {
+                            foreach (var beam in truss.Karamba3DIntermediateBeams.Axis)
+                            {
+                                var axis = beam;
+
+                                _box.Union(axis.ToNurbsCurve().GetBoundingBox(false));
+                                args.Display.DrawCurve(axis.ToNurbsCurve(), System.Drawing.Color.Green);
                             }
                         }
                     }

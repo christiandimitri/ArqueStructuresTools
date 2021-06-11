@@ -5,6 +5,7 @@ using Rhino.Geometry;
 using WarehouseLib.Articulations;
 using WarehouseLib.Beams;
 using WarehouseLib.Columns;
+using WarehouseLib.Options;
 using WarehouseLib.Trusses;
 
 namespace WarehouseLib.Utilities
@@ -12,6 +13,7 @@ namespace WarehouseLib.Utilities
     public class KarambaTruss
     {
         private readonly Truss _truss;
+        public string _porticoType;
 
         private List<Column> _trussStaticColumns;
         private List<Column> _trussBoundaryColumns;
@@ -26,44 +28,40 @@ namespace WarehouseLib.Utilities
         private Beam _trussBottomBeam;
         private Beam _trussIntermediateBeam;
 
-        public Beam GetKaramba3DTopBeams;
-        public List<Beam> Karamba3DBottomBeams;
-        public List<Beam> Karamba3DIntermediateBeams;
+        public Beam Karamba3DTopBeams;
+        public Beam Karamba3DBottomBeams;
+        public Beam Karamba3DIntermediateBeams;
 
         public KarambaTruss(Truss truss)
         {
             // extract truss properties and components
             _truss = truss;
-
+            _porticoType = _truss._porticoType;
             // get truss nodes
             GetTrussNodes();
             // get truss columns
             GetTrussColumns();
-            GetTrussTopBeam();
-            // GetTrussBottomBeam();
-
+            // get truss beams 
+            GetTrussBeams();
             // compute karamba properties for each component and add it
+            // compute karamba3D columns and properties
             GetKaramba3DColumns();
 
             // TODO
-            // GetKaramba3DBeams();
+            // compute karamba3D beams and properties
+            GetKaramba3DBeams();
         }
 
         // truss nodes
-        private void GetTrussTopNodes()
-        {
-            _trussTopNodes = _truss.TopNodes ?? new List<Point3d>();
-        }
-
-        private void GetTrussBottomNodes()
-        {
-            _trussBottomNodes = _truss.BottomNodes ?? new List<Point3d>();
-        }
-
         private void GetTrussNodes()
         {
-            GetTrussTopNodes();
-            GetTrussBottomNodes();
+            _trussTopNodes = _truss.TopNodes != null
+                ? new List<Point3d>(_truss.TopNodes)
+                : new List<Point3d>();
+            if (_porticoType == PorticoType.Truss.ToString() || _truss.BottomBeam.Axis != null)
+            {
+                _trussBottomNodes = _truss.BottomNodes ?? new List<Point3d>();
+            }
         }
 
         // truss columns
@@ -72,20 +70,28 @@ namespace WarehouseLib.Utilities
             _trussStaticColumns = _truss.StaticColumns != null
                 ? new List<Column>(_truss.StaticColumns)
                 : new List<Column>();
-            _trussBoundaryColumns = _truss.BoundaryColumns != null
-                ? new List<Column>(_truss.BoundaryColumns)
-                : new List<Column>();
+            if (_porticoType != PorticoType.Truss.ToString())
+            {
+                _trussBoundaryColumns = _truss.BoundaryColumns != null
+                    ? new List<Column>(_truss.BoundaryColumns)
+                    : new List<Column>();
+            }
         }
 
         // truss beams
-        private void GetTrussTopBeam()
+        private void GetTrussBeams()
         {
             _trussTopBeam = _truss.TopBeam ?? new TopBeam();
-        }
+            if (_porticoType == PorticoType.Truss.ToString())
+            {
+                if (_truss.BottomBeam.Axis  !=null)
+                {
+                    
+                }
+                _trussBottomBeam = _truss.BottomBeam ?? new BottomBeam();
 
-        private void GetTrussBottomBeam()
-        {
-            _trussBottomBeam = _truss.BottomBeam ?? new BottomBeam();
+                _trussIntermediateBeam = _truss.IntermediateBeams ?? new IntermediateBeams();
+            }
         }
 
         // Get Karamba3D all Columns types and properties
@@ -93,38 +99,76 @@ namespace WarehouseLib.Utilities
         {
             // Get Karamba3D static columns with buckling length
             var tempStaticColumns = new List<Column>();
-
-            for (var i = 0; i < _trussStaticColumns.Count; i++)
+            var tempBoundaryColumns = new List<Column>();
+            if ((_truss._articulationType == ArticulationType.Rigid.ToString() &&
+                 _porticoType == PorticoType.Truss.ToString()))
             {
-                double t;
-                var staticColumn = _trussStaticColumns[i];
-
-                staticColumn.Axis.ToNurbsCurve()
-                    .ClosestPoint(_trussBottomNodes[i == 0 ? 0 : _trussBottomNodes.Count - 1], out t);
-                var cl = _truss._articulationType == ArticulationType.Rigid.ToString()
-                    ? staticColumn.Axis.ToNurbsCurve().Split(t).ToList()
-                    : new List<Curve> {staticColumn.Axis.ToNurbsCurve()};
-                var tempColumns = new List<Column>();
-                foreach (var axis in cl)
+                for (int i = 0; i < _trussStaticColumns.Count; i++)
                 {
-                    var column = new StaticColumn();
-                    column.Axis = new Line(axis.PointAtStart, axis.PointAtEnd);
-                    column.BucklingLengths = GetColumnBucklingLength(column).BucklingLengths;
-                    tempColumns.Add(column);
+                    var column = _trussStaticColumns[i];
+                    var bottomNode = _trussBottomNodes[i == 0 ? 0 : _trussBottomNodes.Count - 1];
+                    double t;
+                    column.Axis.ToNurbsCurve().ClosestPoint(bottomNode, out t);
+                    var cl = column.Axis.ToNurbsCurve().Split(t);
+                    foreach (var axis in cl)
+                    {
+                        var tempStaticColumn = new StaticColumn();
+                        tempStaticColumn.Axis =
+                            new Line(axis.ToNurbsCurve().PointAtStart, axis.ToNurbsCurve().PointAtEnd);
+                        var tempCl = GetColumnBucklingLength(tempStaticColumn);
+                        tempStaticColumn.BucklingLengths = tempCl.BucklingLengths;
+                        tempStaticColumns.Add(tempStaticColumn);
+                    }
                 }
-
-                tempStaticColumns.AddRange(tempColumns);
+            }
+            else
+            {
+                foreach (var column in _trussStaticColumns)
+                {
+                    var tempStaticColumn = new BoundaryColumn();
+                    tempStaticColumn.Axis =
+                        new Line(column.Axis.ToNurbsCurve().PointAtStart, column.Axis.ToNurbsCurve().PointAtEnd);
+                    var tempCl = GetColumnBucklingLength(tempStaticColumn);
+                    tempStaticColumn.BucklingLengths = tempCl.BucklingLengths;
+                    tempStaticColumns.Add(tempStaticColumn);
+                }
             }
 
             Karamba3DStaticColumns = tempStaticColumns;
-            Karamba3DBoundaryColumns = _trussBoundaryColumns;
+
+
+            if (_porticoType == PorticoType.Portico.ToString())
+            {
+                foreach (var column in _trussBoundaryColumns)
+                {
+                    var tempBoundaryColumn = new BoundaryColumn();
+                    tempBoundaryColumn.Axis =
+                        new Line(column.Axis.ToNurbsCurve().PointAtStart, column.Axis.ToNurbsCurve().PointAtEnd);
+                    var tempCl = GetColumnBucklingLength(tempBoundaryColumn);
+                    tempBoundaryColumn.BucklingLengths = tempCl.BucklingLengths;
+                    tempBoundaryColumns.Add(tempBoundaryColumn);
+                }
+            }
+
+            Karamba3DBoundaryColumns = tempBoundaryColumns;
         }
 
         // Get Karamba3D all Beams types and properties
 
         private void GetKaramba3DBeams()
         {
-            GetKaramba3DTopBeams = _trussTopBeam;
+            Karamba3DTopBeams = new TopBeam();
+            Karamba3DTopBeams.Axis = new List<Curve>(DivideBeamBetweenNodes(_truss.TopNodes, _trussTopBeam));
+            Karamba3DTopBeams.BucklingLengths =
+                Karamba3DTopBeams.ComputeBucklingLengths(Karamba3DTopBeams, false, double.NaN);
+            if (_porticoType == PorticoType.Truss.ToString())
+            {
+                Karamba3DBottomBeams = new BottomBeam();
+                Karamba3DBottomBeams.Axis =
+                    new List<Curve>(DivideBeamBetweenNodes(_truss.BottomNodes, _trussBottomBeam));
+                // Karamba3DBottomBeams.BucklingLengths= Karamba3DBottomBeams.ComputeBucklingLengths(Karamba3DBottomBeams, false, double.NaN);
+                Karamba3DIntermediateBeams = _trussIntermediateBeam;
+            }
         }
 
         // Return a column with its buckling lengths
@@ -145,21 +189,30 @@ namespace WarehouseLib.Utilities
         }
 
         // Return a beam with its buckling lengths
-        private Beam GetBeamsBucklingLength(Beam beam)
-        {
-            BucklingLengths.BucklingLengths bucklingLength;
 
-            if (GetKaramba3DTopBeams != null)
-            {
-                bucklingLength = beam.ComputeBucklingLengths(beam, false, Double.NaN);
-            }
-
-            return beam;
-        }
 
         private List<Curve> DivideBeamBetweenNodes(List<Point3d> nodes, Beam beam)
         {
             var axis = new List<Curve>();
+            var tempBaseAxisList = Curve.JoinCurves(beam.Axis);
+
+
+            var baseAxis = tempBaseAxisList[0];
+            for (var i = 1; i < nodes.Count - 1; i++)
+            {
+                var node = nodes[i];
+                double t;
+                baseAxis.ClosestPoint(node, out t);
+                var tempList = baseAxis.ToNurbsCurve().Split(t).ToList();
+                axis.Add(tempList[0]);
+                baseAxis = tempList[1];
+                if (i == nodes.Count - 1)
+                {
+                    axis.Add(baseAxis);
+                }
+            }
+
+            axis.Add(baseAxis);
 
 
             return axis;

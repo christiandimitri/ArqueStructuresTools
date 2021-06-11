@@ -43,8 +43,8 @@ namespace WarehouseLib.Options
             ColumnsCount = columnsCount;
             FacadeStrapsDistance = facadeStrapsDistance;
             if (facadeStrapsDistance <= 0) throw new Exception("Warehouse facade straps cannot have 0 length!!");
-            // if (height < clearHeight) throw new Exception("The truss height cannot be < than the clear height");
-            // if (maxHeight < clearHeight) throw new Exception("The truss max height cannot be < than the clear height");
+            if (height < clearHeight) throw new Exception("The truss height cannot be < than the clear height");
+            if (maxHeight < clearHeight) throw new Exception("The truss max height cannot be < than the clear height");
             if (Divisions <= 1) throw new Exception("A normal Truss cannot have a division <= 1");
             if (trussType != "Warren" && divisions < 4 &&
                 articulationType == ArticulationType.Articulated.ToString())
