@@ -35,7 +35,8 @@ namespace WarehouseLib.Trusses
         public string _connectionType;
         public string _articulationType;
         public double _facadeStrapsDistance;
-        public string _porticoType;
+        public string _porticoType { get; set; }
+
 
         protected Truss(Plane plane, TrussInputs inputs)
         {
@@ -51,6 +52,12 @@ namespace WarehouseLib.Trusses
             _divisions = RecomputeDivisions(_divisions);
             _facadeStrapsDistance = inputs.FacadeStrapsDistance;
             _porticoType = inputs.PorticoType;
+            
+        }
+
+        public void UpdatePorticoType(Truss truss)
+        {
+            truss._porticoType = BottomBeam.Axis == null ? PorticoType.Portico.ToString() : PorticoType.Truss.ToString();
         }
 
         protected void ConstructBeams(bool joinTopBeamsAxis, bool joinBottomBeamsAxis)

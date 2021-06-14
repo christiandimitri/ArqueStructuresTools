@@ -52,6 +52,10 @@ namespace WarehouseLib.Options
                     "The 'Articulated' truss types 'Howe', 'Pratt' and 'Warren with studs', cannot have a division count < 4");
             if (columnsCount <= 1)
                 throw new Exception("The columns count should be >= 2");
+            if (facadeStrapsDistance>height)
+            {
+                throw new Exception("The facade straps distance can not be > the truss columns height");
+            }
         }
     }
 }

@@ -23,17 +23,40 @@ namespace WarehouseLib.Beams
 
 
         public List<BucklingLengths.BucklingLengths> ComputeBucklingLengths(Beam beam, bool stAndreCross,
-            double stAndreCrossDistance)
+            double stAndreCrossDistance, bool bucklingActive)
         {
             var buckling = new BucklingLengths.BucklingLengths();
             var bucklings = new List<BucklingLengths.BucklingLengths>();
-            foreach (var axis in beam.Axis)
+            if (!bucklingActive)
             {
-                buckling.BucklingY = axis.GetLength();
-                buckling.BucklingZ = axis.GetLength();
-                bucklings.Add(buckling);
+                for (var i = 0; i < beam.Axis.Count; i++)
+                {
+                    var axis = beam.Axis[i];
+                    buckling.BucklingY = 0.0;
+                    buckling.BucklingZ = 0.0;
+                    bucklings.Add(buckling);
+                }
             }
-
+            else if (!stAndreCross && bucklingActive)
+            {
+                for (var i = 0; i < beam.Axis.Count; i++)
+                {
+                    var axis = beam.Axis[i];
+                    buckling.BucklingY = axis.GetLength();
+                    buckling.BucklingZ = axis.GetLength();
+                    bucklings.Add(buckling);
+                }
+            }
+            else if (stAndreCross && bucklingActive)
+            {
+                for (var i = 0; i < beam.Axis.Count; i++)
+                {
+                    var axis = beam.Axis[i];
+                    buckling.BucklingY = stAndreCrossDistance;
+                    buckling.BucklingZ = axis.GetLength();
+                    bucklings.Add(buckling);
+                }
+            }
             return bucklings;
         }
     }

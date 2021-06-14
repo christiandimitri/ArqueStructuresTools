@@ -62,7 +62,10 @@ namespace ArqueStructuresTools
             var staticColumnsGoo = new List<ColumnGoo>();
             foreach (var staticColumn in truss.Karamba3DStaticColumns)
             {
-                staticColumnsGoo.Add(new ColumnGoo(staticColumn));
+                if (staticColumn.Axis != null)
+                {
+                    staticColumnsGoo.Add(new ColumnGoo(staticColumn));
+                }
             }
 
             var boundaryColumnsGoo = new List<ColumnGoo>();
@@ -70,15 +73,20 @@ namespace ArqueStructuresTools
             {
                 foreach (var boundaryColumn in truss.Karamba3DBoundaryColumns)
                 {
-                    boundaryColumnsGoo.Add(new ColumnGoo(boundaryColumn));
+                    if (boundaryColumn.Axis != null)
+                    {
+                        boundaryColumnsGoo.Add(new ColumnGoo(boundaryColumn));
+                    }
                 }
             }
 
-            var topBeamGoo = new BeamGoo(truss.Karamba3DTopBeams);
-            var bottomBeamGoo = truss._porticoType == PorticoType.Truss.ToString()
+            var topBeamGoo = truss.Karamba3DTopBeams.Axis != null
+                ? new BeamGoo(truss.Karamba3DTopBeams)
+                : new BeamGoo(new TopBeam());
+            var bottomBeamGoo = truss.Karamba3DBottomBeams.Axis !=null
                 ? new BeamGoo(truss.Karamba3DBottomBeams)
                 : new BeamGoo(new BottomBeam());
-            var intermediateBeamGoo = truss._porticoType == PorticoType.Truss.ToString()
+            var intermediateBeamGoo = truss.Karamba3DIntermediateBeams.Axis != null
                 ? new BeamGoo(truss.Karamba3DIntermediateBeams)
                 : new BeamGoo(new IntermediateBeams());
 

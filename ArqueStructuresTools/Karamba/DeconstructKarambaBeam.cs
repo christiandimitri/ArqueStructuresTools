@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ArqueStructuresTools.Params;
 using Grasshopper.Kernel;
 
@@ -24,8 +25,8 @@ namespace ArqueStructuresTools.Karamba
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddCurveParameter("Axis", "A", "Beam axis", GH_ParamAccess.list);
-            pManager.AddNumberParameter("Y Buckling", "YB", "Y buckling length", GH_ParamAccess.item);
-            pManager.AddNumberParameter("Z Buckling", "ZB", "Z buckling length", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Y Buckling", "YB", "Y buckling length", GH_ParamAccess.list);
+            pManager.AddNumberParameter("Z Buckling", "ZB", "Z buckling length", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -34,20 +35,28 @@ namespace ArqueStructuresTools.Karamba
 
             // get input data
             if (!DA.GetData(0, ref beamGoo)) return;
-            var bucklingY = 0.0;
-            var bucklingZ = 0.0;
-            foreach (var bucklingLength in beamGoo.Value.BucklingLengths)
+            var yMultiplier = 1.0;
+            if (!DA.GetData(1, ref yMultiplier)) return;
+            var zMultiplier = 1.0;
+            if (!DA.GetData(2, ref zMultiplier)) return;
+            var bucklingYList = new List<double>();
+            var bucklingZList = new List<double>();
+            if (beamGoo.Value.BucklingLengths != null)
             {
-                bucklingY = bucklingLength.BucklingY;
-                bucklingZ = bucklingLength.BucklingZ;
+                for (var index = 0; index < beamGoo.Value.BucklingLengths.Count; index++)
+                {
+                    var bucklingLength = beamGoo.Value.BucklingLengths[index];
+                    var bucklingY = bucklingLength.BucklingY * yMultiplier;
+                    bucklingYList.Add(bucklingY);
+                    var bucklingZ = bucklingLength.BucklingZ * zMultiplier;
+                    bucklingZList.Add(bucklingZ);
+                }
             }
 
             // set output data 
             DA.SetDataList(0, beamGoo.Value.Axis);
-            DA.SetData(1,
-                bucklingY == 0 ? null : bucklingY);
-            DA.SetData(2,
-                bucklingZ == 0 ? null : bucklingZ);
+            DA.SetDataList(1, bucklingYList);
+            DA.SetDataList(2, bucklingZList);
         }
     }
 }

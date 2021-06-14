@@ -49,11 +49,11 @@ namespace ArqueStructuresTools
                     {
                         var warehouse = warehouseGoo.Value;
 
-                        foreach (var truss in warehouse.Trusses)
+                        foreach (var truss in warehouse.KarambaTrusses)
                         {
-                            if (truss.TopBeam.Axis != null)
+                            if (truss.Karamba3DTopBeams.Axis != null)
                             {
-                                foreach (var bar in truss.TopBeam.Axis)
+                                foreach (var bar in truss.Karamba3DTopBeams.Axis)
                                 {
                                     _box.Union(bar.GetBoundingBox(false));
                                     args.Display.DrawCurve(bar, System.Drawing.Color.Blue);
@@ -61,18 +61,18 @@ namespace ArqueStructuresTools
                             }
 
 
-                            if (truss.BottomBeam.Axis != null)
+                            if (truss.Karamba3DBottomBeams.Axis != null)
                             {
-                                foreach (var bar in truss.BottomBeam.Axis)
+                                foreach (var bar in truss.Karamba3DBottomBeams.Axis)
                                 {
                                     _box.Union(bar.GetBoundingBox(false));
                                     args.Display.DrawCurve(bar, System.Drawing.Color.Red);
                                 }
                             }
 
-                            if (truss.IntermediateBeams.Axis != null)
+                            if (truss.Karamba3DIntermediateBeams.Axis != null)
                             {
-                                foreach (var bar in truss.IntermediateBeams.Axis)
+                                foreach (var bar in truss.Karamba3DIntermediateBeams.Axis)
                                 {
                                     _box.Union(bar.GetBoundingBox(false));
                                     args.Display.DrawCurve(bar, System.Drawing.Color.Green);
@@ -80,40 +80,52 @@ namespace ArqueStructuresTools
                             }
 
 
-                            if (truss.StaticColumns != null)
+                            if (truss.Karamba3DStaticColumns != null)
                             {
-                                foreach (var bar in truss.StaticColumns)
+                                foreach (var bar in truss.Karamba3DStaticColumns)
                                 {
-                                    _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.HotPink);
+                                    if (bar.Axis != null)
+                                    {
+                                        _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                        args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.HotPink);
+                                    }
                                 }
                             }
 
-                            if (truss.BoundaryColumns != null)
+                            if (truss.Karamba3DBoundaryColumns != null)
                             {
-                                foreach (var bar in truss.BoundaryColumns)
+                                foreach (var bar in truss.Karamba3DBoundaryColumns)
                                 {
-                                    _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.DeepPink);
+                                    if (bar.Axis != null)
+                                    {
+                                        _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                        args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.DeepPink);
+                                    }
                                 }
                             }
-                            
-                            
+
+
                             if (warehouse.FacadeStrapsX != null)
                             {
                                 foreach (var strap in warehouse.FacadeStrapsX)
                                 {
-                                    _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Orange);
+                                    if (strap.Axis != null)
+                                    {
+                                        _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                        args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Orange);
+                                    }
                                 }
                             }
-                            
+
                             if (warehouse.FacadeStrapsY != null)
                             {
                                 foreach (var strap in warehouse.FacadeStrapsY)
                                 {
-                                    _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Orange);
+                                    if (strap.Axis != null)
+                                    {
+                                        _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                        args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Orange);
+                                    }
                                 }
                             }
 
@@ -121,38 +133,51 @@ namespace ArqueStructuresTools
                             {
                                 foreach (var bar in warehouse.RoofBracings)
                                 {
-                                    _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Indigo);
+                                    if (bar.Axis != null)
+                                    {
+                                        _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                        args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Indigo);
+                                    }
                                 }
                             }
-                            
+
                             if (warehouse.RoofCables != null)
                             {
                                 foreach (var bar in warehouse.RoofCables)
                                 {
-                                    _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Firebrick);
+                                    if (bar.Axis != null)
+                                    {
+                                        _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                        args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Firebrick);
+                                    }
                                 }
                             }
-                            
+
                             if (warehouse.FacadeCables != null)
                             {
                                 foreach (var bar in warehouse.FacadeCables)
                                 {
-                                    _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Firebrick);
+                                    if (bar.Axis != null)
+                                    {
+                                        _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                        args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Firebrick);
+                                    }
                                 }
                             }
-                            
+
                             if (warehouse.ColumnsBracings != null)
                             {
                                 foreach (var bar in warehouse.ColumnsBracings)
                                 {
-                                    _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                    args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.GreenYellow);
+                                    if (bar.Axis != null)
+                                    {
+                                        _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                        args.Display.DrawCurve(bar.Axis.ToNurbsCurve(),
+                                            System.Drawing.Color.GreenYellow);
+                                    }
                                 }
                             }
-                            
+
                             if (warehouse.Crosses != null)
                             {
                                 foreach (var cross in warehouse.Crosses)

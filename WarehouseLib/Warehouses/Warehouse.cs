@@ -94,6 +94,11 @@ namespace WarehouseLib.Warehouses
             trusses.Insert(0, trussA);
             trusses.RemoveAt(trusses.Count - 1);
             trusses.Add(trussB);
+            for (int i = 0; i < trusses.Count; i++)
+            {
+                var truss = trusses[i];
+                truss.UpdatePorticoType(truss);
+            }
 
             return trusses;
         }

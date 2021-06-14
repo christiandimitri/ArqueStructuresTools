@@ -22,7 +22,7 @@ namespace ArqueStructuresTools.Karamba
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter(), "Trusses", "T", "Warehouse trusses", GH_ParamAccess.list);
+            pManager.AddParameter(new KarambaTrussParameter(), "Trusses", "T", "Warehouse trusses", GH_ParamAccess.list);
             pManager.AddParameter(new StrapParameter(), "Roof straps", "RS", "Warehouse roof straps", GH_ParamAccess.list);
             pManager.AddParameter(new StrapParameter(), "X Facade straps", "X-FS", "Warehouse facade straps X-direction", GH_ParamAccess.list);
             pManager.AddParameter(new StrapParameter(), "Y Facade straps", "Y-FS", "Warehouse facade straps Y-direction", GH_ParamAccess.list);
@@ -42,12 +42,12 @@ namespace ArqueStructuresTools.Karamba
 
             var warehouse = karambaWarehouseGoo.Value;
 
-            var trusses = new List<TrussGoo>();
-            if (warehouse.Trusses != null)
+            var trusses = new List<KarambaTrussGoo>();
+            if (warehouse.KarambaTrusses != null)
             {
-                foreach (var truss in warehouse.Trusses)
+                foreach (var truss in warehouse.KarambaTrusses)
                 {
-                    trusses.Add(new TrussGoo(truss));
+                    trusses.Add(new KarambaTrussGoo(truss));
                 }
             }
 
@@ -123,7 +123,7 @@ namespace ArqueStructuresTools.Karamba
                 }
             }
 
-            DA.SetDataList(0, new List<TrussGoo>(trusses));
+            DA.SetDataList(0, new List<KarambaTrussGoo>(trusses));
             DA.SetDataList(1, new List<StrapGoo>(roofStraps));
             DA.SetDataList(2, new List<StrapGoo>(facadeStrapsX));
             DA.SetDataList(3, new List<StrapGoo>(facadeStrapsY));

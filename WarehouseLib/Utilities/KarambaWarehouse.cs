@@ -42,8 +42,9 @@ namespace WarehouseLib.Utilities
         private void ReplaceTrussesWithKaramabaTrusses()
         {
             var karambaTrusses = new List<KarambaTruss>();
-            foreach (var truss in _warehouse.Trusses)
+            for (var i=0;i<_warehouse.Trusses.Count;i++)
             {
+                var truss = _warehouse.Trusses[i];
                 var karambaTruss = new KarambaTruss(truss);
                 karambaTrusses.Add(karambaTruss);
             }

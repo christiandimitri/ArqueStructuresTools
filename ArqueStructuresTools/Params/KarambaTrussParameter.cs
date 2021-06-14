@@ -40,9 +40,12 @@ namespace ArqueStructuresTools
                         {
                             foreach (var column in truss.Karamba3DStaticColumns)
                             {
-                                var line = column;
-                                _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.HotPink);
+                                if (column.Axis != null)
+                                {
+                                    var line = column;
+                                    _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                    args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.HotPink);
+                                }
                             }
                         }
 
@@ -50,24 +53,26 @@ namespace ArqueStructuresTools
                         {
                             foreach (var column in truss.Karamba3DBoundaryColumns)
                             {
-                                var line = column;
-                                _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.HotPink);
+                                if (column.Axis != null)
+                                {
+                                    var line = column;
+                                    _box.Union(line.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                    args.Display.DrawCurve(line.Axis.ToNurbsCurve(), System.Drawing.Color.HotPink);
+                                }
                             }
                         }
 
-                        if (truss.Karamba3DTopBeams != null)
+                        if (truss.Karamba3DTopBeams.Axis != null)
                         {
                             foreach (var beam in truss.Karamba3DTopBeams.Axis)
                             {
                                 var axis = beam;
-
                                 _box.Union(axis.ToNurbsCurve().GetBoundingBox(false));
                                 args.Display.DrawCurve(axis.ToNurbsCurve(), System.Drawing.Color.Blue);
                             }
                         }
 
-                        if (truss.Karamba3DBottomBeams != null)
+                        if (truss.Karamba3DBottomBeams.Axis != null)
                         {
                             foreach (var beam in truss.Karamba3DBottomBeams.Axis)
                             {
@@ -78,7 +83,7 @@ namespace ArqueStructuresTools
                             }
                         }
 
-                        if (truss.Karamba3DIntermediateBeams != null)
+                        if (truss.Karamba3DIntermediateBeams.Axis != null)
                         {
                             foreach (var beam in truss.Karamba3DIntermediateBeams.Axis)
                             {
