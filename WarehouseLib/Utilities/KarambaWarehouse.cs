@@ -24,6 +24,8 @@ namespace WarehouseLib.Utilities
         public List<Bracing> ColumnsBracings { get; set; }
         public List<Cross> Crosses { get; set; }
 
+        public List<Point3d> StAndresBottomNodes { get; set; }
+
         public KarambaWarehouse(Warehouse warehouse)
         {
             _warehouse = warehouse;
@@ -37,20 +39,34 @@ namespace WarehouseLib.Utilities
             FacadeCables = warehouse.FacadeCables;
             ColumnsBracings = warehouse.ColumnsBracings;
             Crosses = warehouse.Crosses;
+            StAndresBottomNodes = warehouse.StAndreBottomNodes;
         }
 
         private void ReplaceTrussesWithKaramabaTrusses()
         {
             var karambaTrusses = new List<KarambaTruss>();
-            for (var i=0;i<_warehouse.Trusses.Count;i++)
+            var stAndreDistance = ComputeDistanceBetweenStAndresCross();
+            for (var i = 0; i < _warehouse.Trusses.Count; i++)
             {
                 var truss = _warehouse.Trusses[i];
                 var karambaTruss = new KarambaTruss(truss);
                 karambaTrusses.Add(karambaTruss);
             }
-        
+
             // _warehouse.Trusses = new List<Truss>();
             KarambaTrusses = new List<KarambaTruss>(karambaTrusses);
+        }
+
+        private double ComputeDistanceBetweenStAndresCross()
+        {
+            var distances = new List<double>();
+
+            foreach (var truss in Trusses)
+            {
+            }
+
+
+            return 0;
         }
     }
 }

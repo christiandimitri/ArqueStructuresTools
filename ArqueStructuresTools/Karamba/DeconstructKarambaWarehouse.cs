@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ArqueStructuresTools.Params;
 using Grasshopper.Kernel;
+using Rhino.Geometry;
 
 namespace ArqueStructuresTools.Karamba
 {
@@ -16,22 +18,33 @@ namespace ArqueStructuresTools.Karamba
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new KarambaWarehouseParameter(), "Karamba warehouse", "KaWarehouse", "Karamba warehouse to deconstruct",
+            pManager.AddParameter(new KarambaWarehouseParameter(), "Karamba warehouse", "KaWarehouse",
+                "Karamba warehouse to deconstruct",
                 GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new KarambaTrussParameter(), "Trusses", "T", "Warehouse trusses", GH_ParamAccess.list);
-            pManager.AddParameter(new StrapParameter(), "Roof straps", "RS", "Warehouse roof straps", GH_ParamAccess.list);
-            pManager.AddParameter(new StrapParameter(), "X Facade straps", "X-FS", "Warehouse facade straps X-direction", GH_ParamAccess.list);
-            pManager.AddParameter(new StrapParameter(), "Y Facade straps", "Y-FS", "Warehouse facade straps Y-direction", GH_ParamAccess.list);
-            pManager.AddParameter(new BracingParameter(), "Roof bracing", "RB", "Warehouse roof bracing", GH_ParamAccess.list);
-            pManager.AddParameter(new BracingParameter(), "Columns bracing", "CB", "Warehouse columns bracing", GH_ParamAccess.list);
-            pManager.AddParameter(new CableParameter(), "Roof cables", "RC", "Warehouse roof cables", GH_ParamAccess.list);
-            pManager.AddParameter(new CableParameter(), "Facade cables", "FC", "Warehouse facade cables", GH_ParamAccess.list);
-            pManager.AddParameter(new CrossParameter(), "St-And cross", "SAC", "Warehouse st andre cross", GH_ParamAccess.list);
-
+            pManager.AddParameter(new KarambaTrussParameter(), "Trusses", "T", "Warehouse trusses",
+                GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "Roof straps", "RS", "Warehouse roof straps",
+                GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "X Facade straps", "X-FS",
+                "Warehouse facade straps X-direction", GH_ParamAccess.list);
+            pManager.AddParameter(new StrapParameter(), "Y Facade straps", "Y-FS",
+                "Warehouse facade straps Y-direction", GH_ParamAccess.list);
+            pManager.AddParameter(new BracingParameter(), "Roof bracing", "RB", "Warehouse roof bracing",
+                GH_ParamAccess.list);
+            pManager.AddParameter(new BracingParameter(), "Columns bracing", "CB", "Warehouse columns bracing",
+                GH_ParamAccess.list);
+            pManager.AddParameter(new CableParameter(), "Roof cables", "RC", "Warehouse roof cables",
+                GH_ParamAccess.list);
+            pManager.AddParameter(new CableParameter(), "Facade cables", "FC", "Warehouse facade cables",
+                GH_ParamAccess.list);
+            pManager.AddParameter(new CrossParameter(), "St-And cross", "SAC", "Warehouse st andre cross",
+                GH_ParamAccess.list);
+            pManager.AddPointParameter("St-And cross bottom nodes", "SCN", "St andre's bottom nodes",
+                GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -123,6 +136,12 @@ namespace ArqueStructuresTools.Karamba
                 }
             }
 
+            var stAndresBottomNodes = new List<Point3d>();
+            if (warehouse.StAndresBottomNodes != null)
+            {
+                stAndresBottomNodes = warehouse.StAndresBottomNodes;
+            }
+
             DA.SetDataList(0, new List<KarambaTrussGoo>(trusses));
             DA.SetDataList(1, new List<StrapGoo>(roofStraps));
             DA.SetDataList(2, new List<StrapGoo>(facadeStrapsX));
@@ -132,6 +151,7 @@ namespace ArqueStructuresTools.Karamba
             DA.SetDataList(6, new List<CableGoo>(roofCables));
             DA.SetDataList(7, new List<CableGoo>(facadeCables));
             DA.SetDataList(8, new List<CrossGoo>(crossStAndre));
+            DA.SetDataList(9, stAndresBottomNodes);
         }
     }
 }

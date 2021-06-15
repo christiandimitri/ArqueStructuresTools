@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Rhino.Geometry;
 using WarehouseLib.BucklingLengths;
 using WarehouseLib.Profiles;
@@ -21,8 +23,28 @@ namespace WarehouseLib.Beams
 
         public abstract Plane GetTeklaProfileOrientationPlane();
 
+        public List<BucklingLengths.BucklingLengths> ComputePorticoBeamBucklingLengths(Beam beam, bool bucklingActive)
+        {
+            var bucklings = new List<BucklingLengths.BucklingLengths>();
+            var buckling = new BucklingLengths.BucklingLengths();
 
-        public List<BucklingLengths.BucklingLengths> ComputeBucklingLengths(Beam beam, bool stAndreCross,
+            if (bucklingActive)
+            {
+                var lengths = new List<double>();
+                var beamLength = Curve.JoinCurves(beam.Axis,0.01)[0].GetLength();
+                for (int i = 0; i < beam.Axis.Count; i++)
+                {
+                    var axis = beam.Axis[i];
+                    buckling.BucklingY = axis.GetLength();
+                    buckling.BucklingZ = beamLength;
+                    bucklings.Add(buckling);
+                }
+            }
+
+            return bucklings;
+        }
+
+        public List<BucklingLengths.BucklingLengths> ComputeBeamTrussBucklingLengths(Beam beam, bool stAndreCross,
             double stAndreCrossDistance, bool bucklingActive)
         {
             var buckling = new BucklingLengths.BucklingLengths();
@@ -57,6 +79,7 @@ namespace WarehouseLib.Beams
                     bucklings.Add(buckling);
                 }
             }
+
             return bucklings;
         }
     }
