@@ -44,7 +44,7 @@ namespace WarehouseLib.Beams
             return bucklings;
         }
 
-        public List<BucklingLengths.BucklingLengths> ComputeBeamTrussBucklingLengths(Beam beam, bool stAndreCross,
+        public List<BucklingLengths.BucklingLengths> ComputeTrussBeamBucklingLengths(Beam beam, bool stAndreCross,
             double stAndreCrossDistance, bool bucklingActive)
         {
             var buckling = new BucklingLengths.BucklingLengths();

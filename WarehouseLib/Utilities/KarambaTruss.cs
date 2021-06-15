@@ -161,7 +161,7 @@ namespace WarehouseLib.Utilities
                 if (_porticoType == PorticoType.Truss.ToString())
                 {
                     Karamba3DTopBeams.BucklingLengths =
-                        Karamba3DTopBeams.ComputeBeamTrussBucklingLengths(Karamba3DTopBeams, false, double.NaN, true);
+                        Karamba3DTopBeams.ComputeTrussBeamBucklingLengths(Karamba3DTopBeams, false, double.NaN, true);
                 }
                 else
                 {
@@ -174,14 +174,14 @@ namespace WarehouseLib.Utilities
             {
                 Karamba3DBottomBeams.Axis = DivideBeamBetweenNodes(_trussBottomNodes, _trussBottomBeam);
                 Karamba3DBottomBeams.BucklingLengths =
-                    Karamba3DBottomBeams.ComputeBeamTrussBucklingLengths(Karamba3DBottomBeams, false, double.NaN, true);
+                    Karamba3DBottomBeams.ComputeTrussBeamBucklingLengths(Karamba3DBottomBeams, false, double.NaN, true);
             }
 
             if (_trussIntermediateBeam.Axis != null)
             {
                 Karamba3DIntermediateBeams = _trussIntermediateBeam;
                 Karamba3DIntermediateBeams.BucklingLengths =
-                    Karamba3DIntermediateBeams.ComputeBeamTrussBucklingLengths(Karamba3DIntermediateBeams, false,
+                    Karamba3DIntermediateBeams.ComputeTrussBeamBucklingLengths(Karamba3DIntermediateBeams, false,
                         double.NaN, false);
             }
         }
