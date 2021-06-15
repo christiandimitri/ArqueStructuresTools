@@ -30,20 +30,20 @@ namespace ArqueStructuresTools.Karamba
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             var columnGoo = new ColumnGoo();
-            var bucklingYMultiplier = 1.0;
-            var bucklingZMultiplier = 1.0;
+            var bucklingYMultiplier = 0.0;
+            var bucklingZMultiplier = 0.0;
             // get input data
             if (!DA.GetData(0, ref columnGoo)) return;
             if (!DA.GetData(1, ref bucklingYMultiplier)) return;
             if (!DA.GetData(2, ref bucklingZMultiplier)) return;
-            
-            columnGoo.Value.BucklingLengths.BucklingY *= bucklingYMultiplier;
-            columnGoo.Value.BucklingLengths.BucklingZ *= bucklingZMultiplier;
-            
+
+            var bucklingY = columnGoo.Value.BucklingLengths.BucklingY * bucklingYMultiplier;
+            var bucklingZ = columnGoo.Value.BucklingLengths.BucklingZ * bucklingZMultiplier;
+
             // set output data 
             DA.SetData(0, columnGoo.Value.Axis);
-            DA.SetData(1, columnGoo.Value.BucklingLengths.BucklingY);
-            DA.SetData(2, columnGoo.Value.BucklingLengths.BucklingZ);
+            DA.SetData(1, bucklingY);
+            DA.SetData(2, bucklingZ);
         }
     }
 }

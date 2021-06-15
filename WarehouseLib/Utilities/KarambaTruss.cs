@@ -96,26 +96,33 @@ namespace WarehouseLib.Utilities
                     var bottomNode = _trussBottomNodes[i == 0 ? 0 : _trussBottomNodes.Count - 1];
                     double t;
                     column.Axis.ToNurbsCurve().ClosestPoint(bottomNode, out t);
+                    var tempCl = GetColumnBucklingLength(column, true);
                     var cl = column.Axis.ToNurbsCurve().Split(t);
-                    foreach (var axis in cl)
+                    for (var j = 0; j < cl.Length; j++)
                     {
+                        var axis = cl[j];
                         var tempStaticColumn = new StaticColumn();
                         tempStaticColumn.Axis =
                             new Line(axis.ToNurbsCurve().PointAtStart, axis.ToNurbsCurve().PointAtEnd);
-                        var tempCl = GetColumnBucklingLength(tempStaticColumn);
-                        tempStaticColumn.BucklingLengths = tempCl.BucklingLengths;
+                        if (j == 0) tempStaticColumn.BucklingLengths = tempCl.BucklingLengths;
+                        else
+                        {
+                            tempStaticColumn.BucklingLengths = GetColumnBucklingLength(column, false).BucklingLengths;
+                        }
+
                         tempStaticColumns.Add(tempStaticColumn);
                     }
                 }
             }
             else
             {
-                foreach (var column in _trussStaticColumns)
+                for (var i = 0; i < _trussStaticColumns.Count; i++)
                 {
+                    var column = _trussStaticColumns[i];
                     var tempStaticColumn = new StaticColumn();
                     tempStaticColumn.Axis =
                         new Line(column.Axis.ToNurbsCurve().PointAtStart, column.Axis.ToNurbsCurve().PointAtEnd);
-                    var tempCl = GetColumnBucklingLength(tempStaticColumn);
+                    var tempCl = GetColumnBucklingLength(tempStaticColumn, true);
                     tempStaticColumn.BucklingLengths = tempCl.BucklingLengths;
                     tempStaticColumns.Add(tempStaticColumn);
                 }
@@ -126,12 +133,13 @@ namespace WarehouseLib.Utilities
 
             if (_truss.BoundaryColumns != null)
             {
-                foreach (var column in _trussBoundaryColumns)
+                for (var i = 0; i < _trussBoundaryColumns.Count; i++)
                 {
+                    var column = _trussBoundaryColumns[i];
                     var tempBoundaryColumn = new BoundaryColumn();
                     tempBoundaryColumn.Axis =
                         new Line(column.Axis.ToNurbsCurve().PointAtStart, column.Axis.ToNurbsCurve().PointAtEnd);
-                    var tempCl = GetColumnBucklingLength(tempBoundaryColumn);
+                    var tempCl = GetColumnBucklingLength(tempBoundaryColumn, true);
                     tempBoundaryColumn.BucklingLengths = tempCl.BucklingLengths;
                     tempBoundaryColumns.Add(tempBoundaryColumn);
                 }
@@ -165,22 +173,16 @@ namespace WarehouseLib.Utilities
             {
                 Karamba3DIntermediateBeams = _trussIntermediateBeam;
                 Karamba3DIntermediateBeams.BucklingLengths =
-                    Karamba3DIntermediateBeams.ComputeBucklingLengths(Karamba3DIntermediateBeams, false, double.NaN, false);
+                    Karamba3DIntermediateBeams.ComputeBucklingLengths(Karamba3DIntermediateBeams, false, double.NaN,
+                        false);
             }
         }
 
         // Return a column with its buckling lengths
-        private Column GetColumnBucklingLength(Column column)
+        private Column GetColumnBucklingLength(Column column, bool hasBucklingLength)
         {
-            BucklingLengths.BucklingLengths bucklingLength;
-            if (column is StaticColumn)
-            {
-                bucklingLength = column.ComputeBucklingLengths(column, true, _truss._facadeStrapsDistance);
-            }
-            else
-            {
-                bucklingLength = column.ComputeBucklingLengths(column, true, _truss._facadeStrapsDistance);
-            }
+            BucklingLengths.BucklingLengths bucklingLength =
+                column.ComputeBucklingLengths(column, true, _truss._facadeStrapsDistance, hasBucklingLength);
 
             column.BucklingLengths = bucklingLength;
             return column;

@@ -27,14 +27,19 @@ namespace WarehouseLib.Columns
 
         public abstract Plane GetTeklaProfileOrientationPlane(Point3d node, Plane plane, int index);
 
-        public BucklingLengths.BucklingLengths ComputeBucklingLengths(Column column, bool straps, double strapsDistance)
+        public BucklingLengths.BucklingLengths ComputeBucklingLengths(Column column, bool straps, double strapsDistance, bool hasBucklingLength)
         {
             var buckling = new BucklingLengths.BucklingLengths();
             var zBuckling = column.Axis.Length;
             var yBuckling = 1 * column.Axis.Length;
-            if (straps)
+            if (straps && hasBucklingLength)
             {
                 yBuckling = strapsDistance;
+            }
+            else if (!hasBucklingLength)
+            {
+                yBuckling = 0.0;
+                zBuckling = 0.0;
             }
 
             buckling.BucklingY = yBuckling;
