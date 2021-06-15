@@ -31,7 +31,7 @@ namespace WarehouseLib.Utilities
         public Beam Karamba3DTopBeams;
         public Beam Karamba3DBottomBeams;
         public Beam Karamba3DIntermediateBeams;
-
+        public List<Point3d> StBottomAndresNodes;
         public KarambaTruss(Truss truss)
         {
             // extract truss properties and components

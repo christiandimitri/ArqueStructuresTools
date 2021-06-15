@@ -30,7 +30,6 @@ namespace WarehouseLib.Utilities
         {
             _warehouse = warehouse;
             Trusses = _warehouse.Trusses;
-            ReplaceTrussesWithKaramabaTrusses();
             RoofStraps = warehouse.RoofStraps;
             FacadeStrapsX = warehouse.FacadeStrapsX;
             FacadeStrapsY = warehouse.FacadeStrapsY;
@@ -40,12 +39,13 @@ namespace WarehouseLib.Utilities
             ColumnsBracings = warehouse.ColumnsBracings;
             Crosses = warehouse.Crosses;
             StAndresBottomNodes = warehouse.StAndreBottomNodes;
+            ReplaceTrussesWithKaramabaTrusses();
         }
 
         private void ReplaceTrussesWithKaramabaTrusses()
         {
             var karambaTrusses = new List<KarambaTruss>();
-            var stAndreDistance = ComputeDistanceBetweenStAndresCross();
+            // var stAndreDistance = ComputeDistanceBetweenStAndresCross();
             for (var i = 0; i < _warehouse.Trusses.Count; i++)
             {
                 var truss = _warehouse.Trusses[i];
@@ -61,12 +61,17 @@ namespace WarehouseLib.Utilities
         {
             var distances = new List<double>();
 
-            foreach (var truss in Trusses)
+            for (var i = 1; i < Trusses.Count - 1; i++)
             {
+                var truss = Trusses[i];
+                var tempCloud = new PointCloud(truss.BottomNodes);
+                foreach (var node in StAndresBottomNodes)
+                {
+                    var index = tempCloud.ClosestPoint(node);
+                }
             }
 
-
-            return 0;
+            return 0.0;
         }
     }
 }

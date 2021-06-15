@@ -241,21 +241,23 @@ namespace WarehouseLib.Warehouses
                         innerTopNodes);
                     Crosses.AddRange(cross);
                 }
-            GetStAndresCrossBottomNodes();
+
+            // GetStAndresCrossBottomNodes();
         }
 
-        private void GetStAndresCrossBottomNodes()
-        {
-            StAndreBottomNodes = new List<Point3d>();
-            for (int i = 1; i < Trusses.Count - 1; i++)
-            {
-                var outerTopNodes =
-                    new StAndre().ComputeCrossTopNodes(Trusses[i], _warehouseOptions.StAndreCrossCount);
-                var bottomNodes =
-                    new StAndre().ComputeCrossBottomNodes(Trusses[i], outerTopNodes);
-                StAndreBottomNodes.AddRange(bottomNodes);
-            }
-        }
+        // private void GetStAndresCrossBottomNodes()
+        // {
+        //     StAndreBottomNodes = new List<Point3d>();
+        //
+        //     for (int i = 1; i < Trusses.Count - 1; i++)
+        //     {
+        //         var outerTopNodes =
+        //             new StAndre().ComputeCrossTopNodes(Trusses[i], _warehouseOptions.StAndreCrossCount);
+        //         var bottomNodes =
+        //             new StAndre().ComputeCrossBottomNodes(Trusses[i], outerTopNodes);
+        //         StAndreBottomNodes.AddRange(bottomNodes);
+        //     }
+        // }
 
         private List<Point3d> ExtractRoofBracingPoints(Truss truss)
         {

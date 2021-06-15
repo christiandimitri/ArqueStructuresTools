@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Rhino.Geometry;
 using WarehouseLib.Connections;
 using WarehouseLib.Trusses;
@@ -52,7 +53,10 @@ namespace WarehouseLib.Crosses
             {
                 var tempPt = topBeam.PointAt(t);
                 var index = tempCloud.ClosestPoint(tempPt);
-                topNodes.Add(tempList[index]);
+                if (!topNodes.Contains(tempList[index]))
+                {
+                    topNodes.Add(tempList[index]);
+                }
             }
 
 
@@ -67,6 +71,10 @@ namespace WarehouseLib.Crosses
             {
                 var index = tempCloud.ClosestPoint(node);
                 bottomNodes.Add(truss.BottomNodes[index]);
+                if (!bottomNodes.Contains(truss.BottomNodes[index]))
+                {
+                    bottomNodes.Add(truss.BottomNodes[index]);
+                }
             }
 
             return bottomNodes;
