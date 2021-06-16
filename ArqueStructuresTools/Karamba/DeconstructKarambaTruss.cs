@@ -43,8 +43,8 @@ namespace ArqueStructuresTools
             pManager.AddParameter(new BeamParameter(), "Bottom beam", "BB", "Truss bottom beam", GH_ParamAccess.item);
             pManager.AddParameter(new BeamParameter(), "Intermediate beams", "IB", "Truss intermediate beams",
                 GH_ParamAccess.item);
-            // pManager.AddPointParameter("Top nodes", "TN", "Truss top nodes", GH_ParamAccess.list);
-            // pManager.AddPointParameter("Bottom nodes", "BN", "Truss bottom nodes", GH_ParamAccess.list);
+            pManager.AddPointParameter("Top nodes", "TN", "Truss top nodes", GH_ParamAccess.list);
+            pManager.AddPointParameter("Bottom nodes", "BN", "Truss bottom nodes", GH_ParamAccess.list);
             // pManager.AddPointParameter("Boundary nodes", "BN", "Truss boundary nodes", GH_ParamAccess.list);
         }
 
@@ -83,7 +83,7 @@ namespace ArqueStructuresTools
             var topBeamGoo = truss.Karamba3DTopBeams.Axis != null
                 ? new BeamGoo(truss.Karamba3DTopBeams)
                 : new BeamGoo(new TopBeam());
-            var bottomBeamGoo = truss.Karamba3DBottomBeams.Axis !=null
+            var bottomBeamGoo = truss.Karamba3DBottomBeams.Axis != null
                 ? new BeamGoo(truss.Karamba3DBottomBeams)
                 : new BeamGoo(new BottomBeam());
             var intermediateBeamGoo = truss.Karamba3DIntermediateBeams.Axis != null
@@ -95,8 +95,8 @@ namespace ArqueStructuresTools
             DA.SetData(2, topBeamGoo);
             DA.SetData(3, bottomBeamGoo);
             DA.SetData(4, intermediateBeamGoo);
-            // DA.SetDataList(5, staticColumnsGoo);
-            // DA.SetDataList(6, boundaryColumnsGoo);
+            DA.SetDataList(5, truss._trussTopNodes);
+            DA.SetDataList(6, truss._trussBottomNodes);
             // DA.SetDataList(7, boundaryNodes);
         }
 

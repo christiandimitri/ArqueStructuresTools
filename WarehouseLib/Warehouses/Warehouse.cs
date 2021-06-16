@@ -237,7 +237,7 @@ namespace WarehouseLib.Warehouses
                     var innerTopNodes =
                         new StAndre().ComputeCrossTopNodes(Trusses[i + 1], _warehouseOptions.StAndreCrossCount);
                     var innerBottomNodes = new StAndre().ComputeCrossBottomNodes(Trusses[i + 1], innerTopNodes);
-                    var cross = new StAndre().ConstructCrosses(outerTopNodes, innerBottomNodes, outerBottomNodes,
+                    var cross = new StAndre().ConstructCrossesBetweenTwoTrusses(outerTopNodes, innerBottomNodes, outerBottomNodes,
                         innerTopNodes);
                     Crosses.AddRange(cross);
                 }

@@ -132,6 +132,8 @@ namespace WarehouseLib.Trusses
 
             BottomNodes.RemoveAt(0);
             BottomNodes.RemoveAt(BottomNodes.Count - 1);
+            BottomNodes.Insert(0, TopNodes[0]);
+            BottomNodes.Add(TopNodes[TopNodes.Count-1]);
             var tempList = new List<Curve> {IntermediateBeamsAxisCurves[0], splitCurves[0]};
             var axisA = Curve.JoinCurves(tempList)[0];
             tempList = new List<Curve>
