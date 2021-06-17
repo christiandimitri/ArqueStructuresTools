@@ -152,7 +152,17 @@ namespace ArqueStructuresTools
                                     }
                                 }
                             }
-
+                            if (warehouse.RoofStraps != null)
+                            {
+                                foreach (var bar in warehouse.RoofStraps)
+                                {
+                                    if (bar.Axis != null)
+                                    {
+                                        _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
+                                        args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Firebrick);
+                                    }
+                                }
+                            }
                             if (warehouse.FacadeCables != null)
                             {
                                 foreach (var bar in warehouse.FacadeCables)
