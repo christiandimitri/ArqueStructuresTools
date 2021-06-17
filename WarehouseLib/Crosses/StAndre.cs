@@ -21,7 +21,7 @@ namespace WarehouseLib.Crosses
             List<Point3d> outerBottomNodes, List<Point3d> innerTopNodes)
         {
             var crosses = new List<Cross>();
-            
+
             for (int i = 0; i < outerTopNodes.Count; i++)
             {
                 var cross = new StAndre
@@ -92,7 +92,6 @@ namespace WarehouseLib.Crosses
 
             // topNodes = new List<Point3d>(tempList);
             return topNodes;
-            
         }
 
         public override List<Point3d> ComputeCrossBottomNodes(Truss truss, List<Point3d> topNodes)
@@ -108,7 +107,8 @@ namespace WarehouseLib.Crosses
                 {
                     var bottomNode = topNodes[j];
 
-                    if (Math.Abs(topNode.X - bottomNode.X) <= 0.0001 && Math.Abs(topNode.Y - bottomNode.Y) <= 0.0001 && topNode.IsValid && bottomNode.IsValid)
+                    if (Math.Abs(topNode.X - bottomNode.X) <= 0.0001 && Math.Abs(topNode.Y - bottomNode.Y) <= 0.0001 &&
+                        topNode.IsValid && bottomNode.IsValid)
                     {
                         var index = j;
                         bottomNodes.Add(tempBottomNodes[i]);
@@ -116,7 +116,26 @@ namespace WarehouseLib.Crosses
                 }
             }
 
+            SetCrossesBottomNodesToTruss(truss, bottomNodes);
             return bottomNodes;
+        }
+
+        private void SetCrossesBottomNodesToTruss(Truss truss, List<Point3d> bottomNodes)
+        {
+            double t;
+            var tempNodes = new List<Point3d>(bottomNodes);
+            truss.StaticColumns[0].Axis.ToNurbsCurve().ClosestPoint(tempNodes[0], out t);
+            var firstPt = truss.StaticColumns[0].Axis.ToNurbsCurve().PointAt(t);
+            double z;
+            truss.StaticColumns[0].Axis.ToNurbsCurve()
+                .ClosestPoint(tempNodes[tempNodes.Count - 1], out z);
+
+            var endPt = truss.StaticColumns[1].Axis.ToNurbsCurve().PointAt(z);
+            // tempNodes.RemoveAt(0);
+            // tempNodes.Insert(0, firstPt);
+            // tempNodes.RemoveAt(tempNodes.Count - 1);
+            // tempNodes.Add(endPt);
+            truss.StAndresBottomNodes = new List<Point3d>(tempNodes);
         }
 
         private List<Line> ConstructAxis(Point3d outerTopNode, Point3d innerBottomNode,

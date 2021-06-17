@@ -38,7 +38,6 @@ namespace WarehouseLib.Utilities
             FacadeCables = warehouse.FacadeCables;
             ColumnsBracings = warehouse.ColumnsBracings;
             Crosses = warehouse.Crosses;
-            StAndresBottomNodes = warehouse.StAndreBottomNodes;
             ReplaceTrussesWithKaramabaTrusses();
         }
 

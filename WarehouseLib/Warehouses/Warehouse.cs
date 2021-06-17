@@ -29,7 +29,6 @@ namespace WarehouseLib.Warehouses
         public List<Cable> RoofCables;
         public List<Strap> RoofStraps;
         public List<Truss> Trusses;
-        public List<Point3d> StAndreBottomNodes;
 
         public Warehouse(Plane plane, TrussInputs trussInputs, WarehouseOptions warehouseOptions)
         {

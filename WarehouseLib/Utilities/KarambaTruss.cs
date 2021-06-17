@@ -31,7 +31,8 @@ namespace WarehouseLib.Utilities
         public Beam Karamba3DTopBeams;
         public Beam Karamba3DBottomBeams;
         public Beam Karamba3DIntermediateBeams;
-        public List<Point3d> StBottomAndresNodes;
+        public List<Point3d> StAndresBottomNodes;
+
         public KarambaTruss(Truss truss)
         {
             // extract truss properties and components
@@ -49,9 +50,17 @@ namespace WarehouseLib.Utilities
             // TODO
             // compute karamba3D beams and properties
             GetKaramba3DBeams();
-            // Karamba3DTopBeams = _trussTopBeam;
-            // Karamba3DBottomBeams = _trussBottomBeam;
-            // Karamba3DIntermediateBeams = _trussIntermediateBeam;
+
+            // set st andres nodes from each the truss bottom nodes
+            SetStAndresCrossBottomNodes();
+        }
+
+        private void SetStAndresCrossBottomNodes()
+        {
+            if (_truss.StAndresBottomNodes != null && _truss._porticoType == PorticoType.Truss.ToString())
+            {
+                StAndresBottomNodes = new List<Point3d>(_truss.StAndresBottomNodes);
+            }
         }
 
         // truss nodes

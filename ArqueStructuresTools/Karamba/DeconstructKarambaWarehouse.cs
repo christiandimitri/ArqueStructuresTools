@@ -56,11 +56,17 @@ namespace ArqueStructuresTools.Karamba
             var warehouse = karambaWarehouseGoo.Value;
 
             var trusses = new List<KarambaTrussGoo>();
+            var stAndresBottomNodes = new List<Point3d>();
+
             if (warehouse.KarambaTrusses != null)
             {
                 foreach (var truss in warehouse.KarambaTrusses)
                 {
                     trusses.Add(new KarambaTrussGoo(truss));
+                    if (truss.StAndresBottomNodes != null)
+                    {
+                        stAndresBottomNodes.AddRange(truss.StAndresBottomNodes);
+                    }
                 }
             }
 
@@ -136,11 +142,6 @@ namespace ArqueStructuresTools.Karamba
                 }
             }
 
-            var stAndresBottomNodes = new List<Point3d>();
-            if (warehouse.StAndresBottomNodes != null)
-            {
-                stAndresBottomNodes = warehouse.StAndresBottomNodes;
-            }
 
             DA.SetDataList(0, new List<KarambaTrussGoo>(trusses));
             DA.SetDataList(1, new List<StrapGoo>(roofStraps));

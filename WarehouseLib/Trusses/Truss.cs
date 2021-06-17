@@ -36,7 +36,7 @@ namespace WarehouseLib.Trusses
         public string _articulationType;
         public double _facadeStrapsDistance;
         public string _porticoType { get; set; }
-
+        public List<Point3d> StAndresBottomNodes;
 
         protected Truss(Plane plane, TrussInputs inputs)
         {
