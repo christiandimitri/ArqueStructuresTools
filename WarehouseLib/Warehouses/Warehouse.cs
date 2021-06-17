@@ -228,7 +228,9 @@ namespace WarehouseLib.Warehouses
         {
             Crosses = new List<Cross>();
             if (TrussInputs.TrussType != ConnectionType.Warren.ToString())
-                for (var i = 1; i < Trusses.Count - 2; i++)
+                for (var i = _warehouseOptions.HasBoundary ? 1 : 0;
+                    _warehouseOptions.HasBoundary ? i < Trusses.Count - 2 : i < Trusses.Count - 1;
+                    i++)
                 {
                     var outerTopNodes =
                         new StAndre().ComputeCrossTopNodes(Trusses[i], _warehouseOptions.StAndreCrossCount);
@@ -236,27 +238,12 @@ namespace WarehouseLib.Warehouses
                     var innerTopNodes =
                         new StAndre().ComputeCrossTopNodes(Trusses[i + 1], _warehouseOptions.StAndreCrossCount);
                     var innerBottomNodes = new StAndre().ComputeCrossBottomNodes(Trusses[i + 1], innerTopNodes);
-                    var cross = new StAndre().ConstructCrossesBetweenTwoTrusses(outerTopNodes, innerBottomNodes, outerBottomNodes,
+                    var cross = new StAndre().ConstructCrossesBetweenTwoTrusses(outerTopNodes, innerBottomNodes,
+                        outerBottomNodes,
                         innerTopNodes);
                     Crosses.AddRange(cross);
                 }
-
-            // GetStAndresCrossBottomNodes();
         }
-
-        // private void GetStAndresCrossBottomNodes()
-        // {
-        //     StAndreBottomNodes = new List<Point3d>();
-        //
-        //     for (int i = 1; i < Trusses.Count - 1; i++)
-        //     {
-        //         var outerTopNodes =
-        //             new StAndre().ComputeCrossTopNodes(Trusses[i], _warehouseOptions.StAndreCrossCount);
-        //         var bottomNodes =
-        //             new StAndre().ComputeCrossBottomNodes(Trusses[i], outerTopNodes);
-        //         StAndreBottomNodes.AddRange(bottomNodes);
-        //     }
-        // }
 
         private List<Point3d> ExtractRoofBracingPoints(Truss truss)
         {
