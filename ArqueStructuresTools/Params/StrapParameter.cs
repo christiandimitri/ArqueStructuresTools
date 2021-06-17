@@ -37,7 +37,7 @@ namespace ArqueStructuresTools
                         if (strap != null)
                         {
                             _box.Union(strap.Axis.ToNurbsCurve().GetBoundingBox(false));
-                            args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Orange);
+                            args.Display.DrawCurve(strap.Axis.ToNurbsCurve(), System.Drawing.Color.Yellow);
                         }
                     }
                 }

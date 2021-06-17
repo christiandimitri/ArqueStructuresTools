@@ -159,7 +159,7 @@ namespace ArqueStructuresTools
                                     if (bar.Axis != null)
                                     {
                                         _box.Union(bar.Axis.ToNurbsCurve().GetBoundingBox(false));
-                                        args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Firebrick);
+                                        args.Display.DrawCurve(bar.Axis.ToNurbsCurve(), System.Drawing.Color.Yellow);
                                     }
                                 }
                             }
