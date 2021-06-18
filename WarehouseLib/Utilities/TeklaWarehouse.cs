@@ -1,25 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using Rhino.Geometry;
+﻿using System.Diagnostics;
 using WarehouseLib.Beams;
-using WarehouseLib.Cables;
 using WarehouseLib.Options;
 using WarehouseLib.Profiles;
-using WarehouseLib.Trusses;
+using WarehouseLib.Warehouses;
 
-namespace WarehouseLib.Warehouses
+namespace WarehouseLib.Utilities
 {
     public class TeklaWarehouse
     {
         private WarehouseProfiles _profiles;
         private Warehouse _warehouse;
-        private TrussOptions _teklaTrussInputs;
+        private TrussInputs _teklaTrussInputs;
 
         public TeklaWarehouse(Warehouse warehouse, WarehouseProfiles profiles)
         {
             _warehouse = warehouse;
             _profiles = profiles;
-            _teklaTrussInputs = ComputeTeklaTrussInputs(_warehouse._trussOptions, profiles);
+            _teklaTrussInputs = ComputeTeklaTrussInputs(_warehouse.TrussInputs, profiles);
+            Debug.WriteLine(_teklaTrussInputs.Height);
         }
 
         public Warehouse GetTeklaWarehouse()
@@ -59,17 +57,18 @@ namespace WarehouseLib.Warehouses
             return warehouse;
         }
 
-        private TrussOptions ComputeTeklaTrussInputs(TrussOptions trussInputs, WarehouseProfiles profiles)
+        private TrussInputs ComputeTeklaTrussInputs(TrussInputs trussInputs, WarehouseProfiles profiles)
         {
-            var bottomBeamsProfileHeight = new Catalog().GetCatalog()[profiles.BottomBeamsProfileName].Height;
-            var newClearHeight = trussInputs.ClearHeight + bottomBeamsProfileHeight / 2;
-            var topBeamsHeight = new Catalog().GetCatalog()[profiles.TopBeamsProfileName].Height / 2;
-            var newHeight = trussInputs.Height - topBeamsHeight;
-            var newMaxHeight = trussInputs.MaxHeight - topBeamsHeight;
+            var bottomBeamsProfileHeight = new Catalog().GetCatalog()[profiles.BottomBeamsProfileName].Height/2;
+            var newClearHeight = trussInputs.ClearHeight + bottomBeamsProfileHeight;
+            var topBeamsProfileHeight = new Catalog().GetCatalog()[profiles.TopBeamsProfileName].Height / 2;
+            var newHeight = trussInputs.Height - topBeamsProfileHeight;
+            var newMaxHeight = trussInputs.MaxHeight - topBeamsProfileHeight;
 
-            var trussOptions = new TrussOptions(trussInputs.TrussType, trussInputs.Width, newHeight,
+            var trussOptions = new TrussInputs(trussInputs.TrussType, trussInputs.Width, newHeight,
                 newMaxHeight, newClearHeight, trussInputs.BaseType, trussInputs._articulationType,
-                trussInputs.Divisions, trussInputs.PorticoType, trussInputs.ColumnsCount);
+                trussInputs.Divisions, trussInputs.PorticoType, trussInputs.ColumnsCount,
+                trussInputs.FacadeStrapsDistance);
             return trussOptions;
         }
 

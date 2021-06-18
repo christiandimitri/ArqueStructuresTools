@@ -72,7 +72,7 @@
     <Compile Include="Bracings\ColumnsBracing.cs" />
     <Compile Include="Bracings\RoofBracing.cs" />
     <Compile Include="Bracings\RoofBracingType.cs" />
-    <Compile Include="BucklingLengths\BuckelingLength.cs" />
+    <Compile Include="BucklingLengths\BucklingLengths.cs" />
     <Compile Include="Cables\Cable.cs" />
     <Compile Include="Cables\CablePosition.cs" />
     <Compile Include="Cables\FacadeCable.cs" />
@@ -114,8 +114,11 @@
     <Compile Include="Trusses\PichedTruss.cs" />
     <Compile Include="Trusses\Truss.cs" />
     <Compile Include="Trusses\GeometricalTypology.cs" />
+    <Compile Include="Utilities\KarambaTruss.cs" />
+    <Compile Include="Utilities\KarambaWarehouse.cs" />
+    <Compile Include="Utilities\TeklaTruss.cs" />
+    <Compile Include="Utilities\TeklaWarehouse.cs" />
     <Compile Include="Utilities\TrimWhiteSpaceFromString.cs" />
-    <Compile Include="Warehouses\TeklaWarehouse.cs" />
     <Compile Include="Warehouses\Warehouse.cs" />
     <Compile Include="Warehouses\WarehouseType.cs" />
   </ItemGroup>

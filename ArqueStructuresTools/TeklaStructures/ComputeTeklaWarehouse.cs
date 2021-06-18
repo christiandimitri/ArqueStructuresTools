@@ -2,6 +2,7 @@
 using Grasshopper.Kernel;
 using WarehouseLib.Options;
 using WarehouseLib.Profiles;
+using WarehouseLib.Utilities;
 using WarehouseLib.Warehouses;
 
 namespace ArqueStructuresTools.TeklaStructures
@@ -37,7 +38,7 @@ namespace ArqueStructuresTools.TeklaStructures
             if (!DA.GetData(1, ref profileNames)) return;
             var warehouse = warehouseGoo.Value;
             var plane = warehouse._plane;
-            var trussInputs = warehouse._trussOptions;
+            var trussInputs = warehouse.TrussInputs;
             var warehouseOptions = warehouse._warehouseOptions;
 
             warehouse = new Warehouse(plane, trussInputs,

@@ -9,7 +9,7 @@ namespace ArqueStructuresTools
     public class DeconstructCable : GH_Component
     {
         public DeconstructCable() : base("Deconstruct Cable", "DeCable", "Deconstruct a Cable into its component parts", "Arque Structures",
-            "Utilities")
+            "Cable/String")
         {
         }
 

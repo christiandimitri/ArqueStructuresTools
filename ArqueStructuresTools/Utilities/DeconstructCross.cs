@@ -10,7 +10,7 @@ namespace ArqueStructuresTools
     {
         public DeconstructCross() : base("Deconstruct Cross", "DeCross", "Deconstruct a Cross into its component parts",
             "Arque Structures",
-            "Utilities")
+            "Cross")
         {
         }
 

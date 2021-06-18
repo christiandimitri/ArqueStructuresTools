@@ -10,16 +10,16 @@ namespace WarehouseLib.Trusses
 {
     public class MonopichTruss : PichedTruss
     {
-        private TrussOptions _options;
+        private TrussInputs _inputs;
 
-        public MonopichTruss(Plane plane, TrussOptions options) : base(plane, options)
+        public MonopichTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
-            _options = options;
+            _inputs = inputs;
             GenerateTopBars();
             StaticColumns = new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
-            ChangeBaseByType(options.BaseType);
-            ConstructTruss(options.Divisions);
-            ChangeArticulationAtColumnsByType(options._articulationType);
+            ChangeBaseByType(inputs.BaseType);
+            ConstructTruss(inputs.Divisions);
+            ChangeArticulationAtColumnsByType(inputs._articulationType);
             ConstructBeams(true, true);
         }
 
@@ -29,7 +29,7 @@ namespace WarehouseLib.Trusses
             List<Point3d> tempBottomList = new List<Point3d>();
             for (int i = 0; i < TopNodes.Count; i++)
             {
-                if (_trussType == ConnectionType.Warren.ToString())
+                if (_connectionType == ConnectionType.Warren.ToString())
                 {
                     if (i % 2 == 0)
                     {
@@ -40,7 +40,7 @@ namespace WarehouseLib.Trusses
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (_trussType == ConnectionType.WarrenStuds.ToString())
+                else if (_connectionType == ConnectionType.WarrenStuds.ToString())
                 {
                     tempTopList.Add(TopNodes[i]);
                     if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
@@ -48,14 +48,14 @@ namespace WarehouseLib.Trusses
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (_trussType == ConnectionType.Howe.ToString() || _trussType == ConnectionType.Pratt.ToString())
+                else if (_connectionType == ConnectionType.Howe.ToString() || _connectionType == ConnectionType.Pratt.ToString())
                 {
                     tempTopList.Add(TopNodes[i]);
                     tempBottomList.Add(BottomNodes[i]);
                 }
             }
 
-            if (_trussType == ConnectionType.WarrenStuds.ToString())
+            if (_connectionType == ConnectionType.WarrenStuds.ToString())
             {
                 if (!tempBottomList.Contains(BottomNodes[index]))
                 {
@@ -67,7 +67,7 @@ namespace WarehouseLib.Trusses
                 }
             }
 
-            if (_trussType == ConnectionType.Warren.ToString())
+            if (_connectionType == ConnectionType.Warren.ToString())
             {
                 tempBottomList.Insert(0, BottomNodes[0]);
                 tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
@@ -75,7 +75,7 @@ namespace WarehouseLib.Trusses
 
             TopNodes = new List<Point3d>(tempTopList);
             BottomNodes = new List<Point3d>(tempBottomList);
-            if (ConnectionType.Warren.ToString() == _trussType)
+            if (ConnectionType.Warren.ToString() == _connectionType)
             {
                 IntermediateBeamsAxisCurves.RemoveAt(index);
             }

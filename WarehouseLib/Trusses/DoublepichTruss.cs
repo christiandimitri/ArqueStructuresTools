@@ -12,18 +12,18 @@ namespace WarehouseLib.Trusses
 {
     public class DoublepichTruss : PichedTruss
     {
-        public TrussOptions _options;
+        public TrussInputs Inputs;
 
-        public DoublepichTruss(Plane plane, TrussOptions options) : base(plane, options)
+        public DoublepichTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
-            _options = options;
+            Inputs = inputs;
             GenerateTopBars();
             StaticColumns =
                 new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
-            ChangeBaseByType(options.BaseType);
-            ConstructTruss(options.Divisions);
-            ChangeArticulationAtColumnsByType(options._articulationType);
-            ConstructBeams(false, (options.BaseType == 1) ? true : false);
+            ChangeBaseByType(inputs.BaseType);
+            ConstructTruss(inputs.Divisions);
+            ChangeArticulationAtColumnsByType(inputs._articulationType);
+            ConstructBeams(false, (inputs.BaseType == 1) ? true : false);
         }
 
         protected override void RecomputeNodes(int index)
@@ -32,7 +32,7 @@ namespace WarehouseLib.Trusses
             List<Point3d> tempBottomList = new List<Point3d>();
             for (int i = 0; i < TopNodes.Count; i++)
             {
-                if (_trussType == ConnectionType.Warren.ToString())
+                if (_connectionType == ConnectionType.Warren.ToString())
                 {
                     if (i % 2 == 0)
                     {
@@ -43,7 +43,7 @@ namespace WarehouseLib.Trusses
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (_trussType == ConnectionType.WarrenStuds.ToString())
+                else if (_connectionType == ConnectionType.WarrenStuds.ToString())
                 {
                     tempTopList.Add(TopNodes[i]);
                     if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
@@ -51,14 +51,14 @@ namespace WarehouseLib.Trusses
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (_trussType == ConnectionType.Howe.ToString() || _trussType == ConnectionType.Pratt.ToString())
+                else if (_connectionType == ConnectionType.Howe.ToString() || _connectionType == ConnectionType.Pratt.ToString())
                 {
                     tempTopList.Add(TopNodes[i]);
                     tempBottomList.Add(BottomNodes[i]);
                 }
             }
 
-            if (_trussType == ConnectionType.Warren.ToString())
+            if (_connectionType == ConnectionType.Warren.ToString())
             {
                 tempBottomList.Insert(0, BottomNodes[0]);
                 tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
@@ -72,7 +72,7 @@ namespace WarehouseLib.Trusses
                 }
             }
 
-            if (_trussType == ConnectionType.WarrenStuds.ToString())
+            if (_connectionType == ConnectionType.WarrenStuds.ToString())
             {
                 if (!tempBottomList.Contains(BottomNodes[index]))
                 {
@@ -90,7 +90,7 @@ namespace WarehouseLib.Trusses
 
         public override void GenerateTopBars()
         {
-            StartingNodes = GetStartingPoints(_plane, _options.Width, _options.Width, _height, _maxHeight, _height);
+            StartingNodes = GetStartingPoints(_plane, Inputs.Width/2, Inputs.Width/2, _height, _maxHeight, _height);
             var barA = new Line(StartingNodes[0], StartingNodes[1]);
             var barB = new Line(StartingNodes[1], StartingNodes[2]);
             TopBeamAxisCurves = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};

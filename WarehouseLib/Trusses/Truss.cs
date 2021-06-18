@@ -15,7 +15,7 @@ namespace WarehouseLib.Trusses
     {
         public List<Curve> BottomBeamAxisCurves;
         public List<Point3d> BottomNodes;
-        private double _clearHeight;
+        public readonly double _clearHeight;
         public List<Column> StaticColumns;
         public List<Column> BoundaryColumns;
         public int _divisions;
@@ -32,22 +32,32 @@ namespace WarehouseLib.Trusses
         public Beam IntermediateBeams;
         public List<Point3d> TopNodes;
         public List<Point3d> BoundaryTopNodes;
-        public string _trussType;
+        public string _connectionType;
         public string _articulationType;
+        public double _facadeStrapsDistance;
+        public string _porticoType { get; set; }
+        public List<Point3d> StAndresBottomNodes;
 
-
-        protected Truss(Plane plane, TrussOptions options)
+        protected Truss(Plane plane, TrussInputs inputs)
         {
             _plane = plane;
-            _length = options.Width;
-            _height = options.Height;
-            _maxHeight = options.MaxHeight;
-            _clearHeight = options.ClearHeight;
-            _divisions = options.Divisions;
-            _trussType = options.TrussType;
-            _articulationType = options._articulationType;
-            _columnsCount = options.ColumnsCount;
+            _length = inputs.Width;
+            _height = inputs.Height;
+            _maxHeight = inputs.MaxHeight;
+            _clearHeight = inputs.ClearHeight;
+            _divisions = inputs.Divisions;
+            _connectionType = inputs.TrussType;
+            _articulationType = inputs._articulationType;
+            _columnsCount = inputs.ColumnsCount;
             _divisions = RecomputeDivisions(_divisions);
+            _facadeStrapsDistance = inputs.FacadeStrapsDistance;
+            _porticoType = inputs.PorticoType;
+            
+        }
+
+        public void UpdatePorticoType(Truss truss)
+        {
+            truss._porticoType = BottomBeam.Axis == null ? PorticoType.Portico.ToString() : PorticoType.Truss.ToString();
         }
 
         protected void ConstructBeams(bool joinTopBeamsAxis, bool joinBottomBeamsAxis)
@@ -81,7 +91,7 @@ namespace WarehouseLib.Trusses
         {
             if (divisions <= 1) throw new Exception("truss division has to be >=2");
             var recomputedDivisions = divisions;
-            if (_trussType != ConnectionType.Warren.ToString())
+            if (_connectionType != ConnectionType.Warren.ToString())
             {
                 recomputedDivisions /= 2;
             }

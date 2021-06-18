@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
 using Rhino.Geometry;
+using WarehouseLib.Beams;
 using WarehouseLib.Connections;
 using WarehouseLib.Trusses;
 
@@ -11,11 +16,13 @@ namespace WarehouseLib.Crosses
         {
         }
 
-        public override List<Cross> ConstructCrosses(List<Point3d> outerTopNodes, List<Point3d> innerBottomNodes,
+        public override List<Cross> ConstructCrossesBetweenTwoTrusses(List<Point3d> outerTopNodes,
+            List<Point3d> innerBottomNodes,
             List<Point3d> outerBottomNodes, List<Point3d> innerTopNodes)
         {
             var crosses = new List<Cross>();
-            for (int i = 1; i < outerTopNodes.Count - 1; i++)
+
+            for (int i = 0; i < outerTopNodes.Count; i++)
             {
                 var cross = new StAndre
                 {
@@ -28,48 +35,98 @@ namespace WarehouseLib.Crosses
             return crosses;
         }
 
+        private List<Point3d> GetTopNodesFromStuds(Truss truss)
+        {
+            var intermediateBeams = truss.IntermediateBeams;
+            var topStudsNodes = new List<Point3d>();
+            for (int i = 0; i < intermediateBeams.Axis.Count; i++)
+            {
+                var beam = intermediateBeams.Axis[i];
+                var angle = Vector3d.VectorAngle(beam.PointAtEnd - beam.PointAtStart, Vector3d.ZAxis);
+                if (angle == Math.PI || angle == 0)
+                {
+                    // Debug.WriteLine("its a stud");
+                    topStudsNodes.Add(beam.PointAtStart);
+                }
+            }
+
+            return topStudsNodes;
+        }
+
+        private List<Point3d> GetBottomNodesFromStuds(Truss truss)
+        {
+            var intermediateBeams = truss.IntermediateBeams;
+            var bottomStudsNodes = new List<Point3d>();
+            for (int i = 0; i < intermediateBeams.Axis.Count; i++)
+            {
+                var beam = intermediateBeams.Axis[i];
+                var angle = Vector3d.VectorAngle(beam.PointAtEnd - beam.PointAtStart, Vector3d.ZAxis);
+                if (angle == Math.PI || angle == 0)
+                {
+                    // Debug.WriteLine("its a stud");
+                    bottomStudsNodes.Add(beam.PointAtEnd);
+                }
+            }
+
+            return bottomStudsNodes;
+        }
+
         public override List<Point3d> ComputeCrossTopNodes(Truss truss, int count)
         {
             count += 1;
             var topNodes = new List<Point3d>();
-            var tempList = new List<Point3d>();
-            if (truss._trussType == ConnectionType.WarrenStuds.ToString())
-            {
-                for (var i = 1; i < truss.TopNodes.Count; i += 2)
-                {
-                    tempList.Add(truss.TopNodes[i]);
-                }
-            }
-            else
-            {
-                tempList = truss.TopNodes;
-            }
+            var tempList = GetTopNodesFromStuds(truss);
 
             var tempCloud = new PointCloud(tempList);
             var topBeam = Curve.JoinCurves(truss.TopBeamAxisCurves)[0];
-            var parameters = topBeam.DivideByCount(count, true);
+            var parameters = topBeam.DivideByCount(count, false);
             foreach (var t in parameters)
             {
                 var tempPt = topBeam.PointAt(t);
                 var index = tempCloud.ClosestPoint(tempPt);
-                topNodes.Add(tempList[index]);
+                if (!topNodes.Contains(tempList[index]))
+                {
+                    topNodes.Add(tempList[index]);
+                }
             }
 
-
+            // topNodes = new List<Point3d>(tempList);
             return topNodes;
         }
 
         public override List<Point3d> ComputeCrossBottomNodes(Truss truss, List<Point3d> topNodes)
         {
             var bottomNodes = new List<Point3d>();
-            var tempCloud = new PointCloud(truss.BottomNodes);
-            foreach (var node in topNodes)
+            var tempTopNodes = GetTopNodesFromStuds(truss);
+            var tempBottomNodes = GetBottomNodesFromStuds(truss);
+
+            for (int i = 0; i < tempBottomNodes.Count; i++)
             {
-                var index = tempCloud.ClosestPoint(node);
-                bottomNodes.Add(truss.BottomNodes[index]);
+                var topNode = tempBottomNodes[i];
+                for (int j = 0; j < topNodes.Count; j++)
+                {
+                    var bottomNode = topNodes[j];
+
+                    if (Math.Abs(topNode.X - bottomNode.X) <= 0.0001 && Math.Abs(topNode.Y - bottomNode.Y) <= 0.0001 &&
+                        topNode.IsValid && bottomNode.IsValid)
+                    {
+                        var index = j;
+                        bottomNodes.Add(tempBottomNodes[i]);
+                    }
+                }
             }
 
+            SetCrossesBottomNodesToTruss(truss, bottomNodes);
             return bottomNodes;
+        }
+
+        private void SetCrossesBottomNodesToTruss(Truss truss, List<Point3d> bottomNodes)
+        {
+            var tempNodes = new List<Point3d>(bottomNodes);
+
+
+            var startPt = truss.BottomNodes[0];
+            truss.StAndresBottomNodes = new List<Point3d>(tempNodes);
         }
 
         private List<Line> ConstructAxis(Point3d outerTopNode, Point3d innerBottomNode,
@@ -80,8 +137,6 @@ namespace WarehouseLib.Crosses
             var axisA = new Line(outerTopNode, innerBottomNode);
             var axisB = new Line(outerBottomNode, innerTopNode);
             cross = new List<Line> {axisA, axisB};
-
-
             return cross;
         }
 

@@ -6,12 +6,12 @@ using WarehouseLib.Utilities;
 
 namespace ArqueStructuresTools.Options
 {
-    public class WarehouseProfilesInputsComponents : GH_Component
+    public class WarehouseProfilesInputs : GH_Component
     {
-        public WarehouseProfilesInputsComponents() : base("Warehouse Profiles", "WaProfiles",
+        public WarehouseProfilesInputs() : base("Warehouse Profiles", "WaProfiles",
             "Input for each component its corresponding Profile name",
             "Arque Structures",
-            "Utilities")
+            "Inputs")
         {
         }
 

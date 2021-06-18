@@ -8,8 +8,9 @@ namespace ArqueStructuresTools
 {
     public class DeconstructBracing : GH_Component
     {
-        public DeconstructBracing() : base("Deconstruct Bracing", "DeBracing", "Deconstruct a Bracing into its component parts", "Arque Structures",
-            "Utilities")
+        public DeconstructBracing() : base("Deconstruct Bracing", "DeBracing",
+            "Deconstruct a Bracing into its component parts", "Arque Structures",
+            "Bracing")
         {
         }
 
@@ -20,7 +21,8 @@ namespace ArqueStructuresTools
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new BracingParameter(), "Bracing", "B", "Bracing to deconstruct", GH_ParamAccess.item);
+            pManager.AddParameter(new BracingParameter(), "Bracing", "B", "Bracing to deconstruct",
+                GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)

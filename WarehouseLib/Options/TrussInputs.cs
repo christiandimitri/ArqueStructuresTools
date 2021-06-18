@@ -3,7 +3,7 @@ using WarehouseLib.Articulations;
 
 namespace WarehouseLib.Options
 {
-    public struct TrussOptions
+    public struct TrussInputs
     {
         public string TrussType { get; set; }
 
@@ -24,10 +24,12 @@ namespace WarehouseLib.Options
         public string PorticoType { get; set; }
 
         public int ColumnsCount { get; set; }
+        
+        public double FacadeStrapsDistance { get; set; }
 
-        public TrussOptions(string trussType, double width, double height, double maxHeight,
+        public TrussInputs(string trussType, double width, double height, double maxHeight,
             double clearHeight, int baseType, string articulationType, int divisions, string porticoType,
-            int columnsCount)
+            int columnsCount, double facadeStrapsDistance)
         {
             TrussType = trussType;
             Width = width;
@@ -39,6 +41,8 @@ namespace WarehouseLib.Options
             Divisions = divisions;
             PorticoType = porticoType;
             ColumnsCount = columnsCount;
+            FacadeStrapsDistance = facadeStrapsDistance;
+            if (facadeStrapsDistance <= 0) throw new Exception("Warehouse facade straps cannot have 0 length!!");
             if (height < clearHeight) throw new Exception("The truss height cannot be < than the clear height");
             if (maxHeight < clearHeight) throw new Exception("The truss max height cannot be < than the clear height");
             if (Divisions <= 1) throw new Exception("A normal Truss cannot have a division <= 1");
@@ -48,6 +52,10 @@ namespace WarehouseLib.Options
                     "The 'Articulated' truss types 'Howe', 'Pratt' and 'Warren with studs', cannot have a division count < 4");
             if (columnsCount <= 1)
                 throw new Exception("The columns count should be >= 2");
+            if (facadeStrapsDistance>height)
+            {
+                throw new Exception("The facade straps distance can not be > the truss columns height");
+            }
         }
     }
 }

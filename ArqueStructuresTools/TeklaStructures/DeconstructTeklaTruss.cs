@@ -6,15 +6,15 @@ using Rhino.Geometry;
 
 namespace ArqueStructuresTools
 {
-    public class DeconstructTruss : GH_Component
+    public class DeconstructTeklaTruss : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the DeconstructTruss class.
         /// </summary>
-        public DeconstructTruss()
-            : base("Deconstruct Truss", "DeTruss",
-                "Deconstruct a Truss into its component parts",
-                "Arque Structures", "Truss")
+        public DeconstructTeklaTruss()
+            : base("Deconstruct Tekla Truss", "DeTekTruss",
+                "Deconstruct a Tekla Truss into its component parts",
+                "Arque Structures", "Tekla Structures")
         {
         }
 
@@ -52,9 +52,6 @@ namespace ArqueStructuresTools
             if (!DA.GetData(0, ref trussGoo)) return;
 
             var truss = trussGoo.Value;
-            var topNodes = truss.TopNodes != null ? truss.TopNodes : new List<Point3d>();
-            var bottomNodes = truss.BottomNodes != null ? truss.BottomNodes : new List<Point3d>();
-            var boundaryNodes = truss.BoundaryTopNodes != null ? truss.BoundaryTopNodes : new List<Point3d>();
             var staticColumnsGoo = new List<ColumnGoo>();
             var boundaryColumnsGoo = new List<ColumnGoo>();
             var topBeamGoo = (truss.TopBeam != null) ? new BeamGoo(truss.TopBeam) : new BeamGoo();
@@ -81,11 +78,8 @@ namespace ArqueStructuresTools
             DA.SetData(0, topBeamGoo);
             DA.SetData(1, bottomBeamGoo);
             DA.SetData(2, intermediateBeamsGoo);
-            DA.SetDataList(3, topNodes);
-            DA.SetDataList(4, bottomNodes);
             DA.SetDataList(5, staticColumnsGoo);
             DA.SetDataList(6, boundaryColumnsGoo);
-            DA.SetDataList(7, boundaryNodes);
         }
 
         /// <summary>
@@ -106,7 +100,7 @@ namespace ArqueStructuresTools
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("ca8cb4da-4294-4944-9d8d-2b7ad00bf9b1"); }
+            get { return new Guid("233B8B96-D2AE-48EF-BF89-8AEEA95C3F96"); }
         }
     }
 }
