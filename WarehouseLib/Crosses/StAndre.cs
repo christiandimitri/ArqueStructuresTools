@@ -45,7 +45,7 @@ namespace WarehouseLib.Crosses
                 var angle = Vector3d.VectorAngle(beam.PointAtEnd - beam.PointAtStart, Vector3d.ZAxis);
                 if (angle == Math.PI || angle == 0)
                 {
-                    Debug.WriteLine("its a stud");
+                    // Debug.WriteLine("its a stud");
                     topStudsNodes.Add(beam.PointAtStart);
                 }
             }
@@ -122,19 +122,10 @@ namespace WarehouseLib.Crosses
 
         private void SetCrossesBottomNodesToTruss(Truss truss, List<Point3d> bottomNodes)
         {
-            double t;
             var tempNodes = new List<Point3d>(bottomNodes);
-            truss.StaticColumns[0].Axis.ToNurbsCurve().ClosestPoint(tempNodes[0], out t);
-            var firstPt = truss.StaticColumns[0].Axis.ToNurbsCurve().PointAt(t);
-            double z;
-            truss.StaticColumns[0].Axis.ToNurbsCurve()
-                .ClosestPoint(tempNodes[tempNodes.Count - 1], out z);
 
-            var endPt = truss.StaticColumns[1].Axis.ToNurbsCurve().PointAt(z);
-            // tempNodes.RemoveAt(0);
-            // tempNodes.Insert(0, firstPt);
-            // tempNodes.RemoveAt(tempNodes.Count - 1);
-            // tempNodes.Add(endPt);
+
+            var startPt = truss.BottomNodes[0];
             truss.StAndresBottomNodes = new List<Point3d>(tempNodes);
         }
 

@@ -152,6 +152,7 @@ namespace ArqueStructuresTools
                                     }
                                 }
                             }
+
                             if (warehouse.RoofStraps != null)
                             {
                                 foreach (var bar in warehouse.RoofStraps)
@@ -163,6 +164,7 @@ namespace ArqueStructuresTools
                                     }
                                 }
                             }
+
                             if (warehouse.FacadeCables != null)
                             {
                                 foreach (var bar in warehouse.FacadeCables)

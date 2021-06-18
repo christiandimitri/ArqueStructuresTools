@@ -44,8 +44,12 @@ namespace WarehouseLib.Beams
             return bucklings;
         }
 
-        public List<BucklingLengths.BucklingLengths> ComputeTrussBeamBucklingLengths(Beam beam, bool stAndreCross,
-            double stAndreCrossDistance, bool bucklingActive)
+        public List<BucklingLengths.BucklingLengths> SetTrussBeamBucklingLengthsBetweenStAndresCrosses(double distance,
+            Beam beam)
+        {
+            return null;
+        }
+        public List<BucklingLengths.BucklingLengths> ComputeTrussBeamBucklingLengthsBetweenNodes(Beam beam, bool bucklingActive)
         {
             var buckling = new BucklingLengths.BucklingLengths();
             var bucklings = new List<BucklingLengths.BucklingLengths>();
@@ -59,22 +63,12 @@ namespace WarehouseLib.Beams
                     bucklings.Add(buckling);
                 }
             }
-            else if (!stAndreCross && bucklingActive)
+            else
             {
                 for (var i = 0; i < beam.Axis.Count; i++)
                 {
                     var axis = beam.Axis[i];
                     buckling.BucklingY = axis.GetLength();
-                    buckling.BucklingZ = axis.GetLength();
-                    bucklings.Add(buckling);
-                }
-            }
-            else if (stAndreCross && bucklingActive)
-            {
-                for (var i = 0; i < beam.Axis.Count; i++)
-                {
-                    var axis = beam.Axis[i];
-                    buckling.BucklingY = stAndreCrossDistance;
                     buckling.BucklingZ = axis.GetLength();
                     bucklings.Add(buckling);
                 }
