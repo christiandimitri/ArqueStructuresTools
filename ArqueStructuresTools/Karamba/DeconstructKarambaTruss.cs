@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ArqueStructuresTools.Params;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
+using WarehouseLib;
 using WarehouseLib.Beams;
 using WarehouseLib.Columns;
 using WarehouseLib.Options;
@@ -80,14 +81,46 @@ namespace ArqueStructuresTools
                 }
             }
 
-            var topBeamGoo = truss.Karamba3DTopBeams.Axis != null
-                ? new BeamGoo(truss.Karamba3DTopBeams)
+            var topBeamAxisCurves = new List<Axis>();
+            var topBeam = new TopBeam();
+
+            for (int i = 0; i < truss.Karamba3DTopBeams.Axis.Count; i++)
+            {
+                var axis = new Axis(truss.Karamba3DTopBeams.Axis[i].AxisCurve, null);
+                topBeamAxisCurves.Add(axis);
+            }
+
+            topBeam.Axis = topBeamAxisCurves;
+
+            var bottomBeamAxisCurves = new List<Axis>();
+            var bottomBeam = new BottomBeam();
+
+            for (int i = 0; i < truss.Karamba3DBottomBeams.Axis.Count; i++)
+            {
+                var axis = new Axis(truss.Karamba3DBottomBeams.Axis[i].AxisCurve, null);
+                bottomBeamAxisCurves.Add(axis);
+            }
+
+            bottomBeam.Axis = bottomBeamAxisCurves;
+
+            var intermediateBeamAxisCurves = new List<Axis>();
+            var intermediateBeam = new IntermediateBeams();
+            for (int i = 0; i < truss.Karamba3DIntermediateBeams.Axis.Count; i++)
+            {
+                var axis = new Axis(truss.Karamba3DIntermediateBeams.Axis[i].AxisCurve, null);
+                intermediateBeamAxisCurves.Add(axis);
+            }
+
+            intermediateBeam.Axis = intermediateBeamAxisCurves;
+            
+            var topBeamGoo = topBeam.Axis != null
+                ? new BeamGoo(topBeam)
                 : new BeamGoo(new TopBeam());
-            var bottomBeamGoo = truss.Karamba3DBottomBeams.Axis != null
-                ? new BeamGoo(truss.Karamba3DBottomBeams)
+            var bottomBeamGoo = bottomBeam.Axis != null
+                ? new BeamGoo(bottomBeam)
                 : new BeamGoo(new BottomBeam());
-            var intermediateBeamGoo = truss.Karamba3DIntermediateBeams.Axis != null
-                ? new BeamGoo(truss.Karamba3DIntermediateBeams)
+            var intermediateBeamGoo = intermediateBeam.Axis != null
+                ? new BeamGoo(intermediateBeam)
                 : new BeamGoo(new IntermediateBeams());
 
             DA.SetDataList(0, staticColumnsGoo);

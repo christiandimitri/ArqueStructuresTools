@@ -169,10 +169,13 @@ namespace WarehouseLib.Utilities
             if (_trussTopBeam.Axis != null)
             {
                 var axisCurves = SplitBeamBetweenNodes(_trussTopNodes, _trussTopBeam);
+                var tempAxis= new List<Axis>();
                 for (int i = 0; i < axisCurves.Count; i++)
                 {
-                    Karamba3DTopBeams.Axis.Add(new Axis(axisCurves[i], null));
+                    tempAxis.Add(new Axis(axisCurves[i], null));
                 }
+
+                Karamba3DTopBeams.Axis = tempAxis;
                 if (_porticoType == PorticoType.Truss.ToString())
                 {
                     Karamba3DTopBeams.BucklingLengths =
@@ -188,10 +191,13 @@ namespace WarehouseLib.Utilities
             if (_trussBottomBeam.Axis != null)
             {
                 var axisCurves = SplitBeamBetweenNodes(_trussBottomNodes, _trussBottomBeam);
+                var tempAxis = new List<Axis>();
                 for (int i = 0; i < axisCurves.Count; i++)
                 {
-                    Karamba3DBottomBeams.Axis.Add(new Axis(axisCurves[i], null));
+                    tempAxis.Add(new Axis(axisCurves[i], null));
                 }
+
+                Karamba3DBottomBeams.Axis = tempAxis;
                 Karamba3DBottomBeams.BucklingLengths =
                     Karamba3DBottomBeams.ComputeTrussBeamBucklingLengthsBetweenNodes(Karamba3DBottomBeams,  true);
             }

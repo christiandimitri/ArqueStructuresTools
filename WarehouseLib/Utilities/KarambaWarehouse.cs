@@ -111,24 +111,9 @@ namespace WarehouseLib.Utilities
             // indices.RemoveAt(0);
             var stAndresBottomNodes = new List<Point3d>(karambaTruss.StAndresBottomNodes);
             stAndresBottomNodes.RemoveAt(0);
-            for (int i = 0; i < indices.Count-1; i++)
+            for (int i = 0; i < indices.Count - 1; i++)
             {
-                
-                for (int j = indices[i]; j < indices[i+1]; j++)
-                {
-                    var distance = beam.Axis[j].AxisCurve.GetLength();
-                    distances.Add(distance);
-                    if (distances.Count-1 == indices[i] )
-                    {
-                        // distances = new List<double>();
-                        // for (int k = 0; k < distances.Count-1; k++)
-                        // {
-                        //     // var sum=distances[i];
-                        // }
-                    }
-                }
-                // var axisB
-                
+                distances.Add(1.5);
             }
 
 

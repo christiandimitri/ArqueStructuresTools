@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using ArqueStructuresTools.Params;
 using Grasshopper.Kernel;
+using Rhino.Geometry;
+using WarehouseLib;
+using WarehouseLib.Beams;
 
 namespace ArqueStructuresTools.Karamba
 {
@@ -41,6 +44,8 @@ namespace ArqueStructuresTools.Karamba
             if (!DA.GetData(2, ref zMultiplier)) return;
             var bucklingYList = new List<double>();
             var bucklingZList = new List<double>();
+            var axisList = new List<Curve>();
+            
             if (beamGoo.Value.BucklingLengths != null)
             {
                 for (var index = 0; index < beamGoo.Value.BucklingLengths.Count; index++)
@@ -53,8 +58,16 @@ namespace ArqueStructuresTools.Karamba
                 }
             }
 
+            if (beamGoo.Value.Axis!=null)
+            {
+                for (int i = 0; i < beamGoo.Value.Axis.Count; i++)
+                {
+                    axisList.Add(beamGoo.Value.Axis[i].AxisCurve);
+                }
+            }
+
             // set output data 
-            DA.SetDataList(0, beamGoo.Value.Axis);
+            DA.SetDataList(0, axisList);
             DA.SetDataList(1, bucklingYList);
             DA.SetDataList(2, bucklingZList);
         }
