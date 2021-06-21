@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Articulations\ArticulationType.cs" />
+    <Compile Include="Beams\Axis.cs" />
     <Compile Include="Beams\Beam.cs" />
     <Compile Include="Beams\BottomBeam.cs" />
     <Compile Include="Beams\IntermediateBeams.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Connections\WarrenStudsConnection.cs" />
     <Compile Include="Crosses\Cross.cs" />
     <Compile Include="Crosses\StAndre.cs" />
+    <Compile Include="Nodes\Node.cs" />
     <Compile Include="Options\PorticoType.cs" />
     <Compile Include="Options\TrussInputs.cs" />
     <Compile Include="Options\WarehouseInputs.cs" />

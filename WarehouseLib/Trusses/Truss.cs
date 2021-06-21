@@ -35,8 +35,9 @@ namespace WarehouseLib.Trusses
         public string _connectionType;
         public string _articulationType;
         public double _facadeStrapsDistance;
-        public string _porticoType { get; set; }
+        public string _porticoType;
         public List<Point3d> StAndresBottomNodes;
+        public List<int> StAndresBottomNodesIndices;
 
         protected Truss(Plane plane, TrussInputs inputs)
         {
@@ -52,38 +53,68 @@ namespace WarehouseLib.Trusses
             _divisions = RecomputeDivisions(_divisions);
             _facadeStrapsDistance = inputs.FacadeStrapsDistance;
             _porticoType = inputs.PorticoType;
-            
         }
 
         public void UpdatePorticoType(Truss truss)
         {
-            truss._porticoType = BottomBeam.Axis == null ? PorticoType.Portico.ToString() : PorticoType.Truss.ToString();
+            truss._porticoType =
+                BottomBeam.Axis == null ? PorticoType.Portico.ToString() : PorticoType.Truss.ToString();
         }
 
         protected void ConstructBeams(bool joinTopBeamsAxis, bool joinBottomBeamsAxis)
         {
+            var tempTopBeamAxis = (joinTopBeamsAxis == true)
+                ? Curve.JoinCurves(TopBeamAxisCurves, 0.1).ToList()
+                : TopBeamAxisCurves;
+
+            var tempAxis = new List<Axis>();
+            for (int i = 0; i < tempTopBeamAxis.Count; i++)
+            {
+                var axis = new Axis(tempTopBeamAxis[i], null);
+                tempAxis.Add(axis);
+            }
+
             var topBeam = new TopBeam
             {
-                Axis = (joinTopBeamsAxis == true)
-                    ? Curve.JoinCurves(TopBeamAxisCurves, 0.1).ToList()
-                    : TopBeamAxisCurves,
+                Axis = tempAxis,
                 ProfileOrientationPlane = Plane.WorldXY
             };
+
+
             TopBeam = topBeam;
+
+            var tempBottomBeamAxis = (joinBottomBeamsAxis == true)
+                ? Curve.JoinCurves(BottomBeamAxisCurves, 0.1).ToList()
+                : BottomBeamAxisCurves;
+            tempAxis = new List<Axis>();
+            for (int i = 0; i < tempBottomBeamAxis.Count; i++)
+            {
+                var axis = new Axis(tempBottomBeamAxis[i], null);
+                tempAxis.Add(axis);
+            }
 
             var bottomBeam = new BottomBeam
             {
-                Axis = (joinBottomBeamsAxis == true)
-                    ? Curve.JoinCurves(BottomBeamAxisCurves, 0.1).ToList()
-                    : BottomBeamAxisCurves,
+                Axis = tempAxis,
                 ProfileOrientationPlane = Plane.WorldXY
             };
+
             BottomBeam = bottomBeam;
+
+            tempAxis = new List<Axis>();
+
+            for (int i = 0; i < IntermediateBeamsAxisCurves.Count; i++)
+            {
+                var axis = new Axis(IntermediateBeamsAxisCurves[i], null);
+                tempAxis.Add(axis);
+            }
 
             var interBeams = new IntermediateBeams
             {
-                Axis = IntermediateBeamsAxisCurves, ProfileOrientationPlane = Plane.WorldYZ
+                Axis = tempAxis,
+                ProfileOrientationPlane = Plane.WorldYZ
             };
+
             IntermediateBeams = interBeams;
         }
 

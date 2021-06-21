@@ -6,6 +6,7 @@ using Rhino.Geometry;
 using WarehouseLib.Beams;
 using WarehouseLib.Bracings;
 using WarehouseLib.Cables;
+using WarehouseLib.Columns;
 using WarehouseLib.Crosses;
 using WarehouseLib.Trusses;
 using WarehouseLib.Warehouses;
@@ -62,98 +63,87 @@ namespace WarehouseLib.Utilities
             var lengthList = new List<double>();
             // var indices = new List<int>();
             int i = 0;
-            int index = 0;
-            int k = 0;
             for (i = _warehouse._warehouseOptions.HasBoundary ? 1 : 0;
                 _warehouse._warehouseOptions.HasBoundary ? i < KarambaTrusses.Count - 1 : i < KarambaTrusses.Count;
                 i++)
             {
+                int index = 0;
+                int k = 0;
                 var karambaTruss = KarambaTrusses[i];
                 var truss = _warehouse.Trusses[i];
-                var tempCloud = new PointCloud(karambaTruss._trussBottomNodes);
-                tempCloud.RemoveAt(0);
                 if (karambaTruss.StAndresBottomNodes != null)
                 {
-                    var tempStAndreBottomNodes = new List<Point3d>(karambaTruss.StAndresBottomNodes);
-                    tempStAndreBottomNodes.Add(
-                        karambaTruss._trussBottomNodes[karambaTruss._trussBottomNodes.Count - 1]);
-                    var tempAxisList = new List<Curve>();
-                    var tempKarambaAxisList = new List<Curve>(karambaTruss.Karamba3DBottomBeams.Axis);
-
-                    for (k = 0; k < tempStAndreBottomNodes.Count; k++)
-                    {
-                        var lengths = new List<double>();
-                        var tempNode = tempStAndreBottomNodes[k];
-                        var tempIndex = tempCloud.ClosestPoint(tempNode);
-                        index = tempIndex;
-                        lengths = GetBottomBeamBucklingLengths(index, tempKarambaAxisList);
-                    }
-
-                    // store lengths until index met
-
-                    // get the sum of the lengths
-
-
-                    // replace bucklingY lengths with the sum of the lengths
-                    // keep old bucklingZ lengths value
-
-
-                    // add the buckling length to the beam
+                    SetBeamsBucklingLengthsBetweenStAndresCrosses(karambaTruss);
                 }
-            }
-        }
-
-        private List<double> GetBottomBeamBucklingLengths(int index, List<Curve> tempKarambaAxisList)
-        {
-            var lengths = new List<double>();
-            var tempList = new List<Curve>();
-            for (var j = 0; j <= index; j++)
-            {
-                var axis = tempKarambaAxisList[j];
-                tempList.Add(axis);
-            }
-
-            var length = Curve.JoinCurves(tempList)[0].GetLength();
-
-            for (int i = 0; i <= index; i++)
-            {
-                lengths.Add(length);
-            }
-            
-            return lengths;
-        }
-
-        // private void AddElementsInListUntilIndex(List<Curve> oldList, List<Curve> newList, int index)
-        // {
-        //     for (int i = 0; i < UPPER; i++)
-        //     {
-        //         
-        //     }
-        // }
-        private void RemoveFromIndexAndBackwards(List<Curve> axis, int index)
-        {
-            for (int i = 0; i < index; i++)
-            {
-                axis.RemoveAt(i);
-            }
-        }
-
-        private List<int> ReturnIncludedIndices(List<int> indices)
-        {
-            var tempList = new List<int>();
-            for (int i = 0; i < indices.Count - 1; i++)
-            {
-                var indiceA = indices[i];
-                var indiceB = indices[i + 1];
-                for (int j = indiceA; j < indiceB; j++)
+                else
                 {
-                    tempList.Add(j);
+                    SetBeamsBucklingLengthsBetweenNodes(karambaTruss);
                 }
             }
+        }
 
-            tempList.Add(indices[indices.Count - 1]);
+        private void SetBeamsBucklingLengthsBetweenNodes(KarambaTruss karambaTruss)
+        {
+            karambaTruss.Karamba3DBottomBeams.BucklingLengths =
+                new List<BucklingLengths.BucklingLengths>(karambaTruss.Karamba3DBottomBeams.BucklingLengths);
+        }
 
-            return tempList;
+        private void SetBeamsBucklingLengthsBetweenStAndresCrosses(KarambaTruss karambaTruss)
+        {
+            var bucklings = new List<BucklingLengths.BucklingLengths>();
+            var beam = karambaTruss.Karamba3DBottomBeams;
+            var distances = ComputeDistancesBetweenStAndreCrosses(karambaTruss);
+
+
+            bucklings = beam.SetTrussBeamBucklingLengthsBetweenStAndresCrosses(beam, distances);
+            beam.BucklingLengths = bucklings;
+        }
+
+        private List<double> ComputeDistancesBetweenStAndreCrosses(KarambaTruss karambaTruss)
+        {
+            var distances = new List<double>();
+            var axisList = new List<Curve>();
+
+            var beam = new BottomBeam();
+            beam.Axis = new List<Axis>(karambaTruss.Karamba3DBottomBeams.Axis);
+            beam.BucklingLengths = new List<BucklingLengths.BucklingLengths>();
+            var indices = new List<int>(karambaTruss.StAndresBottomNodesIndices);
+            // indices.RemoveAt(0);
+            var stAndresBottomNodes = new List<Point3d>(karambaTruss.StAndresBottomNodes);
+            stAndresBottomNodes.RemoveAt(0);
+            for (int i = 0; i < indices.Count-1; i++)
+            {
+                
+                for (int j = indices[i]; j < indices[i+1]; j++)
+                {
+                    var distance = beam.Axis[j].AxisCurve.GetLength();
+                    distances.Add(distance);
+                    if (distances.Count-1 == indices[i] )
+                    {
+                        // distances = new List<double>();
+                        // for (int k = 0; k < distances.Count-1; k++)
+                        // {
+                        //     // var sum=distances[i];
+                        // }
+                    }
+                }
+                // var axisB
+                
+            }
+
+
+            return distances;
+        }
+
+        private List<double> RepeatAddDistancesByCount(int axisListCount, double distance)
+        {
+            var distances = new List<double>();
+            for (int i = 0; i < axisListCount; i++)
+            {
+                distances.Add(distance);
+            }
+
+            return distances;
         }
     }
 }

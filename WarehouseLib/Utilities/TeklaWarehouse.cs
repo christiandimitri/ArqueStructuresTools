@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using WarehouseLib.Beams;
 using WarehouseLib.Options;
 using WarehouseLib.Profiles;
@@ -32,16 +33,30 @@ namespace WarehouseLib.Utilities
 
                 if (trussB.IntermediateBeams != null)
                 {
+                    var axisList = new List<Axis>();
+                    for (int j = 0; j < trussA.IntermediateBeamsAxisCurves.Count; j++)
+                    {
+                        var axis = new Axis(trussA.IntermediateBeamsAxisCurves[i], null);
+                        axisList.Add(axis);
+                    }
+
                     trussB.IntermediateBeams = new IntermediateBeams
                     {
-                        Axis = trussA.IntermediateBeamsAxisCurves,
+                        Axis = axisList,
                         ProfileOrientationPlane = trussA.IntermediateBeams.ProfileOrientationPlane
                     };
                 }
 
                 if (trussB.BottomBeam != null)
                 {
-                    trussB.BottomBeam.Axis = trussA.BottomBeamAxisCurves;
+                    var axisList = new List<Axis>();
+                    for (int j = 0; j < trussA.BottomBeamAxisCurves.Count; j++)
+                    {
+                        var axis = new Axis(trussA.BottomBeamAxisCurves[i], null);
+                        axisList.Add(axis);
+                    }
+
+                    trussB.BottomBeam.Axis = axisList;
                     trussB.BottomBeam.ProfileOrientationPlane = trussA.BottomBeam.ProfileOrientationPlane;
                 }
             }
@@ -59,7 +74,7 @@ namespace WarehouseLib.Utilities
 
         private TrussInputs ComputeTeklaTrussInputs(TrussInputs trussInputs, WarehouseProfiles profiles)
         {
-            var bottomBeamsProfileHeight = new Catalog().GetCatalog()[profiles.BottomBeamsProfileName].Height/2;
+            var bottomBeamsProfileHeight = new Catalog().GetCatalog()[profiles.BottomBeamsProfileName].Height / 2;
             var newClearHeight = trussInputs.ClearHeight + bottomBeamsProfileHeight;
             var topBeamsProfileHeight = new Catalog().GetCatalog()[profiles.TopBeamsProfileName].Height / 2;
             var newHeight = trussInputs.Height - topBeamsProfileHeight;

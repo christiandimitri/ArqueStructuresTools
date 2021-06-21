@@ -42,11 +42,11 @@ namespace WarehouseLib.Crosses
             for (int i = 0; i < intermediateBeams.Axis.Count; i++)
             {
                 var beam = intermediateBeams.Axis[i];
-                var angle = Vector3d.VectorAngle(beam.PointAtEnd - beam.PointAtStart, Vector3d.ZAxis);
+                var angle = Vector3d.VectorAngle(beam.AxisCurve.PointAtEnd - beam.AxisCurve.PointAtStart, Vector3d.ZAxis);
                 if (angle == Math.PI || angle == 0)
                 {
                     // Debug.WriteLine("its a stud");
-                    topStudsNodes.Add(beam.PointAtStart);
+                    topStudsNodes.Add(beam.AxisCurve.PointAtStart);
                 }
             }
 
@@ -60,11 +60,11 @@ namespace WarehouseLib.Crosses
             for (int i = 0; i < intermediateBeams.Axis.Count; i++)
             {
                 var beam = intermediateBeams.Axis[i];
-                var angle = Vector3d.VectorAngle(beam.PointAtEnd - beam.PointAtStart, Vector3d.ZAxis);
+                var angle = Vector3d.VectorAngle(beam.AxisCurve.PointAtEnd - beam.AxisCurve.PointAtStart, Vector3d.ZAxis);
                 if (angle == Math.PI || angle == 0)
                 {
                     // Debug.WriteLine("its a stud");
-                    bottomStudsNodes.Add(beam.PointAtEnd);
+                    bottomStudsNodes.Add(beam.AxisCurve.PointAtEnd);
                 }
             }
 
@@ -123,10 +123,16 @@ namespace WarehouseLib.Crosses
         private void SetCrossesBottomNodesToTruss(Truss truss, List<Point3d> bottomNodes)
         {
             var tempNodes = new List<Point3d>(bottomNodes);
-
-
-            var startPt = truss.BottomNodes[0];
+            tempNodes.Insert(0, truss.BottomNodes[0]);
+            tempNodes.Add(truss.BottomNodes[truss.BottomNodes.Count - 1]);
             truss.StAndresBottomNodes = new List<Point3d>(tempNodes);
+            var tempCloud = new PointCloud(truss.BottomNodes);
+            truss.StAndresBottomNodesIndices = new List<int>();
+            for (var i=0;i<tempNodes.Count;i++)
+            {
+                var index = tempCloud.ClosestPoint(tempNodes[i]);
+                truss.StAndresBottomNodesIndices.Add(index>0?index-1:index);
+            }
         }
 
         private List<Line> ConstructAxis(Point3d outerTopNode, Point3d innerBottomNode,

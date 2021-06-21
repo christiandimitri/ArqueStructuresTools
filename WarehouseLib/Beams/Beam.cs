@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using Rhino.Geometry;
 using WarehouseLib.BucklingLengths;
+using WarehouseLib.Nodes;
 using WarehouseLib.Profiles;
 
 namespace WarehouseLib.Beams
 {
     public abstract class Beam
     {
-        public List<Curve> Axis;
+        public List<Axis> Axis;
 
         public Plane ProfileOrientationPlane;
 
         public ProfileDescription Profile;
 
         public List<BucklingLengths.BucklingLengths> BucklingLengths;
+        public List<Node> Nodes;
 
         protected Beam()
         {
@@ -31,10 +33,17 @@ namespace WarehouseLib.Beams
             if (bucklingActive)
             {
                 var lengths = new List<double>();
-                var beamLength = Curve.JoinCurves(beam.Axis,0.01)[0].GetLength();
+                var beamAxis = new List<Curve>();
+
                 for (int i = 0; i < beam.Axis.Count; i++)
                 {
-                    var axis = beam.Axis[i];
+                    beamAxis.Add(beam.Axis[i].AxisCurve);
+                }
+
+                var beamLength = Curve.JoinCurves(beamAxis, 0.01)[0].GetLength();
+                for (int i = 0; i < beam.Axis.Count; i++)
+                {
+                    var axis = beam.Axis[i].AxisCurve;
                     buckling.BucklingY = axis.GetLength();
                     buckling.BucklingZ = beamLength;
                     bucklings.Add(buckling);
@@ -44,12 +53,24 @@ namespace WarehouseLib.Beams
             return bucklings;
         }
 
-        public List<BucklingLengths.BucklingLengths> SetTrussBeamBucklingLengthsBetweenStAndresCrosses(double distance,
-            Beam beam)
+        public List<BucklingLengths.BucklingLengths> SetTrussBeamBucklingLengthsBetweenStAndresCrosses(Beam beam,
+            List<double> distances)
         {
-            return null;
+            var buckling = new BucklingLengths.BucklingLengths();
+            var bucklings = new List<BucklingLengths.BucklingLengths>();
+
+            for (int i = 0; i < beam.Axis.Count; i++)
+            {
+                buckling.BucklingY = distances != null ? distances[i] : double.NaN;
+                buckling.BucklingZ = beam.Axis[i].AxisCurve.GetLength();
+                bucklings.Add(buckling);
+            }
+
+            return bucklings;
         }
-        public List<BucklingLengths.BucklingLengths> ComputeTrussBeamBucklingLengthsBetweenNodes(Beam beam, bool bucklingActive)
+
+        public List<BucklingLengths.BucklingLengths> ComputeTrussBeamBucklingLengthsBetweenNodes(Beam beam,
+            bool bucklingActive)
         {
             var buckling = new BucklingLengths.BucklingLengths();
             var bucklings = new List<BucklingLengths.BucklingLengths>();
@@ -67,7 +88,7 @@ namespace WarehouseLib.Beams
             {
                 for (var i = 0; i < beam.Axis.Count; i++)
                 {
-                    var axis = beam.Axis[i];
+                    var axis = beam.Axis[i].AxisCurve;
                     buckling.BucklingY = axis.GetLength();
                     buckling.BucklingZ = axis.GetLength();
                     bucklings.Add(buckling);

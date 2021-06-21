@@ -43,8 +43,8 @@ namespace ArqueStructuresTools.Params
                         {
                             foreach (var axis in beam.Axis)
                             {
-                                _box.Union(axis.ToNurbsCurve().GetBoundingBox(false));
-                                args.Display.DrawCurve(axis.ToNurbsCurve(), System.Drawing.Color.Red);
+                                _box.Union(axis.AxisCurve.ToNurbsCurve().GetBoundingBox(false));
+                                args.Display.DrawCurve(axis.AxisCurve.ToNurbsCurve(), System.Drawing.Color.Red);
                             }
                         }
                     }

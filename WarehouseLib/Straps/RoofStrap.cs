@@ -108,7 +108,12 @@ namespace WarehouseLib
         protected override Plane GetTeklaProfileOrientationPlane(Truss truss, Point3d strapPosition, int index,
             bool isBoundary)
         {
-            var beam = Curve.JoinCurves(truss.TopBeam.Axis)[0];
+            var tempBeamAxis = new List<Curve>();
+            for (int i = 0; i < truss.TopBeam.Axis.Count; i++)
+            {
+                tempBeamAxis.Add(truss.TopBeam.Axis[i].AxisCurve);
+            }
+            var beam = Curve.JoinCurves(tempBeamAxis)[0];
             double t;
             beam.ClosestPoint(strapPosition, out t);
             var tangent = beam.TangentAt(t);

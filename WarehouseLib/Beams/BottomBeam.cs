@@ -6,7 +6,6 @@ namespace WarehouseLib.Beams
     {
         public BottomBeam()
         {
-            
         }
 
         public override Plane GetTeklaProfileOrientationPlane()
@@ -14,4 +13,6 @@ namespace WarehouseLib.Beams
             throw new System.NotImplementedException();
         }
     }
+
+
 }

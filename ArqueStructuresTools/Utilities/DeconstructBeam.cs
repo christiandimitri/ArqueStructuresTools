@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using ArqueStructuresTools.Params;
 using Grasshopper.Kernel;
+using Rhino.Geometry;
+using WarehouseLib;
 
 namespace ArqueStructuresTools
 {
     public class DeconstructBeam : GH_Component
     {
-        public DeconstructBeam() : base("Deconstruct Beam", "DeBeam", "Deconstruct a Beam into its component parts", "Arque Structures",
+        public DeconstructBeam() : base("Deconstruct Beam", "DeBeam", "Deconstruct a Beam into its component parts",
+            "Arque Structures",
             "Beam")
         {
         }
@@ -32,7 +36,13 @@ namespace ArqueStructuresTools
 
             if (!DA.GetData(0, ref beamGoo)) return;
 
-            DA.SetDataList(0, beamGoo.Value.Axis);
+            var axisCurve = new List<Curve>();
+            for (int i = 0; i < beamGoo.Value.Axis.Count; i++)
+            {
+                axisCurve.Add(beamGoo.Value.Axis[i].AxisCurve);
+            }
+
+            DA.SetDataList(0, axisCurve);
             DA.SetData(1, beamGoo.Value.ProfileOrientationPlane);
             DA.SetData(2, beamGoo.Value.Profile.Name);
         }

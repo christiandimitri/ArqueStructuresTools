@@ -55,8 +55,8 @@ namespace ArqueStructuresTools
                             {
                                 foreach (var bar in truss.Karamba3DTopBeams.Axis)
                                 {
-                                    _box.Union(bar.GetBoundingBox(false));
-                                    args.Display.DrawCurve(bar, System.Drawing.Color.Blue);
+                                    _box.Union(bar.AxisCurve.GetBoundingBox(false));
+                                    args.Display.DrawCurve(bar.AxisCurve, System.Drawing.Color.Blue);
                                 }
                             }
 
@@ -65,8 +65,8 @@ namespace ArqueStructuresTools
                             {
                                 foreach (var bar in truss.Karamba3DBottomBeams.Axis)
                                 {
-                                    _box.Union(bar.GetBoundingBox(false));
-                                    args.Display.DrawCurve(bar, System.Drawing.Color.Red);
+                                    _box.Union(bar.AxisCurve.GetBoundingBox(false));
+                                    args.Display.DrawCurve(bar.AxisCurve, System.Drawing.Color.Red);
                                 }
                             }
 
@@ -74,8 +74,8 @@ namespace ArqueStructuresTools
                             {
                                 foreach (var bar in truss.Karamba3DIntermediateBeams.Axis)
                                 {
-                                    _box.Union(bar.GetBoundingBox(false));
-                                    args.Display.DrawCurve(bar, System.Drawing.Color.Green);
+                                    _box.Union(bar.AxisCurve.GetBoundingBox(false));
+                                    args.Display.DrawCurve(bar.AxisCurve, System.Drawing.Color.Green);
                                 }
                             }
 

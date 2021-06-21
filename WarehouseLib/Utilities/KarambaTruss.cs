@@ -32,6 +32,7 @@ namespace WarehouseLib.Utilities
         public Beam Karamba3DBottomBeams;
         public Beam Karamba3DIntermediateBeams;
         public List<Point3d> StAndresBottomNodes;
+        public List<int> StAndresBottomNodesIndices;
 
         public KarambaTruss(Truss truss)
         {
@@ -60,6 +61,7 @@ namespace WarehouseLib.Utilities
             if (_truss.StAndresBottomNodes != null && _truss._porticoType == PorticoType.Truss.ToString())
             {
                 StAndresBottomNodes = new List<Point3d>(_truss.StAndresBottomNodes);
+                StAndresBottomNodesIndices = new List<int>(_truss.StAndresBottomNodesIndices);
             }
         }
 
@@ -166,7 +168,11 @@ namespace WarehouseLib.Utilities
             Karamba3DBottomBeams = new BottomBeam();
             if (_trussTopBeam.Axis != null)
             {
-                Karamba3DTopBeams.Axis = SplitBeamBetweenNodes(_trussTopNodes, _trussTopBeam);
+                var axisCurves = SplitBeamBetweenNodes(_trussTopNodes, _trussTopBeam);
+                for (int i = 0; i < axisCurves.Count; i++)
+                {
+                    Karamba3DTopBeams.Axis.Add(new Axis(axisCurves[i], null));
+                }
                 if (_porticoType == PorticoType.Truss.ToString())
                 {
                     Karamba3DTopBeams.BucklingLengths =
@@ -181,7 +187,11 @@ namespace WarehouseLib.Utilities
 
             if (_trussBottomBeam.Axis != null)
             {
-                Karamba3DBottomBeams.Axis = SplitBeamBetweenNodes(_trussBottomNodes, _trussBottomBeam);
+                var axisCurves = SplitBeamBetweenNodes(_trussBottomNodes, _trussBottomBeam);
+                for (int i = 0; i < axisCurves.Count; i++)
+                {
+                    Karamba3DBottomBeams.Axis.Add(new Axis(axisCurves[i], null));
+                }
                 Karamba3DBottomBeams.BucklingLengths =
                     Karamba3DBottomBeams.ComputeTrussBeamBucklingLengthsBetweenNodes(Karamba3DBottomBeams,  true);
             }
@@ -210,8 +220,15 @@ namespace WarehouseLib.Utilities
         private List<Curve> SplitBeamBetweenNodes(List<Point3d> nodes, Beam beam)
         {
             var axis = new List<Curve>();
-            var tempBaseAxisList = Curve.JoinCurves(beam.Axis);
+            var tempBaseAxisList = new List<Curve>();
+            
+            for (int i = 0; i < beam.Axis.Count; i++)
+            {
+                var tempAxis = beam.Axis[i].AxisCurve;
+                tempBaseAxisList.Add(tempAxis);
+            }
 
+            tempBaseAxisList = Curve.JoinCurves(tempBaseAxisList).ToList();
 
             var baseAxis = tempBaseAxisList[0];
             for (var i = 1; i < nodes.Count - 1; i++)
