@@ -5,6 +5,7 @@ using Grasshopper.Kernel;
 using Rhino.Geometry;
 using WarehouseLib;
 using WarehouseLib.Beams;
+using WarehouseLib.BucklingLengths;
 using WarehouseLib.Columns;
 using WarehouseLib.Options;
 
@@ -83,36 +84,52 @@ namespace ArqueStructuresTools
 
             var topBeamAxisCurves = new List<Axis>();
             var topBeam = new TopBeam();
-
-            for (int i = 0; i < truss.Karamba3DTopBeams.Axis.Count; i++)
+            var tempBucklings = new List<BucklingLengths>();
+            if (truss.Karamba3DTopBeams.Axis != null)
             {
-                var axis = new Axis(truss.Karamba3DTopBeams.Axis[i].AxisCurve, null);
-                topBeamAxisCurves.Add(axis);
-            }
+                for (int i = 0; i < truss.Karamba3DTopBeams.Axis.Count; i++)
+                {
+                    var axis = new Axis(truss.Karamba3DTopBeams.Axis[i].AxisCurve, null);
+                    topBeamAxisCurves.Add(axis);
+                    tempBucklings.Add(truss.Karamba3DTopBeams.BucklingLengths[i]);
+                }
 
-            topBeam.Axis = topBeamAxisCurves;
+                topBeam.Axis = topBeamAxisCurves;
+                topBeam.BucklingLengths = tempBucklings;
+            }
 
             var bottomBeamAxisCurves = new List<Axis>();
             var bottomBeam = new BottomBeam();
-
-            for (int i = 0; i < truss.Karamba3DBottomBeams.Axis.Count; i++)
+            tempBucklings = new List<BucklingLengths>();
+            if (truss.Karamba3DBottomBeams.Axis != null)
             {
-                var axis = new Axis(truss.Karamba3DBottomBeams.Axis[i].AxisCurve, null);
-                bottomBeamAxisCurves.Add(axis);
-            }
+                for (int i = 0; i < truss.Karamba3DBottomBeams.Axis.Count; i++)
+                {
+                    var axis = new Axis(truss.Karamba3DBottomBeams.Axis[i].AxisCurve, null);
+                    bottomBeamAxisCurves.Add(axis);
+                    tempBucklings.Add(truss.Karamba3DBottomBeams.BucklingLengths[i]);
+                }
 
-            bottomBeam.Axis = bottomBeamAxisCurves;
+                bottomBeam.Axis = bottomBeamAxisCurves;
+                bottomBeam.BucklingLengths = tempBucklings;
+            }
 
             var intermediateBeamAxisCurves = new List<Axis>();
             var intermediateBeam = new IntermediateBeams();
-            for (int i = 0; i < truss.Karamba3DIntermediateBeams.Axis.Count; i++)
+            tempBucklings = new List<BucklingLengths>();
+            if (truss.Karamba3DIntermediateBeams.Axis != null)
             {
-                var axis = new Axis(truss.Karamba3DIntermediateBeams.Axis[i].AxisCurve, null);
-                intermediateBeamAxisCurves.Add(axis);
+                for (int i = 0; i < truss.Karamba3DIntermediateBeams.Axis.Count; i++)
+                {
+                    var axis = new Axis(truss.Karamba3DIntermediateBeams.Axis[i].AxisCurve, null);
+                    intermediateBeamAxisCurves.Add(axis);
+                    tempBucklings.Add(truss.Karamba3DIntermediateBeams.BucklingLengths[i]);
+                }
+
+                intermediateBeam.Axis = intermediateBeamAxisCurves;
+                intermediateBeam.BucklingLengths = tempBucklings;
             }
 
-            intermediateBeam.Axis = intermediateBeamAxisCurves;
-            
             var topBeamGoo = topBeam.Axis != null
                 ? new BeamGoo(topBeam)
                 : new BeamGoo(new TopBeam());

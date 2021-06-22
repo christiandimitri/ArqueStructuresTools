@@ -55,12 +55,11 @@ namespace WarehouseLib.Utilities
 
             // _warehouse.Trusses = new List<Truss>();
             KarambaTrusses = new List<KarambaTruss>(karambaTrusses);
-            ReplaceTrussBottomBeamBucklingLengthByDistanceBetweenStAndre();
+            RecomputeBucklingLengths();
         }
 
-        private void ReplaceTrussBottomBeamBucklingLengthByDistanceBetweenStAndre()
+        private void RecomputeBucklingLengths()
         {
-            var lengthList = new List<double>();
             // var indices = new List<int>();
             int i = 0;
             for (i = _warehouse._warehouseOptions.HasBoundary ? 1 : 0;
@@ -102,16 +101,7 @@ namespace WarehouseLib.Utilities
         private List<double> ComputeDistancesBetweenStAndreCrosses(KarambaTruss karambaTruss)
         {
             var distances = new List<double>();
-            var axisList = new List<Curve>();
-
-            var beam = new BottomBeam();
-            beam.Axis = new List<Axis>(karambaTruss.Karamba3DBottomBeams.Axis);
-            beam.BucklingLengths = new List<BucklingLengths.BucklingLengths>();
-            var indices = new List<int>(karambaTruss.StAndresBottomNodesIndices);
-            // indices.RemoveAt(0);
-            var stAndresBottomNodes = new List<Point3d>(karambaTruss.StAndresBottomNodes);
-            stAndresBottomNodes.RemoveAt(0);
-            for (int i = 0; i < indices.Count - 1; i++)
+            for (int i = 0; i < karambaTruss.Karamba3DBottomBeams.Axis.Count; i++)
             {
                 distances.Add(1.5);
             }
