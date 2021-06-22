@@ -4,16 +4,24 @@ using WarehouseLib.Nodes;
 
 namespace WarehouseLib
 {
-    public struct Axis
+    public class Axis
     {
-        public Curve AxisCurve;
+        // <summary>
+        // get or set the axis Curve
+        // </summary>
+        public Curve AxisCurve { get; set; }
 
-        public List<Node> Nodes;
+        // <summary>
+        // get or set the axis's node Point3d
+        // </summary>
 
-        public Axis(Curve axis, List<Node> nodes)
+        public Node Origin { get; set; }
+
+        public Axis Twin { get; set; }
+
+        public Axis(Curve axis)
         {
             AxisCurve = axis;
-            Nodes = nodes;
         }
     }
 }

@@ -89,7 +89,7 @@ namespace ArqueStructuresTools
             {
                 for (int i = 0; i < truss.Karamba3DTopBeams.Axis.Count; i++)
                 {
-                    var axis = new Axis(truss.Karamba3DTopBeams.Axis[i].AxisCurve, null);
+                    var axis = new Axis(truss.Karamba3DTopBeams.Axis[i].AxisCurve);
                     topBeamAxisCurves.Add(axis);
                     tempBucklings.Add(truss.Karamba3DTopBeams.BucklingLengths[i]);
                 }
@@ -105,7 +105,7 @@ namespace ArqueStructuresTools
             {
                 for (int i = 0; i < truss.Karamba3DBottomBeams.Axis.Count; i++)
                 {
-                    var axis = new Axis(truss.Karamba3DBottomBeams.Axis[i].AxisCurve, null);
+                    var axis = new Axis(truss.Karamba3DBottomBeams.Axis[i].AxisCurve);
                     bottomBeamAxisCurves.Add(axis);
                     tempBucklings.Add(truss.Karamba3DBottomBeams.BucklingLengths[i]);
                 }
@@ -121,7 +121,7 @@ namespace ArqueStructuresTools
             {
                 for (int i = 0; i < truss.Karamba3DIntermediateBeams.Axis.Count; i++)
                 {
-                    var axis = new Axis(truss.Karamba3DIntermediateBeams.Axis[i].AxisCurve, null);
+                    var axis = new Axis(truss.Karamba3DIntermediateBeams.Axis[i].AxisCurve);
                     intermediateBeamAxisCurves.Add(axis);
                     tempBucklings.Add(truss.Karamba3DIntermediateBeams.BucklingLengths[i]);
                 }

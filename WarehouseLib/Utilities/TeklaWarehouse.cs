@@ -36,7 +36,7 @@ namespace WarehouseLib.Utilities
                     var axisList = new List<Axis>();
                     for (int j = 0; j < trussA.IntermediateBeamsAxisCurves.Count; j++)
                     {
-                        var axis = new Axis(trussA.IntermediateBeamsAxisCurves[i], null);
+                        var axis = new Axis(trussA.IntermediateBeamsAxisCurves[i]);
                         axisList.Add(axis);
                     }
 
@@ -52,7 +52,7 @@ namespace WarehouseLib.Utilities
                     var axisList = new List<Axis>();
                     for (int j = 0; j < trussA.BottomBeamAxisCurves.Count; j++)
                     {
-                        var axis = new Axis(trussA.BottomBeamAxisCurves[i], null);
+                        var axis = new Axis(trussA.BottomBeamAxisCurves[i]);
                         axisList.Add(axis);
                     }
 

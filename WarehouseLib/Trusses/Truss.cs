@@ -70,7 +70,7 @@ namespace WarehouseLib.Trusses
             var tempAxis = new List<Axis>();
             for (int i = 0; i < tempTopBeamAxis.Count; i++)
             {
-                var axis = new Axis(tempTopBeamAxis[i], null);
+                var axis = new Axis(tempTopBeamAxis[i]);
                 tempAxis.Add(axis);
             }
 
@@ -89,7 +89,7 @@ namespace WarehouseLib.Trusses
             tempAxis = new List<Axis>();
             for (int i = 0; i < tempBottomBeamAxis.Count; i++)
             {
-                var axis = new Axis(tempBottomBeamAxis[i], null);
+                var axis = new Axis(tempBottomBeamAxis[i]);
                 tempAxis.Add(axis);
             }
 
@@ -105,7 +105,7 @@ namespace WarehouseLib.Trusses
 
             for (int i = 0; i < IntermediateBeamsAxisCurves.Count; i++)
             {
-                var axis = new Axis(IntermediateBeamsAxisCurves[i], null);
+                var axis = new Axis(IntermediateBeamsAxisCurves[i]);
                 tempAxis.Add(axis);
             }
 

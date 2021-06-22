@@ -172,7 +172,7 @@ namespace WarehouseLib.Utilities
                 var tempAxis= new List<Axis>();
                 for (int i = 0; i < axisCurves.Count; i++)
                 {
-                    tempAxis.Add(new Axis(axisCurves[i], null));
+                    tempAxis.Add(new Axis(axisCurves[i]));
                 }
 
                 Karamba3DTopBeams.Axis = tempAxis;
@@ -194,7 +194,7 @@ namespace WarehouseLib.Utilities
                 var tempAxis = new List<Axis>();
                 for (int i = 0; i < axisCurves.Count; i++)
                 {
-                    tempAxis.Add(new Axis(axisCurves[i], null));
+                    tempAxis.Add(new Axis(axisCurves[i]));
                 }
 
                 Karamba3DBottomBeams.Axis = tempAxis;
