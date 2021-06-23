@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Rhino.Geometry;
+using WarehouseLib.Beams;
 
 namespace WarehouseLib.Nodes
 {
@@ -14,19 +15,19 @@ namespace WarehouseLib.Nodes
         // <summary>
         // get or set the incident axis edge to the node
         // </summary>
-        public Axis IncidentAxis { get; set; }
+        public BeamAxis IncidentAxis { get; set; }
 
         // <summary>
         // returns a list of all of the adjacent axis to the node
         // </summary>
-        public List<Axis> AdjancentAxis()
+        public List<BeamAxis> AdjancentAxis()
         {
             throw new InvalidOperationException();
         }
         // <summary>
         // initialize a new instance of the Node
         // </summary>
-        public Node(Point3d point3d, Axis incidentAxis)
+        public Node(Point3d point3d)
         {
             Position = point3d;
         }

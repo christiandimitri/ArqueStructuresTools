@@ -7,13 +7,13 @@ using WarehouseLib.Articulations;
 using WarehouseLib.Beams;
 using WarehouseLib.Columns;
 using WarehouseLib.Connections;
+using WarehouseLib.Nodes;
 using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
 {
     public abstract class Truss
     {
-        public List<Curve> BottomBeamAxisCurves;
         public List<Point3d> BottomNodes;
         public readonly double _clearHeight;
         public List<Column> StaticColumns;
@@ -25,11 +25,15 @@ namespace WarehouseLib.Trusses
         public double _maxHeight;
         public Plane _plane;
         public List<Point3d> StartingNodes;
+        public List<Curve> TopBeamBaseCurves;
+        public List<BeamAxis> TopBeamAxis;
         public Beam TopBeam;
-        public List<Curve> TopBeamAxisCurves;
+        public List<Curve> BottomBeamBaseCurves;
         public Beam BottomBeam;
-        public List<Curve> IntermediateBeamsAxisCurves;
+        public List<BeamAxis> BottomBeamAxis;
+        public List<Curve> IntermediateBeamsBaseCurves;
         public Beam IntermediateBeams;
+        public List<BeamAxis> IntermediateBeamAxis;
         public List<Point3d> TopNodes;
         public List<Point3d> BoundaryTopNodes;
         public string _connectionType;
@@ -64,58 +68,79 @@ namespace WarehouseLib.Trusses
         protected void ConstructBeams(bool joinTopBeamsAxis, bool joinBottomBeamsAxis)
         {
             var tempTopBeamAxis = (joinTopBeamsAxis == true)
-                ? Curve.JoinCurves(TopBeamAxisCurves, 0.1).ToList()
-                : TopBeamAxisCurves;
+                ? Curve.JoinCurves(TopBeamBaseCurves, 0.1).ToList()
+                : TopBeamBaseCurves;
 
-            var tempAxis = new List<Axis>();
+            var tempAxis = new List<BeamAxis>();
             for (int i = 0; i < tempTopBeamAxis.Count; i++)
             {
-                var axis = new Axis(tempTopBeamAxis[i]);
+                var axis = new BeamAxis(tempTopBeamAxis[i]);
                 tempAxis.Add(axis);
             }
 
-            var topBeam = new TopBeam
+            var topBeam = new Beam
             {
                 Axis = tempAxis,
-                ProfileOrientationPlane = Plane.WorldXY
+                ProfileOrientationPlane = Plane.WorldXY,
+                Position = "Top",
             };
 
 
             TopBeam = topBeam;
 
             var tempBottomBeamAxis = (joinBottomBeamsAxis == true)
-                ? Curve.JoinCurves(BottomBeamAxisCurves, 0.1).ToList()
-                : BottomBeamAxisCurves;
-            tempAxis = new List<Axis>();
+                ? Curve.JoinCurves(BottomBeamBaseCurves, 0.1).ToList()
+                : BottomBeamBaseCurves;
+            tempAxis = new List<BeamAxis>();
             for (int i = 0; i < tempBottomBeamAxis.Count; i++)
             {
-                var axis = new Axis(tempBottomBeamAxis[i]);
+                var axis = new BeamAxis(tempBottomBeamAxis[i]);
                 tempAxis.Add(axis);
             }
 
-            var bottomBeam = new BottomBeam
+            var bottomBeam = new Beam
             {
                 Axis = tempAxis,
-                ProfileOrientationPlane = Plane.WorldXY
+                ProfileOrientationPlane = Plane.WorldXY,
+                Position = "Bottom"
             };
 
             BottomBeam = bottomBeam;
 
-            tempAxis = new List<Axis>();
+            tempAxis = new List<BeamAxis>();
 
-            for (int i = 0; i < IntermediateBeamsAxisCurves.Count; i++)
+            for (int i = 0; i < IntermediateBeamsBaseCurves.Count; i++)
             {
-                var axis = new Axis(IntermediateBeamsAxisCurves[i]);
+                var axis = new BeamAxis(IntermediateBeamsBaseCurves[i]);
                 tempAxis.Add(axis);
             }
 
-            var interBeams = new IntermediateBeams
+            var interBeams = new Beam
             {
                 Axis = tempAxis,
-                ProfileOrientationPlane = Plane.WorldYZ
+                ProfileOrientationPlane = Plane.WorldYZ,
+                Position = "Intermediate"
             };
 
             IntermediateBeams = interBeams;
+            SetNodesToBeams(TopBeam, BottomBeam, IntermediateBeams);
+        }
+
+        public void SetNodesToBeams(Beam top, Beam bottom, Beam intermediate)
+        {
+            top.Nodes = new List<Node>();
+            foreach (var t in TopNodes)
+            {
+                top.Nodes.Add(new Node(t));
+            }
+
+            IntermediateBeams.Nodes = new List<Node>();
+
+            bottom.Nodes = new List<Node>();
+            foreach (var t in BottomNodes)
+            {
+                bottom.Nodes.Add(new Node(t));
+            }
         }
 
         private int RecomputeDivisions(int divisions)
@@ -196,7 +221,7 @@ namespace WarehouseLib.Trusses
             Line lineA = new Line(ptA, ptB);
             Line lineB = new Line(ptB, ptC);
             var bars = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
-            BottomBeamAxisCurves = bars;
+            BottomBeamBaseCurves = bars;
         }
 
         protected abstract void GenerateBottomNodes(Curve crv);
@@ -265,7 +290,7 @@ namespace WarehouseLib.Trusses
                 bars = connections.ConstructConnections();
             }
 
-            IntermediateBeamsAxisCurves = bars;
+            IntermediateBeamsBaseCurves = bars;
             RecomputeNodes(index);
         }
 
@@ -287,7 +312,7 @@ namespace WarehouseLib.Trusses
 
         private void IsRigidToColumns()
         {
-            BottomBeamAxisCurves = new List<Curve>(BottomBeamAxisCurves);
+            BottomBeamBaseCurves = new List<Curve>(BottomBeamBaseCurves);
         }
 
         protected abstract void IsArticulatedToColumns();
@@ -322,16 +347,105 @@ namespace WarehouseLib.Trusses
 
         public void ConstructPorticoFromTruss(Truss truss, int index)
         {
-            TopBeamAxisCurves = new List<Curve>(TopBeamAxisCurves);
+            TopBeamBaseCurves = new List<Curve>(TopBeamBaseCurves);
             TopNodes = new List<Point3d>(TopNodes);
-            BottomBeam = new BottomBeam();
-            IntermediateBeams = new IntermediateBeams();
-            BottomBeamAxisCurves = new List<Curve>();
+            BottomBeam = new Beam();
+            IntermediateBeams = new Beam();
+            BottomBeamBaseCurves = new List<Curve>();
             BottomNodes = new List<Point3d>();
-            IntermediateBeamsAxisCurves = new List<Curve>();
-            truss.GenerateBoundaryColumnsNodes(truss.TopBeamAxisCurves, _columnsCount);
+            IntermediateBeamsBaseCurves = new List<Curve>();
+            truss.GenerateBoundaryColumnsNodes(truss.TopBeamBaseCurves, _columnsCount);
             BoundaryColumns =
                 new List<Column>(new BoundaryColumn().GenerateColumns(truss.BoundaryTopNodes, _plane, index));
+        }
+
+        // <summary>
+        // split beam axis curves private between nodes
+        // </summary>
+        private List<Curve> SplitBeamBetweenNodes(List<Point3d> nodes, Beam beam)
+        {
+            var axis = new List<Curve>();
+            var tempBaseAxisList = new List<Curve>();
+
+            for (int i = 0; i < beam.Axis.Count; i++)
+            {
+                var tempAxis = beam.Axis[i].AxisCurve;
+                tempBaseAxisList.Add(tempAxis);
+            }
+
+            tempBaseAxisList = Curve.JoinCurves(tempBaseAxisList).ToList();
+
+            var baseAxis = tempBaseAxisList[0];
+            for (var i = 1; i < nodes.Count - 1; i++)
+            {
+                var node = nodes[i];
+                double t;
+                baseAxis.ClosestPoint(node, out t);
+                var tempList = baseAxis.ToNurbsCurve().Split(t).ToList();
+                axis.Add(tempList[0]);
+                baseAxis = tempList[1];
+                if (i == nodes.Count - 1)
+                {
+                    axis.Add(baseAxis);
+                }
+            }
+
+            axis.Add(baseAxis);
+
+
+            return axis;
+        }
+
+        // <summary>
+        // gets the splitted axis in there corresponding list
+        // </summary>
+
+        public void GetAxisBetweenAxis()
+        {
+            var tempList = new List<Curve>(SplitBeamBetweenNodes(TopNodes, TopBeam));
+            TopBeamAxis = new List<BeamAxis>();
+            for (int i = 0; i < tempList.Count; i++)
+            {
+                var axis = new BeamAxis(tempList[i]);
+                TopBeamAxis.Add(axis);
+            }
+
+            tempList = new List<Curve>(SplitBeamBetweenNodes(BottomNodes, BottomBeam));
+            BottomBeamAxis = new List<BeamAxis>();
+            for (int i = 0; i < tempList.Count; i++)
+            {
+                var axis = new BeamAxis(tempList[i]);
+                BottomBeamAxis.Add(axis);
+            }
+
+            IntermediateBeamAxis = new List<BeamAxis>();
+            for (int i = 0; i < IntermediateBeamsBaseCurves.Count; i++)
+            {
+                var axis = new BeamAxis(IntermediateBeamsBaseCurves[i]);
+                IntermediateBeamAxis.Add(axis);
+            }
+        }
+
+        // <summary>
+        // sets the half-edge on each beam axis
+        //</summary>
+        private void SetBeamsAxisHalfEdge()
+        {
+            //<summary>
+            // sets the half-edge
+            //</summary>
+
+            //<summary>
+            // sets the Twin half-edge
+            //</summary>
+
+            // <summary>
+            // sets the previous half-edge
+            //</summary>
+
+            //<summary>
+            // sets the next half-edge
+            //</summary>
         }
     }
 }

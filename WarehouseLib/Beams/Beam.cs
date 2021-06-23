@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Rhino.Geometry;
 using WarehouseLib.BucklingLengths;
@@ -8,23 +9,77 @@ using WarehouseLib.Profiles;
 
 namespace WarehouseLib.Beams
 {
-    public abstract class Beam
+    public class Beam
     {
-        public List<Axis> Axis;
-
-        public Plane ProfileOrientationPlane;
-
-        public ProfileDescription Profile;
-
-        public List<BucklingLengths.BucklingLengths> BucklingLengths;
-        public List<Node> Nodes;
-
-        protected Beam()
+        // <summary>
+        // initializes a new instance of the beam's class
+        // </summary>
+        public Beam()
         {
         }
 
-        public abstract Plane GetTeklaProfileOrientationPlane();
+        // <summary>
+        // gets or sets the beam's axis list
+        // </summary>
+        public List<BeamAxis> Axis { get; set; }
 
+
+        // <summary>
+        // gets or sets the beam's profile orientation plane
+        // </summary>
+        public Plane ProfileOrientationPlane { get; set; }
+
+
+        // <summary>
+        // gets or sets the string value representing the position of the beam
+        // </summary>
+        public string Position { get; set; }
+
+
+        // <summary>
+        // gets or sets the beam's Profile description
+        // </summary>
+        public ProfileDescription Profile;
+
+        // <summary>
+        // gets or sets the beam's buckling length list 
+        // </summary>
+        public List<BucklingLengths.BucklingLengths> BucklingLengths;
+
+        // <summary>
+        // gets or sets the beam's nodes
+        // </summary>
+        public List<Node> Nodes;
+
+        // <summary>
+        // Initializes a new instance of the beam's class with a another half-edge beam
+        // </summary>
+        public Beam(Beam halfEdgeBeam)
+        {
+            Nodes = halfEdgeBeam.Nodes != null ? new List<Node>(halfEdgeBeam.Nodes) : new List<Node>();
+            Axis = halfEdgeBeam.Axis != null ? new List<BeamAxis>(halfEdgeBeam.Axis) : new List<BeamAxis>();
+            HalfEdgeAxis = halfEdgeBeam.HalfEdgeAxis != null
+                ? new List<BeamAxisHalfEdge>(halfEdgeBeam.HalfEdgeAxis)
+                : new List<BeamAxisHalfEdge>();
+        }
+
+        // <summary>
+        // gets or sets the half-edge axis of the beam
+        // </summary>
+        public List<BeamAxisHalfEdge> HalfEdgeAxis { get; set; }
+
+
+        // <summary>
+        // returns the Beam's profile orientation plane
+        // </summary>
+        public Plane GetTeklaProfileOrientationPlane()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        // <summary>
+        // returns the buckling length list for each axis of the beam in case the beam is a Portico
+        // </summary>
         public List<BucklingLengths.BucklingLengths> ComputePorticoBeamBucklingLengths(Beam beam, bool bucklingActive)
         {
             var bucklings = new List<BucklingLengths.BucklingLengths>();
@@ -53,6 +108,10 @@ namespace WarehouseLib.Beams
             return bucklings;
         }
 
+
+        // <summary>
+        // returns the buckling length list for each axis of the beam in case the trusses are connected with st Andre crosses
+        // </summary>
         public List<BucklingLengths.BucklingLengths> SetTrussBeamBucklingLengthsBetweenStAndresCrosses(Beam beam,
             List<double> distances)
         {
@@ -69,6 +128,9 @@ namespace WarehouseLib.Beams
             return bucklings;
         }
 
+        // <summary>
+        // returns the buckling length list between each node for each axis of the beam
+        // </summary>
         public List<BucklingLengths.BucklingLengths> ComputeTrussBeamBucklingLengthsBetweenNodes(Beam beam,
             bool bucklingActive)
         {

@@ -159,10 +159,10 @@ namespace WarehouseLib.Warehouses
         private void GenerateRoofBracing()
         {
             var startBracingPoints = ExtractRoofBracingPoints(Trusses[0]);
-            var startTopBeam = Curve.JoinCurves(Trusses[1].TopBeamAxisCurves)[0];
+            var startTopBeam = Curve.JoinCurves(Trusses[1].TopBeamBaseCurves)[0];
             // var startTopBeam = Trusses[1].TopBeamAxisCurves[0];
             var endBracingPoints = ExtractRoofBracingPoints(Trusses[Trusses.Count - 1]);
-            var endTopBeam = Curve.JoinCurves(Trusses[Trusses.Count - 2].TopBeamAxisCurves)[0];
+            var endTopBeam = Curve.JoinCurves(Trusses[Trusses.Count - 2].TopBeamBaseCurves)[0];
             // var endTopBeam = Trusses[Trusses.Count - 2].TopBeamAxisCurves[0];
 
             if (_warehouseOptions.PorticoCount <= 2) throw new Exception("Portico count has to be >2");
@@ -217,7 +217,7 @@ namespace WarehouseLib.Warehouses
                 if (i == 0 || i == Trusses.Count - 2) tempList.RemoveAt(1);
 
                 var nodes = tempList;
-                var beam = Curve.JoinCurves(trussB.TopBeamAxisCurves)[0];
+                var beam = Curve.JoinCurves(trussB.TopBeamBaseCurves)[0];
                 tempBracings.AddRange(new ColumnsBracing().ConstructBracings(nodes, beam, _plane, 0));
             }
 
@@ -255,7 +255,7 @@ namespace WarehouseLib.Warehouses
             foreach (var column in columns) tempPointList.Add(column.Axis.ToNurbsCurve().PointAtEnd);
 
             if (_warehouseOptions.HasBoundary == false || TrussInputs.ColumnsCount % 2 == 0)
-                tempPointList.Insert(tempPointList.Count / 2, trussA.TopBeamAxisCurves[0].PointAtEnd);
+                tempPointList.Insert(tempPointList.Count / 2, trussA.TopBeamBaseCurves[0].PointAtEnd);
 
             return tempPointList;
         }

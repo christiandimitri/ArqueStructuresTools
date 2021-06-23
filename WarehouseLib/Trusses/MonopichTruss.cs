@@ -77,7 +77,7 @@ namespace WarehouseLib.Trusses
             BottomNodes = new List<Point3d>(tempBottomList);
             if (ConnectionType.Warren.ToString() == _connectionType)
             {
-                IntermediateBeamsAxisCurves.RemoveAt(index);
+                IntermediateBeamsBaseCurves.RemoveAt(index);
             }
         }
 
@@ -87,7 +87,7 @@ namespace WarehouseLib.Trusses
                 _height + ((_maxHeight - _height) / 2), _maxHeight);
             var barA = new Line(StartingNodes[0], StartingNodes[1]);
             var barB = new Line(StartingNodes[1], StartingNodes[2]);
-            TopBeamAxisCurves = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};
+            TopBeamBaseCurves = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};
         }
 
         protected override void GenerateBottomNodes(Curve crv)

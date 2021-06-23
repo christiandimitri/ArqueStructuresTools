@@ -31,9 +31,9 @@ namespace WarehouseLib
         {
             var ptA = new Point3d();
             List<Curve> splitCurves = new List<Curve>();
-            for (int i = 0; i < BottomBeamAxisCurves.Count; i++)
+            for (int i = 0; i < BottomBeamBaseCurves.Count; i++)
             {
-                var bar = BottomBeamAxisCurves[i];
+                var bar = BottomBeamBaseCurves[i];
                 ptA = BottomNodes[i == 0 ? 1 : BottomNodes.Count - 2];
                 double t;
                 bar.ClosestPoint(ptA, out t);
@@ -44,15 +44,15 @@ namespace WarehouseLib
             BottomNodes.RemoveAt(BottomNodes.Count - 1);
             BottomNodes.Insert(0, TopNodes[0]);
             BottomNodes.Add(TopNodes[TopNodes.Count-1]);
-            var tempList = new List<Curve> {IntermediateBeamsAxisCurves[0], splitCurves[0]};
+            var tempList = new List<Curve> {IntermediateBeamsBaseCurves[0], splitCurves[0]};
             var axisA = Curve.JoinCurves(tempList)[0];
             tempList = new List<Curve>
-                {IntermediateBeamsAxisCurves[IntermediateBeamsAxisCurves.Count - 1], splitCurves[1]};
+                {IntermediateBeamsBaseCurves[IntermediateBeamsBaseCurves.Count - 1], splitCurves[1]};
             var axisB = Curve.JoinCurves(tempList)[0];
             splitCurves = new List<Curve> {axisA, axisB};
-            IntermediateBeamsAxisCurves.RemoveAt(0);
-            IntermediateBeamsAxisCurves.RemoveAt(IntermediateBeamsAxisCurves.Count - 1);
-            BottomBeamAxisCurves = splitCurves;
+            IntermediateBeamsBaseCurves.RemoveAt(0);
+            IntermediateBeamsBaseCurves.RemoveAt(IntermediateBeamsBaseCurves.Count - 1);
+            BottomBeamBaseCurves = splitCurves;
         }
 
         protected override void GenerateThickBottomBars()
@@ -63,7 +63,7 @@ namespace WarehouseLib
                     StartingNodes[1] - Vector3d.ZAxis * ComputeDifference());
                 var lineB = new Line(StartingNodes[1] - Vector3d.ZAxis * ComputeDifference(),
                     StartingNodes[2] - Vector3d.ZAxis * ComputeDifference());
-                BottomBeamAxisCurves = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
+                BottomBeamBaseCurves = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
             }
             else
             {
@@ -78,7 +78,7 @@ namespace WarehouseLib
                     finalList = ComputeRigidBottomBarsToColumns();
                 }
 
-                BottomBeamAxisCurves = finalList;
+                BottomBeamBaseCurves = finalList;
             }
         }
 
@@ -107,19 +107,19 @@ namespace WarehouseLib
 
         protected override List<Curve> ComputeBottomBarsArticulatedToColumns(List<Curve> bars)
         {
-            var tempParamsA = TopBeamAxisCurves[0].DivideByCount(_divisions, true);
-            var tempParamsB = TopBeamAxisCurves[1].DivideByCount(_divisions, true);
+            var tempParamsA = TopBeamBaseCurves[0].DivideByCount(_divisions, true);
+            var tempParamsB = TopBeamBaseCurves[1].DivideByCount(_divisions, true);
             var t1 = tempParamsA[1];
             var t2 = tempParamsB[0];
             var t3 = tempParamsB[tempParamsB.Length - 2];
-            var startPoint = TopBeamAxisCurves[0].PointAt(t1) -
+            var startPoint = TopBeamBaseCurves[0].PointAt(t1) -
                              Vector3d.ZAxis * (ComputeDifference() +
-                                               (TopBeamAxisCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
-            var centerPoint = TopBeamAxisCurves[1].PointAt(t2) -
+                                               (TopBeamBaseCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
+            var centerPoint = TopBeamBaseCurves[1].PointAt(t2) -
                               Vector3d.ZAxis * startPoint.DistanceTo(StartingNodes[0]);
-            var endPoint = TopBeamAxisCurves[1].PointAt(t3) -
+            var endPoint = TopBeamBaseCurves[1].PointAt(t3) -
                            Vector3d.ZAxis * (ComputeDifference() +
-                                             (TopBeamAxisCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
+                                             (TopBeamBaseCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
             var arch = new Arc(startPoint, centerPoint, endPoint);
             arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
             Curve[] tempCurves = arch.ToNurbsCurve().Split(t);
@@ -143,7 +143,7 @@ namespace WarehouseLib
             {
                 Line lineA = new Line(StartingNodes[0], StartingNodes[1]);
                 Line lineB = new Line(StartingNodes[1], StartingNodes[2]);
-                TopBeamAxisCurves = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
+                TopBeamBaseCurves = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
             }
             else
             {
@@ -151,7 +151,7 @@ namespace WarehouseLib
                 arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
                 Curve[] tempCrvs = arch.ToNurbsCurve().Split(t);
                 // tempCrvs[1].Reverse();
-                TopBeamAxisCurves = tempCrvs.ToList();
+                TopBeamBaseCurves = tempCrvs.ToList();
             }
         }
 
@@ -217,7 +217,7 @@ namespace WarehouseLib
             BottomNodes = new List<Point3d>(tempBottomList);
             if (ConnectionType.Warren.ToString() == _connectionType)
             {
-                IntermediateBeamsAxisCurves.RemoveAt(index);
+                IntermediateBeamsBaseCurves.RemoveAt(index);
             }
         }
 
@@ -226,11 +226,11 @@ namespace WarehouseLib
             divisions = _divisions;
             TopNodes = new List<Point3d>();
             BottomNodes = new List<Point3d>();
-            IntermediateBeamsAxisCurves = new List<Curve>();
-            for (int i = 0; i < TopBeamAxisCurves.Count; i++)
+            IntermediateBeamsBaseCurves = new List<Curve>();
+            for (int i = 0; i < TopBeamBaseCurves.Count; i++)
             {
-                GenerateTopNodes(TopBeamAxisCurves[i], divisions, i);
-                GenerateBottomNodes(BottomBeamAxisCurves[i]);
+                GenerateTopNodes(TopBeamBaseCurves[i], divisions, i);
+                GenerateBottomNodes(BottomBeamBaseCurves[i]);
             }
 
             PointCloud cloud = new PointCloud(TopNodes);

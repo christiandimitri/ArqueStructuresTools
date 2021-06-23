@@ -35,15 +35,15 @@ namespace WarehouseLib.Trusses
                 bars = ComputeBottomBarsArticulatedToColumns(bars);
             }
 
-            BottomBeamAxisCurves = new List<Curve>(bars);
+            BottomBeamBaseCurves = new List<Curve>(bars);
         }
 
         protected override List<Curve> ComputeBottomBarsArticulatedToColumns(List<Curve> bars)
         {
             var startingPoint = StartingNodes[0] - Vector3d.ZAxis * ComputeDifference();
-            var tempParams = TopBeamAxisCurves[0].DivideByCount(_divisions, true);
+            var tempParams = TopBeamBaseCurves[0].DivideByCount(_divisions, true);
             var t1 = tempParams[1];
-            var tempPt = TopBeamAxisCurves[0].PointAt(t1);
+            var tempPt = TopBeamBaseCurves[0].PointAt(t1);
             var tempPlane = new Plane(tempPt, _plane.XAxis);
             var interPt = new Point3d();
             var intersectionEvents = Intersection.CurvePlane(bars[0], tempPlane, 0.01);
@@ -83,10 +83,10 @@ namespace WarehouseLib.Trusses
             TopNodes = new List<Point3d>();
             BottomNodes = new List<Point3d>();
             // var angle = Vector3d.VectorAngle(TopBars[0].TangentAtStart, Plane.XAxis);
-            for (var i = 0; i < TopBeamAxisCurves.Count; i++)
+            for (var i = 0; i < TopBeamBaseCurves.Count; i++)
             {
-                GenerateTopNodes(TopBeamAxisCurves[i], divisions, i);
-                GenerateBottomNodes(BottomBeamAxisCurves[i]);
+                GenerateTopNodes(TopBeamBaseCurves[i], divisions, i);
+                GenerateBottomNodes(BottomBeamBaseCurves[i]);
             }
 
             var cloud = new PointCloud(TopNodes);
@@ -109,7 +109,7 @@ namespace WarehouseLib.Trusses
                 lines.Add(line.ToNurbsCurve());
             }
 
-            BottomBeamAxisCurves.AddRange(lines);
+            BottomBeamBaseCurves.AddRange(lines);
             return normals;
         }
 
@@ -121,9 +121,9 @@ namespace WarehouseLib.Trusses
         protected override void IsArticulatedToColumns()
         {
             var splitCurves = new List<Curve>();
-            for (var i = 0; i < BottomBeamAxisCurves.Count; i++)
+            for (var i = 0; i < BottomBeamBaseCurves.Count; i++)
             {
-                var bar = BottomBeamAxisCurves[i];
+                var bar = BottomBeamBaseCurves[i];
                 var ptA = BottomNodes[i == 0 ? 1 : BottomNodes.Count - 2];
                 double t;
                 bar.ClosestPoint(ptA, out t);
@@ -134,15 +134,15 @@ namespace WarehouseLib.Trusses
             BottomNodes.RemoveAt(BottomNodes.Count - 1);
             BottomNodes.Insert(0, TopNodes[0]);
             BottomNodes.Add(TopNodes[TopNodes.Count-1]);
-            var tempList = new List<Curve> {IntermediateBeamsAxisCurves[0], splitCurves[0]};
+            var tempList = new List<Curve> {IntermediateBeamsBaseCurves[0], splitCurves[0]};
             var axisA = Curve.JoinCurves(tempList)[0];
             tempList = new List<Curve>
-                {IntermediateBeamsAxisCurves[IntermediateBeamsAxisCurves.Count - 1], splitCurves[1]};
+                {IntermediateBeamsBaseCurves[IntermediateBeamsBaseCurves.Count - 1], splitCurves[1]};
             var axisB = Curve.JoinCurves(tempList)[0];
             splitCurves = new List<Curve> {axisA, axisB};
-            IntermediateBeamsAxisCurves.RemoveAt(0);
-            IntermediateBeamsAxisCurves.RemoveAt(IntermediateBeamsAxisCurves.Count - 1);
-            BottomBeamAxisCurves = splitCurves;
+            IntermediateBeamsBaseCurves.RemoveAt(0);
+            IntermediateBeamsBaseCurves.RemoveAt(IntermediateBeamsBaseCurves.Count - 1);
+            BottomBeamBaseCurves = splitCurves;
         }
 
         public override void GenerateTopBars()

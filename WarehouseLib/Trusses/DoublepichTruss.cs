@@ -93,7 +93,7 @@ namespace WarehouseLib.Trusses
             StartingNodes = GetStartingPoints(_plane, Inputs.Width/2, Inputs.Width/2, _height, _maxHeight, _height);
             var barA = new Line(StartingNodes[0], StartingNodes[1]);
             var barB = new Line(StartingNodes[1], StartingNodes[2]);
-            TopBeamAxisCurves = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};
+            TopBeamBaseCurves = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};
         }
 
         protected override void GenerateBottomNodes(Curve crv)

@@ -30,34 +30,44 @@ namespace WarehouseLib.Utilities
                 var trussA = warehouse.Trusses[i];
 
                 var trussB = _warehouse.Trusses[i];
-
+                
+                // <summary>
+                // Todo top beam
+                // </summary>
+                
+                
                 if (trussB.IntermediateBeams != null)
                 {
-                    var axisList = new List<Axis>();
-                    for (int j = 0; j < trussA.IntermediateBeamsAxisCurves.Count; j++)
+                    var axisList = new List<BeamAxis>();
+                    for (int j = 0; j < trussA.IntermediateBeamsBaseCurves.Count; j++)
                     {
-                        var axis = new Axis(trussA.IntermediateBeamsAxisCurves[i]);
+                        var axis = new BeamAxis(trussA.IntermediateBeamsBaseCurves[i]);
                         axisList.Add(axis);
                     }
 
-                    trussB.IntermediateBeams = new IntermediateBeams
+                    trussB.IntermediateBeams = new Beam()
                     {
                         Axis = axisList,
-                        ProfileOrientationPlane = trussA.IntermediateBeams.ProfileOrientationPlane
+                        ProfileOrientationPlane = trussA.IntermediateBeams.ProfileOrientationPlane,
+                        Position = "Intermediate"
                     };
                 }
 
                 if (trussB.BottomBeam != null)
                 {
-                    var axisList = new List<Axis>();
-                    for (int j = 0; j < trussA.BottomBeamAxisCurves.Count; j++)
+                    var axisList = new List<BeamAxis>();
+                    for (int j = 0; j < trussA.BottomBeamBaseCurves.Count; j++)
                     {
-                        var axis = new Axis(trussA.BottomBeamAxisCurves[i]);
+                        var axis = new BeamAxis(trussA.BottomBeamBaseCurves[i]);
                         axisList.Add(axis);
                     }
 
-                    trussB.BottomBeam.Axis = axisList;
-                    trussB.BottomBeam.ProfileOrientationPlane = trussA.BottomBeam.ProfileOrientationPlane;
+                    trussB.BottomBeam = new Beam()
+                    {
+                        Axis = axisList,
+                        ProfileOrientationPlane = trussA.BottomBeam.ProfileOrientationPlane,
+                        Position = "Bottom"
+                    };
                 }
             }
 

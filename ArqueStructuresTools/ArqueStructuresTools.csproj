@@ -109,6 +109,7 @@
     <Compile Include="Utilities\DeconstructStrap.cs" />
     <Compile Include="Utilities\DeconstructTruss.cs" />
     <Compile Include="Utilities\DeconstructWarehouse.cs" />
+    <Compile Include="Utilities\HalfEdgeBeam.cs" />
     <Compile Include="Warehouse\RectangularWarehouseComponent.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -27,7 +27,8 @@ namespace ArqueStructuresTools.Karamba
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("Axis", "A", "Beam axis", GH_ParamAccess.list);
+            pManager.AddTextParameter("Position", "Po", "Truss beam's position string", GH_ParamAccess.item);
+            pManager.AddCurveParameter("Axis", "A", "Beam's axis", GH_ParamAccess.list);
             pManager.AddNumberParameter("Y Buckling", "YB", "Y buckling length", GH_ParamAccess.list);
             pManager.AddNumberParameter("Z Buckling", "ZB", "Z buckling length", GH_ParamAccess.list);
         }
@@ -45,7 +46,7 @@ namespace ArqueStructuresTools.Karamba
             var bucklingYList = new List<double>();
             var bucklingZList = new List<double>();
             var axisList = new List<Curve>();
-            
+
             if (beamGoo.Value.BucklingLengths != null)
             {
                 for (var index = 0; index < beamGoo.Value.BucklingLengths.Count; index++)
@@ -58,7 +59,7 @@ namespace ArqueStructuresTools.Karamba
                 }
             }
 
-            if (beamGoo.Value.Axis!=null)
+            if (beamGoo.Value.Axis != null)
             {
                 for (int i = 0; i < beamGoo.Value.Axis.Count; i++)
                 {
@@ -66,10 +67,13 @@ namespace ArqueStructuresTools.Karamba
                 }
             }
 
+            var position = beamGoo.Value.Position != null ? beamGoo.Value.Position : string.Empty;
+            
             // set output data 
-            DA.SetDataList(0, axisList);
-            DA.SetDataList(1, bucklingYList);
-            DA.SetDataList(2, bucklingZList);
+            DA.SetData(0, position);
+            DA.SetDataList(1, axisList);
+            DA.SetDataList(2, bucklingYList);
+            DA.SetDataList(3, bucklingZList);
         }
     }
 }

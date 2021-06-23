@@ -63,11 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Articulations\ArticulationType.cs" />
-    <Compile Include="Beams\Axis.cs" />
+    <Compile Include="Beams\BeamAxis.cs" />
+    <Compile Include="Beams\BeamAxisHalfEdge.cs" />
     <Compile Include="Beams\Beam.cs" />
-    <Compile Include="Beams\BottomBeam.cs" />
-    <Compile Include="Beams\IntermediateBeams.cs" />
-    <Compile Include="Beams\TopBeam.cs" />
     <Compile Include="Bracings\Bracing.cs" />
     <Compile Include="Bracings\BracingPosition.cs" />
     <Compile Include="Bracings\ColumnsBracing.cs" />

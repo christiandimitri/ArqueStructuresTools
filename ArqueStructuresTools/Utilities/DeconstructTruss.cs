@@ -57,10 +57,10 @@ namespace ArqueStructuresTools
             var boundaryNodes = truss.BoundaryTopNodes != null ? truss.BoundaryTopNodes : new List<Point3d>();
             var staticColumnsGoo = new List<ColumnGoo>();
             var boundaryColumnsGoo = new List<ColumnGoo>();
-            var topBeamGoo = (truss.TopBeam != null) ? new BeamGoo(truss.TopBeam) : new BeamGoo();
-            var bottomBeamGoo = (truss.BottomBeam != null) ? new BeamGoo(truss.BottomBeam) : new BeamGoo();
+            var topBeamGoo = (truss.TopBeam.Axis != null) ? new BeamGoo(truss.TopBeam) : null;
+            var bottomBeamGoo = (truss.BottomBeam.Axis != null) ? new BeamGoo(truss.BottomBeam) : null;
             var intermediateBeamsGoo =
-                (truss.IntermediateBeams != null) ? new BeamGoo(truss.IntermediateBeams) : new BeamGoo();
+                (truss.IntermediateBeams.Axis != null) ? new BeamGoo(truss.IntermediateBeams) : null;
 
             if (truss.StaticColumns != null)
             {

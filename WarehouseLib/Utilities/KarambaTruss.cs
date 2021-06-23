@@ -83,13 +83,13 @@ namespace WarehouseLib.Utilities
         // truss beams
         private void GetTrussBeams()
         {
-            _trussTopBeam = _truss.TopBeam.Axis != null ? _truss.TopBeam : new TopBeam();
+            _trussTopBeam = _truss.TopBeam.Axis != null ? _truss.TopBeam : new Beam();
 
-            _trussBottomBeam = _truss.BottomBeam.Axis != null ? _truss.BottomBeam : new BottomBeam();
+            _trussBottomBeam = _truss.BottomBeam.Axis != null ? _truss.BottomBeam : new Beam();
 
             _trussIntermediateBeam = _truss.IntermediateBeams.Axis != null
                 ? _truss.IntermediateBeams
-                : new IntermediateBeams();
+                : new Beam();
         }
 
         // Get Karamba3D all Columns types and properties
@@ -160,26 +160,26 @@ namespace WarehouseLib.Utilities
         }
 
         // Get Karamba3D all Beams types and properties
-
         private void GetKaramba3DBeams()
         {
-            Karamba3DTopBeams = new TopBeam();
-            Karamba3DIntermediateBeams = new IntermediateBeams();
-            Karamba3DBottomBeams = new BottomBeam();
+            Karamba3DTopBeams = new Beam();
+            Karamba3DIntermediateBeams = new Beam();
+            Karamba3DBottomBeams = new Beam();
             if (_trussTopBeam.Axis != null)
             {
-                var axisCurves = SplitBeamBetweenNodes(_trussTopNodes, _trussTopBeam);
-                var tempAxis= new List<Axis>();
+                var axisCurves = _truss.TopBeamAxis;
+                var tempAxis = new List<BeamAxis>();
                 for (int i = 0; i < axisCurves.Count; i++)
                 {
-                    tempAxis.Add(new Axis(axisCurves[i]));
+                    tempAxis.Add(new BeamAxis(axisCurves[i].AxisCurve));
                 }
 
                 Karamba3DTopBeams.Axis = tempAxis;
+                Karamba3DTopBeams.Position = _trussTopBeam.Position;
                 if (_porticoType == PorticoType.Truss.ToString())
                 {
                     Karamba3DTopBeams.BucklingLengths =
-                        Karamba3DTopBeams.ComputeTrussBeamBucklingLengthsBetweenNodes(Karamba3DTopBeams,  true);
+                        Karamba3DTopBeams.ComputeTrussBeamBucklingLengthsBetweenNodes(Karamba3DTopBeams, true);
                 }
                 else
                 {
@@ -190,24 +190,29 @@ namespace WarehouseLib.Utilities
 
             if (_trussBottomBeam.Axis != null)
             {
-                var axisCurves = SplitBeamBetweenNodes(_trussBottomNodes, _trussBottomBeam);
-                var tempAxis = new List<Axis>();
+                var axisCurves = _truss.BottomBeamAxis;
+                var tempAxis = new List<BeamAxis>();
                 for (int i = 0; i < axisCurves.Count; i++)
                 {
-                    tempAxis.Add(new Axis(axisCurves[i]));
+                    tempAxis.Add(new BeamAxis(axisCurves[i].AxisCurve));
                 }
 
                 Karamba3DBottomBeams.Axis = tempAxis;
                 Karamba3DBottomBeams.BucklingLengths =
-                    Karamba3DBottomBeams.ComputeTrussBeamBucklingLengthsBetweenNodes(Karamba3DBottomBeams,  true);
+                    Karamba3DBottomBeams.ComputeTrussBeamBucklingLengthsBetweenNodes(Karamba3DBottomBeams, true);
+                Karamba3DBottomBeams.Position = _trussBottomBeam.Position;
             }
 
             if (_trussIntermediateBeam.Axis != null)
             {
                 Karamba3DIntermediateBeams = _trussIntermediateBeam;
                 Karamba3DIntermediateBeams.BucklingLengths =
-                    Karamba3DIntermediateBeams.ComputeTrussBeamBucklingLengthsBetweenNodes(Karamba3DIntermediateBeams, false);
+                    Karamba3DIntermediateBeams.ComputeTrussBeamBucklingLengthsBetweenNodes(Karamba3DIntermediateBeams,
+                        false);
+                Karamba3DIntermediateBeams.Position = _trussIntermediateBeam.Position;
             }
+
+            _truss.SetNodesToBeams(Karamba3DTopBeams, Karamba3DBottomBeams, Karamba3DIntermediateBeams);
         }
 
         // Return a column with its buckling lengths
@@ -223,38 +228,38 @@ namespace WarehouseLib.Utilities
         // Return a beam with its buckling lengths
 
 
-        private List<Curve> SplitBeamBetweenNodes(List<Point3d> nodes, Beam beam)
-        {
-            var axis = new List<Curve>();
-            var tempBaseAxisList = new List<Curve>();
-            
-            for (int i = 0; i < beam.Axis.Count; i++)
-            {
-                var tempAxis = beam.Axis[i].AxisCurve;
-                tempBaseAxisList.Add(tempAxis);
-            }
-
-            tempBaseAxisList = Curve.JoinCurves(tempBaseAxisList).ToList();
-
-            var baseAxis = tempBaseAxisList[0];
-            for (var i = 1; i < nodes.Count - 1; i++)
-            {
-                var node = nodes[i];
-                double t;
-                baseAxis.ClosestPoint(node, out t);
-                var tempList = baseAxis.ToNurbsCurve().Split(t).ToList();
-                axis.Add(tempList[0]);
-                baseAxis = tempList[1];
-                if (i == nodes.Count - 1)
-                {
-                    axis.Add(baseAxis);
-                }
-            }
-
-            axis.Add(baseAxis);
-
-
-            return axis;
-        }
+        // private List<Curve> SplitBeamBetweenNodes(List<Point3d> nodes, Beam beam)
+        // {
+        //     var axis = new List<Curve>();
+        //     var tempBaseAxisList = new List<Curve>();
+        //
+        //     for (int i = 0; i < beam.Axis.Count; i++)
+        //     {
+        //         var tempAxis = beam.Axis[i].AxisCurve;
+        //         tempBaseAxisList.Add(tempAxis);
+        //     }
+        //
+        //     tempBaseAxisList = Curve.JoinCurves(tempBaseAxisList).ToList();
+        //
+        //     var baseAxis = tempBaseAxisList[0];
+        //     for (var i = 1; i < nodes.Count - 1; i++)
+        //     {
+        //         var node = nodes[i];
+        //         double t;
+        //         baseAxis.ClosestPoint(node, out t);
+        //         var tempList = baseAxis.ToNurbsCurve().Split(t).ToList();
+        //         axis.Add(tempList[0]);
+        //         baseAxis = tempList[1];
+        //         if (i == nodes.Count - 1)
+        //         {
+        //             axis.Add(baseAxis);
+        //         }
+        //     }
+        //
+        //     axis.Add(baseAxis);
+        //
+        //
+        //     return axis;
+        // }
     }
 }

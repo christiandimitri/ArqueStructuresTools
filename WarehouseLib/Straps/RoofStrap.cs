@@ -73,20 +73,20 @@ namespace WarehouseLib
         private List<Point3d> ModifyNodesAtStartEndAndAtIndexByOffset(Truss truss, int index, double offset)
         {
             var outNodes = new List<Point3d>(truss.TopNodes);
-            var pt = truss.TopBeamAxisCurves[0].PointAtNormalizedLength(1 - offset);
+            var pt = truss.TopBeamBaseCurves[0].PointAtNormalizedLength(1 - offset);
             outNodes.Insert(0, pt);
             outNodes.RemoveAt(1);
             if (truss is DoublepichTruss)
             {
-                pt = new Point3d(truss.TopBeamAxisCurves[0].PointAtNormalizedLength(offset));
+                pt = new Point3d(truss.TopBeamBaseCurves[0].PointAtNormalizedLength(offset));
                 outNodes.Insert(index, pt);
                 outNodes.RemoveAt(index + 1);
-                pt = new Point3d(truss.TopBeamAxisCurves[1].PointAtNormalizedLength(1 - offset));
+                pt = new Point3d(truss.TopBeamBaseCurves[1].PointAtNormalizedLength(1 - offset));
                 outNodes.Insert(index + 1, pt);
                 // outNodes.RemoveAt(index + 2);
             }
 
-            pt = new Point3d(truss.TopBeamAxisCurves[1].PointAtNormalizedLength(offset));
+            pt = new Point3d(truss.TopBeamBaseCurves[1].PointAtNormalizedLength(offset));
             outNodes.Insert(outNodes.Count - 1, pt);
             outNodes.RemoveAt(outNodes.Count - 1);
             return outNodes;
