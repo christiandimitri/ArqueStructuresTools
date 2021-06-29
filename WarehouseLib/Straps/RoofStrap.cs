@@ -21,7 +21,7 @@ namespace WarehouseLib
                 {
                     var trussA = trusses[i];
                     var trussB = trusses[i + 1];
-                    var offset = 0.9;
+                    // var offset = 0.9;
                     var newNodesA = trussA.TopNodes;
                         // new List<Point3d>(
                         //     new RoofStrap().ModifyNodesAtStartEndAndAtIndexByOffset(trussA, 0, offset));

@@ -24,10 +24,6 @@ namespace WarehouseLib.Utilities
         public List<Point3d> _trussTopNodes;
         public List<Point3d> _trussBottomNodes;
 
-        private Beam _trussTopBeam;
-        private Beam _trussBottomBeam;
-        private Beam _trussIntermediateBeam;
-
         public Beam Karamba3DTopBeams;
         public Beam Karamba3DBottomBeams;
         public Beam Karamba3DIntermediateBeams;
@@ -43,8 +39,6 @@ namespace WarehouseLib.Utilities
             GetTrussNodes();
             // get truss columns
             GetTrussColumns();
-            // get truss beams 
-            GetTrussBeams();
             // compute karamba properties for each component and add it
             // compute karamba3D columns and properties
             GetKaramba3DColumns();
@@ -80,19 +74,6 @@ namespace WarehouseLib.Utilities
             _trussBoundaryColumns = _truss.BoundaryColumns ?? new List<Column>();
         }
 
-        // truss beams
-        private void GetTrussBeams()
-        {
-            if (_truss.TopBeamAxis != null)
-            {
-                _trussTopBeam = _truss.TopBeam;
-            }
-
-            if (_porticoType == PorticoType.Portico) return;
-            _trussBottomBeam = _truss.BottomBeam;
-
-            _trussIntermediateBeam = _truss.IntermediateBeams;
-        }
 
         // Get Karamba3D all Columns types and properties
         private void GetKaramba3DColumns()
@@ -167,17 +148,11 @@ namespace WarehouseLib.Utilities
             Karamba3DTopBeams = new Beam();
             Karamba3DIntermediateBeams = new Beam();
             Karamba3DBottomBeams = new Beam();
-            if (_trussTopBeam.Axis != null)
+            if (_truss.TopBeamAxis != null)
             {
                 var axisCurves = _truss.TopBeamAxis;
-                var tempAxis = new List<BeamAxis>();
-                for (int i = 0; i < axisCurves.Count; i++)
-                {
-                    tempAxis.Add(new BeamAxis(axisCurves[i].AxisCurve));
-                }
-
-                Karamba3DTopBeams.Axis = tempAxis;
-                Karamba3DTopBeams.Position = _trussTopBeam.Position;
+                Karamba3DTopBeams.Axis = axisCurves;
+                Karamba3DTopBeams.Position = _truss.TopBeam.Position;
                 if (_porticoType == PorticoType.Truss)
                 {
                     Karamba3DTopBeams.BucklingLengths =
@@ -190,29 +165,22 @@ namespace WarehouseLib.Utilities
                 }
             }
 
-            if (_trussBottomBeam.Axis != null)
+            if (_truss.BottomBeam.Axis != null)
             {
-                var axisCurves = _trussBottomBeam.Axis;
-                var tempAxis = new List<BeamAxis>();
-                for (int i = 0; i < axisCurves.Count; i++)
-                {
-                    tempAxis.Add(new BeamAxis(axisCurves[i].AxisCurve));
-                }
-
-                Karamba3DBottomBeams.Axis = tempAxis;
-                // Karamba3DBottomBeams = _trussBottomBeam;
+                var axisCurves = _truss.BottomBeamAxis;
+                Karamba3DBottomBeams.Axis = axisCurves;
                 Karamba3DBottomBeams.BucklingLengths =
                     Karamba3DBottomBeams.ComputeTrussBeamBucklingLengthsBetweenNodes(Karamba3DBottomBeams, true);
-                Karamba3DBottomBeams.Position = _trussBottomBeam.Position;
+                Karamba3DBottomBeams.Position = _truss.BottomBeam.Position;
             }
 
-            if (_trussIntermediateBeam.Axis != null)
+            if (_truss.IntermediateBeams.Axis != null)
             {
-                Karamba3DIntermediateBeams = _trussIntermediateBeam;
+                Karamba3DIntermediateBeams = _truss.IntermediateBeams;
                 Karamba3DIntermediateBeams.BucklingLengths =
                     Karamba3DIntermediateBeams.ComputeTrussBeamBucklingLengthsBetweenNodes(Karamba3DIntermediateBeams,
                         false);
-                Karamba3DIntermediateBeams.Position = _trussIntermediateBeam.Position;
+                Karamba3DIntermediateBeams.Position = _truss.IntermediateBeams.Position;
             }
         }
 

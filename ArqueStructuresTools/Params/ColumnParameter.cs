@@ -55,7 +55,7 @@ namespace ArqueStructuresTools
         public bool IsPreviewCapable => true;
         public BoundingBox ClippingBox => _box;
         private BoundingBox _box = new BoundingBox();
-        private IGH_PreviewObject _ighImplementation;
+        // private IGH_PreviewObject _ighImplementation;
     }
 
     public class ColumnGoo : GH_Goo<Column>

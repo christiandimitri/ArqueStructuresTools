@@ -163,6 +163,8 @@ namespace WarehouseLib.Trusses
             {
                 recomputedDivisions /= (int) 2;
             }
+            else
+                recomputedDivisions *= 2;
 
             return recomputedDivisions;
         }
@@ -242,7 +244,7 @@ namespace WarehouseLib.Trusses
                 topBeamAxisTrimmed.Add(beamAxis);
             }
 
-            // if (index == 0) nodes.RemoveAt(nodes.Count - 1);
+            if (index == 0) nodes.RemoveAt(nodes.Count - 1);
 
             return new TempBeam()
             {
@@ -256,13 +258,14 @@ namespace WarehouseLib.Trusses
             var nodes = new List<Point3d>();
             var bottomBeamAxisTrimmed = new List<BeamAxis>();
             var intersectingLines = new List<Line>();
-
+            var tempPoints = new List<Point3d>(points);
+            if (index == 0) tempPoints.Add(curve.PointAtEnd);
             for (int i = 0;
-                i < points.Count;
+                i < tempPoints.Count;
                 i++)
             {
                 var tempPt = _plane.Origin - Vector3d.ZAxis * _maxHeight;
-                var lineA = new Line(points[i], new Point3d(points[i].X, points[i].Y, tempPt.Z));
+                var lineA = new Line(tempPoints[i], new Point3d(tempPoints[i].X, tempPoints[i].Y, tempPt.Z));
                 intersectingLines.Add(lineA);
             }
 
@@ -289,7 +292,7 @@ namespace WarehouseLib.Trusses
                 bottomBeamAxisTrimmed.Add(beamAxis);
             }
 
-            // if (index == 0) nodes.RemoveAt(nodes.Count - 1);
+            if (index == 0) nodes.RemoveAt(nodes.Count - 1);
 
             return new TempBeam()
             {
@@ -311,12 +314,12 @@ namespace WarehouseLib.Trusses
                 var topBeamBaseCurve = TopBeamBaseCurves[i];
                 var bottomBeambaseCurve = BottomBeamBaseCurves[i];
                 var divideByCount = topBeamBaseCurve.DivideByCount(divisions, true);
-                var recomputedParams = new List<double>();
-
-                // recomputedParams = RecomputeParametersByConnectionType(divideByCount, 0, 2);
 
 
-                var resultTop = GenerateTopBeamDivisions(topBeamBaseCurve, divideByCount, i);
+                var recomputedParams = RecomputeParametersByConnectionType(divideByCount);
+
+
+                var resultTop = GenerateTopBeamDivisions(topBeamBaseCurve, recomputedParams.ToArray(), i);
                 TopNodes.AddRange(resultTop.nodes);
                 TopBeamAxis.AddRange(resultTop.axis);
 
@@ -334,14 +337,21 @@ namespace WarehouseLib.Trusses
             GenerateIntermediateBars(_connectionType, index);
         }
 
-        private List<double> RecomputeParametersByConnectionType(double[] parameters, int start, int step)
+        private List<double> RecomputeParametersByConnectionType(double[] parameters)
         {
             var outParams = new List<double>();
             if (_connectionType == ConnectionType.Warren)
             {
-                for (int i = start; i < parameters.ToList().Count; i += step)
+                for (int i = 0; i < parameters.ToList().Count; i++)
                 {
-                    outParams.Add(parameters[i]);
+                    if (i % 2 == 1)
+                    {
+                        if (!outParams.Contains(parameters[i - 1]))
+                        {
+                            outParams.Add(parameters[i - 1]);
+                        }
+                        outParams.Add(parameters[i + 1]);
+                    }
                 }
             }
 
@@ -387,7 +397,7 @@ namespace WarehouseLib.Trusses
 
         public abstract List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index);
 
-        protected abstract void RecomputeNodes(int index);
+        // protected abstract void RecomputeNodes(int index);
 
         protected void ChangeArticulationAtColumnsByType(string type)
         {

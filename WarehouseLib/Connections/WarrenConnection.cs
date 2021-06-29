@@ -31,7 +31,7 @@ namespace WarehouseLib.Connections
 
             var midStudAxis = new Line(tempBottomNodes[MidPointIndex], tempTopNodes[MidPointIndex]);
 
-            axis.Insert(MidPointIndex, midStudAxis.ToNurbsCurve());
+            // axis.Insert(MidPointIndex, midStudAxis.ToNurbsCurve());
 
             return axis;
         }

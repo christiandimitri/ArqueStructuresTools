@@ -66,8 +66,8 @@ namespace WarehouseLib.Utilities
                 _warehouse._warehouseOptions.HasBoundary ? i < KarambaTrusses.Count - 1 : i < KarambaTrusses.Count;
                 i++)
             {
-                int index = 0;
-                int k = 0;
+                // int index = 0;
+                // int k = 0;
                 var karambaTruss = KarambaTrusses[i];
                 var truss = _warehouse.Trusses[i];
                 if (karambaTruss.StAndresBottomNodes != null)
