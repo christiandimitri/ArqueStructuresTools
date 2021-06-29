@@ -48,13 +48,14 @@ namespace ArqueStructuresTools
 
         public void DrawViewportMeshes(IGH_PreviewArgs args)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public bool Hidden { get; set; }
         public bool IsPreviewCapable => true;
         public BoundingBox ClippingBox => _box;
         private BoundingBox _box = new BoundingBox();
+        private IGH_PreviewObject _ighImplementation;
     }
 
     public class ColumnGoo : GH_Goo<Column>

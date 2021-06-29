@@ -2,9 +2,9 @@
 {
     public enum ConnectionType
     {
-        Pratt,
-        Howe,
-        Warren,
-        WarrenStuds
+        Pratt = 0,
+        Howe = 1,
+        Warren = 2,
+        WarrenStuds = 3
     }
 }

@@ -227,7 +227,7 @@ namespace WarehouseLib.Warehouses
         private void GenerateStAndresCross()
         {
             Crosses = new List<Cross>();
-            if (TrussInputs.TrussType != ConnectionType.Warren.ToString())
+            if (TrussInputs.TrussType != ConnectionType.Warren)
                 for (var i = _warehouseOptions.HasBoundary ? 1 : 0;
                     _warehouseOptions.HasBoundary ? i < Trusses.Count - 2 : i < Trusses.Count - 1;
                     i++)

@@ -10,8 +10,10 @@ namespace WarehouseLib.Nodes
         // <summary>
         // get or set the node point3d
         // </summary>
+        
         public Point3d Position;
 
+        public List<BeamAxisHalfEdge> AdjacentAxisHalfEdges;
         // <summary>
         // get or set the incident axis edge to the node
         // </summary>
@@ -30,6 +32,7 @@ namespace WarehouseLib.Nodes
         public Node(Point3d point3d)
         {
             Position = point3d;
+            AdjacentAxisHalfEdges = new List<BeamAxisHalfEdge>();
         }
         
     }

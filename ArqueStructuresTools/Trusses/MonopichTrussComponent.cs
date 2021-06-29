@@ -54,7 +54,7 @@ namespace ArqueStructuresTools
             try
             {
                 truss = new MonopichTruss(plane, trussInputs);
-                if (trussInputs.PorticoType == PorticoType.Portico.ToString())
+                if (trussInputs.PorticoType == PorticoType.Portico)
                 {
                     
                     truss.ConstructPorticoFromTruss(truss, porticoIndex);

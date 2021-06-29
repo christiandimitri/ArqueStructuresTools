@@ -43,7 +43,7 @@ namespace WarehouseLib
             BottomNodes.RemoveAt(0);
             BottomNodes.RemoveAt(BottomNodes.Count - 1);
             BottomNodes.Insert(0, TopNodes[0]);
-            BottomNodes.Add(TopNodes[TopNodes.Count-1]);
+            BottomNodes.Add(TopNodes[TopNodes.Count - 1]);
             var tempList = new List<Curve> {IntermediateBeamsBaseCurves[0], splitCurves[0]};
             var axisA = Curve.JoinCurves(tempList)[0];
             tempList = new List<Curve>
@@ -155,11 +155,6 @@ namespace WarehouseLib
             }
         }
 
-        protected override void GenerateBottomNodes(Curve crv)
-        {
-            GenerateVerticalBottomNodes(crv);
-        }
-
         public override double ComputeArticulatedOffsetFromTrigo(int index, double difference)
         {
             return 0;
@@ -171,7 +166,7 @@ namespace WarehouseLib
             List<Point3d> tempBottomList = new List<Point3d>();
             for (int i = 0; i < TopNodes.Count; i++)
             {
-                if (_connectionType == ConnectionType.Warren.ToString())
+                if (_connectionType == ConnectionType.Warren)
                 {
                     if (i % 2 == 0)
                     {
@@ -182,7 +177,7 @@ namespace WarehouseLib
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (_connectionType == ConnectionType.WarrenStuds.ToString())
+                else if (_connectionType == ConnectionType.WarrenStuds)
                 {
                     tempTopList.Add(TopNodes[i]);
                     if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
@@ -190,19 +185,21 @@ namespace WarehouseLib
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (_connectionType == ConnectionType.Howe.ToString() || _connectionType == ConnectionType.Pratt.ToString())
+                else if (_connectionType == ConnectionType.Howe ||
+                         _connectionType == ConnectionType.Pratt)
                 {
                     tempTopList.Add(TopNodes[i]);
                     tempBottomList.Add(BottomNodes[i]);
                 }
             }
 
-            if (_connectionType == ConnectionType.Warren.ToString())
+            if (_connectionType == ConnectionType.Warren)
             {
                 tempBottomList.Insert(0, BottomNodes[0]);
                 tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
             }
-            if (_connectionType == ConnectionType.WarrenStuds.ToString())
+
+            if (_connectionType == ConnectionType.WarrenStuds)
             {
                 if (!tempBottomList.Contains(BottomNodes[index]))
                 {
@@ -213,29 +210,13 @@ namespace WarehouseLib
                     tempTopList.Insert((index / 2) + 1, TopNodes[index]);
                 }
             }
+
             TopNodes = new List<Point3d>(tempTopList);
             BottomNodes = new List<Point3d>(tempBottomList);
-            if (ConnectionType.Warren.ToString() == _connectionType)
+            if (ConnectionType.Warren == _connectionType)
             {
                 IntermediateBeamsBaseCurves.RemoveAt(index);
             }
-        }
-
-        public override void ConstructTruss(int divisions)
-        {
-            divisions = _divisions;
-            TopNodes = new List<Point3d>();
-            BottomNodes = new List<Point3d>();
-            IntermediateBeamsBaseCurves = new List<Curve>();
-            for (int i = 0; i < TopBeamBaseCurves.Count; i++)
-            {
-                GenerateTopNodes(TopBeamBaseCurves[i], divisions, i);
-                GenerateBottomNodes(BottomBeamBaseCurves[i]);
-            }
-
-            PointCloud cloud = new PointCloud(TopNodes);
-            int index = cloud.ClosestPoint(StartingNodes[1]);
-            GenerateIntermediateBars(_connectionType, index);
         }
     }
 }

@@ -124,7 +124,6 @@ namespace WarehouseLib.Beams
                 buckling.BucklingZ = beam.Axis[i].AxisCurve.GetLength();
                 bucklings.Add(buckling);
             }
-
             return bucklings;
         }
 

@@ -29,7 +29,7 @@ namespace WarehouseLib.Trusses
             List<Point3d> tempBottomList = new List<Point3d>();
             for (int i = 0; i < TopNodes.Count; i++)
             {
-                if (_connectionType == ConnectionType.Warren.ToString())
+                if (_connectionType == ConnectionType.Warren)
                 {
                     if (i % 2 == 0)
                     {
@@ -40,7 +40,7 @@ namespace WarehouseLib.Trusses
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (_connectionType == ConnectionType.WarrenStuds.ToString())
+                else if (_connectionType == ConnectionType.WarrenStuds)
                 {
                     tempTopList.Add(TopNodes[i]);
                     if (i % 2 == 1 || i == TopNodes.Count - 1 || i == 0)
@@ -48,14 +48,14 @@ namespace WarehouseLib.Trusses
                         tempBottomList.Add(BottomNodes[i]);
                     }
                 }
-                else if (_connectionType == ConnectionType.Howe.ToString() || _connectionType == ConnectionType.Pratt.ToString())
+                else if (_connectionType == ConnectionType.Howe || _connectionType == ConnectionType.Pratt)
                 {
                     tempTopList.Add(TopNodes[i]);
                     tempBottomList.Add(BottomNodes[i]);
                 }
             }
 
-            if (_connectionType == ConnectionType.WarrenStuds.ToString())
+            if (_connectionType == ConnectionType.WarrenStuds)
             {
                 if (!tempBottomList.Contains(BottomNodes[index]))
                 {
@@ -67,7 +67,7 @@ namespace WarehouseLib.Trusses
                 }
             }
 
-            if (_connectionType == ConnectionType.Warren.ToString())
+            if (_connectionType == ConnectionType.Warren)
             {
                 tempBottomList.Insert(0, BottomNodes[0]);
                 tempBottomList.Add(BottomNodes[BottomNodes.Count - 1]);
@@ -75,7 +75,7 @@ namespace WarehouseLib.Trusses
 
             TopNodes = new List<Point3d>(tempTopList);
             BottomNodes = new List<Point3d>(tempBottomList);
-            if (ConnectionType.Warren.ToString() == _connectionType)
+            if (ConnectionType.Warren == _connectionType)
             {
                 IntermediateBeamsBaseCurves.RemoveAt(index);
             }
@@ -88,11 +88,6 @@ namespace WarehouseLib.Trusses
             var barA = new Line(StartingNodes[0], StartingNodes[1]);
             var barB = new Line(StartingNodes[1], StartingNodes[2]);
             TopBeamBaseCurves = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};
-        }
-
-        protected override void GenerateBottomNodes(Curve crv)
-        {
-            GenerateVerticalBottomNodes(crv);
         }
     }
 }

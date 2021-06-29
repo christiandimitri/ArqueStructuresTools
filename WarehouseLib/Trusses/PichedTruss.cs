@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
+using WarehouseLib.Beams;
 using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
@@ -72,28 +73,6 @@ namespace WarehouseLib.Trusses
             return bars;
         }
 
-        protected override void GenerateBottomNodes(Curve crv)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void ConstructTruss(int divisions)
-        {
-            divisions = _divisions;
-            TopNodes = new List<Point3d>();
-            BottomNodes = new List<Point3d>();
-            // var angle = Vector3d.VectorAngle(TopBars[0].TangentAtStart, Plane.XAxis);
-            for (var i = 0; i < TopBeamBaseCurves.Count; i++)
-            {
-                GenerateTopNodes(TopBeamBaseCurves[i], divisions, i);
-                GenerateBottomNodes(BottomBeamBaseCurves[i]);
-            }
-
-            var cloud = new PointCloud(TopNodes);
-            var index = cloud.ClosestPoint(StartingNodes[1]);
-            GenerateIntermediateBars(_connectionType, index);
-        }
-
         public override List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index)
         {
             var normals = new List<Vector3d>();
@@ -133,7 +112,7 @@ namespace WarehouseLib.Trusses
             BottomNodes.RemoveAt(0);
             BottomNodes.RemoveAt(BottomNodes.Count - 1);
             BottomNodes.Insert(0, TopNodes[0]);
-            BottomNodes.Add(TopNodes[TopNodes.Count-1]);
+            BottomNodes.Add(TopNodes[TopNodes.Count - 1]);
             var tempList = new List<Curve> {IntermediateBeamsBaseCurves[0], splitCurves[0]};
             var axisA = Curve.JoinCurves(tempList)[0];
             tempList = new List<Curve>

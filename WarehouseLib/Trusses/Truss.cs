@@ -36,10 +36,10 @@ namespace WarehouseLib.Trusses
         public List<BeamAxis> IntermediateBeamAxis;
         public List<Point3d> TopNodes;
         public List<Point3d> BoundaryTopNodes;
-        public string _connectionType;
+        public ConnectionType _connectionType;
         public string _articulationType;
         public double _facadeStrapsDistance;
-        public string _porticoType;
+        public PorticoType _porticoType;
         public List<Point3d> StAndresBottomNodes;
         public List<int> StAndresBottomNodesIndices;
 
@@ -59,10 +59,20 @@ namespace WarehouseLib.Trusses
             _porticoType = inputs.PorticoType;
         }
 
+        private List<BeamAxis> AllAxisList()
+        {
+            var allAxisList = new List<BeamAxis>();
+
+            allAxisList.AddRange(TopBeamAxis);
+            allAxisList.AddRange(BottomBeamAxis);
+
+            return allAxisList;
+        }
+
         public void UpdatePorticoType(Truss truss)
         {
             truss._porticoType =
-                BottomBeam.Axis == null ? PorticoType.Portico.ToString() : PorticoType.Truss.ToString();
+                BottomBeam.Axis == null ? PorticoType.Portico : PorticoType.Truss;
         }
 
         protected void ConstructBeams(bool joinTopBeamsAxis, bool joinBottomBeamsAxis)
@@ -123,33 +133,35 @@ namespace WarehouseLib.Trusses
             };
 
             IntermediateBeams = interBeams;
-            SetNodesToBeams(TopBeam, BottomBeam, IntermediateBeams);
+            // SetNodesToBeams(TopBeam, BottomBeam, IntermediateBeams);
+            // GetAxisBetweenNodes();
+            // SetBeamsAxisHalfEdges();
         }
 
-        public void SetNodesToBeams(Beam top, Beam bottom, Beam intermediate)
-        {
-            top.Nodes = new List<Node>();
-            foreach (var t in TopNodes)
-            {
-                top.Nodes.Add(new Node(t));
-            }
-
-            IntermediateBeams.Nodes = new List<Node>();
-
-            bottom.Nodes = new List<Node>();
-            foreach (var t in BottomNodes)
-            {
-                bottom.Nodes.Add(new Node(t));
-            }
-        }
+        // public void SetNodesToBeams(Beam top, Beam bottom, Beam intermediate)
+        // {
+        //     top.Nodes = new List<Node>();
+        //     foreach (var t in TopNodes)
+        //     {
+        //         top.Nodes.Add(new Node(t));
+        //     }
+        //
+        //     IntermediateBeams.Nodes = new List<Node>();
+        //
+        //     bottom.Nodes = new List<Node>();
+        //     foreach (var t in BottomNodes)
+        //     {
+        //         bottom.Nodes.Add(new Node(t));
+        //     }
+        // }
 
         private int RecomputeDivisions(int divisions)
         {
             if (divisions <= 1) throw new Exception("truss division has to be >=2");
             var recomputedDivisions = divisions;
-            if (_connectionType != ConnectionType.Warren.ToString())
+            if (_connectionType != ConnectionType.Warren)
             {
-                recomputedDivisions /= 2;
+                recomputedDivisions /= (int) 2;
             }
 
             return recomputedDivisions;
@@ -189,17 +201,10 @@ namespace WarehouseLib.Trusses
             GenerateStraightBottomBars();
         }
 
-        protected void GenerateTopNodes(Curve curve, int divisions, int index)
+        public struct TempBeam
         {
-            var nodes = new List<Point3d>();
-            var parameters =
-                curve.DivideByCount(divisions, true);
-
-            for (var i = 0; i < parameters.Length; i++) nodes.Add(curve.PointAt(parameters[i]));
-
-            if (index == 0) nodes.RemoveAt(nodes.Count - 1);
-
-            TopNodes.AddRange(nodes);
+            public List<Point3d> nodes;
+            public List<BeamAxis> axis;
         }
 
         protected double ComputeDifference()
@@ -224,14 +229,34 @@ namespace WarehouseLib.Trusses
             BottomBeamBaseCurves = bars;
         }
 
-        protected abstract void GenerateBottomNodes(Curve crv);
-
-        protected void GenerateVerticalBottomNodes(Curve crv)
+        protected TempBeam GenerateTopBeamDivisions(Curve curve, double[] parameters, int index)
         {
-            List<Point3d> nodes = new List<Point3d>();
-            var points = new List<Point3d>(TopNodes);
+            var nodes = new List<Point3d>();
+            var topBeamAxisTrimmed = new List<BeamAxis>();
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                nodes.Add(curve.PointAt(parameters[i]));
+                if (i <= 0) continue;
+                var axisCurve = curve.Trim(parameters[i - 1], parameters[i]);
+                var beamAxis = new BeamAxis(axisCurve);
+                topBeamAxisTrimmed.Add(beamAxis);
+            }
 
+            // if (index == 0) nodes.RemoveAt(nodes.Count - 1);
+
+            return new TempBeam()
+            {
+                nodes = nodes,
+                axis = topBeamAxisTrimmed
+            };
+        }
+
+        protected TempBeam GenerateBottomBeamDivisions(Curve curve, List<Point3d> points, int index)
+        {
+            var nodes = new List<Point3d>();
+            var bottomBeamAxisTrimmed = new List<BeamAxis>();
             var intersectingLines = new List<Line>();
+
             for (int i = 0;
                 i < points.Count;
                 i++)
@@ -241,9 +266,10 @@ namespace WarehouseLib.Trusses
                 intersectingLines.Add(lineA);
             }
 
+            var parameters = new List<double>();
             foreach (var line in intersectingLines)
             {
-                var intersectionEvents = Intersection.CurveCurve(crv, line.ToNurbsCurve(), 0.01, 0.0);
+                var intersectionEvents = Intersection.CurveCurve(curve, line.ToNurbsCurve(), 0.01, 0.0);
                 if (intersectionEvents == null) continue;
                 for (int i = 0;
                     i < intersectionEvents.Count;
@@ -251,39 +277,104 @@ namespace WarehouseLib.Trusses
                 {
                     var intEv = intersectionEvents[0];
                     nodes.Add(intEv.PointA);
+                    parameters.Add(intEv.ParameterA);
                 }
             }
 
-            BottomNodes.AddRange(nodes);
+            for (var i = 0; i < parameters.Count; i++)
+            {
+                if (i <= 0) continue;
+                var axisCurve = curve.Trim(parameters[i - 1], parameters[i]);
+                var beamAxis = new BeamAxis(axisCurve);
+                bottomBeamAxisTrimmed.Add(beamAxis);
+            }
+
+            // if (index == 0) nodes.RemoveAt(nodes.Count - 1);
+
+            return new TempBeam()
+            {
+                nodes = nodes,
+                axis = bottomBeamAxisTrimmed
+            };
         }
 
-        public abstract void ConstructTruss(int divisions);
+        public virtual void ConstructTruss(int divisions)
+        {
+            divisions = _divisions;
+            TopNodes = new List<Point3d>();
+            BottomNodes = new List<Point3d>();
+            TopBeamAxis = new List<BeamAxis>();
+            BottomBeamAxis = new List<BeamAxis>();
 
-        protected void GenerateIntermediateBars(string trussType, int index)
+            for (var i = 0; i < TopBeamBaseCurves.Count; i++)
+            {
+                var topBeamBaseCurve = TopBeamBaseCurves[i];
+                var bottomBeambaseCurve = BottomBeamBaseCurves[i];
+                var divideByCount = topBeamBaseCurve.DivideByCount(divisions, true);
+                var recomputedParams = new List<double>();
+
+                // recomputedParams = RecomputeParametersByConnectionType(divideByCount, 0, 2);
+
+
+                var resultTop = GenerateTopBeamDivisions(topBeamBaseCurve, divideByCount, i);
+                TopNodes.AddRange(resultTop.nodes);
+                TopBeamAxis.AddRange(resultTop.axis);
+
+                // recomputedParams = RecomputeParametersByConnectionType(divideByCount, 1, 2);
+                // var tempTop = GenerateTopBeamDivisions(beamBaseCurve, recomputedParams.ToArray(), i);
+                var resultBottom = GenerateBottomBeamDivisions(bottomBeambaseCurve, TopNodes, i);
+
+
+                BottomNodes.AddRange(resultBottom.nodes);
+                BottomBeamAxis.AddRange(resultBottom.axis);
+            }
+
+            var cloud = new PointCloud(TopNodes);
+            var index = cloud.ClosestPoint(StartingNodes[1]);
+            GenerateIntermediateBars(_connectionType, index);
+        }
+
+        private List<double> RecomputeParametersByConnectionType(double[] parameters, int start, int step)
+        {
+            var outParams = new List<double>();
+            if (_connectionType == ConnectionType.Warren)
+            {
+                for (int i = start; i < parameters.ToList().Count; i += step)
+                {
+                    outParams.Add(parameters[i]);
+                }
+            }
+
+            else outParams = parameters.ToList();
+
+            return outParams;
+        }
+
+        protected void GenerateIntermediateBars(ConnectionType trussType, int index)
         {
             Connections.Connections connections = null;
 
             var bars = new List<Curve>();
-            if (trussType == ConnectionType.Warren.ToString())
+            if (trussType == ConnectionType.Warren)
             {
                 connections = new WarrenConnection(TopNodes, BottomNodes);
                 connections.MidPointIndex = index;
                 bars = connections.ConstructConnections();
             }
 
-            else if (trussType == ConnectionType.WarrenStuds.ToString())
+            else if (trussType == ConnectionType.WarrenStuds)
             {
                 connections = new WarrenStudsConnection(TopNodes, BottomNodes);
                 connections.MidPointIndex = index;
                 bars = connections.ConstructConnections();
             }
-            else if (trussType == ConnectionType.Pratt.ToString())
+            else if (trussType == ConnectionType.Pratt)
             {
                 connections = new PrattConnection(TopNodes, BottomNodes);
                 connections.MidPointIndex = index;
                 bars = connections.ConstructConnections();
             }
-            else if (trussType == ConnectionType.Howe.ToString())
+            else if (trussType == ConnectionType.Howe)
             {
                 connections = new HoweConnection(TopNodes, BottomNodes, _articulationType);
                 connections.MidPointIndex = index;
@@ -291,7 +382,7 @@ namespace WarehouseLib.Trusses
             }
 
             IntermediateBeamsBaseCurves = bars;
-            RecomputeNodes(index);
+            // RecomputeNodes(index);
         }
 
         public abstract List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index);
@@ -360,92 +451,37 @@ namespace WarehouseLib.Trusses
         }
 
         // <summary>
-        // split beam axis curves private between nodes
-        // </summary>
-        private List<Curve> SplitBeamBetweenNodes(List<Point3d> nodes, Beam beam)
-        {
-            var axis = new List<Curve>();
-            var tempBaseAxisList = new List<Curve>();
-
-            for (int i = 0; i < beam.Axis.Count; i++)
-            {
-                var tempAxis = beam.Axis[i].AxisCurve;
-                tempBaseAxisList.Add(tempAxis);
-            }
-
-            tempBaseAxisList = Curve.JoinCurves(tempBaseAxisList).ToList();
-
-            var baseAxis = tempBaseAxisList[0];
-            for (var i = 1; i < nodes.Count - 1; i++)
-            {
-                var node = nodes[i];
-                double t;
-                baseAxis.ClosestPoint(node, out t);
-                var tempList = baseAxis.ToNurbsCurve().Split(t).ToList();
-                axis.Add(tempList[0]);
-                baseAxis = tempList[1];
-                if (i == nodes.Count - 1)
-                {
-                    axis.Add(baseAxis);
-                }
-            }
-
-            axis.Add(baseAxis);
-
-
-            return axis;
-        }
-
-        // <summary>
-        // gets the splitted axis in there corresponding list
-        // </summary>
-
-        public void GetAxisBetweenAxis()
-        {
-            var tempList = new List<Curve>(SplitBeamBetweenNodes(TopNodes, TopBeam));
-            TopBeamAxis = new List<BeamAxis>();
-            for (int i = 0; i < tempList.Count; i++)
-            {
-                var axis = new BeamAxis(tempList[i]);
-                TopBeamAxis.Add(axis);
-            }
-
-            tempList = new List<Curve>(SplitBeamBetweenNodes(BottomNodes, BottomBeam));
-            BottomBeamAxis = new List<BeamAxis>();
-            for (int i = 0; i < tempList.Count; i++)
-            {
-                var axis = new BeamAxis(tempList[i]);
-                BottomBeamAxis.Add(axis);
-            }
-
-            IntermediateBeamAxis = new List<BeamAxis>();
-            for (int i = 0; i < IntermediateBeamsBaseCurves.Count; i++)
-            {
-                var axis = new BeamAxis(IntermediateBeamsBaseCurves[i]);
-                IntermediateBeamAxis.Add(axis);
-            }
-        }
-
-        // <summary>
         // sets the half-edge on each beam axis
         //</summary>
-        private void SetBeamsAxisHalfEdge()
+        private void SetBeamsAxisHalfEdges()
         {
-            //<summary>
-            // sets the half-edge
-            //</summary>
+            var beamAxisHalfEdgeList = new List<BeamAxisHalfEdge>();
+            var ptNodes = new Dictionary<Point3d, Node>();
+            var beamAxisEnumerable = AllAxisList();
 
-            //<summary>
-            // sets the Twin half-edge
-            //</summary>
+            TopNodes.ForEach(pt => ptNodes.Add(pt, new Node(pt)));
+            BottomNodes.ForEach(pt => ptNodes.Add(pt, new Node(pt)));
 
-            // <summary>
-            // sets the previous half-edge
-            //</summary>
+            foreach (var tempAxisA in beamAxisEnumerable)
+            {
+                var beamAxisHalfEdgeA = new BeamAxisHalfEdge();
+                var beamAxisHalfEdgeB = new BeamAxisHalfEdge();
 
-            //<summary>
-            // sets the next half-edge
-            //</summary>
+                beamAxisHalfEdgeA.Axis = tempAxisA;
+                beamAxisHalfEdgeA.Origin = ptNodes[tempAxisA.AxisCurve.PointAtStart];
+                ptNodes[tempAxisA.AxisCurve.PointAtStart].AdjacentAxisHalfEdges.Add(beamAxisHalfEdgeA);
+
+                beamAxisHalfEdgeB.Axis = tempAxisA;
+                beamAxisHalfEdgeB.Origin = ptNodes[tempAxisA.AxisCurve.PointAtEnd];
+                ptNodes[tempAxisA.AxisCurve.PointAtEnd].AdjacentAxisHalfEdges.Add(beamAxisHalfEdgeB);
+
+
+                beamAxisHalfEdgeB.Twin = beamAxisHalfEdgeA;
+                beamAxisHalfEdgeA.Twin = beamAxisHalfEdgeB;
+
+                beamAxisHalfEdgeList.Add(beamAxisHalfEdgeA);
+                beamAxisHalfEdgeList.Add(beamAxisHalfEdgeB);
+            }
         }
     }
 }

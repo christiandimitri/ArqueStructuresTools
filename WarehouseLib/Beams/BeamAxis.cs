@@ -44,8 +44,7 @@ namespace WarehouseLib.Beams
         public List<BeamAxis> AdjacentAxis()
         {
             var axis = new List<BeamAxis>();
-            axis.AddRange(this.HalfEdge.Origin.AdjancentAxis());
-            axis.AddRange(this.HalfEdge.Twin.Origin.AdjancentAxis());
+            
 
             return axis;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Grasshopper.Kernel;
+using WarehouseLib.Connections;
 using WarehouseLib.Options;
 
 
@@ -19,9 +20,10 @@ namespace ArqueStructuresTools.Options
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddTextParameter("Truss type", "Truss type",
-                "The input is a text, the available types are: Pratt, Howe, Warren, WarrenStuds", GH_ParamAccess.item,
-                "Warren");
+            pManager.AddIntegerParameter("Truss type", "Truss type",
+                "The input is a text, the available types are: 0 for Pratt, 1 for Howe, 2 for Warren, 3 for WarrenStuds",
+                GH_ParamAccess.item,
+                0);
             pManager.AddNumberParameter("Width", "w", "w", GH_ParamAccess.item, 5);
             pManager.AddNumberParameter("Height", "h", "h", GH_ParamAccess.item, 3.0);
             pManager.AddNumberParameter("Max height", "mh", "mh", GH_ParamAccess.item, 4.0);
@@ -29,10 +31,9 @@ namespace ArqueStructuresTools.Options
             pManager.AddIntegerParameter("Base type", "bt", "bt", GH_ParamAccess.item, 0);
             pManager.AddTextParameter("Articulation type", "at", "at", GH_ParamAccess.item, "Rigid");
             pManager.AddIntegerParameter("Divisions", "d", "d", GH_ParamAccess.item, 5);
-            pManager.AddTextParameter("Portico type", "pt", "pt", GH_ParamAccess.item, "Truss");
+            pManager.AddIntegerParameter("Portico type", "pt", "0 for Portico, 1 for Truss", GH_ParamAccess.item, 1);
             pManager.AddIntegerParameter("Columns count", "cc", "cc", GH_ParamAccess.item, 2);
             pManager.AddNumberParameter("Facade straps distance", "fsd", "fsd", GH_ParamAccess.item, 1.2);
-
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -42,7 +43,7 @@ namespace ArqueStructuresTools.Options
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            var trussType = "";
+            var trussType = 0;
             double width = 0;
             double height = 0;
             double maxHeight = 0;
@@ -50,7 +51,7 @@ namespace ArqueStructuresTools.Options
             var baseType = 0;
             var articulationType = "";
             var divisions = 0;
-            var porticoType = "";
+            var porticoType = 1;
             var columnsCount = 0;
             var facadeStrapsDistance = 0.0;
             if (!DA.GetData(0, ref trussType)) return;
@@ -69,8 +70,9 @@ namespace ArqueStructuresTools.Options
             WarehouseLib.Options.TrussInputs inputs;
             try
             {
-                inputs = new WarehouseLib.Options.TrussInputs(trussType, width, height, maxHeight, clearHeight, baseType,
-                    articulationType, divisions, porticoType, columnsCount, facadeStrapsDistance);
+                inputs = new WarehouseLib.Options.TrussInputs((ConnectionType) trussType, width, height, maxHeight,
+                    clearHeight, baseType,
+                    articulationType, divisions, (PorticoType) porticoType, columnsCount, facadeStrapsDistance);
             }
             catch (Exception e)
             {

@@ -24,11 +24,6 @@ namespace WarehouseLib.Trusses
             throw new NotImplementedException();
         }
 
-        protected override void GenerateBottomNodes(Curve crv)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override void IsArticulatedToColumns()
         {
             throw new NotImplementedException();
@@ -65,11 +60,6 @@ namespace WarehouseLib.Trusses
             double offset = 0;
             offset = Vector3d.Multiply(normal, vertical);
             return offset;
-        }
-
-        public override void ConstructTruss(int divisions)
-        {
-            throw new NotImplementedException();
         }
 
         public override List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index)

@@ -13,7 +13,6 @@ namespace ArqueStructuresTools.Params
         public BeamParameter() : base("Beam", "Beam", "Contains a collection of Beams", "Arque Structures", "Params",
             GH_ParamAccess.item)
         {
-            _box = new BoundingBox();
         }
 
         protected override System.Drawing.Bitmap Icon
@@ -43,8 +42,11 @@ namespace ArqueStructuresTools.Params
                         {
                             foreach (var axis in beam.Axis)
                             {
-                                _box.Union(axis.AxisCurve.ToNurbsCurve().GetBoundingBox(false));
-                                args.Display.DrawCurve(axis.AxisCurve.ToNurbsCurve(), System.Drawing.Color.Red);
+                                if (axis != null)
+                                {
+                                    _box.Union(axis.AxisCurve.ToNurbsCurve().GetBoundingBox(false));
+                                    args.Display.DrawCurve(axis.AxisCurve.ToNurbsCurve(), System.Drawing.Color.Red);
+                                }
                             }
                         }
                     }
@@ -54,7 +56,7 @@ namespace ArqueStructuresTools.Params
 
         public void DrawViewportMeshes(IGH_PreviewArgs args)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public bool Hidden { get; set; }

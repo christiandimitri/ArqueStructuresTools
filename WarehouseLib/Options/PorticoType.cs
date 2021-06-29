@@ -2,7 +2,7 @@
 {
     public enum PorticoType
     {
-        Portico,
-        Truss
+        Portico =0,
+        Truss=1
     }
 }

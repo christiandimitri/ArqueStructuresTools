@@ -58,9 +58,9 @@ namespace ArqueStructuresTools
             var staticColumnsGoo = new List<ColumnGoo>();
             var boundaryColumnsGoo = new List<ColumnGoo>();
             var topBeamGoo = (truss.TopBeam.Axis != null) ? new BeamGoo(truss.TopBeam) : null;
-            var bottomBeamGoo = (truss.BottomBeam.Axis != null) ? new BeamGoo(truss.BottomBeam) : null;
+            var bottomBeamGoo = (truss.BottomBeamBaseCurves != null) ? new BeamGoo(truss.BottomBeam) : null;
             var intermediateBeamsGoo =
-                (truss.IntermediateBeams.Axis != null) ? new BeamGoo(truss.IntermediateBeams) : null;
+                (truss.IntermediateBeamsBaseCurves != null) ? new BeamGoo(truss.IntermediateBeams) : null;
 
             if (truss.StaticColumns != null)
             {

@@ -51,7 +51,7 @@ namespace ArqueStructuresTools
             try
             {
                 truss = new ArchTruss(plane, trussInputs);
-                if (trussInputs.PorticoType == PorticoType.Portico.ToString())
+                if (trussInputs.PorticoType == PorticoType.Portico)
                     truss.ConstructPorticoFromTruss(truss, porticoIndex);
             }
             catch (Exception e)

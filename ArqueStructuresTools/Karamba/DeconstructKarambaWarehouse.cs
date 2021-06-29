@@ -43,8 +43,8 @@ namespace ArqueStructuresTools.Karamba
                 GH_ParamAccess.list);
             pManager.AddParameter(new CrossParameter(), "St-And cross", "SAC", "Warehouse st andre cross",
                 GH_ParamAccess.list);
-            pManager.AddPointParameter("St-And cross bottom nodes", "SCN", "St andre's bottom nodes",
-                GH_ParamAccess.list);
+            // pManager.AddPointParameter("St-And cross bottom nodes", "SCN", "St andre's bottom nodes",
+            //     GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -56,17 +56,17 @@ namespace ArqueStructuresTools.Karamba
             var warehouse = karambaWarehouseGoo.Value;
 
             var trusses = new List<KarambaTrussGoo>();
-            var stAndresBottomNodes = new List<Point3d>();
+            // var stAndresBottomNodes = new List<Point3d>();
 
             if (warehouse.KarambaTrusses != null)
             {
                 foreach (var truss in warehouse.KarambaTrusses)
                 {
                     trusses.Add(new KarambaTrussGoo(truss));
-                    if (truss.StAndresBottomNodes != null)
-                    {
-                        stAndresBottomNodes.AddRange(truss.StAndresBottomNodes);
-                    }
+                    // if (truss.StAndresBottomNodes != null)
+                    // {
+                    //     stAndresBottomNodes.AddRange(truss.StAndresBottomNodes);
+                    // }
                 }
             }
 
@@ -152,7 +152,7 @@ namespace ArqueStructuresTools.Karamba
             DA.SetDataList(6, new List<CableGoo>(roofCables));
             DA.SetDataList(7, new List<CableGoo>(facadeCables));
             DA.SetDataList(8, new List<CrossGoo>(crossStAndre));
-            DA.SetDataList(9, stAndresBottomNodes);
+            // DA.SetDataList(9, stAndresBottomNodes);
         }
     }
 }
