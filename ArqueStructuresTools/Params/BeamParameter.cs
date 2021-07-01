@@ -54,7 +54,7 @@ namespace ArqueStructuresTools.Params
 
         public void DrawViewportMeshes(IGH_PreviewArgs args)
         {
-            throw new NotImplementedException();
+            return; 
         }
 
         public bool Hidden { get; set; }

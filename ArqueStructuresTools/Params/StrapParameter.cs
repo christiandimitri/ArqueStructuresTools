@@ -46,6 +46,7 @@ namespace ArqueStructuresTools
 
         public void DrawViewportMeshes(IGH_PreviewArgs args)
         {
+            return;
         }
 
         public bool Hidden { get; set; }

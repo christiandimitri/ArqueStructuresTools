@@ -36,6 +36,7 @@ namespace ArqueStructuresTools
 
         public void DrawViewportMeshes(IGH_PreviewArgs args)
         {
+            return;
         }
 
         public void DrawViewportWires(IGH_PreviewArgs args)
