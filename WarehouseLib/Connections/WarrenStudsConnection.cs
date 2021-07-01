@@ -30,12 +30,12 @@ namespace WarehouseLib.Connections
                 }
             }
 
-            var midStudAxis = new Line(tempBottomNodes[MidPointIndex], tempTopNodes[MidPointIndex]).ToNurbsCurve();
-
-            if ((tempTopNodes.Count / 2) % 2 == 0)
-            {
-                axis.Insert(MidPointIndex + 2, midStudAxis.ToNurbsCurve());
-            }
+            // var midStudAxis = new Line(tempBottomNodes[MidPointIndex], tempTopNodes[MidPointIndex]).ToNurbsCurve();
+            //
+            // if ((tempTopNodes.Count / 2) % 2 == 0)
+            // {
+            //     axis.Insert(MidPointIndex + 2, midStudAxis.ToNurbsCurve());
+            // }
 
 
             return axis;

@@ -61,10 +61,5 @@ namespace WarehouseLib.Trusses
             offset = Vector3d.Multiply(normal, vertical);
             return offset;
         }
-
-        public override List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

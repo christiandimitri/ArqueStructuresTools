@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
@@ -163,8 +164,8 @@ namespace WarehouseLib.Trusses
             {
                 recomputedDivisions /= (int) 2;
             }
-            else
-                recomputedDivisions *= 2;
+            // else
+            //     recomputedDivisions *= 2;
 
             return recomputedDivisions;
         }
@@ -244,8 +245,6 @@ namespace WarehouseLib.Trusses
                 topBeamAxisTrimmed.Add(beamAxis);
             }
 
-            if (index == 0) nodes.RemoveAt(nodes.Count - 1);
-
             return new TempBeam()
             {
                 nodes = nodes,
@@ -292,8 +291,6 @@ namespace WarehouseLib.Trusses
                 bottomBeamAxisTrimmed.Add(beamAxis);
             }
 
-            if (index == 0) nodes.RemoveAt(nodes.Count - 1);
-
             return new TempBeam()
             {
                 nodes = nodes,
@@ -316,20 +313,49 @@ namespace WarehouseLib.Trusses
                 var divideByCount = topBeamBaseCurve.DivideByCount(divisions, true);
 
 
-                var recomputedParams = RecomputeParametersByConnectionType(divideByCount);
+                var recomputedTopParams = RecomputeParametersByConnectionType(divideByCount);
+                var recomputedBottomParams = ReturnNotContainedParams(recomputedTopParams, divideByCount.ToList());
 
 
-                var resultTop = GenerateTopBeamDivisions(topBeamBaseCurve, recomputedParams.ToArray(), i);
-                TopNodes.AddRange(resultTop.nodes);
-                TopBeamAxis.AddRange(resultTop.axis);
+                var resultTop =
+                    GenerateTopBeamDivisions(topBeamBaseCurve, divideByCount.ToArray(), i);
 
-                // recomputedParams = RecomputeParametersByConnectionType(divideByCount, 1, 2);
-                // var tempTop = GenerateTopBeamDivisions(beamBaseCurve, recomputedParams.ToArray(), i);
-                var resultBottom = GenerateBottomBeamDivisions(bottomBeambaseCurve, TopNodes, i);
+                foreach (var node in resultTop.nodes)
+                {
+                    if (!TopNodes.Contains(node))
+                    {
+                        TopNodes.Add(node);
+                    }
+                }
+
+                foreach (var axis in resultTop.axis)
+                {
+                    if (!TopBeamAxis.Contains(axis))
+                    {
+                        TopBeamAxis.Add(axis);
+                    }
+                }
 
 
-                BottomNodes.AddRange(resultBottom.nodes);
-                BottomBeamAxis.AddRange(resultBottom.axis);
+                var tempBottomNodes = GenerateTopBeamDivisions(topBeamBaseCurve, recomputedBottomParams.ToArray(), i).nodes;
+                var resultBottom = GenerateBottomBeamDivisions(bottomBeambaseCurve, tempBottomNodes, i);
+
+
+                foreach (var node in resultBottom.nodes)
+                {
+                    if (!BottomNodes.Contains(node))
+                    {
+                        BottomNodes.Add(node);
+                    }
+                }
+
+                foreach (var axis in resultBottom.axis)
+                {
+                    if (!BottomBeamAxis.Contains(axis))
+                    {
+                        BottomBeamAxis.Add(axis);
+                    }
+                }
             }
 
             var cloud = new PointCloud(TopNodes);
@@ -337,21 +363,32 @@ namespace WarehouseLib.Trusses
             GenerateIntermediateBars(_connectionType, index);
         }
 
+        private List<double> ReturnNotContainedParams(List<double> topParams, List<double> divideByCount)
+        {
+            var outParams = new List<double>();
+            if (_connectionType == ConnectionType.Warren)
+            {
+                for (int i = 0; i < divideByCount.Count; i++)
+                {
+                    if (!topParams.Contains(divideByCount[i]))
+                    {
+                        outParams.Add(divideByCount[i]);
+                    }
+                }
+            }
+            else outParams = divideByCount;
+
+            return outParams;
+        }
+
         private List<double> RecomputeParametersByConnectionType(double[] parameters)
         {
             var outParams = new List<double>();
             if (_connectionType == ConnectionType.Warren)
             {
-                for (int i = 0; i < parameters.ToList().Count; i++)
+                for (int i = 0; i < parameters.ToList().Count; i += 2)
                 {
-                    if (i % 2 == 1)
-                    {
-                        if (!outParams.Contains(parameters[i - 1]))
-                        {
-                            outParams.Add(parameters[i - 1]);
-                        }
-                        outParams.Add(parameters[i + 1]);
-                    }
+                    outParams.Add(parameters[i]);
                 }
             }
 
@@ -396,8 +433,6 @@ namespace WarehouseLib.Trusses
         }
 
         public abstract List<Vector3d> ComputeNormals(Curve crv, List<Point3d> points, int index);
-
-        // protected abstract void RecomputeNodes(int index);
 
         protected void ChangeArticulationAtColumnsByType(string type)
         {

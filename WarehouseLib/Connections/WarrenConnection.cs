@@ -7,13 +7,12 @@ namespace WarehouseLib.Connections
 {
     public class WarrenConnection : Connections
     {
-
         public WarrenConnection(List<Point3d> topNodes, List<Point3d> bottomNodes) : base(topNodes,
             bottomNodes)
         {
         }
 
-        public override List<Curve> ConstructConnections()
+        public List<Curve> ConstructConnection()
         {
             var tempTopNodes = BottomNodes;
             var tempBottomNodes = TopNodes;
@@ -28,10 +27,20 @@ namespace WarehouseLib.Connections
                     axis.Add(lineA.ToNurbsCurve());
                 }
             }
+            return axis;
+        }
 
-            var midStudAxis = new Line(tempBottomNodes[MidPointIndex], tempTopNodes[MidPointIndex]);
+        public override List<Curve> ConstructConnections()
+        {
+            var axis = new List<Curve>();
 
-            // axis.Insert(MidPointIndex, midStudAxis.ToNurbsCurve());
+            for (int i = 0; i < BottomNodes.Count; i++)
+            {
+                var lineA = new Line(TopNodes[i], BottomNodes[i]);
+                var lineB = new Line(TopNodes[i + 1], BottomNodes[i]);
+                if (lineA.IsValid) axis.Add(lineA.ToNurbsCurve());
+                if (lineB.IsValid) axis.Add(lineB.ToNurbsCurve());
+            }
 
             return axis;
         }

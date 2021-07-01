@@ -91,11 +91,7 @@ namespace WarehouseLib.Trusses
             BottomBeamBaseCurves.AddRange(lines);
             return normals;
         }
-
-        // protected override void RecomputeNodes(int index)
-        // {
-        //     throw new NotImplementedException();
-        // }
+        
 
         protected override void IsArticulatedToColumns()
         {
