@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ArqueStructuresTools.Params;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
+using WarehouseLib.Beams;
 
 namespace ArqueStructuresTools
 {
@@ -33,11 +34,14 @@ namespace ArqueStructuresTools
         {
             pManager.AddParameter(new BeamParameter(), "Top beam", "TB", "Truss top beam", GH_ParamAccess.item);
             pManager.AddParameter(new BeamParameter(), "Bottom beam", "BB", "Truss bottom beam", GH_ParamAccess.item);
-            pManager.AddParameter(new BeamParameter(), "Intermediate beams", "IB", "Truss intermediate beams", GH_ParamAccess.item);
+            pManager.AddParameter(new BeamParameter(), "Intermediate beams", "IB", "Truss intermediate beams",
+                GH_ParamAccess.item);
             pManager.AddPointParameter("Top nodes", "TN", "Truss top nodes", GH_ParamAccess.list);
             pManager.AddPointParameter("Bottom nodes", "BN", "Truss bottom nodes", GH_ParamAccess.list);
-            pManager.AddParameter(new ColumnParameter(), "Static columns", "SC", "Truss static columns", GH_ParamAccess.list);
-            pManager.AddParameter(new ColumnParameter(), "Boundary columns", "BC", "Truss boundary columns", GH_ParamAccess.list);
+            pManager.AddParameter(new ColumnParameter(), "Static columns", "SC", "Truss static columns",
+                GH_ParamAccess.list);
+            pManager.AddParameter(new ColumnParameter(), "Boundary columns", "BC", "Truss boundary columns",
+                GH_ParamAccess.list);
             pManager.AddPointParameter("Boundary nodes", "BN", "Truss boundary nodes", GH_ParamAccess.list);
         }
 
@@ -57,10 +61,14 @@ namespace ArqueStructuresTools
             var boundaryNodes = truss.BoundaryTopNodes != null ? truss.BoundaryTopNodes : new List<Point3d>();
             var staticColumnsGoo = new List<ColumnGoo>();
             var boundaryColumnsGoo = new List<ColumnGoo>();
-            var topBeamGoo = (truss.TopBeam != null) ? new BeamGoo(truss.TopBeam) : new BeamGoo();
-            var bottomBeamGoo = (truss.BottomBeam != null) ? new BeamGoo(truss.BottomBeam) : new BeamGoo();
+            var topBeamGoo = (truss.TopBeam.Axis != null) ? new BeamGoo(truss.TopBeam) : new BeamGoo(new TopBeam());
+            var bottomBeamGoo = (truss.BottomBeam.Axis != null)
+                ? new BeamGoo(truss.BottomBeam)
+                : new BeamGoo(new BottomBeam());
             var intermediateBeamsGoo =
-                (truss.IntermediateBeams != null) ? new BeamGoo(truss.IntermediateBeams) : new BeamGoo();
+                (truss.IntermediateBeams.Axis != null)
+                    ? new BeamGoo(truss.IntermediateBeams)
+                    : new BeamGoo(new IntermediateBeams());
 
             if (truss.StaticColumns != null)
             {

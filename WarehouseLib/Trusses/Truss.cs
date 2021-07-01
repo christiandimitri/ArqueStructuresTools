@@ -64,7 +64,7 @@ namespace WarehouseLib.Trusses
             var bottomBeam = new BottomBeam
             {
                 Axis = (joinBottomBeamsAxis == true)
-                    ? Curve.JoinCurves(BottomBeamAxisCurves, 0.1).ToList()
+                    ? Curve.JoinCurves(BottomBeamAxisCurves, 0.01).ToList()
                     : BottomBeamAxisCurves,
                 ProfileOrientationPlane = Plane.WorldXY
             };
