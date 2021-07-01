@@ -48,7 +48,10 @@ namespace WarehouseLib.Warehouses
             GenerateRoofBracing();
             GenerateColumnsBracing();
             GenerateFacadeBracing();
-            GenerateStAndresCross();
+            if (PorticoType.Portico.ToString() != trussOptions._porticoType)
+            {
+                GenerateStAndresCross();
+            }
         }
 
         private void ConstructTrusses(TrussOptions trussOptions)
@@ -61,26 +64,47 @@ namespace WarehouseLib.Warehouses
                 if (_warehouseOptions.Typology == GeometricalTypology.Flat.ToString())
                 {
                     var trussA = new FlatTruss(tempPlane, trussOptions);
+                    if (trussOptions._porticoType == PorticoType.Portico.ToString())
+                    {
+                        trussA.ConstructPorticoFromTruss(trussA, i);
+                    }
+
                     trusses.Add(trussA);
                 }
                 else if (_warehouseOptions.Typology == GeometricalTypology.Arch.ToString())
                 {
                     var trussA = new ArchTruss(tempPlane, trussOptions);
+                    if (trussOptions._porticoType == PorticoType.Portico.ToString())
+                    {
+                        trussA.ConstructPorticoFromTruss(trussA, i);
+                    }
+
                     trusses.Add(trussA);
                 }
                 else if (_warehouseOptions.Typology == GeometricalTypology.Monopich.ToString())
                 {
                     var trussA = new MonopichTruss(tempPlane, trussOptions);
+                    if (trussOptions._porticoType == PorticoType.Portico.ToString())
+                    {
+                        trussA.ConstructPorticoFromTruss(trussA, i);
+                    }
+
                     trusses.Add(trussA);
                 }
                 else if (_warehouseOptions.Typology == GeometricalTypology.Doublepich.ToString())
                 {
                     var trussA = new DoublepichTruss(tempPlane, trussOptions);
+                    if (trussOptions._porticoType == PorticoType.Portico.ToString())
+                    {
+                        trussA.ConstructPorticoFromTruss(trussA, i);
+                    }
+
                     trusses.Add(trussA);
                 }
             }
 
-            if (_warehouseOptions.HasBoundary) trusses = new List<Truss>(WarehouseHasPorticoAtBoundaries(trusses));
+            if (_warehouseOptions.HasBoundary && trussOptions._porticoType != PorticoType.Portico.ToString())
+                trusses = new List<Truss>(WarehouseHasPorticoAtBoundaries(trusses));
 
             Trusses = trusses;
         }

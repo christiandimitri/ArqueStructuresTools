@@ -21,7 +21,7 @@ namespace WarehouseLib.Options
 
         public int Divisions { get; set; }
 
-        public string PorticoType { get; set; }
+        public string _porticoType { get; set; }
 
         public int ColumnsCount { get; set; }
 
@@ -37,10 +37,10 @@ namespace WarehouseLib.Options
             BaseType = baseType;
             _articulationType = articulationType;
             Divisions = divisions;
-            PorticoType = porticoType;
+            _porticoType = porticoType;
             ColumnsCount = columnsCount;
-            if (height < clearHeight) throw new Exception("The truss height cannot be < than the clear height");
-            if (maxHeight < clearHeight) throw new Exception("The truss max height cannot be < than the clear height");
+            if (height < clearHeight && porticoType != PorticoType.Portico.ToString()) throw new Exception("The truss height cannot be < than the clear height");
+            if (maxHeight < clearHeight && porticoType != "Portico") throw new Exception("The truss max height cannot be < than the clear height");
             if (Divisions <= 1) throw new Exception("A normal Truss cannot have a division <= 1");
             if (trussType != "Warren" && divisions < 4 &&
                 articulationType == ArticulationType.Articulated.ToString())
