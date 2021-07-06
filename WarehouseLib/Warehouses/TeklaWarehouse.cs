@@ -32,16 +32,16 @@ namespace WarehouseLib.Warehouses
 
                 var trussB = _warehouse.Trusses[i];
 
-                if (trussB.IntermediateBeams != null)
+                if (trussB.IntermediateBeams.Axis != null)
                 {
                     trussB.IntermediateBeams = new IntermediateBeams();
                     trussB.IntermediateBeams.Axis = trussA.IntermediateBeamsAxisCurves;
                     trussB.IntermediateBeams.ProfileOrientationPlane = trussA.IntermediateBeams.ProfileOrientationPlane;
                 }
 
-                if (trussB.BottomBeam != null)
+                if (trussB.BottomBeam.Axis != null)
                 {
-                    trussB.BottomBeam.Axis = trussA.BottomBeamAxisCurves;
+                    trussB.BottomBeam.Axis = trussA.BottomBeam.Axis;
                     trussB.BottomBeam.ProfileOrientationPlane = trussA.BottomBeam.ProfileOrientationPlane;
                 }
             }
