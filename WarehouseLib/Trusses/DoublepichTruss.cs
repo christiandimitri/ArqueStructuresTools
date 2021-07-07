@@ -19,7 +19,7 @@ namespace WarehouseLib.Trusses
             Inputs = inputs;
             GenerateTopBars();
             StaticColumns =
-                new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
+                new List<Column>(new StaticColumn().GenerateColumns(StartingPoints, plane));
             ChangeBaseByType(inputs.BaseType);
             ConstructTruss(inputs.Divisions);
             ChangeArticulationAtColumnsByType(inputs._articulationType);
@@ -90,9 +90,9 @@ namespace WarehouseLib.Trusses
 
         public override void GenerateTopBars()
         {
-            StartingNodes = GetStartingPoints(_plane, Inputs.Width/2, Inputs.Width/2, _height, _maxHeight, _height);
-            var barA = new Line(StartingNodes[0], StartingNodes[1]);
-            var barB = new Line(StartingNodes[1], StartingNodes[2]);
+            StartingPoints = GetStartingPoints(_plane, Inputs.Width/2, Inputs.Width/2, _height, _maxHeight, _height);
+            var barA = new Line(StartingPoints[0], StartingPoints[1]);
+            var barB = new Line(StartingPoints[1], StartingPoints[2]);
             TopBeamBaseCurves = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};
         }
         

@@ -17,7 +17,6 @@ namespace WarehouseLib.Beams
         public Beam()
         {
         }
-
         // <summary>
         // gets or sets the beam's axis list
         // </summary>

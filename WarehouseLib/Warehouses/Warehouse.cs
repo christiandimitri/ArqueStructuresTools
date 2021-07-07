@@ -213,7 +213,7 @@ namespace WarehouseLib.Warehouses
             {
                 var trussA = Trusses[i];
                 var trussB = Trusses[i + 1];
-                var tempList = trussA.StartingNodes;
+                var tempList = trussA.StartingPoints;
                 if (i == 0 || i == Trusses.Count - 2) tempList.RemoveAt(1);
 
                 var nodes = tempList;

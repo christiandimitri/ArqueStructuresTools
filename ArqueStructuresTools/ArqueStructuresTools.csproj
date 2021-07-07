@@ -82,6 +82,7 @@
     <Compile Include="Params\CrossParameter.cs" />
     <Compile Include="Params\KarambaTrussParameter.cs" />
     <Compile Include="Params\KarambaWarehouseParameter.cs" />
+    <Compile Include="Params\ReWrittenTrussParameter.cs" />
     <Compile Include="Params\StrapParameter.cs" />
     <Compile Include="Params\TrussParameter.cs" />
     <Compile Include="Params\WarehouseParameter.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Trusses\DoublepichTrussComponent.cs" />
     <Compile Include="Trusses\FlatTrussComponent.cs" />
     <Compile Include="Trusses\MonopichTrussComponent.cs" />
+    <Compile Include="Trusses\ReWrittenFlatTrussComponent.cs" />
     <Compile Include="Trusses\TrussComponent.cs" />
     <Compile Include="Utilities\DeconstructBeam.cs" />
     <Compile Include="Utilities\DeconstructBracing.cs" />

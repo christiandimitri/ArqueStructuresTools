@@ -12,7 +12,7 @@ namespace WarehouseLib.Trusses
         public FlatTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
             GenerateTopBars();
-            StaticColumns = new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
+            StaticColumns = new List<Column>(new StaticColumn().GenerateColumns(StartingPoints, plane));
             GenerateThickBottomBars();
             ConstructTruss(inputs.Divisions);
             ChangeArticulationAtColumnsByType(inputs._articulationType);
@@ -21,9 +21,9 @@ namespace WarehouseLib.Trusses
 
         public override void GenerateTopBars()
         {
-            StartingNodes = GetStartingPoints(_plane, _length / 2, _length / 2, _height, _height, _height);
-            var barA = new Line(StartingNodes[0], StartingNodes[1]);
-            var barB = new Line(StartingNodes[1], StartingNodes[2]);
+            StartingPoints = GetStartingPoints(_plane, _length / 2, _length / 2, _height, _height, _height);
+            var barA = new Line(StartingPoints[0], StartingPoints[1]);
+            var barB = new Line(StartingPoints[1], StartingPoints[2]);
             TopBeamBaseCurves = new List<Curve> {barA.ToNurbsCurve(), barB.ToNurbsCurve()};
         }
         

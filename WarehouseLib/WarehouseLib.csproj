@@ -112,6 +112,9 @@
     <Compile Include="Trusses\FlatTruss.cs" />
     <Compile Include="Trusses\MonopichTruss.cs" />
     <Compile Include="Trusses\PichedTruss.cs" />
+    <Compile Include="Trusses\ReWrittenFlatTruss.cs" />
+    <Compile Include="Trusses\ReWrittenPichedTruss.cs" />
+    <Compile Include="Trusses\ReWrittenTruss.cs" />
     <Compile Include="Trusses\Truss.cs" />
     <Compile Include="Trusses\GeometricalTypology.cs" />
     <Compile Include="Utilities\KarambaTruss.cs" />

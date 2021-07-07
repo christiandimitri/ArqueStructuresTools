@@ -20,7 +20,7 @@ namespace WarehouseLib
         {
             _inputs = inputs;
             GenerateTopBars();
-            StaticColumns = new List<Column>(new StaticColumn().GenerateColumns(StartingNodes, plane));
+            StaticColumns = new List<Column>(new StaticColumn().GenerateColumns(StartingPoints, plane));
             ChangeBaseByType(_inputs.BaseType);
             ConstructTruss(inputs.Divisions);
             ChangeArticulationAtColumnsByType(inputs._articulationType);
@@ -64,10 +64,10 @@ namespace WarehouseLib
         {
             if (_height == _maxHeight)
             {
-                var lineA = new Line(StartingNodes[0] - Vector3d.ZAxis * ComputeDifference(),
-                    StartingNodes[1] - Vector3d.ZAxis * ComputeDifference());
-                var lineB = new Line(StartingNodes[1] - Vector3d.ZAxis * ComputeDifference(),
-                    StartingNodes[2] - Vector3d.ZAxis * ComputeDifference());
+                var lineA = new Line(StartingPoints[0] - Vector3d.ZAxis * ComputeDifference(),
+                    StartingPoints[1] - Vector3d.ZAxis * ComputeDifference());
+                var lineB = new Line(StartingPoints[1] - Vector3d.ZAxis * ComputeDifference(),
+                    StartingPoints[2] - Vector3d.ZAxis * ComputeDifference());
                 BottomBeamBaseCurves = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
             }
             else
@@ -89,16 +89,16 @@ namespace WarehouseLib
 
         private List<Curve> ComputeRigidBottomBarsToColumns()
         {
-            var startPoint = StartingNodes[0] - ComputeNormalAtStartEnd(0) * ComputeOffsetFromDot(0);
-            var centerPoint = StartingNodes[1] - Vector3d.ZAxis * ComputeOffsetFromTrigo(0);
-            var endPoint = StartingNodes[2] - ComputeNormalAtStartEnd(1) * ComputeOffsetFromDot(1);
+            var startPoint = StartingPoints[0] - ComputeNormalAtStartEnd(0) * ComputeOffsetFromDot(0);
+            var centerPoint = StartingPoints[1] - Vector3d.ZAxis * ComputeOffsetFromTrigo(0);
+            var endPoint = StartingPoints[2] - ComputeNormalAtStartEnd(1) * ComputeOffsetFromDot(1);
             var arch = new Arc(startPoint, centerPoint, endPoint);
             arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
             Curve[] tempCurves = arch.ToNurbsCurve().Split(t);
-            Line lineA = new Line(StartingNodes[0] - Vector3d.ZAxis * ComputeDifference(),
-                StartingNodes[0] - ComputeNormalAtStartEnd(0) * ComputeOffsetFromDot(0));
-            Line lineB = new Line(StartingNodes[2] - ComputeNormalAtStartEnd(1) * ComputeOffsetFromDot(1),
-                StartingNodes[2] - Vector3d.ZAxis * ComputeDifference()
+            Line lineA = new Line(StartingPoints[0] - Vector3d.ZAxis * ComputeDifference(),
+                StartingPoints[0] - ComputeNormalAtStartEnd(0) * ComputeOffsetFromDot(0));
+            Line lineB = new Line(StartingPoints[2] - ComputeNormalAtStartEnd(1) * ComputeOffsetFromDot(1),
+                StartingPoints[2] - Vector3d.ZAxis * ComputeDifference()
             );
             List<Curve> leftCurves = new List<Curve> {lineA.ToNurbsCurve(), tempCurves[0]};
             List<Curve> rightCurves = new List<Curve> {tempCurves[1], lineB.ToNurbsCurve()};
@@ -119,17 +119,17 @@ namespace WarehouseLib
             var t3 = tempParamsB[tempParamsB.Length - 2];
             var startPoint = TopBeamBaseCurves[0].PointAt(t1) -
                              Vector3d.ZAxis * (ComputeDifference() +
-                                               (TopBeamBaseCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
+                                               (TopBeamBaseCurves[0].PointAt(t1).Z - StartingPoints[0].Z));
             var centerPoint = TopBeamBaseCurves[1].PointAt(t2) -
-                              Vector3d.ZAxis * startPoint.DistanceTo(StartingNodes[0]);
+                              Vector3d.ZAxis * startPoint.DistanceTo(StartingPoints[0]);
             var endPoint = TopBeamBaseCurves[1].PointAt(t3) -
                            Vector3d.ZAxis * (ComputeDifference() +
-                                             (TopBeamBaseCurves[0].PointAt(t1).Z - StartingNodes[0].Z));
+                                             (TopBeamBaseCurves[0].PointAt(t1).Z - StartingPoints[0].Z));
             var arch = new Arc(startPoint, centerPoint, endPoint);
             arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
             Curve[] tempCurves = arch.ToNurbsCurve().Split(t);
-            Line lineA = new Line(StartingNodes[0] - Vector3d.ZAxis * ComputeDifference(), startPoint);
-            Line lineB = new Line(endPoint, StartingNodes[2] - Vector3d.ZAxis * ComputeDifference());
+            Line lineA = new Line(StartingPoints[0] - Vector3d.ZAxis * ComputeDifference(), startPoint);
+            Line lineB = new Line(endPoint, StartingPoints[2] - Vector3d.ZAxis * ComputeDifference());
             List<Curve> leftCurves = new List<Curve> {lineA.ToNurbsCurve(), tempCurves[0]};
             List<Curve> rightCurves = new List<Curve> {tempCurves[1], lineB.ToNurbsCurve()};
             Curve[] joinedRight = Curve.JoinCurves(rightCurves, 0.001);
@@ -141,18 +141,18 @@ namespace WarehouseLib
 
         public override void GenerateTopBars()
         {
-            StartingNodes = GetStartingPoints(_plane, _length / 2, _length / 2, _height,
+            StartingPoints = GetStartingPoints(_plane, _length / 2, _length / 2, _height,
                 _maxHeight, _height);
 
             if (_height == _maxHeight)
             {
-                Line lineA = new Line(StartingNodes[0], StartingNodes[1]);
-                Line lineB = new Line(StartingNodes[1], StartingNodes[2]);
+                Line lineA = new Line(StartingPoints[0], StartingPoints[1]);
+                Line lineB = new Line(StartingPoints[1], StartingPoints[2]);
                 TopBeamBaseCurves = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
             }
             else
             {
-                Arc arch = new Arc(StartingNodes[0], StartingNodes[1], StartingNodes[2]);
+                Arc arch = new Arc(StartingPoints[0], StartingPoints[1], StartingPoints[2]);
                 arch.ToNurbsCurve().LengthParameter(arch.ToNurbsCurve().GetLength() / 2, out double t);
                 Curve[] tempCrvs = arch.ToNurbsCurve().Split(t);
                 // tempCrvs[1].Reverse();

@@ -21,11 +21,11 @@ namespace WarehouseLib.Trusses
             var bars = new List<Curve>();
             var ptA = new Point3d();
             var ptB = new Point3d();
-            for (var i = 0; i < StartingNodes.Count; i++)
+            for (var i = 0; i < StartingPoints.Count; i++)
             {
-                if (i >= StartingNodes.Count - 1) continue;
-                ptA = StartingNodes[i] - Vector3d.ZAxis * ComputeDifference();
-                ptB = StartingNodes[i + 1] - Vector3d.ZAxis * ComputeDifference();
+                if (i >= StartingPoints.Count - 1) continue;
+                ptA = StartingPoints[i] - Vector3d.ZAxis * ComputeDifference();
+                ptB = StartingPoints[i + 1] - Vector3d.ZAxis * ComputeDifference();
                 var tempLine = new Line(ptA, ptB);
                 bars.Add(tempLine.ToNurbsCurve());
             }
@@ -41,7 +41,7 @@ namespace WarehouseLib.Trusses
 
         protected override List<Curve> ComputeBottomBarsArticulatedToColumns(List<Curve> bars)
         {
-            var startingPoint = StartingNodes[0] - Vector3d.ZAxis * ComputeDifference();
+            var startingPoint = StartingPoints[0] - Vector3d.ZAxis * ComputeDifference();
             var tempParams = TopBeamBaseCurves[0].DivideByCount(_divisions, true);
             var t1 = tempParams[1];
             var tempPt = TopBeamBaseCurves[0].PointAt(t1);
@@ -59,12 +59,12 @@ namespace WarehouseLib.Trusses
 
             bars = new List<Curve>();
             double difference = interPt.Z - startingPoint.Z;
-            for (var i = 0; i < StartingNodes.Count; i++)
+            for (var i = 0; i < StartingPoints.Count; i++)
             {
-                if (i >= StartingNodes.Count - 1) continue;
-                var ptA = new Point3d(StartingNodes[i] -
+                if (i >= StartingPoints.Count - 1) continue;
+                var ptA = new Point3d(StartingPoints[i] -
                                       (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
-                var ptB = new Point3d(StartingNodes[i + 1] -
+                var ptB = new Point3d(StartingPoints[i + 1] -
                                       (Vector3d.ZAxis * difference + Vector3d.ZAxis * ComputeDifference()));
                 var tempLine = new Line(ptA, ptB);
                 bars.Add(tempLine.ToNurbsCurve());

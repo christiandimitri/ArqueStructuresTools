@@ -25,7 +25,7 @@ namespace WarehouseLib.Trusses
         public double _length;
         public double _maxHeight;
         public Plane _plane;
-        public List<Point3d> StartingNodes;
+        public List<Point3d> StartingPoints;
         public List<Curve> TopBeamBaseCurves;
         public List<BeamAxis> TopBeamAxis;
         public Beam TopBeam;
@@ -139,31 +139,14 @@ namespace WarehouseLib.Trusses
             // SetBeamsAxisHalfEdges();
         }
 
-        // public void SetNodesToBeams(Beam top, Beam bottom, Beam intermediate)
-        // {
-        //     top.Nodes = new List<Node>();
-        //     foreach (var t in TopNodes)
-        //     {
-        //         top.Nodes.Add(new Node(t));
-        //     }
-        //
-        //     IntermediateBeams.Nodes = new List<Node>();
-        //
-        //     bottom.Nodes = new List<Node>();
-        //     foreach (var t in BottomNodes)
-        //     {
-        //         bottom.Nodes.Add(new Node(t));
-        //     }
-        // }
-
         private int RecomputeDivisions(int divisions)
         {
             if (divisions <= 1) throw new Exception("truss division has to be >=2");
             var recomputedDivisions = divisions;
-            if (_connectionType != ConnectionType.Warren)
-            {
-                recomputedDivisions /= (int) 2;
-            }
+            // if (_connectionType != ConnectionType.Warren)
+            // {
+            //     recomputedDivisions /= (int) 2;
+            // }
             // else
             //     recomputedDivisions *= 2;
 
@@ -223,24 +206,25 @@ namespace WarehouseLib.Trusses
 
         public void GenerateStraightBottomBars()
         {
-            Point3d ptA = StartingNodes[0] - Vector3d.ZAxis * ComputeDifference();
-            Point3d ptC = new Point3d(StartingNodes[2].X, StartingNodes[2].Y, ptA.Z);
-            Point3d ptB = new Point3d(StartingNodes[1].X, StartingNodes[1].Y, ptA.Z);
+            Point3d ptA = StartingPoints[0] - Vector3d.ZAxis * ComputeDifference();
+            Point3d ptC = new Point3d(StartingPoints[2].X, StartingPoints[2].Y, ptA.Z);
+            Point3d ptB = new Point3d(StartingPoints[1].X, StartingPoints[1].Y, ptA.Z);
             Line lineA = new Line(ptA, ptB);
             Line lineB = new Line(ptB, ptC);
             var bars = new List<Curve> {lineA.ToNurbsCurve(), lineB.ToNurbsCurve()};
             BottomBeamBaseCurves = bars;
         }
 
-        protected TempBeam GenerateTopBeamDivisions(Curve curve, double[] parameters, int index)
+        protected TempBeam GenerateTopBeamDivisions(Curve curve, double[] parameters)
         {
             var nodes = new List<Point3d>();
             var topBeamAxisTrimmed = new List<BeamAxis>();
-            for (var i = 0; i < parameters.Length; i++)
+            var tempParams = RecomputeTopPoints(parameters);
+            for (var i = 0; i < tempParams.Length; i++)
             {
-                nodes.Add(curve.PointAt(parameters[i]));
+                nodes.Add(curve.PointAt(tempParams[i]));
                 if (i <= 0) continue;
-                var axisCurve = curve.Trim(parameters[i - 1], parameters[i]);
+                var axisCurve = curve.Trim(tempParams[i - 1], tempParams[i]);
                 var beamAxis = new BeamAxis(axisCurve);
                 topBeamAxisTrimmed.Add(beamAxis);
             }
@@ -252,13 +236,14 @@ namespace WarehouseLib.Trusses
             };
         }
 
-        protected TempBeam GenerateBottomBeamDivisions(Curve curve, List<Point3d> points, int index)
+        protected TempBeam GenerateBottomBeamDivisions(Curve curve, List<Point3d> points)
         {
             var nodes = new List<Point3d>();
+
             var bottomBeamAxisTrimmed = new List<BeamAxis>();
             var intersectingLines = new List<Line>();
-            var tempPoints = new List<Point3d>(points);
-            if (index == 0) tempPoints.Add(curve.PointAtEnd);
+            var tempPoints = new List<Point3d>(RecomputeBottomPoints(points));
+
             for (int i = 0;
                 i < tempPoints.Count;
                 i++)
@@ -300,101 +285,85 @@ namespace WarehouseLib.Trusses
 
         public virtual void ConstructTruss(int divisions)
         {
-            divisions = _divisions;
             TopNodes = new List<Point3d>();
             BottomNodes = new List<Point3d>();
             TopBeamAxis = new List<BeamAxis>();
             BottomBeamAxis = new List<BeamAxis>();
 
-            for (var i = 0; i < TopBeamBaseCurves.Count; i++)
-            {
-                var topBeamBaseCurve = TopBeamBaseCurves[i];
-                var bottomBeambaseCurve = BottomBeamBaseCurves[i];
-                var divideByCount = topBeamBaseCurve.DivideByCount(divisions, true);
+            var tempJoinedTopBaseCurves = Curve.JoinCurves(TopBeamBaseCurves, 0.001)[0];
+            var tempJoinedBottomBaseCurves = Curve.JoinCurves(BottomBeamBaseCurves, 0.001)[0];
 
+            // for (var i = 0; i < TopBeamBaseCurves.Count; i++)
+            // {
+            //     var topBeamBaseCurve = TopBeamBaseCurves[i];
+            //     var bottomBeambaseCurve = BottomBeamBaseCurves[i];
+            //     var initialParams = topBeamBaseCurve.DivideByCount(_divisions, true);
+            //
+            //     var newParams = RecomputeParams(initialParams, topBeamBaseCurve, i);
+            //     var resultTop =
+            //         GenerateTopBeamDivisions(topBeamBaseCurve, newParams.TopParams.ToArray(), i);
+            //     TopNodes.AddRange(resultTop.nodes);
+            //     TopBeamAxis.AddRange(resultTop.axis);
+            //     var tempTopResults = GenerateTopBeamDivisions(topBeamBaseCurve, newParams.BottomParams.ToArray(), i);
+            //     var resultBottom = GenerateBottomBeamDivisions(bottomBeambaseCurve, tempTopResults.nodes, i);
+            //     BottomNodes.AddRange(resultBottom.nodes);
+            //     BottomBeamAxis.AddRange(resultBottom.axis);
+            // }
 
-                var recomputedTopParams = RecomputeParametersByConnectionType(divideByCount);
-                var recomputedBottomParams = ReturnNotContainedParams(recomputedTopParams, divideByCount.ToList());
+            var divisionParams =
+                tempJoinedBottomBaseCurves.DivideByCount(
+                    _connectionType == ConnectionType.Warren ? _divisions * 2 : _divisions, true);
+            var topElements = GenerateTopBeamDivisions(tempJoinedTopBaseCurves, divisionParams);
 
+            TopNodes.AddRange(topElements.nodes);
+            TopBeamAxis.AddRange(topElements.axis);
 
-                var resultTop =
-                    GenerateTopBeamDivisions(topBeamBaseCurve, divideByCount.ToArray(), i);
-
-                foreach (var node in resultTop.nodes)
-                {
-                    if (!TopNodes.Contains(node))
-                    {
-                        TopNodes.Add(node);
-                    }
-                }
-
-                foreach (var axis in resultTop.axis)
-                {
-                    if (!TopBeamAxis.Contains(axis))
-                    {
-                        TopBeamAxis.Add(axis);
-                    }
-                }
-
-
-                var tempBottomNodes = GenerateTopBeamDivisions(topBeamBaseCurve, recomputedBottomParams.ToArray(), i).nodes;
-                var resultBottom = GenerateBottomBeamDivisions(bottomBeambaseCurve, tempBottomNodes, i);
-
-
-                foreach (var node in resultBottom.nodes)
-                {
-                    if (!BottomNodes.Contains(node))
-                    {
-                        BottomNodes.Add(node);
-                    }
-                }
-
-                foreach (var axis in resultBottom.axis)
-                {
-                    if (!BottomBeamAxis.Contains(axis))
-                    {
-                        BottomBeamAxis.Add(axis);
-                    }
-                }
-            }
+            var bottomElements = GenerateBottomBeamDivisions(tempJoinedBottomBaseCurves, topElements.nodes);
+            BottomNodes.AddRange(bottomElements.nodes);
+            BottomBeamAxis.AddRange(bottomElements.axis);
 
             var cloud = new PointCloud(TopNodes);
-            var index = cloud.ClosestPoint(StartingNodes[1]);
+            var index = cloud.ClosestPoint(StartingPoints[1]);
             GenerateIntermediateBars(_connectionType, index);
         }
 
-        private List<double> ReturnNotContainedParams(List<double> topParams, List<double> divideByCount)
+        private double[] RecomputeTopPoints(double[] initialParams)
         {
-            var outParams = new List<double>();
+            var recomputedPoints = new List<double>();
             if (_connectionType == ConnectionType.Warren)
             {
-                for (int i = 0; i < divideByCount.Count; i++)
+                for (int i = 0; i < initialParams.Length; i += 2)
                 {
-                    if (!topParams.Contains(divideByCount[i]))
-                    {
-                        outParams.Add(divideByCount[i]);
-                    }
+                    recomputedPoints.Add(initialParams[i]);
                 }
             }
-            else outParams = divideByCount;
+            else
+            {
+                recomputedPoints = initialParams.ToList();
+            }
 
-            return outParams;
+            return recomputedPoints.ToArray();
         }
 
-        private List<double> RecomputeParametersByConnectionType(double[] parameters)
+        private List<Point3d> RecomputeBottomPoints(List<Point3d> initialPoints)
         {
-            var outParams = new List<double>();
+            var recomputedPoints = new List<Point3d>();
             if (_connectionType == ConnectionType.Warren)
             {
-                for (int i = 0; i < parameters.ToList().Count; i += 2)
+                for (int i = 1; i < initialPoints.Count; i += 2)
                 {
-                    outParams.Add(parameters[i]);
+                    recomputedPoints.Add(initialPoints[i]);
                 }
+
+                recomputedPoints.Insert(0, initialPoints[0]);
+                recomputedPoints.Add(initialPoints[initialPoints.Count - 1]);
+            }
+            else
+            {
+                recomputedPoints = initialPoints;
             }
 
-            else outParams = parameters.ToList();
-
-            return outParams;
+            return recomputedPoints;
         }
 
         protected void GenerateIntermediateBars(ConnectionType trussType, int index)
@@ -438,7 +407,9 @@ namespace WarehouseLib.Trusses
         {
             if (type == ArticulationType.Articulated.ToString())
             {
-                IsArticulatedToColumns();
+                //Temporary comment to fix TODO
+                // IsArticulatedToColumns();
+                IsRigidToColumns();
             }
             else if (type == ArticulationType.Rigid.ToString())
             {
