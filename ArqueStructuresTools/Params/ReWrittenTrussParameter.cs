@@ -64,8 +64,11 @@ namespace ArqueStructuresTools
 
                         if (truss.IntermediateBeamSkeleton != null)
                         {
-                            _box.Union(truss.IntermediateBeamSkeleton.GetBoundingBox(false));
-                            args.Display.DrawCurve(truss.IntermediateBeamSkeleton, System.Drawing.Color.Green);
+                            foreach (var axis in truss.IntermediateBeamSkeleton)
+                            {
+                                _box.Union(axis.GetBoundingBox(false));
+                                args.Display.DrawCurve(axis, System.Drawing.Color.Green);
+                            }
                         }
 
                         if (truss.StaticColumns != null)

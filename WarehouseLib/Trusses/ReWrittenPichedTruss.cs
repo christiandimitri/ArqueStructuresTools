@@ -7,7 +7,12 @@ namespace WarehouseLib.Trusses
     {
         public ReWrittenPichedTruss(Plane plane, TrussInputs inputs) : base(plane, inputs)
         {
-            ConstructBeamsSkeleton();
+            
+        }
+
+        protected override void ConstructTruss()
+        {
+            base.ConstructTruss();
         }
     }
 }

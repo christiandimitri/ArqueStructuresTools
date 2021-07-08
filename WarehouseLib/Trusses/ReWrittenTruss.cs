@@ -41,6 +41,8 @@ namespace WarehouseLib.Trusses
             _divisions = inputs.Divisions;
             _facadeStrapsDistance = inputs.FacadeStrapsDistance;
             _porticoType = inputs.PorticoType;
+            ConstructBeamsSkeleton();
+            ConstructTruss();
         }
 
         // store truss properties
@@ -194,37 +196,36 @@ namespace WarehouseLib.Trusses
         }
 
         // construct intermediate beam axis
-        protected void GenerateIntermediateBeamAxis()
-        {
-            Connections.Connections connections = null;
-
-            var bars = new List<Curve>();
-            if (_inputs.TrussType == ConnectionType.Warren)
-            {
-                connections = new WarrenConnection(TopPoints, BottomPoints);
-                bars = connections.ConstructConnections();
-            }
-
-            else if (_inputs.TrussType == ConnectionType.WarrenStuds)
-            {
-                connections = new WarrenStudsConnection(TopPoints, BottomPoints);
-                bars = connections.ConstructConnections();
-            }
-            else if (_inputs.TrussType == ConnectionType.Pratt)
-            {
-                connections = new PrattConnection(TopPoints, BottomPoints);
-                bars = connections.ConstructConnections();
-            }
-            else if (_inputs.TrussType == ConnectionType.Howe)
-            {
-                connections = new HoweConnection(TopPoints, BottomPoints, _articulationType);
-                bars = connections.ConstructConnections();
-            }
-
-            IntermediateBeamSkeleton = bars;
-        }
+        protected abstract void GenerateIntermediateBeamAxis();
 
         // construct truss method
-        protected abstract void ConstructTruss();
+        protected virtual void ConstructTruss()
+        {
+            TopPoints = new List<Point3d>();
+            BottomPoints = new List<Point3d>();
+            TopBeamAxis = new List<BeamAxis>();
+            BottomBeamAxis = new List<BeamAxis>();
+            var divisionParams =
+                TopBeamSkeleton.DivideByCount(RecomputeDivisons(), true);
+            var topElements = GenerateTopBeamDivisions(TopBeamSkeleton, divisionParams);
+
+            TopPoints.AddRange(topElements.nodes);
+            TopBeamAxis.AddRange(topElements.axis);
+
+            var bottomElements = GenerateBottomBeamDivisions(BottomBeamSkeleton, topElements.nodes);
+            BottomPoints.AddRange(bottomElements.nodes);
+            BottomBeamAxis.AddRange(bottomElements.axis);
+
+            var cloud = new PointCloud(TopPoints);
+            var index = cloud.ClosestPoint(StartingPoints[1]);
+            GenerateIntermediateBeamAxis();
+        }
+
+        // recompute divisions
+        protected virtual int RecomputeDivisons()
+        {
+            var divisions = _divisions * 2;
+            return divisions;
+        }
     }
 }

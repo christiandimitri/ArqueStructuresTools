@@ -24,22 +24,39 @@ namespace WarehouseLib.Trusses
                 StartingPoints[2] - (_plane.ZAxis * moveFactor)).ToNurbsCurve();
         }
 
+        protected override void GenerateIntermediateBeamAxis()
+        {
+            Connections.Connections connections = null;
+
+            var bars = new List<Curve>();
+            if (_inputs.TrussType == ConnectionType.Warren)
+            {
+                connections = new WarrenConnection(TopPoints, BottomPoints);
+                bars = connections.ConstructConnections();
+            }
+
+            else if (_inputs.TrussType == ConnectionType.WarrenStuds)
+            {
+                connections = new WarrenStudsConnection(TopPoints, BottomPoints);
+                bars = connections.ConstructConnections();
+            }
+            else if (_inputs.TrussType == ConnectionType.Pratt)
+            {
+                connections = new PrattConnection(TopPoints, BottomPoints);
+                bars = connections.ConstructConnections();
+            }
+            else if (_inputs.TrussType == ConnectionType.Howe)
+            {
+                connections = new HoweConnection(TopPoints, BottomPoints, _articulationType);
+                bars = connections.ConstructConnections();
+            }
+
+            IntermediateBeamSkeleton = bars;
+        }
+
         protected override void ConstructTruss()
         {
-            var divisionParams =
-                TopBeamSkeleton.DivideByCount(
-                    _connectionType == ConnectionType.Warren ? _divisions * 2 : _divisions, true);
-            var topElements = GenerateTopBeamDivisions(TopBeamSkeleton, divisionParams);
-
-            TopPoints.AddRange(topElements.nodes);
-            TopBeamAxis.AddRange(topElements.axis);
-
-            var bottomElements = GenerateBottomBeamDivisions(BottomBeamSkeleton, topElements.nodes);
-            BottomPoints.AddRange(bottomElements.nodes);
-            BottomBeamAxis.AddRange(bottomElements.axis);
-
-            var cloud = new PointCloud(TopPoints);
-            var index = cloud.ClosestPoint(StartingPoints[1]);
-            GenerateIntermediateBeamAxis();        }
+            base.ConstructTruss();
+        }
     }
 }
