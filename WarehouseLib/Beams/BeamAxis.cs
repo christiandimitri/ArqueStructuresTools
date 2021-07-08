@@ -53,5 +53,6 @@ namespace WarehouseLib.Beams
         // gets or sets the Half-Edge linked to this axis
         // </summary>
         public BeamAxisHalfEdge HalfEdge { get; set; }
+        
     }
 }

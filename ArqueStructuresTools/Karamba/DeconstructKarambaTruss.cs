@@ -85,16 +85,16 @@ namespace ArqueStructuresTools
             var topBeamAxisCurves = new List<BeamAxis>();
             var topBeam = new Beam();
             var tempBucklings = new List<BucklingLengths>();
-            if (truss.Karamba3DTopBeams.Axis != null)
+            if (truss.Karamba3DTopBeams.SkeletonAxis != null)
             {
-                for (int i = 0; i < truss.Karamba3DTopBeams.Axis.Count; i++)
+                for (int i = 0; i < truss.Karamba3DTopBeams.SkeletonAxis.Count; i++)
                 {
-                    var axis = new BeamAxis(truss.Karamba3DTopBeams.Axis[i].AxisCurve);
+                    var axis = new BeamAxis(truss.Karamba3DTopBeams.SkeletonAxis[i].AxisCurve);
                     topBeamAxisCurves.Add(axis);
                     tempBucklings.Add(truss.Karamba3DTopBeams.BucklingLengths[i]);
                 }
 
-                topBeam.Axis = topBeamAxisCurves;
+                topBeam.SkeletonAxis = topBeamAxisCurves;
                 topBeam.BucklingLengths = tempBucklings;
                 topBeam.Position = kaTrussGoo.Value.Karamba3DTopBeams.Position;
             }
@@ -102,16 +102,16 @@ namespace ArqueStructuresTools
             var bottomBeamAxisCurves = new List<BeamAxis>();
             var bottomBeam = new Beam();
             tempBucklings = new List<BucklingLengths>();
-            if (truss._porticoType != PorticoType.Portico && truss.Karamba3DBottomBeams.Axis != null)
+            if (truss._porticoType != PorticoType.Portico && truss.Karamba3DBottomBeams.SkeletonAxis != null)
             {
-                for (int i = 0; i < truss.Karamba3DBottomBeams.Axis.Count; i++)
+                for (int i = 0; i < truss.Karamba3DBottomBeams.SkeletonAxis.Count; i++)
                 {
-                    var axis = new BeamAxis(truss.Karamba3DBottomBeams.Axis[i].AxisCurve);
+                    var axis = new BeamAxis(truss.Karamba3DBottomBeams.SkeletonAxis[i].AxisCurve);
                     bottomBeamAxisCurves.Add(axis);
                     tempBucklings.Add(truss.Karamba3DBottomBeams.BucklingLengths[i]);
                 }
 
-                bottomBeam.Axis = bottomBeamAxisCurves;
+                bottomBeam.SkeletonAxis = bottomBeamAxisCurves;
                 bottomBeam.BucklingLengths = tempBucklings;
                 bottomBeam.Position = kaTrussGoo.Value.Karamba3DBottomBeams.Position;
             }
@@ -119,27 +119,27 @@ namespace ArqueStructuresTools
             var intermediateBeamAxisCurves = new List<BeamAxis>();
             var intermediateBeam = new Beam();
             tempBucklings = new List<BucklingLengths>();
-            if (truss._porticoType != PorticoType.Portico && truss.Karamba3DIntermediateBeams.Axis != null)
+            if (truss._porticoType != PorticoType.Portico && truss.Karamba3DIntermediateBeams.SkeletonAxis != null)
             {
-                for (int i = 0; i < truss.Karamba3DIntermediateBeams.Axis.Count; i++)
+                for (int i = 0; i < truss.Karamba3DIntermediateBeams.SkeletonAxis.Count; i++)
                 {
-                    var axis = new BeamAxis(truss.Karamba3DIntermediateBeams.Axis[i].AxisCurve);
+                    var axis = new BeamAxis(truss.Karamba3DIntermediateBeams.SkeletonAxis[i].AxisCurve);
                     intermediateBeamAxisCurves.Add(axis);
                     tempBucklings.Add(truss.Karamba3DIntermediateBeams.BucklingLengths[i]);
                 }
 
-                intermediateBeam.Axis = intermediateBeamAxisCurves;
+                intermediateBeam.SkeletonAxis = intermediateBeamAxisCurves;
                 intermediateBeam.BucklingLengths = tempBucklings;
                 intermediateBeam.Position = kaTrussGoo.Value.Karamba3DIntermediateBeams.Position;
             }
 
-            var topBeamGoo = topBeam.Axis.Count > 0
+            var topBeamGoo = topBeam.SkeletonAxis.Count > 0
                 ? new BeamGoo(topBeam)
                 : null;
-            var bottomBeamGoo = bottomBeam.Axis.Count > 0
+            var bottomBeamGoo = bottomBeam.SkeletonAxis.Count > 0
                 ? new BeamGoo(bottomBeam)
                 : null;
-            var intermediateBeamGoo = intermediateBeam.Axis.Count > 0
+            var intermediateBeamGoo = intermediateBeam.SkeletonAxis.Count > 0
                 ? new BeamGoo(intermediateBeam)
                 : null;
 

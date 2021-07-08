@@ -59,11 +59,11 @@ namespace ArqueStructuresTools.Karamba
                 }
             }
 
-            if (beamGoo.Value.Axis != null)
+            if (beamGoo.Value.SkeletonAxis != null)
             {
-                for (int i = 0; i < beamGoo.Value.Axis.Count; i++)
+                for (int i = 0; i < beamGoo.Value.SkeletonAxis.Count; i++)
                 {
-                    axisList.Add(beamGoo.Value.Axis[i].AxisCurve);
+                    axisList.Add(beamGoo.Value.SkeletonAxis[i].AxisCurve);
                 }
             }
 

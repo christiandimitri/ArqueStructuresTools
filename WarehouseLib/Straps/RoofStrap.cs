@@ -109,9 +109,9 @@ namespace WarehouseLib
             bool isBoundary)
         {
             var tempBeamAxis = new List<Curve>();
-            for (int i = 0; i < truss.TopBeam.Axis.Count; i++)
+            for (int i = 0; i < truss.TopBeam.SkeletonAxis.Count; i++)
             {
-                tempBeamAxis.Add(truss.TopBeam.Axis[i].AxisCurve);
+                tempBeamAxis.Add(truss.TopBeam.SkeletonAxis[i].AxisCurve);
             }
             var beam = Curve.JoinCurves(tempBeamAxis)[0];
             double t;

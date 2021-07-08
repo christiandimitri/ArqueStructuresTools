@@ -52,14 +52,20 @@ namespace ArqueStructuresTools
                         var truss = trussGoo.Value;
                         if (truss.TopBeamSkeleton != null)
                         {
-                            _box.Union(truss.TopBeamSkeleton.GetBoundingBox(false));
-                            args.Display.DrawCurve(truss.TopBeamSkeleton, System.Drawing.Color.Blue);
+                            foreach (var axis in truss.TopBeamSkeleton)
+                            {
+                                _box.Union(axis.GetBoundingBox(false));
+                                args.Display.DrawCurve(axis, System.Drawing.Color.Blue);
+                            }
                         }
 
                         if (truss.BottomBeamSkeleton != null)
                         {
-                            _box.Union(truss.BottomBeamSkeleton.GetBoundingBox(false));
-                            args.Display.DrawCurve(truss.BottomBeamSkeleton, System.Drawing.Color.Red);
+                            foreach (var axis in truss.BottomBeamSkeleton)
+                            {
+                                _box.Union(axis.GetBoundingBox(false));
+                                args.Display.DrawCurve(axis, System.Drawing.Color.Blue);
+                            }
                         }
 
                         if (truss.IntermediateBeamSkeleton != null)

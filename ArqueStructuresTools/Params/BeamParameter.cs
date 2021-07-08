@@ -38,9 +38,9 @@ namespace ArqueStructuresTools.Params
                     foreach (var beamGoo in branch)
                     {
                         var beam = beamGoo.Value;
-                        if (beam.Axis != null)
+                        if (beam.SkeletonAxis != null)
                         {
-                            foreach (var axis in beam.Axis)
+                            foreach (var axis in beam.SkeletonAxis)
                             {
                                 if (axis != null)
                                 {

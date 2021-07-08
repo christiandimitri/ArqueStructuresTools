@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
 using WarehouseLib.Beams;
 using WarehouseLib.Columns;
 using WarehouseLib.Connections;
+using WarehouseLib.Nodes;
 using WarehouseLib.Options;
 
 namespace WarehouseLib.Trusses
@@ -73,8 +75,8 @@ namespace WarehouseLib.Trusses
 
         // store the beams skeleton curves
 
-        public Curve TopBeamSkeleton;
-        public Curve BottomBeamSkeleton;
+        public List<Curve> TopBeamSkeleton;
+        public List<Curve> BottomBeamSkeleton;
         public List<Curve> IntermediateBeamSkeleton;
 
         // store the beams axis
@@ -82,6 +84,10 @@ namespace WarehouseLib.Trusses
         public List<BeamAxis> TopBeamAxis;
         public List<BeamAxis> BottomBeamAxis;
         public List<BeamAxis> IntermediateBeamAxis;
+
+        // store the truss nodes
+        public List<Node> TopNodes;
+        public List<Node> BottomNodes;
 
         // initialize a truss with another one
 
@@ -119,42 +125,39 @@ namespace WarehouseLib.Trusses
 
         // generate top beams nodes and axis
 
-        protected class TempBeam
-        {
-            public List<Point3d> nodes;
-            public List<BeamAxis> axis;
-        }
-
         // top beam nodes and axis
-        protected TempBeam GenerateTopBeamDivisions(Curve skeleton, double[] divisionParams)
+        protected Beam GenerateTopBeamDivisions(Curve skeleton, double[] divisionParams)
         {
-            var nodes = new List<Point3d>();
+            var points = new List<Point3d>();
+            var nodes = new List<Node>();
             var topBeamAxisTrimmed = new List<BeamAxis>();
             var tempParams = new List<double>(divisionParams.ToList());
             for (var i = 0; i < tempParams.Count; i++)
             {
-                nodes.Add(skeleton.PointAt(tempParams[i]));
+                var point = skeleton.PointAt(tempParams[i]);
+                nodes.Add(new Node(point));
+                points.Add(point);
                 if (i <= 0) continue;
                 var axisCurve = skeleton.Trim(tempParams[i - 1], tempParams[i]);
                 var beamAxis = new BeamAxis(axisCurve);
                 topBeamAxisTrimmed.Add(beamAxis);
             }
 
-            return new TempBeam()
+            return new Beam()
             {
-                nodes = nodes,
-                axis = topBeamAxisTrimmed
+                Nodes = nodes,
+                SkeletonAxis = topBeamAxisTrimmed
             };
         }
 
         // bottom beam nodes and axis
-        protected TempBeam GenerateBottomBeamDivisions(Curve skeleton, List<Point3d> points)
+        protected Beam GenerateBottomBeamDivisions(Curve skeleton, List<Point3d> topNodes)
         {
-            var nodes = new List<Point3d>();
-
+            var points = new List<Point3d>();
+            var nodes = new List<Node>();
             var bottomBeamAxisTrimmed = new List<BeamAxis>();
             var intersectingLines = new List<Line>();
-            var tempPoints = new List<Point3d>(points);
+            var tempPoints = new List<Point3d>(topNodes);
 
             for (int i = 0;
                 i < tempPoints.Count;
@@ -166,6 +169,7 @@ namespace WarehouseLib.Trusses
             }
 
             var parameters = new List<double>();
+            var point = new Point3d();
             foreach (var line in intersectingLines)
             {
                 var intersectionEvents = Intersection.CurveCurve(skeleton, line.ToNurbsCurve(), 0.01, 0.0);
@@ -175,7 +179,9 @@ namespace WarehouseLib.Trusses
                     i++)
                 {
                     var intEv = intersectionEvents[0];
-                    nodes.Add(intEv.PointA);
+                    point = intEv.PointA;
+                    points.Add(point);
+                    nodes.Add(new Node(point));
                     parameters.Add(intEv.ParameterA);
                 }
             }
@@ -188,15 +194,47 @@ namespace WarehouseLib.Trusses
                 bottomBeamAxisTrimmed.Add(beamAxis);
             }
 
-            return new TempBeam()
+            return new Beam()
             {
-                nodes = nodes,
-                axis = bottomBeamAxisTrimmed
+                Nodes = nodes,
+                SkeletonAxis = bottomBeamAxisTrimmed
             };
         }
 
         // construct intermediate beam axis
-        protected abstract void GenerateIntermediateBeamAxis();
+        protected virtual List<BeamAxis> GenerateIntermediateBeamAxis()
+        {
+            Connections.Connections connections = null;
+
+            var bars = new List<Curve>();
+            if (_inputs.TrussType == ConnectionType.Warren)
+            {
+                connections = new WarrenConnection(TopPoints, BottomPoints);
+                bars = connections.ConstructConnections();
+            }
+
+            else if (_inputs.TrussType == ConnectionType.WarrenStuds)
+            {
+                connections = new WarrenStudsConnection(TopPoints, BottomPoints);
+                bars = connections.ConstructConnections();
+            }
+            else if (_inputs.TrussType == ConnectionType.Pratt)
+            {
+                connections = new PrattConnection(TopPoints, BottomPoints);
+                bars = connections.ConstructConnections();
+            }
+            else if (_inputs.TrussType == ConnectionType.Howe)
+            {
+                connections = new HoweConnection(TopPoints, BottomPoints, _articulationType);
+                bars = connections.ConstructConnections();
+            }
+
+            IntermediateBeamSkeleton = bars;
+            var intermediateBeamAxis = new List<BeamAxis>();
+            IntermediateBeamSkeleton.ForEach(axis => intermediateBeamAxis.Add(new BeamAxis(axis)));
+
+            return intermediateBeamAxis;
+        }
 
         // construct truss method
         protected virtual void ConstructTruss()
@@ -205,27 +243,93 @@ namespace WarehouseLib.Trusses
             BottomPoints = new List<Point3d>();
             TopBeamAxis = new List<BeamAxis>();
             BottomBeamAxis = new List<BeamAxis>();
-            var divisionParams =
-                TopBeamSkeleton.DivideByCount(RecomputeDivisons(), true);
-            var topElements = GenerateTopBeamDivisions(TopBeamSkeleton, divisionParams);
+            TopNodes = new List<Node>();
+            BottomNodes = new List<Node>();
 
-            TopPoints.AddRange(topElements.nodes);
-            TopBeamAxis.AddRange(topElements.axis);
+            var initParams =
+                TopBeamSkeleton[0].DivideByCount(RecomputeDivisonsCount(), true);
 
-            var bottomElements = GenerateBottomBeamDivisions(BottomBeamSkeleton, topElements.nodes);
-            BottomPoints.AddRange(bottomElements.nodes);
-            BottomBeamAxis.AddRange(bottomElements.axis);
+            var newParams = RecomputeParams(initParams.ToList());
 
-            var cloud = new PointCloud(TopPoints);
-            var index = cloud.ClosestPoint(StartingPoints[1]);
-            GenerateIntermediateBeamAxis();
+            var topElements = GenerateTopBeamDivisions(TopBeamSkeleton[0], newParams.TopParams.ToArray());
+            TopPoints.AddRange(topElements.GetNodesPoints());
+            TopPoints.ForEach(pt => TopNodes.Add(new Node(pt)));
+            Debug.WriteLine("top points");
+            TopBeamAxis.AddRange(topElements.SkeletonAxis);
+
+            var tempTopElements = GenerateTopBeamDivisions(TopBeamSkeleton[0], newParams.BottomParams.ToArray());
+
+            var bottomElements = GenerateBottomBeamDivisions(BottomBeamSkeleton[0], tempTopElements.GetNodesPoints());
+            BottomPoints.AddRange(bottomElements.GetNodesPoints());
+            BottomBeamAxis.AddRange(bottomElements.SkeletonAxis);
+            BottomPoints.ForEach(pt => BottomNodes.Add(new Node(pt)));
+
+
+            IntermediateBeamAxis = GenerateIntermediateBeamAxis();
+            TopBeam = new Beam();
+            BottomBeam = new Beam();
+            IntermediateBeam = new Beam();
+            TopBeam.SetBeamAxisNodes(TopBeamAxis, TopNodes, new List<BeamAxis> {new BeamAxis(TopBeamSkeleton[0])});
+            BottomBeam.SetBeamAxisNodes(BottomBeamAxis, BottomNodes,
+                new List<BeamAxis> {new BeamAxis(BottomBeamSkeleton[0])});
+            IntermediateBeam.SetBeamAxisNodes(IntermediateBeamAxis, new List<Node>(),
+                new List<BeamAxis>(IntermediateBeamAxis));
         }
 
-        // recompute divisions
-        protected virtual int RecomputeDivisons()
+        // recompute divisions * 2 to make divisions 
+        protected virtual int RecomputeDivisonsCount()
         {
-            var divisions = _divisions * 2;
+            var divisions = _divisions;
+            if (_connectionType == ConnectionType.Warren)
+            {
+                divisions *= 2;
+            }
+            else if (_divisions % 2 == 1 && _connectionType != ConnectionType.Warren) divisions += 1;
+
             return divisions;
+        }
+
+        // initializes a curve params divisions struct
+        public struct DivisionParamsOnBeam
+        {
+            public List<double> TopParams;
+            public List<double> BottomParams;
+        }
+
+        // recompute params by connection type
+        protected virtual DivisionParamsOnBeam RecomputeParams(List<double> initParams)
+        {
+            var recomputedParams = new DivisionParamsOnBeam();
+            recomputedParams.TopParams = new List<double>();
+            recomputedParams.BottomParams = new List<double>();
+            if (_connectionType == ConnectionType.Warren)
+            {
+                for (int i = 0; i < initParams.Count; i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        recomputedParams.TopParams.Add(initParams[i]);
+                    }
+                    else
+                    {
+                        recomputedParams.BottomParams.Add(initParams[i]);
+                    }
+                }
+            }
+            else
+            {
+                recomputedParams.TopParams = initParams.ToList();
+                recomputedParams.BottomParams = initParams.ToList();
+            }
+
+            return recomputedParams;
+        }
+
+        protected virtual List<double> RecomputedTopParams()
+        {
+            var topParams = new List<double>();
+
+            return topParams;
         }
     }
 }

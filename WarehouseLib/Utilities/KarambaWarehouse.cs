@@ -101,7 +101,7 @@ namespace WarehouseLib.Utilities
         private List<double> ComputeDistancesBetweenStAndreCrosses(KarambaTruss karambaTruss)
         {
             var distances = new List<double>();
-            for (int i = 0; i < karambaTruss.Karamba3DBottomBeams.Axis.Count; i++)
+            for (int i = 0; i < karambaTruss.Karamba3DBottomBeams.SkeletonAxis.Count; i++)
             {
                 distances.Add(1.5);
             }

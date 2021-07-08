@@ -6,13 +6,13 @@ using Rhino.Geometry;
 
 namespace ArqueStructuresTools
 {
-    public class DeconstructTruss : GH_Component
+    public class DeconstructReWrittenTruss : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the DeconstructTruss class.
         /// </summary>
-        public DeconstructTruss()
-            : base("Deconstruct Truss", "DeTruss",
+        public DeconstructReWrittenTruss()
+            : base("Deconstruct ReTruss", "DeReTruss",
                 "Deconstruct a Truss into its component parts",
                 "Arque Structures", "Truss")
         {
@@ -23,7 +23,8 @@ namespace ArqueStructuresTools
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new TrussParameter(), "Truss", "T", "Truss to deconstruct", GH_ParamAccess.item);
+            pManager.AddParameter(new ReWrittenTrussParameter(), "Truss", "T", "Truss to deconstruct",
+                GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -33,12 +34,14 @@ namespace ArqueStructuresTools
         {
             pManager.AddParameter(new BeamParameter(), "Top beam", "TB", "Truss top beam", GH_ParamAccess.item);
             pManager.AddParameter(new BeamParameter(), "Bottom beam", "BB", "Truss bottom beam", GH_ParamAccess.item);
-            pManager.AddParameter(new BeamParameter(), "Intermediate beams", "IB", "Truss intermediate beams", GH_ParamAccess.item);
+            pManager.AddParameter(new BeamParameter(), "Intermediate beams", "IB", "Truss intermediate beams",
+                GH_ParamAccess.item);
             pManager.AddPointParameter("Top nodes", "TN", "Truss top nodes", GH_ParamAccess.list);
             pManager.AddPointParameter("Bottom nodes", "BN", "Truss bottom nodes", GH_ParamAccess.list);
-            pManager.AddParameter(new ColumnParameter(), "Static columns", "SC", "Truss static columns", GH_ParamAccess.list);
-            pManager.AddParameter(new ColumnParameter(), "Boundary columns", "BC", "Truss boundary columns", GH_ParamAccess.list);
-            pManager.AddPointParameter("Boundary nodes", "BN", "Truss boundary nodes", GH_ParamAccess.list);
+            pManager.AddParameter(new ColumnParameter(), "Static columns", "SC", "Truss static columns",
+                GH_ParamAccess.list);
+            pManager.AddParameter(new ColumnParameter(), "Boundary columns", "BC", "Truss boundary columns",
+                GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -47,20 +50,20 @@ namespace ArqueStructuresTools
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            TrussGoo trussGoo = new TrussGoo();
+            ReWrittenTrussGoo trussGoo = new ReWrittenTrussGoo();
 
             if (!DA.GetData(0, ref trussGoo)) return;
 
             var truss = trussGoo.Value;
-            var topNodes = truss.TopNodes != null ? truss.TopNodes : new List<Point3d>();
-            var bottomNodes = truss.BottomNodes != null ? truss.BottomNodes : new List<Point3d>();
-            var boundaryNodes = truss.BoundaryTopNodes != null ? truss.BoundaryTopNodes : new List<Point3d>();
+            var topNodes = truss.TopPoints != null ? truss.TopPoints : new List<Point3d>();
+            var bottomNodes = truss.BottomPoints != null ? truss.BottomPoints : new List<Point3d>();
+            // var boundaryNodes = truss.BoundaryTopNodes != null ? truss.BoundaryTopNodes : new List<Point3d>();
             var staticColumnsGoo = new List<ColumnGoo>();
             var boundaryColumnsGoo = new List<ColumnGoo>();
             var topBeamGoo = (truss.TopBeam.SkeletonAxis != null) ? new BeamGoo(truss.TopBeam) : null;
-            var bottomBeamGoo = (truss.BottomBeamBaseCurves != null) ? new BeamGoo(truss.BottomBeam) : null;
+            var bottomBeamGoo = (truss.BottomBeamSkeleton != null) ? new BeamGoo(truss.BottomBeam) : null;
             var intermediateBeamsGoo =
-                (truss.IntermediateBeamsBaseCurves != null) ? new BeamGoo(truss.IntermediateBeams) : null;
+                (truss.IntermediateBeamSkeleton != null) ? new BeamGoo(truss.IntermediateBeam) : null;
 
             if (truss.StaticColumns != null)
             {
@@ -85,7 +88,6 @@ namespace ArqueStructuresTools
             DA.SetDataList(4, bottomNodes);
             DA.SetDataList(5, staticColumnsGoo);
             DA.SetDataList(6, boundaryColumnsGoo);
-            DA.SetDataList(7, boundaryNodes);
         }
 
         /// <summary>
@@ -106,7 +108,7 @@ namespace ArqueStructuresTools
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("ca8cb4da-4294-4944-9d8d-2b7ad00bf9b1"); }
+            get { return new Guid("F085CAB8-0624-4CF8-B7A3-6EA60E1A6743"); }
         }
     }
 }

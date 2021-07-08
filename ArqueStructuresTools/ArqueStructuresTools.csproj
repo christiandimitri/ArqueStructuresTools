@@ -108,9 +108,11 @@
     <Compile Include="Utilities\DeconstructBracing.cs" />
     <Compile Include="Utilities\DeconstructCable.cs" />
     <Compile Include="Utilities\DeconstructCross.cs" />
+    <Compile Include="Utilities\DeconstructReWrittenTruss.cs" />
     <Compile Include="Utilities\DeconstructStrap.cs" />
     <Compile Include="Utilities\DeconstructTruss.cs" />
     <Compile Include="Utilities\DeconstructWarehouse.cs" />
+    <Compile Include="Utilities\DivisionParamsOnCurve.cs" />
     <Compile Include="Utilities\HalfEdgeTruss.cs" />
     <Compile Include="Warehouse\RectangularWarehouseComponent.cs" />
   </ItemGroup>

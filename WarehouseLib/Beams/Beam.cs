@@ -17,10 +17,11 @@ namespace WarehouseLib.Beams
         public Beam()
         {
         }
+
         // <summary>
         // gets or sets the beam's axis list
         // </summary>
-        public List<BeamAxis> Axis { get; set; }
+        public List<BeamAxis> SkeletonAxis { get; set; }
 
 
         // <summary>
@@ -50,13 +51,35 @@ namespace WarehouseLib.Beams
         // </summary>
         public List<Node> Nodes;
 
+        public List<Point3d> GetNodesPoints()
+        {
+            var points = new List<Point3d>();
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                points.Add(Nodes[i].Position);
+            }
+
+            return points;
+        }
+
+        // constructs tekla beam axis, nodes and properties
+        public Beam SetBeamAxisNodes(List<BeamAxis> axis, List<Node> nodes, List<BeamAxis> skeletonAxis)
+        {
+            var beam = new Beam();
+            beam.SkeletonAxis = new List<BeamAxis> (axis);
+            beam.Nodes = nodes;
+            beam.SkeletonAxis = skeletonAxis;
+            return beam;
+        }
+
+
         // <summary>
         // Initializes a new instance of the beam's class with a another half-edge beam
         // </summary>
         public Beam(Beam halfEdgeBeam)
         {
             Nodes = halfEdgeBeam.Nodes != null ? new List<Node>(halfEdgeBeam.Nodes) : new List<Node>();
-            Axis = halfEdgeBeam.Axis != null ? new List<BeamAxis>(halfEdgeBeam.Axis) : new List<BeamAxis>();
+            SkeletonAxis = halfEdgeBeam.SkeletonAxis != null ? new List<BeamAxis>(halfEdgeBeam.SkeletonAxis) : new List<BeamAxis>();
             HalfEdgeAxis = halfEdgeBeam.HalfEdgeAxis != null
                 ? new List<BeamAxisHalfEdge>(halfEdgeBeam.HalfEdgeAxis)
                 : new List<BeamAxisHalfEdge>();
@@ -89,15 +112,15 @@ namespace WarehouseLib.Beams
                 var lengths = new List<double>();
                 var beamAxis = new List<Curve>();
 
-                for (int i = 0; i < beam.Axis.Count; i++)
+                for (int i = 0; i < beam.SkeletonAxis.Count; i++)
                 {
-                    beamAxis.Add(beam.Axis[i].AxisCurve);
+                    beamAxis.Add(beam.SkeletonAxis[i].AxisCurve);
                 }
 
                 var beamLength = Curve.JoinCurves(beamAxis, 0.01)[0].GetLength();
-                for (int i = 0; i < beam.Axis.Count; i++)
+                for (int i = 0; i < beam.SkeletonAxis.Count; i++)
                 {
-                    var axis = beam.Axis[i].AxisCurve;
+                    var axis = beam.SkeletonAxis[i].AxisCurve;
                     buckling.BucklingY = axis.GetLength();
                     buckling.BucklingZ = beamLength;
                     bucklings.Add(buckling);
@@ -117,12 +140,13 @@ namespace WarehouseLib.Beams
             var buckling = new BucklingLengths.BucklingLengths();
             var bucklings = new List<BucklingLengths.BucklingLengths>();
 
-            for (int i = 0; i < beam.Axis.Count; i++)
+            for (int i = 0; i < beam.SkeletonAxis.Count; i++)
             {
                 buckling.BucklingY = distances != null ? distances[i] : double.NaN;
-                buckling.BucklingZ = beam.Axis[i].AxisCurve.GetLength();
+                buckling.BucklingZ = beam.SkeletonAxis[i].AxisCurve.GetLength();
                 bucklings.Add(buckling);
             }
+
             return bucklings;
         }
 
@@ -136,9 +160,9 @@ namespace WarehouseLib.Beams
             var bucklings = new List<BucklingLengths.BucklingLengths>();
             if (!bucklingActive)
             {
-                for (var i = 0; i < beam.Axis.Count; i++)
+                for (var i = 0; i < beam.SkeletonAxis.Count; i++)
                 {
-                    var axis = beam.Axis[i];
+                    var axis = beam.SkeletonAxis[i];
                     buckling.BucklingY = 0.0;
                     buckling.BucklingZ = 0.0;
                     bucklings.Add(buckling);
@@ -146,9 +170,9 @@ namespace WarehouseLib.Beams
             }
             else
             {
-                for (var i = 0; i < beam.Axis.Count; i++)
+                for (var i = 0; i < beam.SkeletonAxis.Count; i++)
                 {
-                    var axis = beam.Axis[i].AxisCurve;
+                    var axis = beam.SkeletonAxis[i].AxisCurve;
                     buckling.BucklingY = axis.GetLength();
                     buckling.BucklingZ = axis.GetLength();
                     bucklings.Add(buckling);

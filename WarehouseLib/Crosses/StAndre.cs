@@ -39,9 +39,9 @@ namespace WarehouseLib.Crosses
         {
             var intermediateBeams = truss.IntermediateBeams;
             var topStudsNodes = new List<Point3d>();
-            for (int i = 0; i < intermediateBeams.Axis.Count; i++)
+            for (int i = 0; i < intermediateBeams.SkeletonAxis.Count; i++)
             {
-                var beam = intermediateBeams.Axis[i];
+                var beam = intermediateBeams.SkeletonAxis[i];
                 var angle = Vector3d.VectorAngle(beam.AxisCurve.PointAtEnd - beam.AxisCurve.PointAtStart, Vector3d.ZAxis);
                 if (angle == Math.PI || angle == 0)
                 {
@@ -57,9 +57,9 @@ namespace WarehouseLib.Crosses
         {
             var intermediateBeams = truss.IntermediateBeams;
             var bottomStudsNodes = new List<Point3d>();
-            for (int i = 0; i < intermediateBeams.Axis.Count; i++)
+            for (int i = 0; i < intermediateBeams.SkeletonAxis.Count; i++)
             {
-                var beam = intermediateBeams.Axis[i];
+                var beam = intermediateBeams.SkeletonAxis[i];
                 var angle = Vector3d.VectorAngle(beam.AxisCurve.PointAtEnd - beam.AxisCurve.PointAtStart, Vector3d.ZAxis);
                 if (angle == Math.PI || angle == 0)
                 {

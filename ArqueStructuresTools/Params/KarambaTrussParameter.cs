@@ -62,9 +62,9 @@ namespace ArqueStructuresTools
                             }
                         }
 
-                        if (truss.Karamba3DTopBeams.Axis != null)
+                        if (truss.Karamba3DTopBeams.SkeletonAxis != null)
                         {
-                            foreach (var beam in truss.Karamba3DTopBeams.Axis)
+                            foreach (var beam in truss.Karamba3DTopBeams.SkeletonAxis)
                             {
                                 var axis = beam;
                                 _box.Union(axis.AxisCurve.ToNurbsCurve().GetBoundingBox(false));
@@ -72,9 +72,9 @@ namespace ArqueStructuresTools
                             }
                         }
 
-                        if (truss.Karamba3DBottomBeams.Axis != null)
+                        if (truss.Karamba3DBottomBeams.SkeletonAxis != null)
                         {
-                            foreach (var beam in truss.Karamba3DBottomBeams.Axis)
+                            foreach (var beam in truss.Karamba3DBottomBeams.SkeletonAxis)
                             {
                                 var axis = beam;
 
@@ -83,9 +83,9 @@ namespace ArqueStructuresTools
                             }
                         }
 
-                        if (truss.Karamba3DIntermediateBeams.Axis != null)
+                        if (truss.Karamba3DIntermediateBeams.SkeletonAxis != null)
                         {
-                            foreach (var beam in truss.Karamba3DIntermediateBeams.Axis)
+                            foreach (var beam in truss.Karamba3DIntermediateBeams.SkeletonAxis)
                             {
                                 var axis = beam;
 

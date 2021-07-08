@@ -38,9 +38,9 @@ namespace ArqueStructuresTools
             if (!DA.GetData(0, ref beamGoo)) return;
 
             var axisCurve = new List<Curve>();
-            for (int i = 0; i < beamGoo.Value.Axis.Count; i++)
+            for (int i = 0; i < beamGoo.Value.SkeletonAxis.Count; i++)
             {
-                axisCurve.Add(beamGoo.Value.Axis[i].AxisCurve);
+                axisCurve.Add(beamGoo.Value.SkeletonAxis[i].AxisCurve);
             }
 
             var position = string.Empty;

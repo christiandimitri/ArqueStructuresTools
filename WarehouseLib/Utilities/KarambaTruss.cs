@@ -82,7 +82,7 @@ namespace WarehouseLib.Utilities
             var tempStaticColumns = new List<Column>();
             var tempBoundaryColumns = new List<Column>();
             if ((_truss._articulationType == ArticulationType.Rigid.ToString() &&
-                 _truss.BottomBeam.Axis != null))
+                 _truss.BottomBeam.SkeletonAxis != null))
             {
                 for (int i = 0; i < _trussStaticColumns.Count; i++)
                 {
@@ -151,7 +151,7 @@ namespace WarehouseLib.Utilities
             if (_truss.TopBeamAxis != null)
             {
                 var axisCurves = _truss.TopBeamAxis;
-                Karamba3DTopBeams.Axis = axisCurves;
+                Karamba3DTopBeams.SkeletonAxis = axisCurves;
                 Karamba3DTopBeams.Position = _truss.TopBeam.Position;
                 if (_porticoType == PorticoType.Truss)
                 {
@@ -165,16 +165,16 @@ namespace WarehouseLib.Utilities
                 }
             }
 
-            if (_truss.BottomBeam.Axis != null)
+            if (_truss.BottomBeam.SkeletonAxis != null)
             {
                 var axisCurves = _truss.BottomBeamAxis;
-                Karamba3DBottomBeams.Axis = axisCurves;
+                Karamba3DBottomBeams.SkeletonAxis = axisCurves;
                 Karamba3DBottomBeams.BucklingLengths =
                     Karamba3DBottomBeams.ComputeTrussBeamBucklingLengthsBetweenNodes(Karamba3DBottomBeams, true);
                 Karamba3DBottomBeams.Position = _truss.BottomBeam.Position;
             }
 
-            if (_truss.IntermediateBeams.Axis != null)
+            if (_truss.IntermediateBeams.SkeletonAxis != null)
             {
                 Karamba3DIntermediateBeams = _truss.IntermediateBeams;
                 Karamba3DIntermediateBeams.BucklingLengths =

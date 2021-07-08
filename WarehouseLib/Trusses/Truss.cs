@@ -73,7 +73,7 @@ namespace WarehouseLib.Trusses
         public void UpdatePorticoType(Truss truss)
         {
             truss._porticoType =
-                BottomBeam.Axis == null ? PorticoType.Portico : PorticoType.Truss;
+                BottomBeam.SkeletonAxis == null ? PorticoType.Portico : PorticoType.Truss;
         }
 
         protected void ConstructBeams(bool joinTopBeamsAxis, bool joinBottomBeamsAxis)
@@ -91,7 +91,7 @@ namespace WarehouseLib.Trusses
 
             var topBeam = new Beam
             {
-                Axis = tempAxis,
+                SkeletonAxis = tempAxis,
                 ProfileOrientationPlane = Plane.WorldXY,
                 Position = "Top",
             };
@@ -111,7 +111,7 @@ namespace WarehouseLib.Trusses
 
             var bottomBeam = new Beam
             {
-                Axis = tempAxis,
+                SkeletonAxis = tempAxis,
                 ProfileOrientationPlane = Plane.WorldXY,
                 Position = "Bottom"
             };
@@ -128,7 +128,7 @@ namespace WarehouseLib.Trusses
 
             var interBeams = new Beam
             {
-                Axis = tempAxis,
+                SkeletonAxis = tempAxis,
                 ProfileOrientationPlane = Plane.WorldYZ,
                 Position = "Intermediate"
             };

@@ -51,9 +51,9 @@ namespace ArqueStructuresTools
 
                         foreach (var truss in warehouse.KarambaTrusses)
                         {
-                            if (truss.Karamba3DTopBeams.Axis != null)
+                            if (truss.Karamba3DTopBeams.SkeletonAxis != null)
                             {
-                                foreach (var bar in truss.Karamba3DTopBeams.Axis)
+                                foreach (var bar in truss.Karamba3DTopBeams.SkeletonAxis)
                                 {
                                     _box.Union(bar.AxisCurve.GetBoundingBox(false));
                                     args.Display.DrawCurve(bar.AxisCurve, System.Drawing.Color.Blue);
@@ -61,18 +61,18 @@ namespace ArqueStructuresTools
                             }
 
 
-                            if (truss.Karamba3DBottomBeams.Axis != null)
+                            if (truss.Karamba3DBottomBeams.SkeletonAxis != null)
                             {
-                                foreach (var bar in truss.Karamba3DBottomBeams.Axis)
+                                foreach (var bar in truss.Karamba3DBottomBeams.SkeletonAxis)
                                 {
                                     _box.Union(bar.AxisCurve.GetBoundingBox(false));
                                     args.Display.DrawCurve(bar.AxisCurve, System.Drawing.Color.Red);
                                 }
                             }
 
-                            if (truss.Karamba3DIntermediateBeams.Axis != null)
+                            if (truss.Karamba3DIntermediateBeams.SkeletonAxis != null)
                             {
-                                foreach (var bar in truss.Karamba3DIntermediateBeams.Axis)
+                                foreach (var bar in truss.Karamba3DIntermediateBeams.SkeletonAxis)
                                 {
                                     _box.Union(bar.AxisCurve.GetBoundingBox(false));
                                     args.Display.DrawCurve(bar.AxisCurve, System.Drawing.Color.Green);

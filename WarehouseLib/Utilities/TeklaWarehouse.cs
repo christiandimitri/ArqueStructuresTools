@@ -47,7 +47,7 @@ namespace WarehouseLib.Utilities
 
                     trussB.IntermediateBeams = new Beam()
                     {
-                        Axis = axisList,
+                        SkeletonAxis = axisList,
                         ProfileOrientationPlane = trussA.IntermediateBeams.ProfileOrientationPlane,
                         Position = "Intermediate"
                     };
@@ -64,7 +64,7 @@ namespace WarehouseLib.Utilities
 
                     trussB.BottomBeam = new Beam()
                     {
-                        Axis = axisList,
+                        SkeletonAxis = axisList,
                         ProfileOrientationPlane = trussA.BottomBeam.ProfileOrientationPlane,
                         Position = "Bottom"
                     };
@@ -133,7 +133,7 @@ namespace WarehouseLib.Utilities
 
                 if (truss.TopBeam != null)
                 {
-                    truss.TopBeam.Profile = truss.BottomBeam.Axis.Count is 0 ? porticoBeamsProfile : topBeamsProfile;
+                    truss.TopBeam.Profile = truss.BottomBeam.SkeletonAxis.Count is 0 ? porticoBeamsProfile : topBeamsProfile;
                 }
 
                 if (truss.BottomBeam != null)
