@@ -373,20 +373,20 @@ namespace WarehouseLib.Trusses
             var bars = new List<Curve>();
             if (trussType == ConnectionType.Warren)
             {
-                connections = new WarrenConnection(TopNodes, BottomNodes);
+                connections = new WarrenConnection(TopNodes, BottomNodes, _articulationType);
                 connections.MidPointIndex = index;
                 bars = connections.ConstructConnections();
             }
 
             else if (trussType == ConnectionType.WarrenStuds)
             {
-                connections = new WarrenStudsConnection(TopNodes, BottomNodes);
+                connections = new WarrenStudsConnection(TopNodes, BottomNodes, _articulationType.ToString());
                 connections.MidPointIndex = index;
                 bars = connections.ConstructConnections();
             }
             else if (trussType == ConnectionType.Pratt)
             {
-                connections = new PrattConnection(TopNodes, BottomNodes);
+                connections = new PrattConnection(TopNodes, BottomNodes, _articulationType);
                 connections.MidPointIndex = index;
                 bars = connections.ConstructConnections();
             }

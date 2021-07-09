@@ -5,15 +5,16 @@ namespace WarehouseLib.Connections
 {
     public class PrattConnection : Connections
     {
-        public PrattConnection(List<Point3d> topNodes, List<Point3d> bottomNodes) : base(topNodes,
-            bottomNodes)
+        public PrattConnection(List<Point3d> topNodes, List<Point3d> bottomNodes, string articulationType) : base(
+            topNodes,
+            bottomNodes, articulationType)
         {
         }
 
         public override List<Curve> ConstructConnections()
         {
             var bars = new List<Curve>();
-            for (var i = 0; i < TopNodes.Count; i ++)
+            for (var i = 0; i < TopNodes.Count; i++)
             {
                 if (i < MidPointIndex)
                 {

@@ -5,12 +5,9 @@ namespace WarehouseLib.Connections
 {
     public class HoweConnection : Connections
     {
-        
-        private readonly string _articulationType;
         public HoweConnection(List<Point3d> topNodes, List<Point3d> bottomNodes, string articulationType) :
-            base(topNodes, bottomNodes)
+            base(topNodes, bottomNodes, articulationType)
         {
-            _articulationType = articulationType;
         }
 
         public override List<Curve> ConstructConnections()

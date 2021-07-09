@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
+using WarehouseLib.Articulations;
 using WarehouseLib.Beams;
 using WarehouseLib.Columns;
 using WarehouseLib.Connections;
@@ -209,18 +210,18 @@ namespace WarehouseLib.Trusses
             var bars = new List<Curve>();
             if (_inputs.TrussType == ConnectionType.Warren)
             {
-                connections = new WarrenConnection(TopPoints, BottomPoints);
+                connections = new WarrenConnection(TopPoints, BottomPoints, _articulationType);
                 bars = connections.ConstructConnections();
             }
 
             else if (_inputs.TrussType == ConnectionType.WarrenStuds)
             {
-                connections = new WarrenStudsConnection(TopPoints, BottomPoints);
+                connections = new WarrenStudsConnection(TopPoints, BottomPoints, _articulationType.ToString());
                 bars = connections.ConstructConnections();
             }
             else if (_inputs.TrussType == ConnectionType.Pratt)
             {
-                connections = new PrattConnection(TopPoints, BottomPoints);
+                connections = new PrattConnection(TopPoints, BottomPoints, _articulationType);
                 bars = connections.ConstructConnections();
             }
             else if (_inputs.TrussType == ConnectionType.Howe)
@@ -234,6 +235,19 @@ namespace WarehouseLib.Trusses
             IntermediateBeamSkeleton.ForEach(axis => intermediateBeamAxis.Add(new BeamAxis(axis)));
 
             return intermediateBeamAxis;
+        }
+
+        // recompute divisions * 2 to make divisions 
+        protected virtual int RecomputeDivisonsCount()
+        {
+            var divisions = _divisions;
+            if (_connectionType == ConnectionType.Warren)
+            {
+                divisions *= 2;
+            }
+            else if (_divisions % 2 == 1 && _connectionType != ConnectionType.Warren) divisions += 1;
+
+            return divisions;
         }
 
         // construct truss method
@@ -264,11 +278,12 @@ namespace WarehouseLib.Trusses
             BottomBeamAxis.AddRange(bottomElements.SkeletonAxis);
             BottomPoints.ForEach(pt => BottomNodes.Add(new Node(pt)));
 
-
             IntermediateBeamAxis = GenerateIntermediateBeamAxis();
+
             TopBeam = new Beam();
             BottomBeam = new Beam();
             IntermediateBeam = new Beam();
+
             TopBeam.SetBeamAxisNodes(TopBeamAxis, TopNodes, new List<BeamAxis> {new BeamAxis(TopBeamSkeleton[0])});
             BottomBeam.SetBeamAxisNodes(BottomBeamAxis, BottomNodes,
                 new List<BeamAxis> {new BeamAxis(BottomBeamSkeleton[0])});
@@ -276,18 +291,6 @@ namespace WarehouseLib.Trusses
                 new List<BeamAxis>(IntermediateBeamAxis));
         }
 
-        // recompute divisions * 2 to make divisions 
-        protected virtual int RecomputeDivisonsCount()
-        {
-            var divisions = _divisions;
-            if (_connectionType == ConnectionType.Warren)
-            {
-                divisions *= 2;
-            }
-            else if (_divisions % 2 == 1 && _connectionType != ConnectionType.Warren) divisions += 1;
-
-            return divisions;
-        }
 
         // initializes a curve params divisions struct
         public struct DivisionParamsOnBeam
@@ -314,6 +317,30 @@ namespace WarehouseLib.Trusses
                     {
                         recomputedParams.BottomParams.Add(initParams[i]);
                     }
+                }
+
+                if (_articulationType != ArticulationType.Articulated.ToString())
+                {
+                    recomputedParams.BottomParams.Insert(0, initParams[0]);
+                    recomputedParams.BottomParams.Add(initParams[initParams.Count - 1]);
+                }
+            }
+            else if (_connectionType == ConnectionType.WarrenStuds)
+            {
+                for (int i = 0; i < initParams.Count; i++)
+                {
+                    recomputedParams.TopParams.Add(initParams[i]);
+
+                    if (i % 2 == 1)
+                    {
+                        recomputedParams.BottomParams.Add(initParams[i]);
+                    }
+                }
+
+                if (_articulationType != ArticulationType.Articulated.ToString())
+                {
+                    recomputedParams.BottomParams.Insert(0, initParams[0]);
+                    recomputedParams.BottomParams.Add(initParams[initParams.Count - 1]);
                 }
             }
             else

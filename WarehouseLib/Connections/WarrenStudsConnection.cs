@@ -1,42 +1,38 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Rhino.Geometry;
+using WarehouseLib.Articulations;
 
 namespace WarehouseLib.Connections
 {
     public class WarrenStudsConnection : Connections
     {
-        public WarrenStudsConnection(List<Point3d> topNodes, List<Point3d> bottomNodes) : base(topNodes,
-            bottomNodes)
+        public WarrenStudsConnection(List<Point3d> topNodes, List<Point3d> bottomNodes, string articulationType) : base(
+            topNodes,
+            bottomNodes, articulationType)
         {
         }
 
 
         public override List<Curve> ConstructConnections()
         {
-            var tempTopNodes = BottomNodes;
-            var tempBottomNodes = TopNodes;
             var axis = new List<Curve>();
-            for (var i = 0; i < tempTopNodes.Count; i++)
+            var tempBottomNodes = new List<Point3d>(BottomNodes);
+            if (_articulationType != ArticulationType.Articulated.ToString())
             {
-                if (i % 2 == 1)
-                {
-                    var lineA = new Line(tempBottomNodes[i - 1], tempTopNodes[i]);
-                    axis.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(tempBottomNodes[i], tempTopNodes[i]);
-                    axis.Add(lineA.ToNurbsCurve());
-                    lineA = new Line(tempBottomNodes[i + 1], tempTopNodes[i]);
-                    axis.Add(lineA.ToNurbsCurve());
-                }
+                tempBottomNodes.RemoveAt(0);
+                tempBottomNodes.RemoveAt(tempBottomNodes.Count - 1);
             }
 
-            // var midStudAxis = new Line(tempBottomNodes[MidPointIndex], tempTopNodes[MidPointIndex]).ToNurbsCurve();
-            //
-            // if ((tempTopNodes.Count / 2) % 2 == 0)
-            // {
-            //     axis.Insert(MidPointIndex + 2, midStudAxis.ToNurbsCurve());
-            // }
-
+            for (int i = 0; i < tempBottomNodes.Count; i++)
+            {
+                var lineA = new Line(TopNodes[i + i], tempBottomNodes[i]);
+                var lineB = new Line(TopNodes[i + i + 1], tempBottomNodes[i]);
+                var lineC = new Line(TopNodes[i + i + 2], tempBottomNodes[i]);
+                if (lineA.IsValid) axis.Add(lineA.ToNurbsCurve());
+                if (lineB.IsValid) axis.Add(lineB.ToNurbsCurve());
+                if (lineC.IsValid) axis.Add(lineC.ToNurbsCurve());
+            }
 
             return axis;
         }
