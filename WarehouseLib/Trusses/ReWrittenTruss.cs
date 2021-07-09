@@ -124,122 +124,35 @@ namespace WarehouseLib.Trusses
         // construct beams skeleton
         protected abstract void ConstructBeamsSkeleton();
 
-        // generate top beams nodes and axis
+        // gets the top beams nodes and axis
 
         // top beam nodes and axis
-        protected Beam GenerateTopBeamDivisions(Curve skeleton, double[] divisionParams)
+        protected Beam GetTopBeamDivisions(Curve skeleton, double[] divisionParams)
         {
-            var points = new List<Point3d>();
-            var nodes = new List<Node>();
-            var topBeamAxisTrimmed = new List<BeamAxis>();
-            var tempParams = new List<double>(divisionParams.ToList());
-            for (var i = 0; i < tempParams.Count; i++)
-            {
-                var point = skeleton.PointAt(tempParams[i]);
-                nodes.Add(new Node(point));
-                points.Add(point);
-                if (i <= 0) continue;
-                var axisCurve = skeleton.Trim(tempParams[i - 1], tempParams[i]);
-                var beamAxis = new BeamAxis(axisCurve);
-                topBeamAxisTrimmed.Add(beamAxis);
-            }
+            var topBeamElements = new Beam().GenerateTopBeamDivisions(skeleton, divisionParams);
 
-            var beamSkeleton = new List<BeamAxis> {new BeamAxis(skeleton)};
-            return new Beam()
-            {
-                Nodes = nodes,
-                SkeletonAxis = beamSkeleton,
-                Axis = topBeamAxisTrimmed
-            };
+            return topBeamElements;
         }
 
-        // bottom beam nodes and axis
-        protected Beam GenerateBottomBeamDivisions(Curve skeleton, List<Point3d> topNodes)
+        // gets bottom beam nodes and axis
+        protected Beam GetBottomBeamDivisions(Curve skeleton, List<Point3d> topNodes, Plane _plane,
+            double _maxHeight)
         {
-            var points = new List<Point3d>();
-            var nodes = new List<Node>();
-            var bottomBeamAxisTrimmed = new List<BeamAxis>();
-            var intersectingLines = new List<Line>();
-            var tempPoints = new List<Point3d>(topNodes);
-
-            for (int i = 0;
-                i < tempPoints.Count;
-                i++)
-            {
-                var tempPt = _plane.Origin - Vector3d.ZAxis * _maxHeight;
-                var lineA = new Line(tempPoints[i], new Point3d(tempPoints[i].X, tempPoints[i].Y, tempPt.Z));
-                intersectingLines.Add(lineA);
-            }
-
-            var parameters = new List<double>();
-            var point = new Point3d();
-            foreach (var line in intersectingLines)
-            {
-                var intersectionEvents = Intersection.CurveCurve(skeleton, line.ToNurbsCurve(), 0.01, 0.0);
-                if (intersectionEvents == null) continue;
-                for (int i = 0;
-                    i < intersectionEvents.Count;
-                    i++)
-                {
-                    var intEv = intersectionEvents[0];
-                    point = intEv.PointA;
-                    points.Add(point);
-                    nodes.Add(new Node(point));
-                    parameters.Add(intEv.ParameterA);
-                }
-            }
-
-            for (var i = 0; i < parameters.Count; i++)
-            {
-                if (i <= 0) continue;
-                var axisCurve = skeleton.Trim(parameters[i - 1], parameters[i]);
-                var beamAxis = new BeamAxis(axisCurve);
-                bottomBeamAxisTrimmed.Add(beamAxis);
-            }
-
-            var beamSkeleton = new List<BeamAxis> {new BeamAxis(skeleton)};
-
-            return new Beam()
-            {
-                Nodes = nodes,
-                SkeletonAxis = beamSkeleton,
-                Axis = bottomBeamAxisTrimmed
-            };
+            var bottomBeamElements = new Beam().GenerateBottomBeamDivisions(skeleton, topNodes, _plane, _maxHeight);
+            return bottomBeamElements;
         }
 
-        // construct intermediate beam axis
-        protected virtual List<BeamAxis> GenerateIntermediateBeamAxis()
+        // gets the intermediate beam axis
+        public Beam GetIntermediateBeamAxis(List<Point3d> _topPoints, List<Point3d> _bottomPoints)
         {
-            Connections.Connections connections = null;
-
-            var bars = new List<Curve>();
-            if (_inputs.TrussType == ConnectionType.Warren)
-            {
-                connections = new WarrenConnection(TopPoints, BottomPoints, _articulationType);
-                bars = connections.ConstructConnections();
-            }
-
-            else if (_inputs.TrussType == ConnectionType.WarrenStuds)
-            {
-                connections = new WarrenStudsConnection(TopPoints, BottomPoints, _articulationType.ToString());
-                bars = connections.ConstructConnections();
-            }
-            else if (_inputs.TrussType == ConnectionType.Pratt)
-            {
-                connections = new PrattConnection(TopPoints, BottomPoints, _articulationType);
-                bars = connections.ConstructConnections();
-            }
-            else if (_inputs.TrussType == ConnectionType.Howe)
-            {
-                connections = new HoweConnection(TopPoints, BottomPoints, _articulationType);
-                bars = connections.ConstructConnections();
-            }
-
-            IntermediateBeamSkeleton = bars;
+            var intermediateBeam = new Beam().GenerateIntermediateBeamAxis(_inputs, _topPoints,
+                _bottomPoints, _articulationType);
+            
+            intermediateBeam.SkeletonAxis.ForEach(axis => IntermediateBeamSkeleton.Add(axis.AxisCurve));
             var intermediateBeamAxis = new List<BeamAxis>();
-            IntermediateBeamSkeleton.ForEach(axis => intermediateBeamAxis.Add(new BeamAxis(axis)));
+            intermediateBeam.Axis.ForEach(axis => intermediateBeamAxis.Add(axis));
 
-            return intermediateBeamAxis;
+            return intermediateBeam;
         }
 
         // recompute divisions * 2 to make divisions 
@@ -270,20 +183,21 @@ namespace WarehouseLib.Trusses
 
             var newParams = RecomputeParams(initParams.ToList());
 
-            var topElements = GenerateTopBeamDivisions(TopBeamSkeleton[0], newParams.TopParams.ToArray());
+            var topElements = GetTopBeamDivisions(TopBeamSkeleton[0], newParams.TopParams.ToArray());
             TopPoints.AddRange(topElements.GetNodesPoints());
             TopPoints.ForEach(pt => TopNodes.Add(new Node(pt)));
             Debug.WriteLine("top points");
             TopBeamAxis.AddRange(topElements.SkeletonAxis);
 
-            var tempTopElements = GenerateTopBeamDivisions(TopBeamSkeleton[0], newParams.BottomParams.ToArray());
+            var tempTopElements = GetTopBeamDivisions(TopBeamSkeleton[0], newParams.BottomParams.ToArray());
 
-            var bottomElements = GenerateBottomBeamDivisions(BottomBeamSkeleton[0], tempTopElements.GetNodesPoints());
+            var bottomElements = GetBottomBeamDivisions(BottomBeamSkeleton[0], tempTopElements.GetNodesPoints(), _plane,
+                _maxHeight);
             BottomPoints.AddRange(bottomElements.GetNodesPoints());
             BottomBeamAxis.AddRange(bottomElements.SkeletonAxis);
             BottomPoints.ForEach(pt => BottomNodes.Add(new Node(pt)));
 
-            IntermediateBeamAxis = GenerateIntermediateBeamAxis();
+            IntermediateBeamAxis = GetIntermediateBeamAxis(TopPoints, BottomPoints).Axis;
 
             TopBeam = new Beam();
             BottomBeam = new Beam();
@@ -355,13 +269,6 @@ namespace WarehouseLib.Trusses
             }
 
             return recomputedParams;
-        }
-
-        protected virtual List<double> RecomputedTopParams()
-        {
-            var topParams = new List<double>();
-
-            return topParams;
         }
     }
 }

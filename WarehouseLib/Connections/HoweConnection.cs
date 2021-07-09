@@ -40,15 +40,6 @@ namespace WarehouseLib.Connections
 
             bars.RemoveAt(0);
             bars.RemoveAt(bars.Count - 1);
-            if (_articulationType == "Articulated")
-            {
-                bars.RemoveAt(0);
-                var lineA = new Line(TopNodes[0], BottomNodes[1]);
-                bars.Insert(0, lineA.ToNurbsCurve());
-                bars.RemoveAt(bars.Count - 1);
-                lineA = new Line(TopNodes[TopNodes.Count - 1], BottomNodes[BottomNodes.Count - 2]);
-                bars.Add(lineA.ToNurbsCurve());
-            }
 
             return bars;
         }

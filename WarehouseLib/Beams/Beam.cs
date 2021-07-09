@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Rhino.Geometry;
+using Rhino.Geometry.Intersect;
+using WarehouseLib.Articulations;
 using WarehouseLib.BucklingLengths;
+using WarehouseLib.Connections;
 using WarehouseLib.Nodes;
+using WarehouseLib.Options;
 using WarehouseLib.Profiles;
 
 namespace WarehouseLib.Beams
@@ -187,6 +191,132 @@ namespace WarehouseLib.Beams
             }
 
             return bucklings;
+        }
+
+
+        // <summary>
+        // bottom beam nodes and axis
+        // </summary>
+        public Beam GenerateBottomBeamDivisions(Curve skeleton, List<Point3d> topNodes, Plane _plane,
+            double _maxHeight)
+        {
+            var points = new List<Point3d>();
+            var nodes = new List<Node>();
+            var bottomBeamAxisTrimmed = new List<BeamAxis>();
+            var intersectingLines = new List<Line>();
+            var tempPoints = new List<Point3d>(topNodes);
+
+            for (int i = 0;
+                i < tempPoints.Count;
+                i++)
+            {
+                var tempPt = _plane.Origin - Vector3d.ZAxis * _maxHeight;
+                var lineA = new Line(tempPoints[i], new Point3d(tempPoints[i].X, tempPoints[i].Y, tempPt.Z));
+                intersectingLines.Add(lineA);
+            }
+
+            var parameters = new List<double>();
+            var point = new Point3d();
+            foreach (var line in intersectingLines)
+            {
+                var intersectionEvents = Intersection.CurveCurve(skeleton, line.ToNurbsCurve(), 0.01, 0.0);
+                if (intersectionEvents == null) continue;
+                for (int i = 0;
+                    i < intersectionEvents.Count;
+                    i++)
+                {
+                    var intEv = intersectionEvents[0];
+                    point = intEv.PointA;
+                    points.Add(point);
+                    nodes.Add(new Node(point));
+                    parameters.Add(intEv.ParameterA);
+                }
+            }
+
+            for (var i = 0; i < parameters.Count; i++)
+            {
+                if (i <= 0) continue;
+                var axisCurve = skeleton.Trim(parameters[i - 1], parameters[i]);
+                var beamAxis = new BeamAxis(axisCurve);
+                bottomBeamAxisTrimmed.Add(beamAxis);
+            }
+
+            var beamSkeleton = new List<BeamAxis> {new BeamAxis(skeleton)};
+
+            return new Beam()
+            {
+                Nodes = nodes,
+                SkeletonAxis = beamSkeleton,
+                Axis = bottomBeamAxisTrimmed
+            };
+        }
+
+        // <summary>
+        // generates the top beam nodes and axis
+        // </summary>
+        public Beam GenerateTopBeamDivisions(Curve skeleton, double[] divisionParams)
+        {
+            var points = new List<Point3d>();
+            var nodes = new List<Node>();
+            var topBeamAxisTrimmed = new List<BeamAxis>();
+            var tempParams = new List<double>(divisionParams.ToList());
+            for (var i = 0; i < tempParams.Count; i++)
+            {
+                var point = skeleton.PointAt(tempParams[i]);
+                nodes.Add(new Node(point));
+                points.Add(point);
+                if (i <= 0) continue;
+                var axisCurve = skeleton.Trim(tempParams[i - 1], tempParams[i]);
+                var beamAxis = new BeamAxis(axisCurve);
+                topBeamAxisTrimmed.Add(beamAxis);
+            }
+
+            var beamSkeleton = new List<BeamAxis> {new BeamAxis(skeleton)};
+            return new Beam()
+            {
+                Nodes = nodes,
+                SkeletonAxis = beamSkeleton,
+                Axis = topBeamAxisTrimmed
+            };
+        }
+
+        // construct intermediate beam axis
+        public Beam GenerateIntermediateBeamAxis(TrussInputs _inputs, List<Point3d> _topPoints,
+            List<Point3d> _bottomPoints, string _articulationType)
+        {
+            Connections.Connections connections = null;
+
+            var bars = new List<Curve>();
+            if (_inputs.TrussType == ConnectionType.Warren)
+            {
+                connections = new WarrenConnection(_topPoints, _bottomPoints, _articulationType);
+                bars = connections.ConstructConnections();
+            }
+
+            else if (_inputs.TrussType == ConnectionType.WarrenStuds)
+            {
+                connections = new WarrenStudsConnection(_topPoints, _bottomPoints, _articulationType.ToString());
+                bars = connections.ConstructConnections();
+            }
+            else if (_inputs.TrussType == ConnectionType.Pratt)
+            {
+                connections = new PrattConnection(_topPoints, _bottomPoints, _articulationType);
+                bars = connections.ConstructConnections();
+            }
+            else if (_inputs.TrussType == ConnectionType.Howe)
+            {
+                connections = new HoweConnection(_topPoints, _bottomPoints, _articulationType);
+                bars = connections.ConstructConnections();
+            }
+
+            var intermediateBeamAxis = new List<BeamAxis>();
+            bars.ForEach(axis => intermediateBeamAxis.Add(new BeamAxis(axis)));
+
+            return new Beam()
+            {
+                SkeletonAxis = intermediateBeamAxis,
+                Axis = intermediateBeamAxis
+            };
         }
     }
 }

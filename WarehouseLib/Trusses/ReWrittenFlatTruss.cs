@@ -28,11 +28,6 @@ namespace WarehouseLib.Trusses
             };
         }
 
-        protected override List<BeamAxis> GenerateIntermediateBeamAxis()
-        {
-            return base.GenerateIntermediateBeamAxis();
-        }
-
         protected override void ConstructTruss()
         {
             base.ConstructTruss();
