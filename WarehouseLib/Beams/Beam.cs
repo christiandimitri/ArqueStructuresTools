@@ -19,9 +19,14 @@ namespace WarehouseLib.Beams
         }
 
         // <summary>
-        // gets or sets the beam's axis list
+        // gets or sets the beam's skeleton axis list
         // </summary>
         public List<BeamAxis> SkeletonAxis { get; set; }
+
+        // <summary>
+        // gets or sets the beam's axis list between nodes
+        // </summary>
+        public List<BeamAxis> Axis { get; set; }
 
 
         // <summary>
@@ -66,7 +71,7 @@ namespace WarehouseLib.Beams
         public Beam SetBeamAxisNodes(List<BeamAxis> axis, List<Node> nodes, List<BeamAxis> skeletonAxis)
         {
             var beam = new Beam();
-            beam.SkeletonAxis = new List<BeamAxis> (axis);
+            beam.SkeletonAxis = new List<BeamAxis>(axis);
             beam.Nodes = nodes;
             beam.SkeletonAxis = skeletonAxis;
             return beam;
@@ -79,7 +84,9 @@ namespace WarehouseLib.Beams
         public Beam(Beam halfEdgeBeam)
         {
             Nodes = halfEdgeBeam.Nodes != null ? new List<Node>(halfEdgeBeam.Nodes) : new List<Node>();
-            SkeletonAxis = halfEdgeBeam.SkeletonAxis != null ? new List<BeamAxis>(halfEdgeBeam.SkeletonAxis) : new List<BeamAxis>();
+            SkeletonAxis = halfEdgeBeam.SkeletonAxis != null
+                ? new List<BeamAxis>(halfEdgeBeam.SkeletonAxis)
+                : new List<BeamAxis>();
             HalfEdgeAxis = halfEdgeBeam.HalfEdgeAxis != null
                 ? new List<BeamAxisHalfEdge>(halfEdgeBeam.HalfEdgeAxis)
                 : new List<BeamAxisHalfEdge>();

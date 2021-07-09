@@ -144,10 +144,12 @@ namespace WarehouseLib.Trusses
                 topBeamAxisTrimmed.Add(beamAxis);
             }
 
+            var beamSkeleton = new List<BeamAxis> {new BeamAxis(skeleton)};
             return new Beam()
             {
                 Nodes = nodes,
-                SkeletonAxis = topBeamAxisTrimmed
+                SkeletonAxis = beamSkeleton,
+                Axis = topBeamAxisTrimmed
             };
         }
 
@@ -195,10 +197,13 @@ namespace WarehouseLib.Trusses
                 bottomBeamAxisTrimmed.Add(beamAxis);
             }
 
+            var beamSkeleton = new List<BeamAxis> {new BeamAxis(skeleton)};
+
             return new Beam()
             {
                 Nodes = nodes,
-                SkeletonAxis = bottomBeamAxisTrimmed
+                SkeletonAxis = beamSkeleton,
+                Axis = bottomBeamAxisTrimmed
             };
         }
 
